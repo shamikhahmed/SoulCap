@@ -1,0 +1,2111 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [pgvector(map: "vector"), pg_trgm, uuid_ossp]
+}
+
+// ─── Enums ────────────────────────────────────────────────────────────────────
+
+enum MembershipRole {
+  OWNER
+  ADMIN
+  MEMBER
+  VIEWER
+}
+
+enum MembershipStatus {
+  ACTIVE
+  INVITED
+  SUSPENDED
+  REMOVED
+}
+
+enum MemoryType {
+  FACT
+  PREFERENCE
+  GOAL
+  RELATIONSHIP
+  TRIGGER
+  EMOTIONAL_EVENT
+  LIFE_EVENT
+  PATTERN
+  INTERVENTION_RESULT
+  HABIT_OBSERVATION
+}
+
+enum MemorySource {
+  EXPLICIT
+  INFERRED
+  CORROBORATED
+  HYPOTHESIZED
+}
+
+enum RelationshipType {
+  FAMILY
+  FRIEND
+  PARTNER
+  COLLEAGUE
+  MENTOR
+  THERAPIST
+  OTHER
+}
+
+enum GoalStatus {
+  ACTIVE
+  PAUSED
+  COMPLETED
+  ABANDONED
+}
+
+enum GoalDomain {
+  EMOTIONAL
+  RELATIONAL
+  CAREER
+  HEALTH
+  PERSONAL
+  FINANCIAL
+  SPIRITUAL
+}
+
+enum HabitFrequency {
+  DAILY
+  WEEKDAYS
+  WEEKENDS
+  WEEKLY
+  MONTHLY
+  CUSTOM
+}
+
+enum HabitStatus {
+  ACTIVE
+  PAUSED
+  ARCHIVED
+}
+
+enum InsightType {
+  PATTERN
+  ACHIEVEMENT
+  RISK
+  GROWTH
+  RECOMMENDATION
+  MILESTONE
+}
+
+enum PatternType {
+  EMOTIONAL
+  BEHAVIORAL
+  RELATIONAL
+  COGNITIVE
+  SOMATIC
+  CYCLICAL
+  CONTEXTUAL
+}
+
+enum PatternStatus {
+  HYPOTHESIZED
+  EMERGING
+  CONFIRMED
+  ARCHIVED
+}
+
+enum RiskLevel {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum SafetyTier {
+  NONE
+  DISTRESS
+  ELEVATED
+  ACUTE
+}
+
+enum AIProviderType {
+  ANTHROPIC
+  OPENAI
+  GOOGLE
+  LOCAL
+}
+
+enum AIModelRole {
+  ANALYSIS
+  GENERATION
+  EMBEDDING
+  CLASSIFICATION
+}
+
+enum MessageRole {
+  USER
+  ASSISTANT
+  SYSTEM
+}
+
+enum ThreadStatus {
+  ACTIVE
+  ARCHIVED
+  DELETED
+}
+
+enum PredictionType {
+  MOOD
+  BEHAVIOR
+  RISK
+  GROWTH
+  ENGAGEMENT
+}
+
+enum InterventionStrategy {
+  WITNESS
+  REFLECT
+  EXPLORE
+  PATTERN
+  REFRAME
+  EDUCATE
+  ACTIVATE
+  GROUND
+  CHALLENGE
+  RESOURCE
+  VALIDATE
+  CELEBRATE
+}
+
+enum AIMode {
+  SUPPORT
+  COACHING
+  REFLECTION
+  CRISIS
+  EXPLORATION
+}
+
+enum JobStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  RETRYING
+  CANCELLED
+}
+
+enum NotificationType {
+  CHECK_IN_REMINDER
+  INSIGHT_GENERATED
+  GOAL_MILESTONE
+  PATTERN_DETECTED
+  SAFETY_ALERT
+  STREAK_ACHIEVED
+  WEEKLY_REPORT
+  PUSH
+  EMAIL
+  IN_APP
+}
+
+enum SubscriptionStatus {
+  TRIALING
+  ACTIVE
+  PAST_DUE
+  CANCELED
+  UNPAID
+  PAUSED
+}
+
+enum SubscriptionTier {
+  FREE
+  PLUS
+  PRO
+  ENTERPRISE
+}
+
+enum FileType {
+  VOICE_NOTE
+  IMAGE
+  DOCUMENT
+  AVATAR
+}
+
+enum LifeEventCategory {
+  RELATIONSHIP
+  CAREER
+  HEALTH
+  LOSS
+  ACHIEVEMENT
+  TRANSITION
+  TRAUMA
+  CELEBRATION
+}
+
+// ─── Tenant / Auth ────────────────────────────────────────────────────────────
+
+model Organization {
+  id          String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  slug        String  @unique
+  name        String
+  logoUrl     String?
+  website     String?
+  description String?
+  metadata    Json    @default("{}")
+  settings    Json    @default("{}")
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  memberships      Membership[]
+  livingMindModels LivingMindModel[]
+  conversationThreads ConversationThread[]
+  insights         Insight[]
+  growthReports    GrowthReport[]
+  featureFlags     FeatureFlag[]
+  apiKeys          APIKey[]
+  webhooks         Webhook[]
+  auditLogs        AuditLog[]
+  stripeCustomers  StripeCustomer[]
+  subscriptions    Subscription[]
+
+  @@index([slug])
+  @@map("organizations")
+}
+
+model User {
+  id             String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  clerkId        String  @unique
+  email          String  @unique
+  emailVerified  Boolean @default(false)
+  firstName      String?
+  lastName       String?
+  displayName    String?
+  avatarUrl      String?
+  phoneNumber    String?
+  timezone       String  @default("UTC")
+  locale         String  @default("en")
+  metadata       Json    @default("{}")
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  memberships         Membership[]
+  profile             Profile?
+  livingMindModel     LivingMindModel?
+  emotionalStates     EmotionalState[]
+  emotionalEvents     EmotionalEvent[]
+  lifeEvents          LifeEvent[]
+  relationshipNodes   RelationshipNode[]
+  habits              Habit[]
+  goals               Goal[]
+  triggers            Trigger[]
+  copingMechanisms    CopingMechanism[]
+  interventions       Intervention[]
+  checkIns            CheckIn[]
+  journalEntries      JournalEntry[]
+  voiceNotes          VoiceNote[]
+  conversationThreads ConversationThread[]
+  memoryItems         MemoryItem[]
+  insights            Insight[]
+  predictions         Prediction[]
+  notifications       Notification[]
+  notificationPreferences NotificationPreference[]
+  userSettings        UserSetting[]
+  auditLogs           AuditLog[]
+  files               File[]
+  aiUsageLogs         AIUsageLog[]
+  backgroundJobs      BackgroundJob[]
+  riskAssessments     RiskAssessment[]
+  safetyFlags         SafetyFlag[]
+  growthReports       GrowthReport[]
+
+  @@index([clerkId])
+  @@index([email])
+  @@map("users")
+}
+
+model Membership {
+  id             String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String           @db.Uuid
+  organizationId String           @db.Uuid
+  role           MembershipRole   @default(MEMBER)
+  status         MembershipStatus @default(ACTIVE)
+  invitedBy      String?          @db.Uuid
+  invitedAt      DateTime?
+  joinedAt       DateTime?
+  metadata       Json             @default("{}")
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  user         User         @relation(fields: [userId], references: [id])
+  organization Organization @relation(fields: [organizationId], references: [id])
+
+  @@unique([userId, organizationId])
+  @@index([organizationId])
+  @@index([userId])
+  @@map("memberships")
+}
+
+model Profile {
+  id             String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String  @unique @db.Uuid
+  organizationId String  @db.Uuid
+
+  dateOfBirth    DateTime?
+  gender         String?
+  pronouns       String?
+  occupation     String?
+  location       String?
+  bio            String?
+
+  // Onboarding
+  onboardingComplete     Boolean @default(false)
+  onboardingCompletedAt  DateTime?
+  onboardingStep         Int     @default(0)
+
+  // Consent
+  consentLmmProfiling    Boolean @default(false)
+  consentDataRetention   Boolean @default(false)
+  consentResearch        Boolean @default(false)
+  consentGivenAt         DateTime?
+
+  // Clinical
+  hasTherapist           Boolean @default(false)
+  hasMedication          Boolean @default(false)
+  hasDiagnosis           Boolean @default(false)
+  referralSource         String?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([organizationId])
+  @@map("profiles")
+}
+
+// ─── Living Mind Model ────────────────────────────────────────────────────────
+
+model LivingMindModel {
+  id             String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String @unique @db.Uuid
+  organizationId String @db.Uuid
+
+  // Affective Domain
+  baselineValence       Float @default(0.0)
+  emotionalVolatility   Float @default(0.5)
+  emotionalGranularity  Float @default(0.3)
+  dominantEmotionProfile Json @default("{}")
+
+  // Personality Signals
+  attachmentStyle        String @default("unknown")
+  locusOfControl         Float  @default(0.5)
+  metacognitiveAwareness Float  @default(0.3)
+  openness               Float  @default(0.5)
+  conscientiousness      Float  @default(0.5)
+  resilience             Float  @default(0.5)
+  selfCompassion         Float  @default(0.5)
+
+  // Behavioral Tendencies
+  copingStyle     String @default("unknown")
+  stressResponse  String @default("unknown")
+  conflictStyle   String @default("unknown")
+
+  // Cognitive
+  ruminationTendency   Float @default(0.5)
+  cognitiveFlexibility Float @default(0.5)
+
+  // Relational
+  socialBattery        Float @default(0.5)
+  boundaryStrength     Float @default(0.5)
+
+  // Trend Data
+  emotionalTrend    Json @default("[]")
+  moodCyclePattern  Json @default("{}")
+
+  // Active State
+  currentEmotionalState Json @default("{}")
+  activeRisks           Json @default("[]")
+  activeGoals           Json @default("[]")
+  activeTriggers        Json @default("[]")
+  activeStressors       Json @default("[]")
+
+  // Growth
+  growthAreas                Json @default("[]")
+  strengths                  Json @default("[]")
+  weaknesses                 Json @default("[]")
+  preferredCopingMechanisms  Json @default("[]")
+  communicationPreferences   Json @default("{}")
+
+  // Procedural Memory
+  interventionEffectiveness Json @default("{}")
+  strategyHistory           Json @default("[]")
+
+  // Model Health
+  modelVersion      Int     @default(1)
+  confidenceScore   Float   @default(0.0)
+  totalInteractions Int     @default(0)
+  snapshotCount     Int     @default(0)
+  lastSnapshotAt    DateTime?
+  lastInteractionAt DateTime?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  user         User         @relation(fields: [userId], references: [id])
+  organization Organization @relation(fields: [organizationId], references: [id])
+  snapshots    MindSnapshot[]
+
+  @@index([organizationId])
+  @@index([userId])
+  @@map("living_mind_models")
+}
+
+model MindSnapshot {
+  id               String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  livingMindModelId String @db.Uuid
+  userId           String @db.Uuid
+  organizationId   String @db.Uuid
+
+  snapshotVersion  Int
+  modelState       Json
+  confidenceScore  Float
+  triggerReason    String
+
+  createdAt DateTime @default(now())
+
+  livingMindModel LivingMindModel @relation(fields: [livingMindModelId], references: [id])
+
+  @@index([livingMindModelId, createdAt(sort: Desc)])
+  @@index([userId])
+  @@map("mind_snapshots")
+}
+
+// ─── Emotional ────────────────────────────────────────────────────────────────
+
+model EmotionalState {
+  id             String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String @db.Uuid
+  organizationId String @db.Uuid
+
+  valence          Float
+  arousal          Float
+  groundedness     Float
+  dominantEmotions String[]
+  intensity        Float
+  confidence       Float    @default(0.8)
+
+  source       String
+  contextId    String?
+  contextType  String?
+
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([organizationId])
+  @@map("emotional_states")
+}
+
+model EmotionalEvent {
+  id             String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String @db.Uuid
+  organizationId String @db.Uuid
+
+  emotionType  String
+  valence      Float
+  arousal      Float
+  intensity    Float
+  trigger      String?
+  context      String?
+  resolution   String?
+  bodyLocation String?
+
+  confidence Float
+  source     String
+
+  relatedEntityId   String?
+  relatedEntityType String?
+
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId, emotionType])
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([organizationId])
+  @@map("emotional_events")
+}
+
+model LifeEvent {
+  id             String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String            @db.Uuid
+  organizationId String            @db.Uuid
+
+  title          String
+  description    String?
+  category       LifeEventCategory
+  impact         Float
+  valenceImpact  Float
+  occurredAt     DateTime
+
+  isOngoing      Boolean @default(false)
+  endsAt         DateTime?
+
+  relatedPersons String[]
+  tags           String[]
+  metadata       Json    @default("{}")
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId, occurredAt(sort: Desc)])
+  @@index([organizationId])
+  @@map("life_events")
+}
+
+// ─── Relationship Graph ───────────────────────────────────────────────────────
+
+model RelationshipNode {
+  id             String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String           @db.Uuid
+  organizationId String           @db.Uuid
+
+  label          String
+  type           RelationshipType
+  displayName    String?
+  description    String?
+
+  // Metrics
+  closeness           Float @default(0.5)
+  trust               Float @default(0.5)
+  emotionalImpact     Float @default(0.0)
+  interactionFreq     Float @default(0.3)
+  supportCapacity     Float @default(0.5)
+  drainCapacity       Float @default(0.5)
+  complexity          Float @default(0.5)
+
+  // Emotional profile
+  primaryEmotionWith  String?
+  primaryEmotionApart String?
+  attachmentPattern   String?
+
+  // History
+  mentionFrequency    Json @default("{}")
+  conflictHistory     Json @default("[]")
+  valenceHistory      Json @default("[]")
+
+  lastMentioned DateTime?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  user  User               @relation(fields: [userId], references: [id])
+  edgesFrom RelationshipEdge[] @relation("EdgeFrom")
+  edgesTo   RelationshipEdge[] @relation("EdgeTo")
+
+  @@unique([userId, label])
+  @@index([userId, closeness(sort: Desc)])
+  @@index([organizationId])
+  @@map("relationship_nodes")
+}
+
+model RelationshipEdge {
+  id             String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId String @db.Uuid
+
+  fromNodeId String @db.Uuid
+  toNodeId   String @db.Uuid
+
+  edgeType   String
+  weight     Float  @default(0.5)
+  metadata   Json   @default("{}")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  fromNode RelationshipNode @relation("EdgeFrom", fields: [fromNodeId], references: [id])
+  toNode   RelationshipNode @relation("EdgeTo", fields: [toNodeId], references: [id])
+
+  @@unique([fromNodeId, toNodeId, edgeType])
+  @@index([fromNodeId])
+  @@index([toNodeId])
+  @@map("relationship_edges")
+}
+
+// ─── Habits ───────────────────────────────────────────────────────────────────
+
+model HabitCategory {
+  id             String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId String @db.Uuid
+
+  name        String
+  icon        String?
+  color       String?
+  description String?
+  isSystem    Boolean @default(false)
+
+  createdAt DateTime @default(now())
+
+  habits Habit[]
+
+  @@index([organizationId])
+  @@map("habit_categories")
+}
+
+model Habit {
+  id             String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String      @db.Uuid
+  organizationId String      @db.Uuid
+  categoryId     String?     @db.Uuid
+
+  name             String
+  description      String?
+  targetFrequency  HabitFrequency
+  customFrequency  Json?
+  status           HabitStatus @default(ACTIVE)
+
+  currentAdherence    Float @default(0.0)
+  emotionalCorrelation Json @default("{}")
+  stressCorrelation    Float @default(0.0)
+  moodImpact           Float @default(0.0)
+
+  streakCurrent Int @default(0)
+  streakBest    Int @default(0)
+  totalLogs     Int @default(0)
+
+  reminderTime  String?
+  reminderDays  String[]
+  startDate     DateTime @default(now())
+  lastTracked   DateTime?
+
+  metadata Json @default("{}")
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  user     User           @relation(fields: [userId], references: [id])
+  category HabitCategory? @relation(fields: [categoryId], references: [id])
+  logs     HabitLog[]
+  activities ActivityRecommendation[]
+
+  @@index([userId, status])
+  @@index([organizationId])
+  @@map("habits")
+}
+
+model HabitLog {
+  id      String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  habitId String @db.Uuid
+  userId  String @db.Uuid
+
+  completedAt   DateTime
+  quality       Float?
+  note          String?
+  emotionBefore String?
+  emotionAfter  String?
+  valenceBefore Float?
+  valenceAfter  Float?
+  duration      Int?
+
+  createdAt DateTime @default(now())
+
+  habit Habit @relation(fields: [habitId], references: [id])
+
+  @@index([habitId, completedAt(sort: Desc)])
+  @@index([userId, completedAt(sort: Desc)])
+  @@map("habit_logs")
+}
+
+// ─── Goals ────────────────────────────────────────────────────────────────────
+
+model Goal {
+  id             String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String     @db.Uuid
+  organizationId String     @db.Uuid
+
+  title          String
+  description    String?
+  domain         GoalDomain
+  status         GoalStatus @default(ACTIVE)
+
+  progress       Float    @default(0.0)
+  targetProgress Float    @default(1.0)
+  blockers       String[] @default([])
+  tags           String[] @default([])
+
+  targetDate  DateTime?
+  completedAt DateTime?
+
+  lmmLinked  Boolean @default(true)
+  metadata   Json    @default("{}")
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  user       User              @relation(fields: [userId], references: [id])
+  milestones GoalMilestone[]
+  progressLogs GoalProgress[]
+
+  @@index([userId, status])
+  @@index([organizationId])
+  @@map("goals")
+}
+
+model GoalMilestone {
+  id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  goalId String @db.Uuid
+  userId String @db.Uuid
+
+  title       String
+  description String?
+  completed   Boolean  @default(false)
+  completedAt DateTime?
+  targetDate  DateTime?
+  order       Int      @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  goal Goal @relation(fields: [goalId], references: [id])
+
+  @@index([goalId])
+  @@map("goal_milestones")
+}
+
+model GoalProgress {
+  id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  goalId String @db.Uuid
+  userId String @db.Uuid
+
+  progress    Float
+  note        String?
+  emotionAtLog String?
+  valenceAtLog Float?
+
+  loggedAt DateTime @default(now())
+
+  goal Goal @relation(fields: [goalId], references: [id])
+
+  @@index([goalId, loggedAt(sort: Desc)])
+  @@map("goal_progress")
+}
+
+// ─── Triggers & Coping ───────────────────────────────────────────────────────
+
+model Trigger {
+  id             String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String @db.Uuid
+  organizationId String @db.Uuid
+
+  name         String
+  description  String?
+  category     String
+  intensity    Float  @default(0.5)
+  frequency    Int    @default(0)
+  responseType String?
+
+  firstSeen DateTime  @default(now())
+  lastSeen  DateTime?
+  contexts  String[]  @default([])
+
+  confidence Float  @default(0.5)
+  isActive   Boolean @default(true)
+  metadata   Json   @default("{}")
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId, isActive])
+  @@index([organizationId])
+  @@map("triggers")
+}
+
+model CopingMechanism {
+  id             String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String @db.Uuid
+  organizationId String @db.Uuid
+
+  name          String
+  description   String?
+  category      String
+  effectiveness Float  @default(0.5)
+  usageFrequency Int   @default(0)
+
+  worksFor   String[] @default([])
+  contexts   String[] @default([])
+  isHealthy  Boolean  @default(true)
+  userRated  Boolean  @default(false)
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([organizationId])
+  @@map("coping_mechanisms")
+}
+
+// ─── Interventions ────────────────────────────────────────────────────────────
+
+model Intervention {
+  id             String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String               @db.Uuid
+  organizationId String               @db.Uuid
+
+  strategy           InterventionStrategy
+  mode               AIMode
+  sessionId          String?
+  threadId           String?           @db.Uuid
+
+  contextEmotionalState Json
+  contextSafetyTier     SafetyTier @default(NONE)
+  contextTrustLevel     Float      @default(0.5)
+  contextTopics         String[]   @default([])
+
+  immediateEngagement Float?
+  sessionContinuation Float?
+  userFeedback        String?
+  overallScore        Float?
+  implicitScore       Float?
+
+  scoredAt DateTime?
+
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+  history  InterventionHistory[]
+
+  @@index([userId, strategy])
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([organizationId])
+  @@map("interventions")
+}
+
+model InterventionHistory {
+  id             String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  interventionId String @db.Uuid
+  userId         String @db.Uuid
+
+  event     String
+  metadata  Json   @default("{}")
+  createdAt DateTime @default(now())
+
+  intervention Intervention @relation(fields: [interventionId], references: [id])
+
+  @@index([interventionId])
+  @@map("intervention_history")
+}
+
+// ─── Activities ───────────────────────────────────────────────────────────────
+
+model Activity {
+  id             String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId String @db.Uuid
+
+  name         String
+  description  String?
+  category     String
+  tags         String[] @default([])
+  isSystem     Boolean  @default(false)
+  moodImpact   Float    @default(0.0)
+  energyImpact Float    @default(0.0)
+  duration     Int?
+
+  createdAt DateTime @default(now())
+
+  recommendations ActivityRecommendation[]
+
+  @@index([organizationId])
+  @@map("activities")
+}
+
+model ActivityRecommendation {
+  id             String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String @db.Uuid
+  organizationId String @db.Uuid
+  activityId     String @db.Uuid
+  habitId        String? @db.Uuid
+
+  reason      String?
+  score       Float   @default(0.5)
+  completed   Boolean @default(false)
+  completedAt DateTime?
+  feedback    String?
+
+  expiresAt DateTime?
+  createdAt DateTime  @default(now())
+
+  activity Activity @relation(fields: [activityId], references: [id])
+  habit    Habit?   @relation(fields: [habitId], references: [id])
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@map("activity_recommendations")
+}
+
+model Hobby {
+  id             String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String @db.Uuid
+  organizationId String @db.Uuid
+
+  name          String
+  category      String
+  enjoymentLevel Float @default(0.7)
+  frequency      Float @default(0.3)
+  lastEngaged    DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+  @@map("hobbies")
+}
+
+// ─── Routines ─────────────────────────────────────────────────────────────────
+
+model RoutineProfile {
+  id             String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String @unique @db.Uuid
+  organizationId String @db.Uuid
+
+  wakeTime     String?
+  sleepTime    String?
+  workStart    String?
+  workEnd      String?
+  exerciseTime String?
+  mealTimes    Json    @default("[]")
+  freeTimeSlots Json   @default("[]")
+
+  sleepQuality    Float @default(0.5)
+  routineAdherence Float @default(0.5)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  events RoutineEvent[]
+
+  @@index([organizationId])
+  @@map("routine_profiles")
+}
+
+model RoutineEvent {
+  id               String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  routineProfileId String @db.Uuid
+  userId           String @db.Uuid
+
+  name      String
+  category  String
+  startTime String
+  endTime   String?
+  days      String[]
+  isFixed   Boolean @default(false)
+  metadata  Json    @default("{}")
+
+  createdAt DateTime @default(now())
+
+  routineProfile RoutineProfile @relation(fields: [routineProfileId], references: [id])
+
+  @@index([routineProfileId])
+  @@map("routine_events")
+}
+
+// ─── Insights ─────────────────────────────────────────────────────────────────
+
+model Insight {
+  id             String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String      @db.Uuid
+  organizationId String      @db.Uuid
+
+  type       InsightType
+  title      String
+  content    String
+  summary    String?
+  confidence Float       @default(0.7)
+
+  evidenceIds  String[] @default([])
+  relatedTopics String[] @default([])
+  tags         String[] @default([])
+
+  aiProviderId String?
+  promptId     String?   @db.Uuid
+  modelUsed    String?
+
+  userSeen     Boolean   @default(false)
+  userReaction String?
+  seenAt       DateTime?
+
+  expiresAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  user         User         @relation(fields: [userId], references: [id])
+  organization Organization @relation(fields: [organizationId], references: [id])
+  history      InsightHistory[]
+
+  @@index([userId, type])
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([organizationId])
+  @@map("insights")
+}
+
+model InsightHistory {
+  id        String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  insightId String @db.Uuid
+  userId    String @db.Uuid
+
+  event     String
+  metadata  Json   @default("{}")
+  createdAt DateTime @default(now())
+
+  insight Insight @relation(fields: [insightId], references: [id])
+
+  @@index([insightId])
+  @@map("insight_history")
+}
+
+model GrowthReport {
+  id             String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String @db.Uuid
+  organizationId String @db.Uuid
+
+  reportType   String
+  periodStart  DateTime
+  periodEnd    DateTime
+  title        String
+  narrative    String
+  metrics      Json   @default("{}")
+  achievements String[] @default([])
+  areasOfGrowth String[] @default([])
+  recommendations String[] @default([])
+
+  aiGenerated  Boolean @default(true)
+  modelUsed    String?
+  userSeen     Boolean @default(false)
+
+  createdAt DateTime @default(now())
+
+  user         User         @relation(fields: [userId], references: [id])
+  organization Organization @relation(fields: [organizationId], references: [id])
+
+  @@index([userId, periodStart(sort: Desc)])
+  @@index([organizationId])
+  @@map("growth_reports")
+}
+
+// ─── Check-Ins ────────────────────────────────────────────────────────────────
+
+model CheckIn {
+  id             String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String @db.Uuid
+  organizationId String @db.Uuid
+
+  valence       Float
+  arousal       Float
+  groundedness  Float
+  emotions      String[] @default([])
+  energyLevel   Float?
+  bodyAwareness String?
+  freeText      String?
+
+  aiInsight     String?
+  aiOpener      String?
+  safetyTier    SafetyTier @default(NONE)
+
+  threadId      String? @db.Uuid
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User              @relation(fields: [userId], references: [id])
+  responses CheckInResponse[]
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([organizationId])
+  @@map("check_ins")
+}
+
+model CheckInResponse {
+  id          String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  checkInId   String @db.Uuid
+  userId      String @db.Uuid
+
+  questionKey String
+  response    Json
+  metadata    Json @default("{}")
+
+  createdAt DateTime @default(now())
+
+  checkIn CheckIn @relation(fields: [checkInId], references: [id])
+
+  @@index([checkInId])
+  @@map("check_in_responses")
+}
+
+// ─── Journal ──────────────────────────────────────────────────────────────────
+
+model JournalEntry {
+  id             String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String @db.Uuid
+  organizationId String @db.Uuid
+
+  title      String?
+  content    String
+  mood       String?
+  valence    Float?
+  tags       String[] @default([])
+  isPrivate  Boolean  @default(true)
+  wordCount  Int      @default(0)
+
+  aiInsight  String?
+  threadId   String?  @db.Uuid
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([organizationId])
+  @@map("journal_entries")
+}
+
+model VoiceNote {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String   @db.Uuid
+  organizationId String   @db.Uuid
+
+  fileId         String   @db.Uuid
+  durationMs     Int
+  transcript     String?
+  transcribedAt  DateTime?
+  transcribeModel String?
+
+  valence    Float?
+  emotions   String[] @default([])
+  topics     String[] @default([])
+
+  threadId   String?  @db.Uuid
+  journalId  String?  @db.Uuid
+
+  createdAt DateTime  @default(now())
+  deletedAt DateTime?
+
+  user User @relation(fields: [userId], references: [id])
+  file File @relation(fields: [fileId], references: [id])
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([organizationId])
+  @@map("voice_notes")
+}
+
+// ─── Conversations ────────────────────────────────────────────────────────────
+
+model ConversationThread {
+  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String       @db.Uuid
+  organizationId String       @db.Uuid
+
+  status         ThreadStatus @default(ACTIVE)
+  mode           AIMode       @default(SUPPORT)
+  title          String?
+  summary        String?
+
+  turnCount      Int    @default(0)
+  qualityScore   Float?
+  userSentiment  Float?
+
+  safetyTier     SafetyTier @default(NONE)
+  safetyEscalated Boolean   @default(false)
+
+  startedAt  DateTime  @default(now())
+  endedAt    DateTime?
+  lastMsgAt  DateTime?
+
+  metadata Json @default("{}")
+
+  user         User         @relation(fields: [userId], references: [id])
+  organization Organization @relation(fields: [organizationId], references: [id])
+  messages     Message[]
+
+  @@index([userId, startedAt(sort: Desc)])
+  @@index([organizationId])
+  @@map("conversation_threads")
+}
+
+model Message {
+  id       String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  threadId String @db.Uuid
+  userId   String @db.Uuid
+
+  role    MessageRole
+  content String
+
+  // AI metadata (assistant messages only)
+  aiMode           AIMode?
+  aiStrategy       InterventionStrategy?
+  safetyTier       SafetyTier            @default(NONE)
+  detectedEmotions Json?
+  memoriesUsed     Int                   @default(0)
+  explainability   Json?
+  tokensUsed       Int?
+  latencyMs        Int?
+  modelUsed        String?
+  providerId       String?
+
+  parentMessageId String? @db.Uuid
+
+  createdAt DateTime @default(now())
+
+  thread    ConversationThread @relation(fields: [threadId], references: [id])
+  embedding MessageEmbedding?
+
+  @@index([threadId, createdAt])
+  @@index([userId, createdAt(sort: Desc)])
+  @@map("messages")
+}
+
+model MessageEmbedding {
+  id        String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  messageId String @unique @db.Uuid
+  userId    String @db.Uuid
+
+  embedding Unsupported("vector(1536)")?
+  model     String
+  dimension Int    @default(1536)
+
+  createdAt DateTime @default(now())
+
+  message Message @relation(fields: [messageId], references: [id])
+
+  @@index([userId])
+  @@map("message_embeddings")
+}
+
+// ─── Memory System ────────────────────────────────────────────────────────────
+
+model MemoryItem {
+  id             String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String      @db.Uuid
+  organizationId String      @db.Uuid
+
+  type           MemoryType
+  source         MemorySource
+  content        String
+  summary        String?
+
+  confidence     Float @default(0.5)
+  relevance      Float @default(0.5)
+  decayScore     Float @default(1.0)
+  halfLifeDays   Int   @default(90)
+
+  lastValidatedAt DateTime?
+  lastRetrievedAt DateTime?
+  retrievalCount  Int       @default(0)
+
+  domain      String?
+  subdomain   String?
+  tags        String[]  @default([])
+  contexts    String[]  @default([])
+
+  relatedEntityId   String?
+  relatedEntityType String?
+
+  displayEligible  Boolean @default(false)
+  userValidated    Boolean @default(false)
+  userRejected     Boolean @default(false)
+
+  embedding Unsupported("vector(1536)")?
+
+  revisionHistory  Json @default("[]")
+  contradictions   String[] @default([])
+  supportingItems  String[] @default([])
+
+  expiresAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  user    User           @relation(fields: [userId], references: [id])
+  clusters MemoryLink[]  @relation("MemoryItemLinks")
+  linkedBy MemoryLink[]  @relation("LinkedMemoryItems")
+
+  @@index([userId, type])
+  @@index([userId, confidence(sort: Desc)])
+  @@index([userId, displayEligible])
+  @@index([organizationId])
+  @@map("memory_items")
+}
+
+model MemoryCluster {
+  id             String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String @db.Uuid
+  organizationId String @db.Uuid
+
+  name      String
+  theme     String
+  summary   String?
+  centroid  Unsupported("vector(1536)")?
+  itemCount Int @default(0)
+  coherence Float @default(0.5)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  links MemoryLink[]
+
+  @@index([userId])
+  @@map("memory_clusters")
+}
+
+model MemoryLink {
+  id        String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  clusterId String @db.Uuid
+  memoryId  String @db.Uuid
+  linkedId  String? @db.Uuid
+
+  linkType  String
+  strength  Float @default(0.5)
+
+  createdAt DateTime @default(now())
+
+  cluster  MemoryCluster @relation(fields: [clusterId], references: [id])
+  memory   MemoryItem    @relation("MemoryItemLinks", fields: [memoryId], references: [id])
+  linked   MemoryItem?   @relation("LinkedMemoryItems", fields: [linkedId], references: [id])
+
+  @@index([clusterId])
+  @@index([memoryId])
+  @@map("memory_links")
+}
+
+model MemoryRetrievalLog {
+  id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId String @db.Uuid
+
+  query         String
+  queryVector   Unsupported("vector(1536)")?
+  retrievedIds  String[] @default([])
+  relevanceScores Float[] @default([])
+  method        String
+  latencyMs     Int?
+
+  contextThreadId String?
+  triggeredBy     String?
+
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@map("memory_retrieval_logs")
+}
+
+// ─── Patterns ─────────────────────────────────────────────────────────────────
+
+model PsychologicalPattern {
+  id             String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String        @db.Uuid
+  organizationId String        @db.Uuid
+
+  type           PatternType
+  status         PatternStatus @default(HYPOTHESIZED)
+  name           String
+  description    String
+  summary        String?
+
+  confidence     Float @default(0.3)
+  occurrenceCount Int  @default(0)
+  significance   Float @default(0.5)
+
+  evidenceIds     String[]  @default([])
+  triggers        String[]  @default([])
+  contexts        String[]  @default([])
+  timeOfDay       String?
+  dayOfWeek       String?
+  seasonality     String?
+
+  firstDetected   DateTime @default(now())
+  lastDetected    DateTime?
+  lastConfirmed   DateTime?
+
+  userAcknowledged Boolean   @default(false)
+  acknowledgedAt   DateTime?
+
+  metadata Json @default("{}")
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  user       User               @relation(fields: [userId], references: [id])
+  detections PatternDetection[]
+  history    PatternHistory[]
+
+  @@index([userId, type])
+  @@index([userId, status])
+  @@index([organizationId])
+  @@map("psychological_patterns")
+}
+
+model PatternDetection {
+  id        String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  patternId String @db.Uuid
+  userId    String @db.Uuid
+
+  evidenceId   String?
+  evidenceType String?
+  confidence   Float
+  metadata     Json   @default("{}")
+
+  detectedAt DateTime @default(now())
+
+  pattern PsychologicalPattern @relation(fields: [patternId], references: [id])
+
+  @@index([patternId, detectedAt(sort: Desc)])
+  @@map("pattern_detections")
+}
+
+model PatternHistory {
+  id        String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  patternId String @db.Uuid
+  userId    String @db.Uuid
+
+  event         String
+  previousState Json?
+  newState      Json?
+  metadata      Json @default("{}")
+
+  createdAt DateTime @default(now())
+
+  pattern PsychologicalPattern @relation(fields: [patternId], references: [id])
+
+  @@index([patternId])
+  @@map("pattern_history")
+}
+
+// ─── Predictions ──────────────────────────────────────────────────────────────
+
+model Prediction {
+  id             String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String         @db.Uuid
+  organizationId String         @db.Uuid
+
+  type           PredictionType
+  title          String
+  description    String
+  confidence     Float
+  timeHorizon    String
+  targetDate     DateTime?
+
+  predictedValue Json
+  actualValue    Json?
+
+  accurate      Boolean?
+  evaluatedAt   DateTime?
+  evidenceIds   String[] @default([])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user    User               @relation(fields: [userId], references: [id])
+  history PredictionHistory[]
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([organizationId])
+  @@map("predictions")
+}
+
+model PredictionHistory {
+  id           String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  predictionId String @db.Uuid
+  userId       String @db.Uuid
+
+  event    String
+  metadata Json   @default("{}")
+
+  createdAt DateTime @default(now())
+
+  prediction Prediction @relation(fields: [predictionId], references: [id])
+
+  @@index([predictionId])
+  @@map("prediction_history")
+}
+
+// ─── Safety ───────────────────────────────────────────────────────────────────
+
+model RiskAssessment {
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String    @db.Uuid
+  organizationId String    @db.Uuid
+
+  level          RiskLevel
+  safetyTier     SafetyTier
+  signals        String[]  @default([])
+  context        String?
+  sourceType     String?
+  sourceId       String?
+
+  triggeredBy    String?
+  autoGenerated  Boolean   @default(true)
+  reviewed       Boolean   @default(false)
+  reviewedBy     String?   @db.Uuid
+  reviewedAt     DateTime?
+  resolution     String?
+
+  metadata Json @default("{}")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user   User         @relation(fields: [userId], references: [id])
+  events RiskEvent[]
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([userId, level])
+  @@index([organizationId])
+  @@map("risk_assessments")
+}
+
+model RiskEvent {
+  id               String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  riskAssessmentId String @db.Uuid
+  userId           String @db.Uuid
+
+  event    String
+  metadata Json   @default("{}")
+
+  createdAt DateTime @default(now())
+
+  riskAssessment RiskAssessment @relation(fields: [riskAssessmentId], references: [id])
+
+  @@index([riskAssessmentId])
+  @@map("risk_events")
+}
+
+model SafetyFlag {
+  id             String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String     @db.Uuid
+  organizationId String     @db.Uuid
+
+  tier           SafetyTier
+  signals        String[]  @default([])
+  sourceType     String
+  sourceId       String?
+  rawSignalHash  String?
+
+  responseGiven  String?
+  resourcesProvided Boolean @default(false)
+  webhookFired   Boolean   @default(false)
+  webhookAt      DateTime?
+
+  resolved       Boolean   @default(false)
+  resolvedAt     DateTime?
+  resolvedBy     String?   @db.Uuid
+
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([organizationId])
+  @@map("safety_flags")
+}
+
+// ─── Notifications ────────────────────────────────────────────────────────────
+
+model Notification {
+  id             String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String           @db.Uuid
+  organizationId String           @db.Uuid
+
+  type           NotificationType
+  title          String
+  body           String
+  data           Json             @default("{}")
+
+  read           Boolean  @default(false)
+  readAt         DateTime?
+  sent           Boolean  @default(false)
+  sentAt         DateTime?
+  channel        String[]  @default([])
+
+  apnsId         String?
+  apnsStatus     String?
+
+  scheduledFor   DateTime?
+
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId, read])
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([organizationId])
+  @@map("notifications")
+}
+
+model NotificationPreference {
+  id             String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String @db.Uuid
+  organizationId String @db.Uuid
+
+  checkInReminderEnabled  Boolean  @default(true)
+  checkInReminderTime     String   @default("09:00")
+  checkInReminderDays     String[] @default(["MON","TUE","WED","THU","FRI","SAT","SUN"])
+
+  insightNotifications    Boolean @default(true)
+  goalNotifications       Boolean @default(true)
+  patternNotifications    Boolean @default(true)
+  weeklyReportEnabled     Boolean @default(true)
+
+  pushEnabled    Boolean @default(true)
+  emailEnabled   Boolean @default(false)
+  inAppEnabled   Boolean @default(true)
+
+  deviceTokens   String[] @default([])
+  apnsDeviceToken String?
+
+  quietHoursStart String @default("22:00")
+  quietHoursEnd   String @default("08:00")
+
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([userId])
+  @@map("notification_preferences")
+}
+
+// ─── Settings ─────────────────────────────────────────────────────────────────
+
+model UserSetting {
+  id             String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String @db.Uuid
+  organizationId String @db.Uuid
+
+  key      String
+  value    Json
+  category String @default("general")
+
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([userId, key])
+  @@index([userId])
+  @@map("user_settings")
+}
+
+model FeatureFlag {
+  id             String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId String @db.Uuid
+
+  key         String
+  enabled     Boolean @default(false)
+  rolloutPct  Float   @default(0.0)
+  conditions  Json    @default("{}")
+  description String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+
+  @@unique([organizationId, key])
+  @@index([organizationId])
+  @@map("feature_flags")
+}
+
+// ─── AI Infrastructure ────────────────────────────────────────────────────────
+
+model AIProvider {
+  id   String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  type AIProviderType
+  role AIModelRole
+
+  name           String
+  modelId        String
+  apiVersion     String?
+  maxTokens      Int     @default(4096)
+  contextWindow  Int     @default(128000)
+  costPer1kInput  Float  @default(0.0)
+  costPer1kOutput Float  @default(0.0)
+  latencyP50Ms   Int?
+  latencyP99Ms   Int?
+
+  isActive       Boolean @default(true)
+  isPrimary      Boolean @default(false)
+  isFailover     Boolean @default(false)
+  priority       Int     @default(0)
+
+  capabilities String[] @default([])
+  metadata     Json     @default("{}")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  usageLogs AIUsageLog[]
+
+  @@index([type, role])
+  @@index([isActive, isPrimary])
+  @@map("ai_providers")
+}
+
+model AIUsageLog {
+  id             String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String?        @db.Uuid
+  organizationId String?        @db.Uuid
+  providerId     String         @db.Uuid
+
+  operation      String
+  model          String
+  inputTokens    Int     @default(0)
+  outputTokens   Int     @default(0)
+  totalTokens    Int     @default(0)
+  costUsd        Float   @default(0.0)
+  latencyMs      Int?
+
+  success        Boolean @default(true)
+  errorCode      String?
+  errorMessage   String?
+
+  contextType    String?
+  contextId      String?
+
+  createdAt DateTime @default(now())
+
+  user     User?       @relation(fields: [userId], references: [id])
+  provider AIProvider  @relation(fields: [providerId], references: [id])
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([organizationId, createdAt(sort: Desc)])
+  @@index([providerId, createdAt(sort: Desc)])
+  @@map("ai_usage_logs")
+}
+
+model PromptTemplate {
+  id   String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId String @db.Uuid
+
+  name        String
+  description String?
+  category    String
+  version     Int     @default(1)
+
+  systemPrompt  String?
+  userTemplate  String?
+  variables     Json    @default("[]")
+
+  isActive   Boolean @default(true)
+  isSystem   Boolean @default(false)
+
+  avgTokens  Int?
+  avgLatency Int?
+  successRate Float @default(1.0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  executions PromptExecution[]
+
+  @@index([organizationId, category])
+  @@map("prompt_templates")
+}
+
+model PromptExecution {
+  id         String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  templateId String @db.Uuid
+  userId     String? @db.Uuid
+
+  variables      Json
+  systemPrompt   String?
+  renderedPrompt String
+  response       String?
+
+  model          String
+  inputTokens    Int     @default(0)
+  outputTokens   Int     @default(0)
+  latencyMs      Int?
+
+  success        Boolean @default(true)
+  errorCode      String?
+
+  createdAt DateTime @default(now())
+
+  template PromptTemplate @relation(fields: [templateId], references: [id])
+
+  @@index([templateId, createdAt(sort: Desc)])
+  @@map("prompt_executions")
+}
+
+// ─── Audit & Security ─────────────────────────────────────────────────────────
+
+model AuditLog {
+  id             String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String? @db.Uuid
+  organizationId String? @db.Uuid
+
+  action       String
+  resource     String
+  resourceId   String?
+  metadata     Json    @default("{}")
+
+  ipAddress    String?
+  userAgent    String?
+  requestId    String?
+
+  success      Boolean @default(true)
+  errorCode    String?
+
+  createdAt DateTime @default(now())
+
+  user         User?         @relation(fields: [userId], references: [id])
+  organization Organization? @relation(fields: [organizationId], references: [id])
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([organizationId, createdAt(sort: Desc)])
+  @@index([action, createdAt(sort: Desc)])
+  @@map("audit_logs")
+}
+
+model APIKey {
+  id             String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId String @db.Uuid
+  createdBy      String @db.Uuid
+
+  name        String
+  keyHash     String @unique
+  keyPrefix   String
+  scopes      String[] @default([])
+
+  isActive    Boolean   @default(true)
+  lastUsedAt  DateTime?
+  expiresAt   DateTime?
+  usageCount  Int       @default(0)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+
+  @@index([organizationId])
+  @@map("api_keys")
+}
+
+model Webhook {
+  id             String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId String @db.Uuid
+
+  url          String
+  secret       String
+  events       String[] @default([])
+  isActive     Boolean  @default(true)
+  description  String?
+
+  successCount Int @default(0)
+  failureCount Int @default(0)
+  lastFiredAt  DateTime?
+  lastStatusCode Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  organization Organization @relation(fields: [organizationId], references: [id])
+
+  @@index([organizationId])
+  @@map("webhooks")
+}
+
+// ─── Files ────────────────────────────────────────────────────────────────────
+
+model File {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String   @db.Uuid
+  organizationId String   @db.Uuid
+
+  type           FileType
+  originalName   String
+  storageKey     String   @unique
+  bucket         String
+  mimeType       String
+  sizeBytes      Int
+
+  isEncrypted    Boolean  @default(true)
+  encryptionKey  String?
+
+  url            String?
+  urlExpiresAt   DateTime?
+
+  metadata       Json     @default("{}")
+
+  createdAt DateTime  @default(now())
+  deletedAt DateTime?
+
+  user       User        @relation(fields: [userId], references: [id])
+  voiceNotes VoiceNote[]
+
+  @@index([userId])
+  @@index([organizationId])
+  @@map("files")
+}
+
+model MediaAsset {
+  id             String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId String @db.Uuid
+
+  name       String
+  storageKey String @unique
+  bucket     String
+  mimeType   String
+  sizeBytes  Int
+  category   String
+  tags       String[] @default([])
+  isPublic   Boolean  @default(false)
+  cdnUrl     String?
+
+  createdAt DateTime @default(now())
+
+  @@index([organizationId])
+  @@map("media_assets")
+}
+
+// ─── Billing ──────────────────────────────────────────────────────────────────
+
+model StripeCustomer {
+  id             String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId String @db.Uuid
+  userId         String? @db.Uuid
+
+  stripeCustomerId String @unique
+  email            String?
+  name             String?
+  metadata         Json   @default("{}")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  organization  Organization   @relation(fields: [organizationId], references: [id])
+  subscriptions Subscription[]
+  invoices      Invoice[]
+
+  @@index([organizationId])
+  @@map("stripe_customers")
+}
+
+model Subscription {
+  id               String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organizationId   String             @db.Uuid
+  stripeCustomerId String             @db.Uuid
+
+  stripeSubscriptionId String           @unique
+  stripePriceId        String
+  tier                 SubscriptionTier @default(FREE)
+  status               SubscriptionStatus
+
+  currentPeriodStart DateTime
+  currentPeriodEnd   DateTime
+  cancelAt           DateTime?
+  canceledAt         DateTime?
+  trialStart         DateTime?
+  trialEnd           DateTime?
+
+  quantity   Int   @default(1)
+  metadata   Json  @default("{}")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  organization    Organization   @relation(fields: [organizationId], references: [id])
+  stripeCustomer  StripeCustomer @relation(fields: [stripeCustomerId], references: [id])
+  invoices        Invoice[]
+
+  @@index([organizationId])
+  @@map("subscriptions")
+}
+
+model Invoice {
+  id               String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  stripeCustomerId String @db.Uuid
+  subscriptionId   String? @db.Uuid
+
+  stripeInvoiceId   String @unique
+  amountDue         Int
+  amountPaid        Int     @default(0)
+  currency          String  @default("usd")
+  status            String
+  invoiceUrl        String?
+  invoicePdf        String?
+  periodStart       DateTime?
+  periodEnd         DateTime?
+
+  paidAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  stripeCustomer StripeCustomer @relation(fields: [stripeCustomerId], references: [id])
+  subscription   Subscription?  @relation(fields: [subscriptionId], references: [id])
+
+  @@index([stripeCustomerId])
+  @@map("invoices")
+}
+
+// ─── Jobs & System ────────────────────────────────────────────────────────────
+
+model BackgroundJob {
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId         String?   @db.Uuid
+  organizationId String?   @db.Uuid
+
+  queue      String
+  jobName    String
+  jobId      String?
+  status     JobStatus @default(PENDING)
+  payload    Json      @default("{}")
+  result     Json?
+  error      String?
+
+  attempts   Int @default(0)
+  maxAttempts Int @default(3)
+
+  scheduledAt DateTime?
+  startedAt   DateTime?
+  completedAt DateTime?
+  failedAt    DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User? @relation(fields: [userId], references: [id])
+
+  @@index([userId, status])
+  @@index([queue, status])
+  @@index([createdAt(sort: Desc)])
+  @@map("background_jobs")
+}
+
+model SystemEvent {
+  id   String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name String
+  data Json   @default("{}")
+  source String?
+  version String @default("1.0")
+
+  createdAt DateTime @default(now())
+
+  @@index([name, createdAt(sort: Desc)])
+  @@map("system_events")
+}
