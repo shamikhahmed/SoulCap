@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<meta name="theme-color" content="#0D0D14"/>
+<meta name="theme-color" content="#000000"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="SoulCap"/>
@@ -12,677 +12,569 @@
 <link rel="apple-touch-icon" href="icons/icon-192.png"/>
 <title>SoulCap</title>
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+button,textarea,input{font-family:inherit;cursor:pointer;}
 
 :root{
-  --night:#0D0D14;
-  --deep:#13131F;
-  --lifted:#1C1C2E;
-  --rim:#252538;
-  --muted:#4A4A6A;
-  --soft:#8585A8;
-  --bright:#E8E8F4;
-  --white:#FFFFFF;
-  --iris:#7B6FE8;
-  --lavender:#A89CF7;
-  --blush:#E8A5C4;
-  --sage:#6EC4A7;
-  --amber:#F2B46E;
-  --rose:#F07070;
-  --safe-top:env(safe-area-inset-top,0px);
-  --safe-bottom:env(safe-area-inset-bottom,0px);
-  --tab-h:56px;
+  --bg:#000000;
+  --bg2:#1C1C1E;
+  --bg3:#2C2C2E;
+  --bg4:#3A3A3C;
+  --l1:#FFFFFF;
+  --l2:rgba(235,235,245,0.6);
+  --l3:rgba(235,235,245,0.3);
+  --l4:rgba(235,235,245,0.16);
+  --sep:rgba(84,84,88,0.65);
+  --sep2:rgba(84,84,88,0.36);
+  --acc:#7D7AFF;
+  --acc-bg:rgba(125,122,255,0.14);
+  --purple:#BF5AF2;
+  --green:#30D158;
+  --orange:#FF9F0A;
+  --red:#FF453A;
+  --teal:#5AC8FA;
+  --blue:#0A84FF;
+  --sat:env(safe-area-inset-top,0px);
+  --sab:env(safe-area-inset-bottom,0px);
+  --tab-h:49px;
   --spring:cubic-bezier(0.32,0.72,0,1);
+  --ease:cubic-bezier(0.25,0.46,0.45,0.94);
 }
 
 html,body{
-  height:100%;background:var(--night);color:var(--bright);
-  font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sans-serif;
-  -webkit-font-smoothing:antialiased;overflow:hidden;user-select:none;
+  height:100%;background:var(--bg);color:var(--l1);
+  font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','SF Pro Display','Helvetica Neue',Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  overflow:hidden;user-select:none;-webkit-user-select:none;
 }
 
-#app{
-  height:100%;display:flex;flex-direction:column;
-  max-width:430px;margin:0 auto;position:relative;overflow:hidden;
-}
+#app{height:100%;display:flex;flex-direction:column;max-width:430px;margin:0 auto;position:relative;overflow:hidden;}
 
-/* ── SCREENS ── */
+/* ── SCREEN CONTAINER ── */
+#screens{position:relative;flex:1;overflow:hidden;}
+
 .screen{
-  display:none;flex-direction:column;flex:1;overflow:hidden;
-  padding-top:var(--safe-top);
+  position:absolute;inset:0;
+  display:flex;flex-direction:column;
+  opacity:0;pointer-events:none;
+  transition:opacity 0.24s var(--ease);
 }
-.screen.active{display:flex;}
+.screen.active{opacity:1;pointer-events:auto;}
 
-.scroll{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;}
-.scroll::-webkit-scrollbar{display:none;}
+#screen-today,#screen-you{overflow-y:auto;-webkit-overflow-scrolling:touch;}
+#screen-today::-webkit-scrollbar,#screen-you::-webkit-scrollbar{display:none;}
+#screen-soul{overflow:hidden;}
 
 /* ── ONBOARDING ── */
 #onboarding{
-  position:fixed;inset:0;background:var(--night);z-index:999;
+  position:fixed;inset:0;background:var(--bg);z-index:999;
   display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:40px 32px calc(40px + var(--safe-bottom));
-  padding-top:calc(60px + var(--safe-top));
+  padding:calc(56px + var(--sat)) 28px calc(40px + var(--sab));
 }
 #onboarding.hidden{display:none;}
 
-.ob-step{display:none;flex-direction:column;align-items:center;width:100%;animation:fadeIn 0.5s var(--spring);}
+@keyframes obIn{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:none;}}
+.ob-step{display:none;flex-direction:column;align-items:center;width:100%;animation:obIn 0.44s var(--spring);}
 .ob-step.active{display:flex;}
 
-@keyframes fadeIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
-
-.ob-orb{
-  width:88px;height:88px;border-radius:50%;
-  background:radial-gradient(circle at 38% 38%,var(--lavender),var(--iris) 60%,#3d2d8a);
-  box-shadow:0 0 48px rgba(123,111,232,0.35);
-  animation:breathe 4s ease-in-out infinite;
-  flex-shrink:0;
-}
+/* Orb */
 @keyframes breathe{
-  0%,100%{transform:scale(1);box-shadow:0 0 48px rgba(123,111,232,0.35);}
-  50%{transform:scale(1.06);box-shadow:0 0 72px rgba(123,111,232,0.5);}
+  0%,100%{transform:scale(1);box-shadow:0 0 36px rgba(125,122,255,0.52),0 0 72px rgba(125,122,255,0.22),0 0 140px rgba(125,122,255,0.1);}
+  50%{transform:scale(1.065);box-shadow:0 0 52px rgba(125,122,255,0.68),0 0 100px rgba(125,122,255,0.32),0 0 180px rgba(125,122,255,0.14);}
 }
-
-.ob-heading{
-  font-size:28px;font-weight:700;letter-spacing:-0.5px;
-  text-align:center;line-height:1.25;margin-top:32px;color:var(--white);
+.ob-orb,.orb,.soul-orb-sm,.typing-orb-ball,.panic-orb{
+  background:
+    radial-gradient(circle at 32% 27%, rgba(255,255,255,0.46) 0%, transparent 36%),
+    radial-gradient(circle at 68% 73%, rgba(191,90,242,0.62) 0%, transparent 40%),
+    radial-gradient(ellipse at 50% 50%, #9B98FF 0%, #5E5CE6 38%, #3730A3 72%, #1E1860 100%);
 }
-.ob-sub{
-  font-size:16px;color:var(--soft);text-align:center;margin-top:12px;
-  line-height:1.6;max-width:300px;
+.ob-orb{
+  width:100px;height:100px;border-radius:50%;flex-shrink:0;
+  box-shadow:0 0 36px rgba(125,122,255,0.52),0 0 72px rgba(125,122,255,0.22);
+  animation:breathe 5s ease-in-out infinite;
 }
+.ob-heading{font-size:34px;font-weight:700;letter-spacing:-0.5px;text-align:center;line-height:1.15;margin-top:36px;color:var(--l1);}
+.ob-sub{font-size:17px;color:var(--l2);text-align:center;margin-top:10px;line-height:1.55;max-width:300px;font-weight:400;}
 .ob-spacer{flex:1;}
-
-.ob-pills{
-  display:flex;flex-direction:column;gap:10px;width:100%;margin-top:32px;
-}
+.ob-pills{display:flex;flex-direction:column;gap:8px;width:100%;margin-top:28px;}
 .ob-pill{
-  background:var(--lifted);border:1px solid var(--rim);border-radius:16px;
-  padding:16px 20px;font-size:15px;color:var(--bright);cursor:pointer;
-  transition:background 0.15s,border-color 0.15s,transform 0.1s;
-  text-align:left;
+  background:var(--bg2);border:none;border-radius:14px;
+  padding:17px 18px;font-size:17px;color:var(--l1);text-align:left;font-weight:400;
+  transition:background 0.12s,transform 0.1s var(--spring);
 }
-.ob-pill:active{background:var(--rim);transform:scale(0.98);}
-.ob-pill.sel{background:rgba(123,111,232,0.15);border-color:var(--iris);}
-
+.ob-pill:active{background:var(--bg3);transform:scale(0.98);}
+.ob-pill.sel{background:var(--acc-bg);color:var(--acc);}
 .ob-name-input{
-  width:100%;background:transparent;border:none;border-bottom:1px solid var(--rim);
-  color:var(--white);font-size:28px;font-weight:600;text-align:center;
-  outline:none;padding:12px 0;margin-top:32px;letter-spacing:-0.3px;
-  font-family:inherit;
+  width:100%;background:transparent;border:none;border-bottom:1.5px solid var(--sep);
+  color:var(--l1);font-size:36px;font-weight:600;text-align:center;outline:none;
+  padding:14px 0;margin-top:36px;letter-spacing:-0.6px;
+  transition:border-color 0.2s;
 }
-.ob-name-input::placeholder{color:var(--muted);}
-
+.ob-name-input:focus{border-color:var(--acc);}
+.ob-name-input::placeholder{color:var(--l4);}
 .ob-btn{
-  width:100%;padding:17px;background:var(--iris);border:none;border-radius:16px;
-  color:var(--white);font-size:17px;font-weight:600;cursor:pointer;margin-top:20px;
-  transition:opacity 0.15s,transform 0.1s;letter-spacing:-0.2px;font-family:inherit;
+  width:100%;padding:17px;background:var(--acc);border:none;border-radius:14px;
+  color:var(--l1);font-size:17px;font-weight:600;margin-top:20px;letter-spacing:-0.2px;
+  transition:opacity 0.15s,transform 0.1s;
 }
-.ob-btn:active{opacity:0.88;transform:scale(0.98);}
-.ob-btn.ghost{background:transparent;color:var(--soft);margin-top:8px;}
-
-.ob-notice{
-  background:var(--lifted);border-radius:16px;padding:20px;margin-top:20px;
-  width:100%;
-}
-.ob-notice p{font-size:15px;color:var(--bright);line-height:1.6;font-weight:500;}
-.ob-notice small{display:block;font-size:13px;color:var(--soft);margin-top:8px;line-height:1.5;}
+.ob-btn:active{opacity:0.84;transform:scale(0.98);}
+.ob-btn.ghost{background:transparent;color:var(--l3);margin-top:8px;}
+.ob-notice{background:var(--bg2);border-radius:16px;padding:20px;margin-top:20px;width:100%;}
+.ob-notice p{font-size:15px;color:var(--l1);line-height:1.65;font-weight:500;}
+.ob-notice small{display:block;font-size:13px;color:var(--l2);margin-top:8px;line-height:1.55;}
 
 /* ── TAB BAR ── */
 .tab-bar{
-  height:calc(var(--tab-h) + var(--safe-bottom));
-  padding-bottom:var(--safe-bottom);
-  background:rgba(13,13,20,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  display:flex;border-top:1px solid rgba(255,255,255,0.05);flex-shrink:0;
+  height:calc(var(--tab-h) + var(--sab));padding-bottom:var(--sab);
+  background:rgba(0,0,0,0.86);
+  backdrop-filter:blur(24px) saturate(1.8);-webkit-backdrop-filter:blur(24px) saturate(1.8);
+  border-top:0.5px solid rgba(255,255,255,0.08);
+  display:flex;flex-shrink:0;position:relative;z-index:10;
 }
 .tab{
   flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  cursor:pointer;gap:5px;border:none;background:none;color:var(--muted);
-  font-size:10px;font-weight:500;letter-spacing:0.2px;
-  transition:color 0.2s;padding:0;
+  gap:4px;border:none;background:none;color:var(--l3);
+  font-size:10px;font-weight:500;letter-spacing:0.1px;padding:0;
+  transition:color 0.18s;
 }
-.tab.active{color:var(--iris);}
-.tab svg{width:24px;height:24px;transition:transform 0.2s var(--spring);}
+.tab.active{color:var(--acc);}
+.tab svg{width:22px;height:22px;transition:transform 0.22s var(--spring);}
 .tab.active svg{transform:scale(1.1);}
-.tab-label{font-size:10px;}
+.tab-label{font-size:10px;margin-top:1px;}
 
 /* ── TODAY SCREEN ── */
-.today-top{
-  padding:28px 24px 0;
-}
-.today-greeting{font-size:13px;color:var(--soft);font-weight:500;letter-spacing:0.2px;margin-bottom:4px;}
-.today-name{font-size:30px;font-weight:700;letter-spacing:-0.6px;color:var(--white);}
-.today-context{
-  font-size:15px;color:var(--soft);margin-top:8px;line-height:1.5;
-  font-weight:400;
-}
+.today-top{padding:calc(var(--sat) + 24px) 20px 0;}
+.today-greeting{font-size:15px;color:var(--l2);font-weight:400;margin-bottom:3px;}
+.today-name{font-size:34px;font-weight:700;letter-spacing:-0.5px;color:var(--l1);line-height:1.1;}
+.today-context{font-size:15px;color:var(--l2);margin-top:8px;line-height:1.55;font-weight:400;}
 
-.orb-center{
-  display:flex;flex-direction:column;align-items:center;padding:36px 24px 28px;
-}
+/* ORB */
+.orb-center{display:flex;flex-direction:column;align-items:center;padding:44px 24px 32px;}
 .orb{
-  width:100px;height:100px;border-radius:50%;cursor:pointer;
-  background:radial-gradient(circle at 38% 38%,var(--lavender),var(--iris) 55%,#3d2d8a);
-  box-shadow:0 0 0 0 rgba(123,111,232,0.4);
-  animation:breathe 4s ease-in-out infinite;
-  transition:transform 0.2s var(--spring);
-  flex-shrink:0;
+  width:120px;height:120px;border-radius:50%;
+  box-shadow:
+    0 0 0 1px rgba(125,122,255,0.14),
+    0 0 36px rgba(125,122,255,0.52),
+    0 0 72px rgba(125,122,255,0.26),
+    0 0 140px rgba(125,122,255,0.1);
+  animation:breathe 5s ease-in-out infinite;
+  cursor:pointer;
+  transition:transform 0.18s var(--spring);
 }
-.orb:active{transform:scale(0.94);}
-.orb-question{
-  font-size:17px;color:var(--bright);text-align:center;margin-top:20px;
-  line-height:1.55;font-weight:400;max-width:280px;
-}
-.orb-hint{font-size:13px;color:var(--muted);margin-top:8px;text-align:center;}
+.orb:active{transform:scale(0.91)!important;animation-play-state:paused;}
+.orb-question{font-size:17px;color:var(--l1);text-align:center;margin-top:22px;line-height:1.55;font-weight:400;max-width:280px;font-style:italic;}
+.orb-hint{font-size:13px;color:var(--l3);margin-top:6px;text-align:center;}
 
-.today-stats{
-  display:flex;gap:0;margin:0 24px;
-  border:1px solid var(--rim);border-radius:16px;overflow:hidden;
-}
-.stat{
-  flex:1;padding:14px 12px;text-align:center;border-right:1px solid var(--rim);
-}
-.stat:last-child{border-right:none;}
-.stat-val{font-size:18px;font-weight:700;color:var(--bright);font-variant-numeric:tabular-nums;}
-.stat-label{font-size:11px;color:var(--muted);margin-top:3px;font-weight:500;}
+/* STATS */
+.today-stats{display:flex;margin:0 20px;background:var(--bg2);border-radius:16px;overflow:hidden;}
+.stat{flex:1;padding:15px 10px;text-align:center;}
+.stat+.stat{border-left:0.5px solid var(--sep2);}
+.stat-val{font-size:22px;font-weight:700;color:var(--l1);font-variant-numeric:tabular-nums;letter-spacing:-0.3px;}
+.stat-label{font-size:11px;color:var(--l3);margin-top:3px;font-weight:400;}
 
-.today-section{padding:28px 24px 0;}
-.today-section-title{font-size:13px;font-weight:600;color:var(--soft);letter-spacing:0.3px;margin-bottom:14px;}
+/* SECTIONS */
+.today-section{padding:28px 20px 0;}
+.today-section-title{font-size:22px;font-weight:700;letter-spacing:-0.35px;color:var(--l1);margin-bottom:14px;}
 
+/* CARDS */
 .today-card{
-  background:var(--deep);border:1px solid var(--rim);border-radius:20px;
-  padding:18px 20px;margin-bottom:10px;cursor:pointer;
-  transition:background 0.15s,transform 0.1s;
+  background:var(--bg2);border-radius:16px;padding:18px;margin-bottom:8px;
+  cursor:pointer;border:none;width:100%;text-align:left;
+  transition:background 0.12s,transform 0.12s var(--spring);
+  display:block;
 }
-.today-card:active{background:var(--lifted);transform:scale(0.99);}
-.tc-label{font-size:11px;font-weight:600;color:var(--iris);letter-spacing:0.4px;margin-bottom:6px;}
-.tc-title{font-size:16px;font-weight:600;color:var(--bright);line-height:1.4;}
-.tc-sub{font-size:13px;color:var(--soft);margin-top:4px;line-height:1.5;}
-.tc-arrow{float:right;color:var(--muted);font-size:18px;margin-top:-2px;}
+.today-card:active{background:var(--bg3);transform:scale(0.985);}
+.tc-row{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+.tc-label{font-size:12px;font-weight:600;color:var(--acc);letter-spacing:0.2px;margin-bottom:5px;}
+.tc-title{font-size:16px;font-weight:600;color:var(--l1);line-height:1.4;}
+.tc-sub{font-size:14px;color:var(--l2);margin-top:4px;line-height:1.5;font-weight:400;}
+.tc-arrow{color:var(--l3);font-size:22px;font-weight:300;line-height:1;margin-top:1px;flex-shrink:0;}
 
-.habit-row{
-  display:flex;gap:12px;padding:4px 0;
+/* HABITS */
+.habit-row{display:flex;gap:6px;justify-content:space-between;}
+.habit-ring-wrap{
+  display:flex;flex-direction:column;align-items:center;gap:7px;
+  transition:transform 0.15s var(--spring);
 }
-.habit-ring-wrap{display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer;}
-.habit-ring{
-  width:52px;height:52px;border-radius:50%;
-  display:flex;align-items:center;justify-content:center;
-  position:relative;
-}
-.habit-ring svg{width:52px;height:52px;transform:rotate(-90deg);position:absolute;}
+.habit-ring-wrap:active{transform:scale(0.9);}
+.habit-ring{width:56px;height:56px;display:flex;align-items:center;justify-content:center;position:relative;}
+.habit-ring svg{width:56px;height:56px;transform:rotate(-90deg);position:absolute;inset:0;}
 .habit-ring-icon{font-size:20px;z-index:1;}
-.habit-ring-label{font-size:10px;color:var(--soft);font-weight:500;text-align:center;max-width:54px;}
+.habit-ring-label{font-size:10px;color:var(--l3);font-weight:500;text-align:center;max-width:58px;line-height:1.2;}
 
-.today-insight{
-  margin:0 24px 24px;background:var(--deep);border:1px solid var(--rim);
-  border-radius:20px;padding:20px;
-}
-.ti-label{font-size:11px;font-weight:600;color:var(--lavender);letter-spacing:0.4px;margin-bottom:10px;}
-.ti-text{font-size:15px;color:var(--bright);line-height:1.6;font-weight:400;}
-.ti-source{font-size:12px;color:var(--muted);margin-top:10px;}
+/* INSIGHT */
+.today-insight{margin:0 20px;background:var(--bg2);border-radius:16px;padding:18px;}
+.ti-label{font-size:12px;font-weight:600;color:var(--purple);letter-spacing:0.2px;margin-bottom:10px;}
+.ti-text{font-size:15px;color:var(--l1);line-height:1.65;font-weight:400;}
+.ti-source{font-size:12px;color:var(--l3);margin-top:10px;}
 
+/* GROUND BUTTON */
 .ground-btn{
-  margin:8px 24px 32px;background:transparent;border:1px solid var(--rim);
-  border-radius:14px;padding:14px 18px;display:flex;align-items:center;gap:12px;
-  cursor:pointer;transition:border-color 0.15s,background 0.15s;width:calc(100% - 48px);
+  margin:12px 20px 40px;background:var(--bg2);border:none;border-radius:16px;
+  padding:16px 18px;display:flex;align-items:center;gap:14px;
+  width:calc(100% - 40px);
+  transition:background 0.12s,transform 0.1s;
 }
-.ground-btn:active{background:var(--lifted);}
-.ground-btn-icon{font-size:18px;flex-shrink:0;}
-.ground-btn-text .gbt{font-size:14px;font-weight:500;color:var(--soft);text-align:left;}
-.ground-btn-text .gbs{font-size:12px;color:var(--muted);margin-top:1px;text-align:left;}
+.ground-btn:active{background:var(--bg3);transform:scale(0.985);}
+.ground-btn-icon{font-size:24px;flex-shrink:0;}
+.gbt{font-size:16px;font-weight:500;color:var(--l1);text-align:left;}
+.gbs{font-size:13px;color:var(--l2);margin-top:2px;text-align:left;font-weight:400;}
 
-/* ── CHECK-IN FLOW (modal, one question at a time) ── */
+/* ── CHECK-IN ── */
 .ci-overlay{
-  position:fixed;inset:0;background:var(--night);z-index:500;
-  display:none;flex-direction:column;
-  padding-top:var(--safe-top);padding-bottom:var(--safe-bottom);
+  position:fixed;inset:0;background:var(--bg);z-index:500;
+  display:flex;flex-direction:column;
+  transform:translateY(100%);
+  transition:transform 0.44s var(--spring);
+  padding-top:var(--sat);padding-bottom:var(--sab);
 }
-.ci-overlay.open{display:flex;}
-.ci-nav{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:16px 20px;flex-shrink:0;
-}
+.ci-overlay.open{transform:translateY(0);}
+.ci-nav{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;flex-shrink:0;}
 .ci-close{
-  background:var(--lifted);border:none;border-radius:50%;
-  width:34px;height:34px;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;color:var(--soft);font-size:18px;
+  background:var(--bg2);border:none;border-radius:50%;
+  width:32px;height:32px;display:flex;align-items:center;justify-content:center;
+  color:var(--l2);font-size:15px;
+  transition:background 0.12s;
 }
-.ci-progress{
-  display:flex;gap:4px;align-items:center;
-}
-.ci-dot{
-  width:6px;height:6px;border-radius:50%;background:var(--rim);
-  transition:background 0.25s,width 0.25s;
-}
-.ci-dot.done{background:var(--iris);}
-.ci-dot.active{width:18px;border-radius:3px;background:var(--iris);}
+.ci-close:active{background:var(--bg3);}
+.ci-progress{display:flex;gap:5px;align-items:center;}
+.ci-dot{width:6px;height:6px;border-radius:50%;background:var(--bg4);transition:all 0.24s var(--spring);}
+.ci-dot.done{background:var(--acc);}
+.ci-dot.active{width:20px;border-radius:3px;background:var(--acc);}
 
-.ci-body{
-  flex:1;display:flex;flex-direction:column;justify-content:center;
-  padding:32px 28px;
+.ci-body{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative;}
+.ci-step{
+  position:absolute;inset:0;padding:20px 24px 0;
+  display:flex;flex-direction:column;
+  opacity:0;pointer-events:none;
+  transform:translateX(30px);
+  transition:opacity 0.3s var(--spring),transform 0.3s var(--spring);
 }
-.ci-step{display:none;animation:fadeIn 0.35s var(--spring);}
-.ci-step.active{display:block;}
-.ci-q{
-  font-size:26px;font-weight:700;letter-spacing:-0.5px;color:var(--white);
-  line-height:1.25;margin-bottom:32px;
-}
-.ci-emotions{
-  display:flex;flex-wrap:wrap;gap:10px;
-}
+.ci-step.active{opacity:1;pointer-events:auto;transform:none;}
+.ci-q{font-size:28px;font-weight:700;letter-spacing:-0.5px;color:var(--l1);line-height:1.2;margin-bottom:32px;}
+.ci-emotions{display:flex;flex-wrap:wrap;gap:10px;}
 .ci-em{
-  background:var(--lifted);border:1.5px solid var(--rim);border-radius:24px;
-  padding:10px 16px;font-size:14px;font-weight:500;color:var(--bright);
-  cursor:pointer;transition:all 0.12s;
-  display:flex;align-items:center;gap:7px;
+  background:var(--bg2);border:none;border-radius:22px;
+  padding:11px 18px;font-size:15px;font-weight:500;color:var(--l1);
+  display:flex;align-items:center;gap:8px;
+  transition:background 0.12s,transform 0.12s var(--spring),color 0.12s;
 }
-.ci-em:active{transform:scale(0.96);}
-.ci-em.sel{background:rgba(123,111,232,0.15);border-color:var(--iris);color:var(--lavender);}
-.ci-em-icon{font-size:16px;}
-
-.ci-scale{display:flex;flex-direction:column;gap:0;}
+.ci-em:active{transform:scale(0.94);}
+.ci-em.sel{background:var(--acc-bg);color:var(--acc);}
+.ci-em-icon{font-size:17px;}
+.ci-scale{display:flex;flex-direction:column;}
 .ci-scale-btn{
-  padding:16px 0;border-bottom:1px solid var(--rim);cursor:pointer;
-  display:flex;align-items:center;justify-content:space-between;
-  transition:background 0.1s;
+  padding:17px 0;border:none;border-bottom:0.5px solid var(--sep2);
+  background:none;display:flex;align-items:center;justify-content:space-between;
+  width:100%;text-align:left;
+  transition:opacity 0.1s;
 }
-.ci-scale-btn:first-child{border-top:1px solid var(--rim);}
-.ci-scale-btn:active{background:rgba(255,255,255,0.03);}
-.ci-scale-btn.sel .csb-label{color:var(--lavender);}
-.ci-scale-btn.sel .csb-check{opacity:1;}
-.csb-label{font-size:16px;font-weight:500;color:var(--bright);}
-.csb-check{opacity:0;color:var(--iris);font-size:18px;transition:opacity 0.15s;}
-
+.ci-scale-btn:first-child{border-top:0.5px solid var(--sep2);}
+.ci-scale-btn:active{opacity:0.55;}
+.ci-scale-btn.sel .csb-label{color:var(--acc);}
+.ci-scale-btn.sel .csb-check{opacity:1;color:var(--acc);}
+.csb-label{font-size:17px;font-weight:400;color:var(--l1);}
+.csb-check{opacity:0;font-size:17px;transition:opacity 0.15s;}
 .ci-free{
-  width:100%;background:transparent;border:none;border-bottom:1px solid var(--rim);
-  color:var(--bright);font-size:18px;font-weight:400;outline:none;
-  padding:12px 0;font-family:inherit;line-height:1.5;resize:none;
-  min-height:120px;
+  width:100%;background:transparent;border:none;color:var(--l1);
+  font-size:19px;font-weight:400;outline:none;resize:none;min-height:140px;line-height:1.55;
 }
-.ci-free::placeholder{color:var(--muted);}
-
-.ci-footer{padding:20px 28px;flex-shrink:0;}
+.ci-free::placeholder{color:var(--l4);}
+.ci-footer{padding:16px 24px;flex-shrink:0;}
 .ci-next{
-  width:100%;padding:17px;background:var(--iris);border:none;border-radius:16px;
-  color:var(--white);font-size:17px;font-weight:600;cursor:pointer;
-  transition:opacity 0.15s,transform 0.1s;font-family:inherit;letter-spacing:-0.2px;
+  width:100%;padding:17px;background:var(--acc);border:none;border-radius:14px;
+  color:var(--l1);font-size:17px;font-weight:600;letter-spacing:-0.2px;
+  transition:opacity 0.15s,transform 0.1s;
 }
-.ci-next:active{opacity:0.88;transform:scale(0.98);}
+.ci-next:active{opacity:0.84;transform:scale(0.98);}
 
-/* ── SOUL (CHAT) SCREEN ── */
+/* ── SOUL CHAT ── */
 .soul-header{
   display:flex;align-items:center;justify-content:space-between;
-  padding:16px 20px;flex-shrink:0;border-bottom:1px solid rgba(255,255,255,0.04);
+  padding:calc(var(--sat) + 12px) 20px 14px;
+  flex-shrink:0;border-bottom:0.5px solid var(--sep2);
+  background:rgba(0,0,0,0.72);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
 }
 .soul-presence{display:flex;align-items:center;gap:10px;}
 .soul-orb-sm{
-  width:34px;height:34px;border-radius:50%;
-  background:radial-gradient(circle at 38% 38%,var(--lavender),var(--iris) 60%,#3d2d8a);
-  animation:breathe 4s ease-in-out infinite;flex-shrink:0;
+  width:34px;height:34px;border-radius:50%;flex-shrink:0;
+  box-shadow:0 0 14px rgba(125,122,255,0.5);
+  animation:breathe 5s ease-in-out infinite;
 }
-.soul-name{font-size:16px;font-weight:600;color:var(--white);}
-.soul-status{font-size:12px;color:var(--sage);margin-top:1px;display:flex;align-items:center;gap:5px;}
-.soul-status-dot{width:5px;height:5px;border-radius:50%;background:var(--sage);}
-.soul-action{
-  background:none;border:none;cursor:pointer;color:var(--soft);
-  font-size:13px;font-weight:500;padding:8px 12px;
-  border-radius:10px;transition:background 0.12s;
-}
-.soul-action:active{background:var(--lifted);}
+.soul-name{font-size:17px;font-weight:600;color:var(--l1);}
+.soul-status{font-size:12px;color:var(--green);margin-top:1px;display:flex;align-items:center;gap:5px;}
+.soul-status-dot{width:5px;height:5px;border-radius:50%;background:var(--green);}
+.soul-action{background:none;border:none;color:var(--l3);font-size:15px;font-weight:400;padding:8px 0;}
+.soul-action:active{opacity:0.55;}
 
 .messages{
   flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;
-  padding:20px 0;display:flex;flex-direction:column;gap:20px;
+  padding:22px 0 10px;display:flex;flex-direction:column;gap:20px;
 }
 .messages::-webkit-scrollbar{display:none;}
 
-/* Soul messages float — no bubble */
-.msg-ai{padding:0 24px;align-self:flex-start;max-width:100%;}
-.msg-ai-text{font-size:16px;color:var(--bright);line-height:1.65;font-weight:400;}
-.msg-ai-time{font-size:11px;color:var(--muted);margin-top:6px;}
+.msg-ai{padding:0 22px;align-self:flex-start;max-width:100%;}
+.msg-ai-text{font-size:17px;color:var(--l1);line-height:1.6;font-weight:400;}
+.msg-ai-time{font-size:11px;color:var(--l3);margin-top:6px;}
 
-/* Memory anchor */
 .msg-anchor{
-  margin:0 24px 4px;padding:10px 14px;
-  background:rgba(168,156,247,0.07);border-left:2px solid var(--iris);
+  margin:0 22px 4px;padding:10px 14px;
+  background:rgba(125,122,255,0.08);border-left:2px solid var(--acc);
   border-radius:0 10px 10px 0;
 }
-.msg-anchor-text{font-size:12px;color:var(--lavender);font-style:italic;line-height:1.5;}
+.msg-anchor-text{font-size:12px;color:rgba(165,162,255,0.85);font-style:italic;line-height:1.5;}
 
-/* User messages in soft card */
-.msg-user{
-  padding:0 20px;align-self:flex-end;max-width:85%;
-}
+.msg-user{padding:0 20px;align-self:flex-end;max-width:82%;}
 .msg-user-bubble{
-  background:var(--lifted);border:1px solid var(--rim);
-  border-radius:20px 20px 6px 20px;
-  padding:12px 16px;font-size:15px;color:var(--bright);line-height:1.55;
+  background:var(--acc);border-radius:20px 20px 6px 20px;
+  padding:12px 16px;font-size:16px;color:var(--l1);line-height:1.5;
 }
-.msg-user-time{font-size:11px;color:var(--muted);margin-top:5px;text-align:right;}
+.msg-user-time{font-size:11px;color:var(--l3);margin-top:5px;text-align:right;}
 
-/* Typing orb */
-.typing-wrap{padding:0 24px;}
-.typing-orb{
-  width:34px;height:34px;border-radius:50%;
-  background:radial-gradient(circle at 38% 38%,var(--lavender),var(--iris) 60%,#3d2d8a);
-  animation:breathePulse 1.5s ease-in-out infinite;display:none;
-}
-.typing-orb.visible{display:block;}
-@keyframes breathePulse{
-  0%,100%{transform:scale(0.9);opacity:0.7;}
-  50%{transform:scale(1.05);opacity:1;}
-}
+.typing-wrap{padding:0 22px 8px;min-height:28px;}
+.typing-dots{display:none;gap:5px;align-items:center;height:20px;}
+.typing-dots.visible{display:flex;}
+.td{width:7px;height:7px;border-radius:50%;background:var(--l3);animation:tdBounce 1.1s ease-in-out infinite;}
+.td:nth-child(2){animation-delay:.14s;}
+.td:nth-child(3){animation-delay:.28s;}
+@keyframes tdBounce{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-6px);}}
 
 .chat-bar{
-  display:flex;align-items:flex-end;gap:12px;
-  padding:12px 16px;padding-bottom:calc(12px + var(--safe-bottom));
-  background:rgba(13,13,20,0.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-  border-top:1px solid rgba(255,255,255,0.04);flex-shrink:0;
+  display:flex;align-items:flex-end;gap:10px;
+  padding:10px 16px calc(10px + var(--sab));
+  background:rgba(0,0,0,0.86);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border-top:0.5px solid var(--sep2);flex-shrink:0;
 }
 .chat-input{
-  flex:1;background:var(--lifted);border:1px solid var(--rim);border-radius:18px;
-  padding:11px 16px;color:var(--bright);font-size:15px;resize:none;
+  flex:1;background:var(--bg2);border:none;border-radius:20px;
+  padding:11px 16px;color:var(--l1);font-size:16px;resize:none;
   outline:none;max-height:120px;min-height:44px;line-height:1.45;
-  font-family:inherit;transition:border-color 0.15s;
 }
-.chat-input:focus{border-color:rgba(123,111,232,0.4);}
-.chat-input::placeholder{color:var(--muted);}
+.chat-input::placeholder{color:var(--l3);}
 .send-btn{
-  width:44px;height:44px;border-radius:50%;border:none;cursor:pointer;
+  width:36px;height:36px;border-radius:50%;border:none;
   display:flex;align-items:center;justify-content:center;flex-shrink:0;
-  background:var(--iris);transition:background 0.15s,transform 0.1s,opacity 0.15s;
-  opacity:0;pointer-events:none;
+  background:var(--acc);
+  transition:transform 0.15s var(--spring),opacity 0.18s;
+  opacity:0;pointer-events:none;margin-bottom:4px;
 }
 .send-btn.visible{opacity:1;pointer-events:auto;}
-.send-btn:active{transform:scale(0.9);}
-.send-btn svg{width:20px;height:20px;fill:white;}
+.send-btn:active{transform:scale(0.86);}
+.send-btn svg{width:16px;height:16px;fill:white;}
 
 /* ── YOU SCREEN ── */
 .you-header{
-  padding:28px 24px 0;
+  padding:calc(var(--sat) + 24px) 20px 0;
   display:flex;align-items:flex-end;justify-content:space-between;
 }
-.you-title{font-size:30px;font-weight:700;letter-spacing:-0.6px;color:var(--white);}
+.you-title{font-size:34px;font-weight:700;letter-spacing:-0.5px;color:var(--l1);}
 .you-profile-btn{
-  width:38px;height:38px;border-radius:50%;background:var(--lifted);
-  border:1px solid var(--rim);display:flex;align-items:center;justify-content:center;
-  font-size:18px;cursor:pointer;flex-shrink:0;
+  width:36px;height:36px;border-radius:50%;background:var(--bg2);border:none;
+  display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;
   transition:background 0.12s;
 }
-.you-profile-btn:active{background:var(--rim);}
+.you-profile-btn:active{background:var(--bg3);}
 
-/* Soul's assessment */
-.soul-letter{
-  margin:20px 24px 0;background:var(--deep);border:1px solid var(--rim);
-  border-radius:20px;padding:20px;
-}
-.sl-from{font-size:11px;font-weight:600;color:var(--iris);letter-spacing:0.4px;margin-bottom:12px;}
-.sl-body{font-size:15px;color:var(--bright);line-height:1.7;font-weight:400;}
-.sl-date{font-size:12px;color:var(--muted);margin-top:12px;}
+.soul-letter{margin:20px 20px 0;background:var(--bg2);border-radius:16px;padding:20px;}
+.sl-from{font-size:12px;font-weight:600;color:var(--acc);letter-spacing:0.2px;margin-bottom:12px;}
+.sl-body{font-size:15px;color:var(--l1);line-height:1.75;font-weight:400;}
+.sl-date{font-size:12px;color:var(--l3);margin-top:12px;}
 
-/* Journal section within You */
-.you-section{padding:28px 24px 0;}
-.you-section-head{
-  display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;
-}
-.you-section-title{font-size:20px;font-weight:700;letter-spacing:-0.4px;color:var(--white);}
+.you-section{padding:28px 20px 0;}
+.you-section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
+.you-section-title{font-size:22px;font-weight:700;letter-spacing:-0.35px;color:var(--l1);}
 .you-new-btn{
-  background:var(--iris);border:none;border-radius:12px;
-  padding:8px 14px;color:var(--white);font-size:13px;font-weight:600;
-  cursor:pointer;transition:opacity 0.12s;font-family:inherit;
+  background:var(--acc-bg);border:none;border-radius:10px;
+  padding:7px 14px;color:var(--acc);font-size:15px;font-weight:600;
+  transition:opacity 0.12s;
 }
-.you-new-btn:active{opacity:0.8;}
+.you-new-btn:active{opacity:0.65;}
 
 .journal-entry{
-  background:var(--deep);border:1px solid var(--rim);border-radius:18px;
-  padding:18px 20px;margin-bottom:10px;cursor:pointer;
+  background:var(--bg2);border-radius:14px;
+  padding:16px 18px;margin-bottom:8px;
+  border:none;width:100%;text-align:left;display:block;
+  transition:background 0.12s,transform 0.12s var(--spring);
+}
+.journal-entry:active{background:var(--bg3);transform:scale(0.985);}
+.je-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.je-date{font-size:12px;color:var(--l3);}
+.je-mood{font-size:15px;}
+.je-title{font-size:16px;font-weight:600;color:var(--l1);margin-bottom:4px;}
+.je-preview{font-size:14px;color:var(--l2);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+
+.pattern-card{background:var(--bg2);border-radius:14px;padding:16px 18px;margin-bottom:8px;}
+.pc-type{font-size:12px;font-weight:600;color:var(--purple);letter-spacing:0.2px;margin-bottom:8px;}
+.pc-text{font-size:15px;color:var(--l1);line-height:1.6;}
+.pc-confidence{font-size:12px;color:var(--l3);margin-top:6px;}
+
+/* ── PANIC ── */
+.panic-overlay{
+  position:fixed;inset:0;background:var(--bg);z-index:800;
+  display:flex;flex-direction:column;
+  transform:translateY(100%);transition:transform 0.44s var(--spring);
+  padding-top:var(--sat);padding-bottom:var(--sab);
+}
+.panic-overlay.open{transform:translateY(0);}
+.panic-close{align-self:flex-end;background:none;border:none;padding:20px 24px;color:var(--l2);font-size:15px;}
+.panic-close:active{opacity:0.55;}
+.panic-main{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 32px;text-align:center;}
+.panic-orb{
+  width:100px;height:100px;border-radius:50%;
+  background:
+    radial-gradient(circle at 32% 27%, rgba(255,200,200,0.5) 0%, transparent 36%),
+    radial-gradient(ellipse at 50% 50%, #FF8080 0%, var(--red) 44%, #6b1010 100%);
+  box-shadow:0 0 36px rgba(255,69,58,0.48),0 0 72px rgba(255,69,58,0.2);
+  animation:breathe 5s ease-in-out infinite;margin-bottom:32px;
+}
+.panic-title{font-size:30px;font-weight:700;letter-spacing:-0.5px;color:var(--l1);margin-bottom:10px;}
+.panic-sub{font-size:17px;color:var(--l2);line-height:1.6;max-width:300px;font-weight:400;}
+.panic-988{margin-top:28px;font-size:14px;color:var(--red);font-weight:500;padding:14px 24px;background:rgba(255,69,58,0.08);border-radius:14px;}
+.panic-choices{display:flex;gap:10px;padding:24px;flex-shrink:0;}
+.panic-choice{
+  flex:1;background:var(--bg2);border:none;border-radius:16px;
+  padding:18px 12px;text-align:center;
+  transition:background 0.12s,transform 0.12s var(--spring);
+}
+.panic-choice:active{background:var(--bg3);transform:scale(0.95);}
+.panic-choice-icon{font-size:28px;margin-bottom:8px;}
+.panic-choice-label{font-size:14px;font-weight:600;color:var(--l1);}
+.panic-choice-sub{font-size:12px;color:var(--l2);margin-top:3px;}
+
+/* ── GROUNDING ── */
+.ground-overlay{
+  position:fixed;inset:0;background:var(--bg);z-index:900;
+  display:flex;flex-direction:column;
+  transform:translateY(100%);transition:transform 0.44s var(--spring);
+  padding-top:var(--sat);padding-bottom:var(--sab);
+}
+.ground-overlay.open{transform:translateY(0);}
+.ground-close{align-self:flex-end;background:none;border:none;padding:20px 24px;color:var(--l2);font-size:15px;}
+.ground-close:active{opacity:0.55;}
+.ground-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:0 32px;text-align:center;}
+.ground-step-label{font-size:13px;font-weight:600;color:var(--acc);letter-spacing:0.3px;margin-bottom:20px;}
+.ground-step-text{font-size:28px;font-weight:700;letter-spacing:-0.4px;color:var(--l1);line-height:1.25;max-width:300px;}
+.ground-hint{font-size:17px;color:var(--l2);margin-top:18px;line-height:1.6;max-width:280px;font-weight:400;}
+.ground-progress{display:flex;gap:6px;margin-top:44px;}
+.gp-dot{width:8px;height:8px;border-radius:50%;background:var(--bg3);transition:background 0.25s,transform 0.25s;}
+.gp-dot.done{background:var(--acc);}
+.gp-dot.active{background:var(--l1);transform:scale(1.3);}
+.ground-footer{padding:20px 24px;flex-shrink:0;}
+.ground-next{
+  width:100%;padding:17px;background:var(--bg2);border:none;border-radius:14px;
+  color:var(--l1);font-size:17px;font-weight:600;
   transition:background 0.12s,transform 0.1s;
 }
-.journal-entry:active{background:var(--lifted);transform:scale(0.99);}
-.je-meta{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
-.je-date{font-size:12px;color:var(--muted);}
-.je-mood{font-size:16px;}
-.je-title{font-size:16px;font-weight:600;color:var(--bright);margin-bottom:5px;}
-.je-preview{
-  font-size:14px;color:var(--soft);line-height:1.55;
-  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
-}
+.ground-next:active{background:var(--bg3);transform:scale(0.98);}
 
-/* Patterns */
-.pattern-card{
-  background:var(--deep);border:1px solid var(--rim);border-radius:18px;
-  padding:18px 20px;margin-bottom:10px;
-}
-.pc-type{font-size:11px;font-weight:600;color:var(--lavender);letter-spacing:0.4px;margin-bottom:8px;}
-.pc-text{font-size:15px;color:var(--bright);line-height:1.6;}
-.pc-confidence{font-size:12px;color:var(--muted);margin-top:6px;}
-
-/* ── PANIC OVERLAY ── */
-.panic-overlay{
-  position:fixed;inset:0;background:var(--night);z-index:800;
-  display:none;flex-direction:column;
-  padding-top:var(--safe-top);padding-bottom:var(--safe-bottom);
-}
-.panic-overlay.open{display:flex;}
-.panic-close{
-  align-self:flex-end;background:none;border:none;padding:20px 24px;
-  color:var(--soft);font-size:13px;cursor:pointer;font-family:inherit;
-}
-.panic-main{
-  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:0 32px;text-align:center;
-}
-.panic-orb{
-  width:96px;height:96px;border-radius:50%;
-  background:radial-gradient(circle at 38% 38%,#f9a8a8,var(--rose) 60%,#6b1010);
-  animation:breathe 4s ease-in-out infinite;margin-bottom:28px;
-}
-.panic-title{font-size:28px;font-weight:700;letter-spacing:-0.5px;color:var(--white);margin-bottom:10px;}
-.panic-sub{font-size:16px;color:var(--soft);line-height:1.6;max-width:300px;}
-.panic-988{
-  margin-top:28px;font-size:14px;color:var(--rose);font-weight:500;
-  padding:14px 24px;border:1px solid rgba(240,112,112,0.2);border-radius:14px;
-}
-
-.panic-choices{
-  display:flex;gap:10px;padding:24px;flex-shrink:0;
-}
-.panic-choice{
-  flex:1;background:var(--deep);border:1px solid var(--rim);border-radius:18px;
-  padding:18px 14px;text-align:center;cursor:pointer;
-  transition:background 0.12s,border-color 0.12s,transform 0.1s;
-}
-.panic-choice:active{transform:scale(0.97);}
-.panic-choice-icon{font-size:28px;margin-bottom:8px;}
-.panic-choice-label{font-size:14px;font-weight:600;color:var(--bright);}
-.panic-choice-sub{font-size:12px;color:var(--soft);margin-top:3px;}
-
-/* ── GROUNDING (one step per screen) ── */
-.ground-overlay{
-  position:fixed;inset:0;background:var(--night);z-index:900;
-  display:none;flex-direction:column;
-  padding-top:var(--safe-top);padding-bottom:var(--safe-bottom);
-}
-.ground-overlay.open{display:flex;}
-.ground-close{
-  align-self:flex-end;background:none;border:none;padding:20px 24px;
-  color:var(--soft);font-size:13px;cursor:pointer;font-family:inherit;
-}
-.ground-body{
-  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:0 32px;text-align:center;
-}
-.ground-step-label{
-  font-size:13px;font-weight:600;color:var(--iris);letter-spacing:0.4px;margin-bottom:20px;
-}
-.ground-step-text{
-  font-size:24px;font-weight:600;letter-spacing:-0.3px;color:var(--white);
-  line-height:1.4;max-width:320px;
-}
-.ground-hint{font-size:15px;color:var(--soft);margin-top:16px;line-height:1.6;max-width:280px;}
-.ground-progress{
-  display:flex;gap:6px;margin-top:40px;
-}
-.gp-dot{
-  width:8px;height:8px;border-radius:50%;background:var(--rim);
-  transition:background 0.25s,transform 0.25s;
-}
-.gp-dot.done{background:var(--iris);}
-.gp-dot.active{background:var(--lavender);transform:scale(1.3);}
-.ground-footer{padding:20px 28px;flex-shrink:0;}
-.ground-next{
-  width:100%;padding:17px;background:var(--deep);border:1px solid var(--rim);
-  border-radius:16px;color:var(--bright);font-size:17px;font-weight:600;
-  cursor:pointer;transition:all 0.15s;font-family:inherit;
-}
-.ground-next:active{background:var(--lifted);}
-
-/* ── PROFILE OVERLAY ── */
+/* ── PROFILE ── */
 .profile-overlay{
-  position:fixed;inset:0;background:var(--night);z-index:700;
-  display:none;flex-direction:column;
-  padding-top:var(--safe-top);padding-bottom:var(--safe-bottom);
+  position:fixed;inset:0;background:var(--bg);z-index:700;
+  display:flex;flex-direction:column;
+  transform:translateY(100%);transition:transform 0.44s var(--spring);
+  padding-top:var(--sat);padding-bottom:var(--sab);
 }
-.profile-overlay.open{display:flex;}
-.profile-nav{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:16px 24px;flex-shrink:0;
-}
-.profile-back{
-  background:none;border:none;color:var(--iris);font-size:15px;
-  font-weight:500;cursor:pointer;font-family:inherit;padding:8px 0;
-}
-.profile-title{font-size:17px;font-weight:600;color:var(--white);}
-.profile-body{flex:1;overflow-y:auto;padding:0 24px 32px;}
+.profile-overlay.open{transform:translateY(0);}
+.profile-nav{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;flex-shrink:0;}
+.profile-back{background:none;border:none;color:var(--acc);font-size:17px;font-weight:400;padding:8px 0;}
+.profile-back:active{opacity:0.55;}
+.profile-title{font-size:17px;font-weight:600;color:var(--l1);}
+.profile-body{flex:1;overflow-y:auto;padding:0 24px 40px;}
 .profile-body::-webkit-scrollbar{display:none;}
 .profile-avatar{
-  width:72px;height:72px;border-radius:50%;
-  background:radial-gradient(circle at 38% 38%,var(--lavender),var(--iris));
+  width:68px;height:68px;border-radius:50%;
+  background:radial-gradient(circle at 35% 30%,#9B98FF,#3730A3);
   display:flex;align-items:center;justify-content:center;
-  font-size:28px;margin:8px 0 16px;
+  font-size:28px;margin:8px 0 14px;
 }
-.profile-name{font-size:26px;font-weight:700;letter-spacing:-0.5px;color:var(--white);}
-.profile-since{font-size:13px;color:var(--muted);margin-top:4px;}
-.profile-soul-line{
-  font-size:15px;color:var(--soft);margin-top:20px;line-height:1.6;
-  font-style:italic;padding:16px;background:var(--deep);border:1px solid var(--rim);
-  border-radius:14px;
-}
+.profile-name{font-size:28px;font-weight:700;letter-spacing:-0.5px;color:var(--l1);}
+.profile-since{font-size:13px;color:var(--l3);margin-top:4px;}
+.profile-soul-line{font-size:15px;color:var(--l2);margin-top:18px;line-height:1.65;font-style:italic;padding:16px;background:var(--bg2);border-radius:14px;}
 .profile-section{margin-top:28px;}
-.profile-section-title{font-size:13px;font-weight:600;color:var(--soft);letter-spacing:0.3px;margin-bottom:12px;}
-.profile-row{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:15px 0;border-bottom:1px solid var(--rim);cursor:pointer;
-}
+.profile-section-title{font-size:13px;font-weight:600;color:var(--l3);letter-spacing:0.2px;text-transform:uppercase;margin-bottom:8px;}
+.profile-group{background:var(--bg2);border-radius:14px;overflow:hidden;}
+.profile-row{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:0.5px solid var(--sep2);cursor:pointer;border:none;background:none;width:100%;text-align:left;}
 .profile-row:last-child{border-bottom:none;}
-.profile-row-label{font-size:15px;color:var(--bright);}
-.profile-row-val{font-size:14px;color:var(--soft);}
-.profile-delete{
-  width:100%;margin-top:32px;padding:15px;background:transparent;
-  border:1px solid rgba(240,112,112,0.25);border-radius:14px;
-  color:var(--rose);font-size:15px;font-weight:500;cursor:pointer;font-family:inherit;
-}
+.profile-row:active{background:var(--bg3);}
+.profile-row-label{font-size:17px;color:var(--l1);font-weight:400;}
+.profile-row-val{font-size:15px;color:var(--l3);}
+.profile-delete{width:100%;margin-top:16px;padding:15px;background:var(--bg2);border:none;border-radius:14px;color:var(--red);font-size:17px;font-weight:400;}
+.profile-delete:active{background:var(--bg3);}
 
-/* ── JOURNAL COMPOSE ── */
+/* ── COMPOSE ── */
 .compose-overlay{
-  position:fixed;inset:0;background:var(--night);z-index:600;
-  display:none;flex-direction:column;
-  padding-top:var(--safe-top);padding-bottom:var(--safe-bottom);
+  position:fixed;inset:0;background:var(--bg);z-index:600;
+  display:flex;flex-direction:column;
+  transform:translateY(100%);transition:transform 0.44s var(--spring);
+  padding-top:var(--sat);padding-bottom:var(--sab);
 }
-.compose-overlay.open{display:flex;}
-.compose-nav{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:16px 24px;flex-shrink:0;
-}
-.compose-cancel{
-  background:none;border:none;color:var(--soft);font-size:15px;
-  cursor:pointer;font-family:inherit;
-}
-.compose-save{
-  background:var(--iris);border:none;border-radius:12px;
-  color:var(--white);font-size:15px;font-weight:600;padding:8px 16px;
-  cursor:pointer;font-family:inherit;transition:opacity 0.12s;
-}
+.compose-overlay.open{transform:translateY(0);}
+.compose-nav{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;flex-shrink:0;}
+.compose-cancel{background:none;border:none;color:var(--l2);font-size:17px;font-weight:400;}
+.compose-cancel:active{opacity:0.55;}
+.compose-save{background:var(--acc);border:none;border-radius:10px;color:var(--l1);font-size:15px;font-weight:600;padding:8px 16px;transition:opacity 0.12s;}
 .compose-save:active{opacity:0.8;}
-.compose-date{padding:0 24px 12px;font-size:13px;color:var(--muted);}
-.compose-area{
-  flex:1;background:transparent;border:none;color:var(--bright);
-  font-size:18px;line-height:1.7;padding:0 24px;resize:none;
-  outline:none;font-family:inherit;font-weight:400;
-}
-.compose-area::placeholder{color:var(--muted);}
+.compose-date{padding:0 24px 12px;font-size:14px;color:var(--l3);}
+.compose-area{flex:1;background:transparent;border:none;color:var(--l1);font-size:19px;line-height:1.65;padding:0 24px;resize:none;outline:none;font-weight:400;}
+.compose-area::placeholder{color:var(--l4);}
 
-/* ── JOURNAL READ ── */
+/* ── READ ── */
 .read-overlay{
-  position:fixed;inset:0;background:var(--night);z-index:600;
-  display:none;flex-direction:column;
-  padding-top:var(--safe-top);padding-bottom:var(--safe-bottom);
+  position:fixed;inset:0;background:var(--bg);z-index:600;
+  display:flex;flex-direction:column;
+  transform:translateY(100%);transition:transform 0.44s var(--spring);
+  padding-top:var(--sat);padding-bottom:var(--sab);
 }
-.read-overlay.open{display:flex;}
-.read-nav{
-  display:flex;align-items:center;justify-content:space-between;
-  padding:16px 24px;flex-shrink:0;
-}
-.read-back{
-  background:none;border:none;color:var(--iris);font-size:15px;
-  font-weight:500;cursor:pointer;font-family:inherit;
-}
+.read-overlay.open{transform:translateY(0);}
+.read-nav{display:flex;align-items:center;padding:16px 24px;flex-shrink:0;}
+.read-back{background:none;border:none;color:var(--acc);font-size:17px;font-weight:400;}
+.read-back:active{opacity:0.55;}
 .read-body{flex:1;overflow-y:auto;padding:20px 24px 40px;}
 .read-body::-webkit-scrollbar{display:none;}
-.read-date{font-size:13px;color:var(--muted);margin-bottom:12px;}
-.read-title{font-size:26px;font-weight:700;letter-spacing:-0.5px;color:var(--white);margin-bottom:20px;line-height:1.25;}
-.read-text{font-size:17px;color:var(--bright);line-height:1.75;font-weight:400;}
-.read-reflection{
-  margin-top:32px;padding:16px;background:var(--deep);
-  border:1px solid var(--rim);border-radius:14px;
-}
-.read-ref-label{font-size:11px;font-weight:600;color:var(--iris);letter-spacing:0.4px;margin-bottom:8px;}
-.read-ref-text{font-size:14px;color:var(--soft);line-height:1.6;}
+.read-date{font-size:13px;color:var(--l3);margin-bottom:10px;}
+.read-title{font-size:28px;font-weight:700;letter-spacing:-0.5px;color:var(--l1);margin-bottom:18px;line-height:1.2;}
+.read-text{font-size:17px;color:var(--l1);line-height:1.75;font-weight:400;}
+.read-reflection{margin-top:32px;padding:16px;background:var(--bg2);border-radius:14px;}
+.read-ref-label{font-size:12px;font-weight:600;color:var(--acc);letter-spacing:0.2px;margin-bottom:8px;}
+.read-ref-text{font-size:14px;color:var(--l2);line-height:1.65;}
 
 /* ── TOAST ── */
 .toast{
-  position:fixed;bottom:calc(var(--tab-h) + var(--safe-bottom) + 20px);
-  left:50%;transform:translateX(-50%) translateY(12px);
-  background:var(--lifted);border:1px solid var(--rim);
-  color:var(--bright);padding:11px 20px;border-radius:24px;
+  position:fixed;bottom:calc(var(--tab-h) + var(--sab) + 24px);
+  left:50%;transform:translateX(-50%) translateY(10px);
+  background:var(--bg3);color:var(--l1);padding:10px 20px;border-radius:22px;
   font-size:14px;font-weight:500;opacity:0;
-  transition:opacity 0.22s,transform 0.22s var(--spring);
-  z-index:999;white-space:nowrap;pointer-events:none;
+  transition:opacity 0.2s,transform 0.2s var(--spring);
+  z-index:9999;white-space:nowrap;pointer-events:none;
 }
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
 /* ── INSTALL BANNER ── */
 #install-banner{
   display:none;position:fixed;
-  bottom:calc(var(--tab-h) + var(--safe-bottom) + 16px);
-  left:16px;right:16px;background:var(--lifted);
-  border:1px solid var(--iris);border-radius:20px;padding:16px 18px;
-  z-index:500;box-shadow:0 8px 32px rgba(0,0,0,0.6);
+  bottom:calc(var(--tab-h) + var(--sab) + 16px);
+  left:16px;right:16px;background:var(--bg2);
+  border-radius:20px;padding:16px 18px;z-index:500;
+  box-shadow:0 8px 40px rgba(0,0,0,0.7);
   align-items:center;gap:14px;
 }
 #install-banner.show{display:flex;}
 .ib-icon{font-size:32px;flex-shrink:0;}
-.ib-t{font-size:14px;font-weight:600;color:var(--white);}
-.ib-s{font-size:12px;color:var(--soft);margin-top:2px;}
+.ib-t{font-size:15px;font-weight:600;color:var(--l1);}
+.ib-s{font-size:13px;color:var(--l2);margin-top:2px;}
 .ib-actions{margin-left:auto;display:flex;flex-direction:column;gap:6px;align-items:flex-end;}
-.ib-install{
-  background:var(--iris);border:none;border-radius:10px;padding:8px 14px;
-  color:var(--white);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;
-  font-family:inherit;
-}
-.ib-dismiss{background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;font-family:inherit;}
+.ib-install{background:var(--acc);border:none;border-radius:10px;padding:8px 14px;color:var(--l1);font-size:13px;font-weight:600;white-space:nowrap;}
+.ib-dismiss{background:none;border:none;color:var(--l3);font-size:12px;}
 
-/* ── UTILS ── */
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);}
 </style>
 </head>
 <body>
 
-<!-- ══════════════════════════════════════════
-     ONBOARDING
-══════════════════════════════════════════ -->
+<!-- ══ ONBOARDING ══ -->
 <div id="onboarding">
-
-  <!-- Step 1: Arrival -->
   <div class="ob-step active" id="ob-1">
     <div class="ob-orb"></div>
     <div class="ob-heading">Hello.</div>
@@ -690,11 +582,9 @@ html,body{
     <div class="ob-spacer"></div>
     <button class="ob-btn" onclick="obNext(2)">Begin</button>
   </div>
-
-  <!-- Step 2: Why are you here -->
   <div class="ob-step" id="ob-2">
     <div class="ob-heading">What brought you here?</div>
-    <div class="ob-pills" id="ob-reason-pills">
+    <div class="ob-pills">
       <button class="ob-pill" onclick="obSelectReason(this)">I'm going through something hard</button>
       <button class="ob-pill" onclick="obSelectReason(this)">I want to understand myself better</button>
       <button class="ob-pill" onclick="obSelectReason(this)">I need someone to talk to</button>
@@ -702,8 +592,6 @@ html,body{
       <button class="ob-pill" onclick="obSelectReason(this)">I want to grow</button>
     </div>
   </div>
-
-  <!-- Step 3: Honesty -->
   <div class="ob-step" id="ob-3">
     <div class="ob-heading">Before we begin.</div>
     <div class="ob-notice">
@@ -713,27 +601,24 @@ html,body{
     <div class="ob-spacer"></div>
     <button class="ob-btn" onclick="obNext(4)">I understand</button>
   </div>
-
-  <!-- Step 4: Your name -->
   <div class="ob-step" id="ob-4">
     <div class="ob-orb" id="ob-name-orb"></div>
     <div class="ob-heading" id="ob-name-heading">What should I call you?</div>
-    <input class="ob-name-input" id="ob-name" type="text" placeholder="Your name" autocomplete="given-name" spellcheck="false"
+    <input class="ob-name-input" id="ob-name" type="text" placeholder="Your name"
+      autocomplete="given-name" spellcheck="false"
       oninput="onNameInput()" onkeydown="if(event.key==='Enter')obSubmitName()"/>
     <div class="ob-spacer"></div>
-    <button class="ob-btn" id="ob-name-btn" onclick="obSubmitName()" style="opacity:0.4;pointer-events:none">Continue</button>
+    <button class="ob-btn" id="ob-name-btn" onclick="obSubmitName()" style="opacity:0.35;pointer-events:none">Continue</button>
   </div>
-
 </div>
 
-<!-- ══════════════════════════════════════════
-     MAIN APP
-══════════════════════════════════════════ -->
+<!-- ══ APP ══ -->
 <div id="app">
 
-  <!-- ── TODAY SCREEN ── -->
-  <div id="screen-today" class="screen active">
-    <div class="scroll">
+  <div id="screens">
+
+    <!-- TODAY -->
+    <div id="screen-today" class="screen active">
       <div class="today-top">
         <div class="today-greeting" id="today-greeting">Good morning</div>
         <div class="today-name" id="today-name">Shamikh</div>
@@ -741,42 +626,39 @@ html,body{
       </div>
 
       <div class="orb-center">
-        <div class="orb" id="home-orb" onclick="openCheckIn()" title="Tap to check in"></div>
+        <div class="orb" id="home-orb" onclick="openCheckIn()"></div>
         <div class="orb-question" id="today-question">"What's the first thing you noticed this morning?"</div>
         <div class="orb-hint">Tap to check in</div>
       </div>
 
       <div class="today-stats">
-        <div class="stat">
-          <div class="stat-val">12</div>
-          <div class="stat-label">Day streak</div>
-        </div>
-        <div class="stat">
-          <div class="stat-val">😌</div>
-          <div class="stat-label">Yesterday</div>
-        </div>
-        <div class="stat">
-          <div class="stat-val">3</div>
-          <div class="stat-label">This week</div>
-        </div>
+        <div class="stat"><div class="stat-val">12</div><div class="stat-label">Day streak</div></div>
+        <div class="stat"><div class="stat-val">😌</div><div class="stat-label">Yesterday</div></div>
+        <div class="stat"><div class="stat-val">3</div><div class="stat-label">This week</div></div>
       </div>
 
       <div class="today-section">
         <div class="today-section-title">Today</div>
-
-        <div class="today-card" onclick="goTab('soul')">
-          <span class="tc-arrow">›</span>
-          <div class="tc-label">Soul is here</div>
-          <div class="tc-title">How are you carrying last week?</div>
-          <div class="tc-sub">Soul noticed something worth exploring.</div>
-        </div>
-
-        <div class="today-card" onclick="openCheckIn()">
-          <span class="tc-arrow">›</span>
-          <div class="tc-label">Daily check-in</div>
-          <div class="tc-title">A moment for yourself.</div>
-          <div class="tc-sub">Takes 30 seconds. Your profile updates quietly.</div>
-        </div>
+        <button class="today-card" onclick="goTab('soul')">
+          <div class="tc-row">
+            <div>
+              <div class="tc-label">Soul is here</div>
+              <div class="tc-title">How are you carrying last week?</div>
+              <div class="tc-sub">Soul noticed something worth exploring.</div>
+            </div>
+            <div class="tc-arrow">›</div>
+          </div>
+        </button>
+        <button class="today-card" onclick="openCheckIn()">
+          <div class="tc-row">
+            <div>
+              <div class="tc-label">Daily check-in</div>
+              <div class="tc-title">A moment for yourself.</div>
+              <div class="tc-sub">Takes 30 seconds. Your profile updates quietly.</div>
+            </div>
+            <div class="tc-arrow">›</div>
+          </div>
+        </button>
       </div>
 
       <div class="today-section">
@@ -784,35 +666,35 @@ html,body{
         <div class="habit-row">
           <div class="habit-ring-wrap" onclick="toggleHabit(this,0)">
             <div class="habit-ring">
-              <svg viewBox="0 0 52 52"><circle cx="26" cy="26" r="22" fill="none" stroke="var(--rim)" stroke-width="3.5"/><circle cx="26" cy="26" r="22" fill="none" stroke="var(--sage)" stroke-width="3.5" stroke-dasharray="138" stroke-dashoffset="138" class="h-arc" id="h0" style="transition:stroke-dashoffset 0.5s var(--spring)"/></svg>
+              <svg viewBox="0 0 56 56"><circle cx="28" cy="28" r="24" fill="none" stroke="rgba(48,209,88,0.15)" stroke-width="4"/><circle cx="28" cy="28" r="24" fill="none" stroke="#30D158" stroke-width="4" stroke-dasharray="150.8" stroke-dashoffset="150.8" stroke-linecap="round" class="h-arc" id="h0" style="transition:stroke-dashoffset 0.55s var(--spring)"/></svg>
               <span class="habit-ring-icon">🚶</span>
             </div>
             <div class="habit-ring-label">Walk</div>
           </div>
           <div class="habit-ring-wrap" onclick="toggleHabit(this,1)">
             <div class="habit-ring">
-              <svg viewBox="0 0 52 52"><circle cx="26" cy="26" r="22" fill="none" stroke="var(--rim)" stroke-width="3.5"/><circle cx="26" cy="26" r="22" fill="none" stroke="var(--iris)" stroke-width="3.5" stroke-dasharray="138" stroke-dashoffset="34.5" class="h-arc" id="h1" style="transition:stroke-dashoffset 0.5s var(--spring)"/></svg>
+              <svg viewBox="0 0 56 56"><circle cx="28" cy="28" r="24" fill="none" stroke="rgba(10,132,255,0.15)" stroke-width="4"/><circle cx="28" cy="28" r="24" fill="none" stroke="#0A84FF" stroke-width="4" stroke-dasharray="150.8" stroke-dashoffset="37.7" stroke-linecap="round" class="h-arc" id="h1" style="transition:stroke-dashoffset 0.55s var(--spring)"/></svg>
               <span class="habit-ring-icon">📖</span>
             </div>
             <div class="habit-ring-label">Read</div>
           </div>
           <div class="habit-ring-wrap" onclick="toggleHabit(this,2)">
             <div class="habit-ring">
-              <svg viewBox="0 0 52 52"><circle cx="26" cy="26" r="22" fill="none" stroke="var(--rim)" stroke-width="3.5"/><circle cx="26" cy="26" r="22" fill="none" stroke="var(--blush)" stroke-width="3.5" stroke-dasharray="138" stroke-dashoffset="138" class="h-arc" id="h2" style="transition:stroke-dashoffset 0.5s var(--spring)"/></svg>
+              <svg viewBox="0 0 56 56"><circle cx="28" cy="28" r="24" fill="none" stroke="rgba(191,90,242,0.15)" stroke-width="4"/><circle cx="28" cy="28" r="24" fill="none" stroke="#BF5AF2" stroke-width="4" stroke-dasharray="150.8" stroke-dashoffset="150.8" stroke-linecap="round" class="h-arc" id="h2" style="transition:stroke-dashoffset 0.55s var(--spring)"/></svg>
               <span class="habit-ring-icon">🧘</span>
             </div>
             <div class="habit-ring-label">Breathe</div>
           </div>
           <div class="habit-ring-wrap" onclick="toggleHabit(this,3)">
             <div class="habit-ring">
-              <svg viewBox="0 0 52 52"><circle cx="26" cy="26" r="22" fill="none" stroke="var(--rim)" stroke-width="3.5"/><circle cx="26" cy="26" r="22" fill="none" stroke="var(--amber)" stroke-width="3.5" stroke-dasharray="138" stroke-dashoffset="138" class="h-arc" id="h3" style="transition:stroke-dashoffset 0.5s var(--spring)"/></svg>
+              <svg viewBox="0 0 56 56"><circle cx="28" cy="28" r="24" fill="none" stroke="rgba(255,159,10,0.15)" stroke-width="4"/><circle cx="28" cy="28" r="24" fill="none" stroke="#FF9F0A" stroke-width="4" stroke-dasharray="150.8" stroke-dashoffset="150.8" stroke-linecap="round" class="h-arc" id="h3" style="transition:stroke-dashoffset 0.55s var(--spring)"/></svg>
               <span class="habit-ring-icon">💧</span>
             </div>
             <div class="habit-ring-label">Hydrate</div>
           </div>
           <div class="habit-ring-wrap" onclick="toggleHabit(this,4)">
             <div class="habit-ring">
-              <svg viewBox="0 0 52 52"><circle cx="26" cy="26" r="22" fill="none" stroke="var(--rim)" stroke-width="3.5"/><circle cx="26" cy="26" r="22" fill="none" stroke="var(--lavender)" stroke-width="3.5" stroke-dasharray="138" stroke-dashoffset="138" class="h-arc" id="h4" style="transition:stroke-dashoffset 0.5s var(--spring)"/></svg>
+              <svg viewBox="0 0 56 56"><circle cx="28" cy="28" r="24" fill="none" stroke="rgba(125,122,255,0.15)" stroke-width="4"/><circle cx="28" cy="28" r="24" fill="none" stroke="#7D7AFF" stroke-width="4" stroke-dasharray="150.8" stroke-dashoffset="150.8" stroke-linecap="round" class="h-arc" id="h4" style="transition:stroke-dashoffset 0.55s var(--spring)"/></svg>
               <span class="habit-ring-icon">✍️</span>
             </div>
             <div class="habit-ring-label">Journal</div>
@@ -831,90 +713,78 @@ html,body{
 
       <button class="ground-btn" onclick="openPanic()">
         <span class="ground-btn-icon">🫂</span>
-        <div class="ground-btn-text">
+        <div>
           <div class="gbt">Need grounding?</div>
           <div class="gbs">Breathing, visualization, and crisis support</div>
         </div>
       </button>
-
     </div>
-  </div>
 
-  <!-- ── SOUL SCREEN ── -->
-  <div id="screen-soul" class="screen">
-    <div class="soul-header">
-      <div class="soul-presence">
-        <div class="soul-orb-sm"></div>
-        <div>
-          <div class="soul-name">Soul</div>
-          <div class="soul-status"><span class="soul-status-dot"></span>Present</div>
+    <!-- SOUL -->
+    <div id="screen-soul" class="screen">
+      <div class="soul-header">
+        <div class="soul-presence">
+          <div class="soul-orb-sm"></div>
+          <div>
+            <div class="soul-name">Soul</div>
+            <div class="soul-status"><span class="soul-status-dot"></span>Present</div>
+          </div>
+        </div>
+        <button class="soul-action" onclick="clearChat()">Clear</button>
+      </div>
+      <div class="messages" id="messages">
+        <div class="msg-ai">
+          <div class="msg-ai-text">How are you feeling right now?<br/>You can share anything — I'm listening.</div>
+          <div class="msg-ai-time">Just now</div>
         </div>
       </div>
-      <button class="soul-action" onclick="clearChat()">Clear</button>
-    </div>
-
-    <div class="messages" id="messages">
-      <div class="msg-ai">
-        <div class="msg-ai-text">How are you feeling right now?<br/>You can share anything — I'm listening.</div>
-        <div class="msg-ai-time">Just now</div>
+      <div class="typing-wrap"><div class="typing-dots" id="typing"><div class="td"></div><div class="td"></div><div class="td"></div></div></div>
+      <div class="chat-bar">
+        <textarea class="chat-input" id="chat-input" placeholder="Say anything." rows="1"
+          oninput="onChatInput(this)"
+          onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage()}"></textarea>
+        <button class="send-btn" id="send-btn" onclick="sendMessage()">
+          <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        </button>
       </div>
     </div>
 
-    <div class="typing-wrap"><div class="typing-orb" id="typing"></div></div>
-
-    <div class="chat-bar">
-      <textarea class="chat-input" id="chat-input" placeholder="Say anything." rows="1"
-        oninput="onChatInput(this)"
-        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage()}"
-      ></textarea>
-      <button class="send-btn" id="send-btn" onclick="sendMessage()">
-        <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
-      </button>
-    </div>
-  </div>
-
-  <!-- ── YOU SCREEN ── -->
-  <div id="screen-you" class="screen">
-    <div class="scroll">
+    <!-- YOU -->
+    <div id="screen-you" class="screen">
       <div class="you-header">
         <div class="you-title">You</div>
         <button class="you-profile-btn" onclick="openProfile()">👤</button>
       </div>
-
       <div class="soul-letter">
         <div class="sl-from">Soul's reflection · This week</div>
         <div class="sl-body">You showed up 6 out of 7 days. Your mood was highest on Tuesday afternoon. Something shifted Thursday — you seemed more guarded than usual. Sunday evenings remain a pattern worth exploring.<br/><br/>You're trending toward openness. That's new.</div>
         <div class="sl-date">June 9–15, 2026</div>
       </div>
-
       <div class="you-section">
         <div class="you-section-head">
           <div class="you-section-title">Journal</div>
           <button class="you-new-btn" onclick="openCompose()">+ New</button>
         </div>
         <div id="journal-list">
-          <div class="journal-entry" onclick="openEntry(0)">
+          <button class="journal-entry" onclick="openEntry(0)">
             <div class="je-meta"><span class="je-date">Today</span><span class="je-mood">😌</span></div>
             <div class="je-title">Feeling more settled lately</div>
             <div class="je-preview">I've been noticing that mornings feel lighter. There's still the usual noise but I'm not as caught in it as I used to be.</div>
-          </div>
-          <div class="journal-entry" onclick="openEntry(1)">
+          </button>
+          <button class="journal-entry" onclick="openEntry(1)">
             <div class="je-meta"><span class="je-date">Yesterday · 9:42 PM</span><span class="je-mood">😟</span></div>
             <div class="je-title">Hard day at work</div>
             <div class="je-preview">Everything felt like too much. The meeting went badly and I couldn't shake the feeling that I said the wrong thing.</div>
-          </div>
-          <div class="journal-entry" onclick="openEntry(2)">
+          </button>
+          <button class="journal-entry" onclick="openEntry(2)">
             <div class="je-meta"><span class="je-date">2 days ago</span><span class="je-mood">😊</span></div>
             <div class="je-title">Small win</div>
             <div class="je-preview">Actually finished the project I'd been avoiding for two weeks. Felt good. Need to remember this feeling.</div>
-          </div>
+          </button>
         </div>
       </div>
-
       <div class="you-section" style="padding-bottom:40px;">
-        <div class="you-section-head">
-          <div class="you-section-title">Patterns</div>
-        </div>
+        <div class="you-section-head"><div class="you-section-title">Patterns</div></div>
         <div class="pattern-card">
           <div class="pc-type">Temporal pattern · Confirmed</div>
           <div class="pc-text">Sunday evenings consistently carry a different kind of weight for you.</div>
@@ -926,11 +796,11 @@ html,body{
           <div class="pc-confidence">Noticed 4 times</div>
         </div>
       </div>
-
     </div>
-  </div>
 
-  <!-- ── TAB BAR ── -->
+  </div><!-- end #screens -->
+
+  <!-- TAB BAR -->
   <div class="tab-bar">
     <button class="tab active" id="tab-today" onclick="goTab('today')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -955,9 +825,7 @@ html,body{
 
 </div><!-- end #app -->
 
-<!-- ══════════════════════════════════════════
-     CHECK-IN OVERLAY
-══════════════════════════════════════════ -->
+<!-- CHECK-IN -->
 <div class="ci-overlay" id="ci-overlay">
   <div class="ci-nav">
     <button class="ci-close" onclick="closeCheckIn()">✕</button>
@@ -967,11 +835,9 @@ html,body{
       <div class="ci-dot" id="ci-p2"></div>
       <div class="ci-dot" id="ci-p3"></div>
     </div>
-    <div style="width:34px"></div>
+    <div style="width:32px"></div>
   </div>
-
   <div class="ci-body">
-    <!-- Step 0: Mood -->
     <div class="ci-step active" id="ci-s0">
       <div class="ci-q">How are you feeling right now?</div>
       <div class="ci-emotions">
@@ -985,46 +851,37 @@ html,body{
         <button class="ci-em" onclick="ciSelect(this,'mood')"><span class="ci-em-icon">🤩</span>Amazing</button>
       </div>
     </div>
-
-    <!-- Step 1: Energy -->
     <div class="ci-step" id="ci-s1">
       <div class="ci-q">How's your energy today?</div>
       <div class="ci-scale">
-        <div class="ci-scale-btn" onclick="ciSelect(this,'energy')"><span class="csb-label">Running on empty</span><span class="csb-check">✓</span></div>
-        <div class="ci-scale-btn" onclick="ciSelect(this,'energy')"><span class="csb-label">Low, but present</span><span class="csb-check">✓</span></div>
-        <div class="ci-scale-btn" onclick="ciSelect(this,'energy')"><span class="csb-label">Somewhere in the middle</span><span class="csb-check">✓</span></div>
-        <div class="ci-scale-btn" onclick="ciSelect(this,'energy')"><span class="csb-label">Mostly good</span><span class="csb-check">✓</span></div>
-        <div class="ci-scale-btn" onclick="ciSelect(this,'energy')"><span class="csb-label">Energized and clear</span><span class="csb-check">✓</span></div>
+        <button class="ci-scale-btn" onclick="ciSelect(this,'energy')"><span class="csb-label">Running on empty</span><span class="csb-check">✓</span></button>
+        <button class="ci-scale-btn" onclick="ciSelect(this,'energy')"><span class="csb-label">Low, but present</span><span class="csb-check">✓</span></button>
+        <button class="ci-scale-btn" onclick="ciSelect(this,'energy')"><span class="csb-label">Somewhere in the middle</span><span class="csb-check">✓</span></button>
+        <button class="ci-scale-btn" onclick="ciSelect(this,'energy')"><span class="csb-label">Mostly good</span><span class="csb-check">✓</span></button>
+        <button class="ci-scale-btn" onclick="ciSelect(this,'energy')"><span class="csb-label">Energized and clear</span><span class="csb-check">✓</span></button>
       </div>
     </div>
-
-    <!-- Step 2: Grounded -->
     <div class="ci-step" id="ci-s2">
       <div class="ci-q">How grounded do you feel?</div>
       <div class="ci-scale">
-        <div class="ci-scale-btn" onclick="ciSelect(this,'ground')"><span class="csb-label">Scattered and overwhelmed</span><span class="csb-check">✓</span></div>
-        <div class="ci-scale-btn" onclick="ciSelect(this,'ground')"><span class="csb-label">A bit unsettled</span><span class="csb-check">✓</span></div>
-        <div class="ci-scale-btn" onclick="ciSelect(this,'ground')"><span class="csb-label">Okay, getting there</span><span class="csb-check">✓</span></div>
-        <div class="ci-scale-btn" onclick="ciSelect(this,'ground')"><span class="csb-label">Mostly steady</span><span class="csb-check">✓</span></div>
-        <div class="ci-scale-btn" onclick="ciSelect(this,'ground')"><span class="csb-label">Rooted and clear</span><span class="csb-check">✓</span></div>
+        <button class="ci-scale-btn" onclick="ciSelect(this,'ground')"><span class="csb-label">Scattered and overwhelmed</span><span class="csb-check">✓</span></button>
+        <button class="ci-scale-btn" onclick="ciSelect(this,'ground')"><span class="csb-label">A bit unsettled</span><span class="csb-check">✓</span></button>
+        <button class="ci-scale-btn" onclick="ciSelect(this,'ground')"><span class="csb-label">Okay, getting there</span><span class="csb-check">✓</span></button>
+        <button class="ci-scale-btn" onclick="ciSelect(this,'ground')"><span class="csb-label">Mostly steady</span><span class="csb-check">✓</span></button>
+        <button class="ci-scale-btn" onclick="ciSelect(this,'ground')"><span class="csb-label">Rooted and clear</span><span class="csb-check">✓</span></button>
       </div>
     </div>
-
-    <!-- Step 3: Free text -->
     <div class="ci-step" id="ci-s3">
       <div class="ci-q">Anything on your mind?</div>
       <textarea class="ci-free" id="ci-free" placeholder="Optional — write freely." rows="4"></textarea>
     </div>
   </div>
-
   <div class="ci-footer">
     <button class="ci-next" id="ci-next-btn" onclick="ciNext()">Continue</button>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════
-     PANIC OVERLAY
-══════════════════════════════════════════ -->
+<!-- PANIC -->
 <div class="panic-overlay" id="panic-overlay">
   <button class="panic-close" onclick="closePanic()">Close</button>
   <div class="panic-main">
@@ -1052,9 +909,7 @@ html,body{
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════
-     GROUNDING OVERLAY
-══════════════════════════════════════════ -->
+<!-- GROUNDING -->
 <div class="ground-overlay" id="ground-overlay">
   <button class="ground-close" onclick="closeGrounding()">Close</button>
   <div class="ground-body">
@@ -1068,9 +923,7 @@ html,body{
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════
-     PROFILE OVERLAY
-══════════════════════════════════════════ -->
+<!-- PROFILE -->
 <div class="profile-overlay" id="profile-overlay">
   <div class="profile-nav">
     <button class="profile-back" onclick="closeProfile()">← Back</button>
@@ -1082,38 +935,37 @@ html,body{
     <div class="profile-name" id="profile-name-display">Shamikh</div>
     <div class="profile-since">Member since June 2026 · Day 12</div>
     <div class="profile-soul-line" id="soul-sees">"Shamikh shows up more openly this month."</div>
-
     <div class="profile-section">
       <div class="profile-section-title">Relationship with Soul</div>
-      <div class="profile-row">
-        <span class="profile-row-label">Stage</span>
-        <span class="profile-row-val">Soul is starting to know you.</span>
-      </div>
-      <div class="profile-row">
-        <span class="profile-row-label">Conversations</span>
-        <span class="profile-row-val">18 this month</span>
+      <div class="profile-group">
+        <div class="profile-row">
+          <span class="profile-row-label">Stage</span>
+          <span class="profile-row-val">Soul is starting to know you.</span>
+        </div>
+        <div class="profile-row">
+          <span class="profile-row-label">Conversations</span>
+          <span class="profile-row-val">18 this month</span>
+        </div>
       </div>
     </div>
-
     <div class="profile-section">
       <div class="profile-section-title">Settings</div>
-      <div class="profile-row" onclick="showToast('Notifications coming soon')">
-        <span class="profile-row-label">Notifications</span>
-        <span class="profile-row-val">Off ›</span>
-      </div>
-      <div class="profile-row" onclick="showToast('Privacy settings coming soon')">
-        <span class="profile-row-label">Data & Privacy</span>
-        <span class="profile-row-val">›</span>
+      <div class="profile-group">
+        <button class="profile-row" onclick="showToast('Notifications coming soon')">
+          <span class="profile-row-label">Notifications</span>
+          <span class="profile-row-val">Off ›</span>
+        </button>
+        <button class="profile-row" onclick="showToast('Privacy settings coming soon')">
+          <span class="profile-row-label">Data &amp; Privacy</span>
+          <span class="profile-row-val">›</span>
+        </button>
       </div>
     </div>
-
     <button class="profile-delete" onclick="showToast('Delete everything — coming in full app')">Delete all my data</button>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════
-     JOURNAL COMPOSE
-══════════════════════════════════════════ -->
+<!-- COMPOSE -->
 <div class="compose-overlay" id="compose-overlay">
   <div class="compose-nav">
     <button class="compose-cancel" onclick="closeCompose()">Cancel</button>
@@ -1123,9 +975,7 @@ html,body{
   <textarea class="compose-area" id="compose-area" placeholder="What's on your mind?"></textarea>
 </div>
 
-<!-- ══════════════════════════════════════════
-     JOURNAL READ
-══════════════════════════════════════════ -->
+<!-- READ -->
 <div class="read-overlay" id="read-overlay">
   <div class="read-nav">
     <button class="read-back" onclick="closeRead()">← Journal</button>
@@ -1141,10 +991,8 @@ html,body{
   </div>
 </div>
 
-<!-- ══ TOAST ══ -->
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-<!-- ══ INSTALL BANNER ══ -->
 <div id="install-banner" role="complementary">
   <div class="ib-icon">📲</div>
   <div><div class="ib-t">Add to Home Screen</div><div class="ib-s">Install for the full experience</div></div>
@@ -1157,7 +1005,6 @@ html,body{
 <script>
 'use strict';
 
-// ── STATE ──
 const state = {
   name: localStorage.getItem('sc_name') || '',
   onboarded: localStorage.getItem('sc_onboarded') === '1',
@@ -1172,7 +1019,7 @@ const state = {
   groundFlow: null,
 };
 
-// ── ONBOARDING ──
+// Init
 if (state.onboarded) {
   document.getElementById('onboarding').classList.add('hidden');
   if (state.name) setName(state.name);
@@ -1180,6 +1027,7 @@ if (state.onboarded) {
   document.getElementById('app').style.display = 'none';
 }
 
+// Onboarding
 function obNext(n) {
   document.querySelectorAll('.ob-step').forEach(s => s.classList.remove('active'));
   document.getElementById('ob-' + n).classList.add('active');
@@ -1196,7 +1044,7 @@ function obSelectReason(el) {
 function onNameInput() {
   const v = document.getElementById('ob-name').value.trim();
   const btn = document.getElementById('ob-name-btn');
-  btn.style.opacity = v ? '1' : '0.4';
+  btn.style.opacity = v ? '1' : '0.35';
   btn.style.pointerEvents = v ? 'auto' : 'none';
 }
 
@@ -1207,19 +1055,21 @@ function obSubmitName() {
   localStorage.setItem('sc_name', v);
   localStorage.setItem('sc_onboarded', '1');
   document.getElementById('ob-name-heading').textContent = 'Nice to meet you, ' + v + '.';
-  document.getElementById('ob-name-btn').textContent = "Let's begin →";
-  document.getElementById('ob-name-btn').onclick = startApp;
+  const btn = document.getElementById('ob-name-btn');
+  btn.textContent = "Let's begin →";
+  btn.onclick = startApp;
 }
 
 function startApp() {
   document.getElementById('onboarding').classList.add('hidden');
-  document.getElementById('app').style.display = 'flex';
+  const app = document.getElementById('app');
+  app.style.display = 'flex';
   setName(state.name);
   state.onboarded = true;
   openCheckIn();
 }
 
-// ── NAVIGATION ──
+// Navigation
 function goTab(name) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
@@ -1227,7 +1077,6 @@ function goTab(name) {
   document.getElementById('tab-' + name).classList.add('active');
 }
 
-// ── NAME / GREETING ──
 function setName(n) {
   document.getElementById('today-name').textContent = n;
   document.getElementById('profile-name-display').textContent = n;
@@ -1236,7 +1085,6 @@ function setName(n) {
   document.getElementById('today-greeting').textContent = g;
 }
 
-// ── QUESTIONS rotation ──
 const questions = [
   '"What\'s the first thing you noticed this morning?"',
   '"If today had a color, what would it be?"',
@@ -1246,59 +1094,69 @@ const questions = [
 ];
 document.getElementById('today-question').textContent = questions[new Date().getDay() % questions.length];
 
-// ── HABITS ──
+// Habits
 function toggleHabit(wrap, idx) {
   state.habits[idx] = !state.habits[idx];
   localStorage.setItem('sc_habits', JSON.stringify(state.habits));
-  const arc = document.getElementById('h' + idx);
-  arc.style.strokeDashoffset = state.habits[idx] ? '0' : '138';
+  updateHabitRing(idx);
   if (state.habits[idx]) showToast('Habit complete ✓');
 }
-// init rings
-state.habits.forEach((done, i) => {
-  const arc = document.getElementById('h' + i);
-  if (arc) arc.style.strokeDashoffset = done ? '0' : '138';
-});
 
-// ── CHECK-IN ──
+function updateHabitRing(idx) {
+  const arc = document.getElementById('h' + idx);
+  if (arc) arc.style.strokeDashoffset = state.habits[idx] ? '0' : '150.8';
+}
+
+state.habits.forEach((_, i) => updateHabitRing(i));
+
+// Check-in
 let ciData = {};
 function openCheckIn() {
   ciData = {}; state.ciStep = 0;
   updateCiProgress(0);
-  document.querySelectorAll('.ci-step').forEach((s,i) => s.classList.toggle('active', i===0));
+  document.querySelectorAll('.ci-step').forEach((s,i) => {
+    s.classList.toggle('active', i === 0);
+  });
   document.querySelectorAll('.ci-em,.ci-scale-btn').forEach(el => el.classList.remove('sel'));
   document.getElementById('ci-free').value = '';
   document.getElementById('ci-next-btn').textContent = 'Continue';
   document.getElementById('ci-overlay').classList.add('open');
 }
 function closeCheckIn() { document.getElementById('ci-overlay').classList.remove('open'); }
+
 function updateCiProgress(step) {
-  for (let i=0;i<4;i++) {
-    const d = document.getElementById('ci-p'+i);
+  for (let i = 0; i < 4; i++) {
+    const d = document.getElementById('ci-p' + i);
     d.classList.toggle('done', i < step);
     d.classList.toggle('active', i === step);
   }
 }
+
 function ciSelect(el, group) {
-  el.closest('.ci-step').querySelectorAll('.ci-em.sel, .ci-scale-btn.sel').forEach(e => e.classList.remove('sel'));
+  el.closest('.ci-step').querySelectorAll('.ci-em.sel,.ci-scale-btn.sel').forEach(e => e.classList.remove('sel'));
   el.classList.add('sel');
   ciData[group] = el.textContent.trim();
-  setTimeout(() => ciNext(), 180);
+  setTimeout(() => ciNext(), 200);
 }
+
 function ciNext() {
   if (state.ciStep === 3) { submitCheckIn(); return; }
+  const prev = document.getElementById('ci-s' + state.ciStep);
   state.ciStep++;
-  document.querySelectorAll('.ci-step').forEach((s,i) => s.classList.toggle('active', i===state.ciStep));
+  const next = document.getElementById('ci-s' + state.ciStep);
+  prev.classList.remove('active');
+  next.classList.add('active');
   updateCiProgress(state.ciStep);
   if (state.ciStep === 3) document.getElementById('ci-next-btn').textContent = 'Done';
 }
+
 function submitCheckIn() {
   closeCheckIn();
   showToast('Check-in saved ✓');
   document.getElementById('today-context').textContent = 'Just checked in. Soul is listening.';
 }
 
-// ── SOUL CHAT ──
+// Chat
 const responses = [
   "Thank you for sharing that. What's sitting heaviest right now?",
   "That makes sense. It sounds like you've been carrying a lot. What does it feel like in your body?",
@@ -1314,8 +1172,7 @@ let rIdx = 0;
 function onChatInput(el) {
   el.style.height = 'auto';
   el.style.height = Math.min(el.scrollHeight, 120) + 'px';
-  const btn = document.getElementById('send-btn');
-  btn.classList.toggle('visible', el.value.trim().length > 0);
+  document.getElementById('send-btn').classList.toggle('visible', el.value.trim().length > 0);
 }
 
 function sendMessage() {
@@ -1327,17 +1184,15 @@ function sendMessage() {
   document.getElementById('send-btn').classList.remove('visible');
   const typing = document.getElementById('typing');
   typing.classList.add('visible');
-  document.getElementById('messages').appendChild(typing.parentElement.removeChild(typing));
   scrollChat();
   setTimeout(() => {
     typing.classList.remove('visible');
-    const reply = responses[rIdx++ % responses.length];
-    addMsg('ai', reply);
-  }, 1000 + Math.random() * 700);
+    addMsg('ai', responses[rIdx++ % responses.length]);
+  }, 900 + Math.random() * 600);
 }
 
 function addMsg(role, text) {
-  const now = new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  const now = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
   const el = document.createElement('div');
   if (role === 'ai') {
     el.className = 'msg-ai';
@@ -1346,7 +1201,8 @@ function addMsg(role, text) {
     el.className = 'msg-user';
     el.innerHTML = `<div class="msg-user-bubble">${text}</div><div class="msg-user-time">${now}</div>`;
   }
-  document.getElementById('messages').appendChild(el);
+  const msgs = document.getElementById('messages');
+  msgs.insertBefore(el, document.getElementById('typing').parentElement);
   scrollChat();
 }
 
@@ -1361,38 +1217,34 @@ function clearChat() {
       <div class="msg-ai-text">How are you feeling right now?<br/>You can share anything — I'm listening.</div>
       <div class="msg-ai-time">Just now</div>
     </div>`;
+  document.getElementById('messages').appendChild(document.getElementById('typing').parentElement);
 }
 
-// ── PANIC ──
+// Panic
 function openPanic() { document.getElementById('panic-overlay').classList.add('open'); }
 function closePanic() { document.getElementById('panic-overlay').classList.remove('open'); }
 function closePanicGoChat() { closePanic(); goTab('soul'); }
 
-// ── GROUNDING ──
+// Grounding
 const flows = {
-  '54321': {
-    steps: [
-      {l:'Step 1 of 5 · See',t:'Look around you.',h:'Name 5 things you can see right now. Take your time.'},
-      {l:'Step 2 of 5 · Touch',t:'Notice 4 things you can touch.',h:'Feel their texture. Their temperature. Be here.'},
-      {l:'Step 3 of 5 · Hear',t:'Listen carefully.',h:'What are 3 things you can hear? Near ones and far ones.'},
-      {l:'Step 4 of 5 · Smell',t:'Notice 2 things you can smell.',h:'Or imagine a scent that feels safe to you.'},
-      {l:'Step 5 of 5 · Taste',t:'Notice 1 thing you can taste.',h:'Take one slow, deep breath. You made it through.'},
-    ]
-  },
-  'breathing': {
-    steps: [
-      {l:'Box breathing · Round 1',t:'Breathe in.',h:'Slowly, for 4 counts. 1… 2… 3… 4…'},
-      {l:'Box breathing · Hold',t:'Hold.',h:'4 counts. 1… 2… 3… 4…'},
-      {l:'Box breathing · Out',t:'Breathe out.',h:'Slowly, for 4 counts. 1… 2… 3… 4…'},
-      {l:'Box breathing · Hold empty',t:'Hold.',h:'Empty lungs, 4 counts. 1… 2… 3… 4… Then repeat.'},
-    ]
-  }
+  '54321': {steps:[
+    {l:'Step 1 of 5 · See',t:'Look around you.',h:'Name 5 things you can see right now. Take your time.'},
+    {l:'Step 2 of 5 · Touch',t:'Notice 4 things you can touch.',h:'Feel their texture. Their temperature. Be here.'},
+    {l:'Step 3 of 5 · Hear',t:'Listen carefully.',h:'What are 3 things you can hear? Near ones and far ones.'},
+    {l:'Step 4 of 5 · Smell',t:'Notice 2 things you can smell.',h:'Or imagine a scent that feels safe to you.'},
+    {l:'Step 5 of 5 · Taste',t:'Notice 1 thing you can taste.',h:'Take one slow, deep breath. You made it through.'},
+  ]},
+  'breathing': {steps:[
+    {l:'Box breathing · Round 1',t:'Breathe in.',h:'Slowly, for 4 counts. 1… 2… 3… 4…'},
+    {l:'Box breathing · Hold',t:'Hold.',h:'4 counts. 1… 2… 3… 4…'},
+    {l:'Box breathing · Out',t:'Breathe out.',h:'Slowly, for 4 counts. 1… 2… 3… 4…'},
+    {l:'Box breathing · Hold empty',t:'Hold.',h:'Empty lungs, 4 counts. 1… 2… 3… 4… Then repeat.'},
+  ]}
 };
 
 function startGrounding(key) {
   closePanic();
-  state.groundFlow = key;
-  state.groundStep = 0;
+  state.groundFlow = key; state.groundStep = 0;
   renderGroundStep();
   document.getElementById('ground-overlay').classList.add('open');
 }
@@ -1400,15 +1252,12 @@ function startGrounding(key) {
 function renderGroundStep() {
   const f = flows[state.groundFlow];
   const s = f.steps[state.groundStep];
-  const total = f.steps.length;
   document.getElementById('g-label').textContent = s.l;
   document.getElementById('g-text').textContent = s.t;
   document.getElementById('g-hint').textContent = s.h;
-  const last = state.groundStep === total - 1;
-  document.getElementById('g-next').textContent = last ? "I'm feeling better" : 'Next';
-  // progress dots
+  document.getElementById('g-next').textContent = state.groundStep === f.steps.length - 1 ? "I'm feeling better" : 'Next';
   let html = '';
-  for (let i=0;i<total;i++) {
+  for (let i = 0; i < f.steps.length; i++) {
     const cls = i < state.groundStep ? 'done' : i === state.groundStep ? 'active' : '';
     html += `<div class="gp-dot ${cls}"></div>`;
   }
@@ -1425,20 +1274,16 @@ function groundNext() {
     showToast('Well done. You did something brave.');
   }
 }
+function closeGrounding() { document.getElementById('ground-overlay').classList.remove('open'); }
 
-function closeGrounding() {
-  document.getElementById('ground-overlay').classList.remove('open');
-}
-
-// ── JOURNAL ──
+// Journal
 function renderJournalList() {
-  const list = document.getElementById('journal-list');
-  list.innerHTML = state.journals.map((j,i) => `
-    <div class="journal-entry" onclick="openEntry(${i})">
+  document.getElementById('journal-list').innerHTML = state.journals.map((j,i) => `
+    <button class="journal-entry" onclick="openEntry(${i})">
       <div class="je-meta"><span class="je-date">${j.date}</span><span class="je-mood">${j.mood}</span></div>
       <div class="je-title">${j.title}</div>
       <div class="je-preview">${j.text}</div>
-    </div>`).join('');
+    </button>`).join('');
 }
 
 function openEntry(idx) {
@@ -1449,16 +1294,14 @@ function openEntry(idx) {
   document.getElementById('read-ref').textContent = j.ref || 'Soul is still reflecting on this.';
   document.getElementById('read-overlay').classList.add('open');
 }
-
 function closeRead() { document.getElementById('read-overlay').classList.remove('open'); }
 
 function openCompose() {
   document.getElementById('compose-area').value = '';
   document.getElementById('compose-date').textContent = new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
   document.getElementById('compose-overlay').classList.add('open');
-  setTimeout(() => document.getElementById('compose-area').focus(), 300);
+  setTimeout(() => document.getElementById('compose-area').focus(), 350);
 }
-
 function closeCompose() { document.getElementById('compose-overlay').classList.remove('open'); }
 
 function saveEntry() {
@@ -1475,11 +1318,11 @@ function saveEntry() {
   showToast('Entry saved');
 }
 
-// ── PROFILE ──
+// Profile
 function openProfile() { document.getElementById('profile-overlay').classList.add('open'); }
 function closeProfile() { document.getElementById('profile-overlay').classList.remove('open'); }
 
-// ── TOAST ──
+// Toast
 let toastT;
 function showToast(msg) {
   const t = document.getElementById('toast');
@@ -1489,7 +1332,7 @@ function showToast(msg) {
   toastT = setTimeout(() => t.classList.remove('show'), 2400);
 }
 
-// ── PWA INSTALL ──
+// PWA Install
 let deferredPrompt;
 window.addEventListener('beforeinstallprompt', e => {
   e.preventDefault(); deferredPrompt = e;
@@ -1505,10 +1348,10 @@ document.getElementById('install-btn').addEventListener('click', async () => {
 function dismissInstall() { document.getElementById('install-banner').classList.remove('show'); }
 window.addEventListener('appinstalled', () => showToast('SoulCap installed ✓'));
 
-// ── SERVICE WORKER ──
+// Service Worker
 if ('serviceWorker' in navigator) {
   const p = location.hostname === 'localhost' ? '/sw.js' : '/SoulCap/sw.js';
-  navigator.serviceWorker.register(p).catch(()=>{});
+  navigator.serviceWorker.register(p).catch(() => {});
 }
 </script>
 </body>
