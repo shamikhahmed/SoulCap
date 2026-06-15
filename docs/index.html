@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#7c6ff7" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="SoulCap" />
+  <meta name="description" content="Your AI emotional wellness companion" />
+
+  <link rel="manifest" href="manifest.json" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+
+  <title>SoulCap</title>
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0f0f1a;
+      --surface: #1a1a2e;
+      --surface2: #22223b;
+      --surface3: #2d2d4e;
+      --accent: #7c6ff7;
+      --accent2: #a78bfa;
+      --accent-glow: rgba(124,111,247,0.18);
+      --green: #34d399;
+      --red: #f87171;
+      --yellow: #fbbf24;
+      --text: #e8e8f0;
+      --text2: #9898b8;
+      --text3: #5a5a80;
+      --radius: 18px;
+      --radius-sm: 10px;
+      --tab-h: 68px;
+      --header-h: 60px;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+    }
+
+    html, body {
+      height: 100%;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    #app {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      max-width: 480px;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* ── SCREENS ── */
+    .screen {
+      display: none;
+      flex-direction: column;
+      flex: 1;
+      overflow: hidden;
+      padding-top: var(--safe-top);
+    }
+    .screen.active { display: flex; }
+
+    /* ── HEADER ── */
+    .header {
+      height: var(--header-h);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      flex-shrink: 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .header-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .header-logo {
+      font-size: 20px;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .header-sub { font-size: 12px; color: var(--text2); margin-top: 1px; }
+    .icon-btn {
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      background: var(--surface2);
+      border: none;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px;
+      color: var(--text);
+      transition: background 0.15s;
+    }
+    .icon-btn:active { background: var(--surface3); }
+
+    /* ── TAB BAR ── */
+    .tab-bar {
+      height: calc(var(--tab-h) + var(--safe-bottom));
+      padding-bottom: var(--safe-bottom);
+      background: var(--surface);
+      display: flex;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      flex-shrink: 0;
+    }
+    .tab {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      gap: 4px;
+      border: none;
+      background: none;
+      color: var(--text3);
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      transition: color 0.15s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .tab.active { color: var(--accent2); }
+    .tab .tab-icon { font-size: 22px; line-height: 1; }
+    .tab.active .tab-icon { filter: drop-shadow(0 0 6px var(--accent)); }
+
+    /* ── SCROLL AREA ── */
+    .scroll { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+    .scroll::-webkit-scrollbar { display: none; }
+
+    /* ── HOME SCREEN ── */
+    .home-hero {
+      padding: 28px 20px 20px;
+    }
+    .greeting { font-size: 26px; font-weight: 800; line-height: 1.2; }
+    .greeting span { color: var(--accent2); }
+    .home-sub { font-size: 14px; color: var(--text2); margin-top: 6px; }
+
+    .checkin-card {
+      margin: 0 16px 16px;
+      background: linear-gradient(135deg, #1e1b4b, #2d2d4e);
+      border-radius: var(--radius);
+      padding: 20px;
+      border: 1px solid rgba(124,111,247,0.2);
+      cursor: pointer;
+      transition: transform 0.15s;
+    }
+    .checkin-card:active { transform: scale(0.98); }
+    .checkin-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--accent2); }
+    .checkin-q { font-size: 18px; font-weight: 700; margin-top: 8px; }
+    .checkin-hint { font-size: 13px; color: var(--text2); margin-top: 6px; }
+    .checkin-btn {
+      margin-top: 16px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--accent);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      padding: 10px 18px;
+      border-radius: 24px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 20px 12px;
+    }
+    .section-title { font-size: 16px; font-weight: 700; }
+    .see-all { font-size: 13px; color: var(--accent2); cursor: pointer; }
+
+    .quick-actions {
+      display: flex;
+      gap: 10px;
+      padding: 0 16px 20px;
+      overflow-x: auto;
+    }
+    .quick-actions::-webkit-scrollbar { display: none; }
+    .qa-card {
+      flex-shrink: 0;
+      width: 110px;
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 16px 12px;
+      border: 1px solid rgba(255,255,255,0.06);
+      cursor: pointer;
+      transition: border-color 0.15s;
+      text-align: center;
+    }
+    .qa-card:active { border-color: var(--accent); }
+    .qa-icon { font-size: 28px; margin-bottom: 8px; }
+    .qa-label { font-size: 12px; font-weight: 600; color: var(--text2); }
+
+    .mood-row {
+      display: flex;
+      gap: 8px;
+      padding: 0 16px 24px;
+      justify-content: center;
+    }
+    .mood-dot {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: var(--surface2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: border-color 0.15s, transform 0.1s;
+    }
+    .mood-dot:active { transform: scale(1.2); }
+    .mood-dot.selected { border-color: var(--accent); }
+
+    .panic-strip {
+      margin: 0 16px 24px;
+      background: linear-gradient(135deg, #3d1515, #4a1a1a);
+      border: 1px solid rgba(248,113,113,0.25);
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+    }
+    .panic-strip:active { opacity: 0.85; }
+    .panic-icon { font-size: 32px; }
+    .panic-text .pt { font-size: 15px; font-weight: 700; color: #fca5a5; }
+    .panic-text .ps { font-size: 12px; color: #f87171; opacity: 0.8; margin-top: 2px; }
+
+    /* ── CHAT SCREEN ── */
+    .messages-area {
+      flex: 1;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .messages-area::-webkit-scrollbar { display: none; }
+
+    .msg {
+      display: flex;
+      flex-direction: column;
+      max-width: 82%;
+    }
+    .msg.user { align-self: flex-end; align-items: flex-end; }
+    .msg.ai { align-self: flex-start; align-items: flex-start; }
+
+    .bubble {
+      padding: 12px 16px;
+      border-radius: 20px;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+    .msg.user .bubble {
+      background: var(--accent);
+      color: #fff;
+      border-bottom-right-radius: 6px;
+    }
+    .msg.ai .bubble {
+      background: var(--surface2);
+      color: var(--text);
+      border-bottom-left-radius: 6px;
+    }
+    .msg-time { font-size: 11px; color: var(--text3); margin-top: 4px; padding: 0 4px; }
+
+    .typing-indicator {
+      align-self: flex-start;
+      background: var(--surface2);
+      padding: 12px 18px;
+      border-radius: 20px;
+      border-bottom-left-radius: 6px;
+      display: none;
+    }
+    .typing-indicator.visible { display: flex; gap: 5px; align-items: center; }
+    .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--text3); animation: bounce 1.2s infinite; }
+    .dot:nth-child(2) { animation-delay: 0.2s; }
+    .dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
+
+    .chat-input-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 10px;
+      padding: 12px 16px;
+      padding-bottom: calc(12px + var(--safe-bottom));
+      background: var(--surface);
+      border-top: 1px solid rgba(255,255,255,0.05);
+      flex-shrink: 0;
+    }
+    .chat-input {
+      flex: 1;
+      background: var(--surface2);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 24px;
+      padding: 12px 18px;
+      color: var(--text);
+      font-size: 15px;
+      resize: none;
+      outline: none;
+      max-height: 120px;
+      min-height: 46px;
+      line-height: 1.4;
+      font-family: inherit;
+    }
+    .chat-input::placeholder { color: var(--text3); }
+    .send-btn {
+      width: 46px; height: 46px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: none;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .send-btn:active { transform: scale(0.92); background: var(--accent2); }
+
+    /* ── CHECK-IN SCREEN ── */
+    .checkin-screen { padding: 20px 20px 0; }
+    .ci-title { font-size: 22px; font-weight: 800; }
+    .ci-sub { font-size: 14px; color: var(--text2); margin-top: 6px; margin-bottom: 24px; }
+
+    .ci-section { margin-bottom: 28px; }
+    .ci-label { font-size: 13px; font-weight: 700; color: var(--accent2); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 14px; }
+
+    .emoji-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+    .emoji-opt {
+      background: var(--surface2);
+      border-radius: var(--radius-sm);
+      padding: 14px 8px;
+      text-align: center;
+      cursor: pointer;
+      border: 2px solid transparent;
+      transition: border-color 0.12s, background 0.12s;
+    }
+    .emoji-opt:active { background: var(--surface3); }
+    .emoji-opt.sel { border-color: var(--accent); background: var(--accent-glow); }
+    .emoji-opt .e { font-size: 26px; }
+    .emoji-opt .l { font-size: 11px; color: var(--text2); margin-top: 5px; }
+
+    .slider-wrap { padding: 0 4px; }
+    .slider {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: linear-gradient(to right, var(--accent) 0%, var(--accent) 50%, var(--surface3) 50%);
+      outline: none;
+    }
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 24px; height: 24px;
+      border-radius: 50%;
+      background: var(--accent2);
+      box-shadow: 0 0 0 4px rgba(124,111,247,0.25);
+      cursor: pointer;
+    }
+    .slider-labels { display: flex; justify-content: space-between; font-size: 11px; color: var(--text3); margin-top: 8px; }
+
+    .ci-submit {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border: none;
+      border-radius: var(--radius);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-bottom: 24px;
+      transition: opacity 0.15s;
+    }
+    .ci-submit:active { opacity: 0.88; }
+
+    /* ── JOURNAL SCREEN ── */
+    .journal-list { padding: 12px 16px; display: flex; flex-direction: column; gap: 12px; }
+    .journal-card {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 18px;
+      border: 1px solid rgba(255,255,255,0.06);
+      cursor: pointer;
+      transition: border-color 0.15s;
+    }
+    .journal-card:active { border-color: var(--accent); }
+    .jc-date { font-size: 11px; color: var(--text3); margin-bottom: 6px; }
+    .jc-title { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+    .jc-preview { font-size: 13px; color: var(--text2); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .jc-mood { font-size: 20px; float: right; margin-top: -2px; }
+
+    .new-entry-btn {
+      position: absolute;
+      bottom: calc(var(--tab-h) + var(--safe-bottom) + 20px);
+      right: 20px;
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: none;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 26px;
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(124,111,247,0.45);
+      transition: transform 0.12s;
+    }
+    .new-entry-btn:active { transform: scale(0.92); }
+
+    /* ── PANIC SCREEN ── */
+    .panic-header {
+      background: linear-gradient(180deg, #1a0505, var(--bg));
+      padding: 28px 20px 20px;
+      text-align: center;
+    }
+    .panic-big-icon { font-size: 56px; margin-bottom: 12px; }
+    .panic-main-title { font-size: 24px; font-weight: 800; color: #fca5a5; }
+    .panic-main-sub { font-size: 14px; color: var(--text2); margin-top: 8px; line-height: 1.5; }
+
+    .grounding-cards { padding: 0 16px 16px; display: flex; flex-direction: column; gap: 12px; }
+    .gc {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      border: 1px solid rgba(255,255,255,0.06);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: border-color 0.15s;
+    }
+    .gc:active { border-color: var(--accent); }
+    .gc-icon { font-size: 32px; flex-shrink: 0; }
+    .gc-title { font-size: 15px; font-weight: 700; }
+    .gc-desc { font-size: 12px; color: var(--text2); margin-top: 3px; }
+
+    .crisis-section { padding: 0 16px 100px; }
+    .crisis-label {
+      font-size: 12px; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.8px;
+      color: var(--red); margin-bottom: 12px;
+    }
+    .crisis-line {
+      background: #1a0a0a;
+      border-radius: var(--radius-sm);
+      padding: 14px 16px;
+      margin-bottom: 8px;
+      border: 1px solid rgba(248,113,113,0.15);
+      display: flex; align-items: center; gap: 12px;
+    }
+    .crisis-line .ci { font-size: 22px; }
+    .crisis-line .cn { font-size: 14px; font-weight: 700; color: #fca5a5; }
+    .crisis-line .cc { font-size: 12px; color: var(--text2); margin-top: 2px; }
+
+    /* ── GROUNDING MODAL ── */
+    .modal-overlay {
+      display: none;
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.7);
+      z-index: 100;
+      align-items: flex-end;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--surface);
+      border-radius: 28px 28px 0 0;
+      padding: 28px 24px;
+      padding-bottom: calc(28px + var(--safe-bottom));
+      width: 100%;
+      max-height: 88vh;
+      overflow-y: auto;
+      animation: slideUp 0.3s ease;
+    }
+    @keyframes slideUp { from{transform:translateY(100%)} to{transform:translateY(0)} }
+    .modal-handle { width: 40px; height: 4px; background: var(--surface3); border-radius: 2px; margin: 0 auto 20px; }
+    .modal-title { font-size: 20px; font-weight: 800; margin-bottom: 8px; }
+    .modal-sub { font-size: 14px; color: var(--text2); margin-bottom: 24px; line-height: 1.5; }
+
+    .step-card {
+      background: var(--bg);
+      border-radius: var(--radius);
+      padding: 18px;
+      margin-bottom: 12px;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .step-num { font-size: 11px; font-weight: 700; color: var(--accent2); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
+    .step-text { font-size: 15px; line-height: 1.6; }
+    .modal-close {
+      width: 100%;
+      padding: 15px;
+      background: var(--accent);
+      border: none;
+      border-radius: var(--radius);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    /* ── JOURNAL COMPOSE MODAL ── */
+    .compose-area {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius);
+      padding: 14px;
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.6;
+      resize: none;
+      height: 160px;
+      outline: none;
+      font-family: inherit;
+      margin-bottom: 16px;
+    }
+    .compose-area::placeholder { color: var(--text3); }
+
+    /* ── SUCCESS TOAST ── */
+    .toast {
+      position: fixed;
+      bottom: calc(var(--tab-h) + var(--safe-bottom) + 16px);
+      left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: #1a3a1a;
+      border: 1px solid var(--green);
+      color: var(--green);
+      padding: 12px 20px;
+      border-radius: 24px;
+      font-size: 14px;
+      font-weight: 600;
+      opacity: 0;
+      transition: opacity 0.25s, transform 0.25s;
+      z-index: 200;
+      white-space: nowrap;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ── INSTALL BANNER ── */
+    #install-banner {
+      display: none;
+      position: fixed;
+      bottom: calc(var(--tab-h) + var(--safe-bottom) + 12px);
+      left: 16px; right: 16px;
+      background: var(--surface);
+      border: 1px solid var(--accent);
+      border-radius: var(--radius);
+      padding: 16px;
+      z-index: 150;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    }
+    #install-banner.show { display: flex; align-items: center; gap: 14px; }
+    .ib-icon { font-size: 36px; flex-shrink: 0; }
+    .ib-text .ibt { font-size: 15px; font-weight: 700; }
+    .ib-text .ibs { font-size: 12px; color: var(--text2); margin-top: 3px; }
+    .ib-btns { margin-left: auto; display: flex; flex-direction: column; gap: 6px; }
+    .ib-install {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+    .ib-dismiss {
+      background: none;
+      border: none;
+      color: var(--text3);
+      font-size: 12px;
+      cursor: pointer;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- ══ HOME SCREEN ══ -->
+  <div id="screen-home" class="screen active">
+    <div class="header">
+      <div>
+        <div class="header-logo">SoulCap</div>
+        <div class="header-sub">Good to see you</div>
+      </div>
+      <button class="icon-btn" onclick="showToast('⚙️ Settings coming soon')">⚙️</button>
+    </div>
+    <div class="scroll" id="home-scroll">
+      <div class="home-hero">
+        <div class="greeting">How are you feeling<br /><span>right now?</span></div>
+        <div class="home-sub">Tap below to start your daily check-in</div>
+      </div>
+
+      <div class="mood-row">
+        <div class="mood-dot" onclick="pickMood(this,'😔')">😔</div>
+        <div class="mood-dot" onclick="pickMood(this,'😟')">😟</div>
+        <div class="mood-dot" onclick="pickMood(this,'😐')">😐</div>
+        <div class="mood-dot" onclick="pickMood(this,'🙂')">🙂</div>
+        <div class="mood-dot" onclick="pickMood(this,'😊')">😊</div>
+        <div class="mood-dot" onclick="pickMood(this,'😄')">😄</div>
+      </div>
+
+      <div class="checkin-card" onclick="goTab('checkin')">
+        <div class="checkin-label">Daily Check-In</div>
+        <div class="checkin-q">What's present for you today?</div>
+        <div class="checkin-hint">Takes about 30 seconds. Your LMM profile updates automatically.</div>
+        <button class="checkin-btn">Start Check-In →</button>
+      </div>
+
+      <div class="section-header">
+        <div class="section-title">Quick Access</div>
+      </div>
+
+      <div class="quick-actions">
+        <div class="qa-card" onclick="goTab('chat')">
+          <div class="qa-icon">💬</div>
+          <div class="qa-label">Talk to Soul</div>
+        </div>
+        <div class="qa-card" onclick="goTab('journal')">
+          <div class="qa-icon">📓</div>
+          <div class="qa-label">Journal</div>
+        </div>
+        <div class="qa-card" onclick="showToast('🌱 Habit tracking coming soon')">
+          <div class="qa-icon">🌱</div>
+          <div class="qa-label">Habits</div>
+        </div>
+        <div class="qa-card" onclick="showToast('🎯 Goals tracking coming soon')">
+          <div class="qa-icon">🎯</div>
+          <div class="qa-label">Goals</div>
+        </div>
+        <div class="qa-card" onclick="showToast('📈 Insights coming soon')">
+          <div class="qa-icon">📈</div>
+          <div class="qa-label">Insights</div>
+        </div>
+      </div>
+
+      <div class="panic-strip" onclick="goTab('panic')">
+        <div class="panic-icon">🆘</div>
+        <div class="panic-text">
+          <div class="pt">Feeling overwhelmed?</div>
+          <div class="ps">Tap for grounding exercises & crisis support</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ CHAT SCREEN ══ -->
+  <div id="screen-chat" class="screen">
+    <div class="header">
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#7c6ff7,#a78bfa);display:flex;align-items:center;justify-content:center;font-size:18px">🌙</div>
+        <div>
+          <div class="header-title">Soul</div>
+          <div class="header-sub" style="display:flex;align-items:center;gap:4px"><span style="width:6px;height:6px;border-radius:50%;background:#34d399;display:inline-block"></span> Active</div>
+        </div>
+      </div>
+      <button class="icon-btn" onclick="clearChat()">🗑</button>
+    </div>
+
+    <div class="messages-area" id="messages">
+      <div class="msg ai">
+        <div class="bubble">Hi, I'm Soul 🌙 I'm here with you. How are you feeling right now? You can share anything — I'm listening.</div>
+        <div class="msg-time">Just now</div>
+      </div>
+    </div>
+
+    <div class="typing-indicator" id="typing">
+      <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+    </div>
+
+    <div class="chat-input-row">
+      <textarea class="chat-input" id="chat-input" placeholder="Share what's on your mind…" rows="1"
+        oninput="autoResize(this)"
+        onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendMessage()}"
+      ></textarea>
+      <button class="send-btn" onclick="sendMessage()">➤</button>
+    </div>
+  </div>
+
+  <!-- ══ CHECK-IN SCREEN ══ -->
+  <div id="screen-checkin" class="screen">
+    <div class="header">
+      <div class="header-title">Daily Check-In</div>
+      <div style="font-size:13px;color:var(--text2)" id="ci-streak">🔥 1 day streak</div>
+    </div>
+    <div class="scroll">
+      <div class="checkin-screen">
+        <div class="ci-title">How are you today?</div>
+        <div class="ci-sub">This takes 30 seconds and helps your Living Mind Model understand you better.</div>
+
+        <div class="ci-section">
+          <div class="ci-label">Your mood</div>
+          <div class="emoji-grid">
+            <div class="emoji-opt" onclick="selectOpt(this,'mood')"><div class="e">😢</div><div class="l">Sad</div></div>
+            <div class="emoji-opt" onclick="selectOpt(this,'mood')"><div class="e">😟</div><div class="l">Worried</div></div>
+            <div class="emoji-opt" onclick="selectOpt(this,'mood')"><div class="e">😐</div><div class="l">Neutral</div></div>
+            <div class="emoji-opt" onclick="selectOpt(this,'mood')"><div class="e">😌</div><div class="l">Calm</div></div>
+            <div class="emoji-opt" onclick="selectOpt(this,'mood')"><div class="e">🙂</div><div class="l">Good</div></div>
+            <div class="emoji-opt" onclick="selectOpt(this,'mood')"><div class="e">😊</div><div class="l">Happy</div></div>
+            <div class="emoji-opt" onclick="selectOpt(this,'mood')"><div class="e">😄</div><div class="l">Great</div></div>
+            <div class="emoji-opt" onclick="selectOpt(this,'mood')"><div class="e">🤩</div><div class="l">Amazing</div></div>
+          </div>
+        </div>
+
+        <div class="ci-section">
+          <div class="ci-label">Energy level</div>
+          <div class="slider-wrap">
+            <input type="range" class="slider" id="energy-slider" min="0" max="100" value="50" oninput="updateSlider(this)" />
+            <div class="slider-labels"><span>Drained</span><span>Energized</span></div>
+          </div>
+        </div>
+
+        <div class="ci-section">
+          <div class="ci-label">How grounded do you feel?</div>
+          <div class="slider-wrap">
+            <input type="range" class="slider" id="ground-slider" min="0" max="100" value="50" oninput="updateSlider(this)" />
+            <div class="slider-labels"><span>Scattered</span><span>Grounded</span></div>
+          </div>
+        </div>
+
+        <div class="ci-section">
+          <div class="ci-label">Anything on your mind? (optional)</div>
+          <textarea class="compose-area" id="ci-note" placeholder="What's present for you right now…"></textarea>
+        </div>
+
+        <button class="ci-submit" onclick="submitCheckIn()">Log Check-In ✓</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ JOURNAL SCREEN ══ -->
+  <div id="screen-journal" class="screen">
+    <div class="header">
+      <div class="header-title">Journal</div>
+      <button class="icon-btn" onclick="showToast('🔍 Search coming soon')">🔍</button>
+    </div>
+    <div class="scroll">
+      <div class="journal-list" id="journal-list">
+        <div class="journal-card" onclick="openJournal(0)">
+          <div class="jc-mood">😌</div>
+          <div class="jc-date">Today · Just now</div>
+          <div class="jc-title">Feeling more settled lately</div>
+          <div class="jc-preview">I've been noticing that mornings feel lighter. There's still the usual noise but I'm not as caught in it as I used to be. Maybe the check-ins are helping.</div>
+        </div>
+        <div class="journal-card" onclick="openJournal(1)">
+          <div class="jc-mood">😟</div>
+          <div class="jc-date">Yesterday · 9:42 PM</div>
+          <div class="jc-title">Hard day at work</div>
+          <div class="jc-preview">Everything felt like too much today. The meeting went badly and I couldn't shake the feeling that I said the wrong thing. Soul helped me get perspective.</div>
+        </div>
+        <div class="journal-card" onclick="openJournal(2)">
+          <div class="jc-mood">😊</div>
+          <div class="jc-date">2 days ago · 7:15 PM</div>
+          <div class="jc-title">Small win</div>
+          <div class="jc-preview">Actually finished the project I'd been avoiding for two weeks. Felt good. Need to remember this feeling when the next hard thing comes up.</div>
+        </div>
+      </div>
+    </div>
+    <button class="new-entry-btn" onclick="openNewEntry()">✏️</button>
+  </div>
+
+  <!-- ══ PANIC SCREEN ══ -->
+  <div id="screen-panic" class="screen">
+    <div class="scroll">
+      <div class="panic-header">
+        <div class="panic-big-icon">🫂</div>
+        <div class="panic-main-title">I'm right here with you</div>
+        <div class="panic-main-sub">You are not alone. Let's slow things down together. Choose a grounding exercise below.</div>
+      </div>
+
+      <div class="grounding-cards">
+        <div class="gc" onclick="openGrounding('54321')">
+          <div class="gc-icon">👁</div>
+          <div>
+            <div class="gc-title">5-4-3-2-1 Grounding</div>
+            <div class="gc-desc">Use your senses to anchor in the present moment</div>
+          </div>
+        </div>
+        <div class="gc" onclick="openGrounding('breathing')">
+          <div class="gc-icon">💨</div>
+          <div>
+            <div class="gc-title">Box Breathing</div>
+            <div class="gc-desc">4 counts in · 4 hold · 4 out · 4 hold</div>
+          </div>
+        </div>
+        <div class="gc" onclick="openGrounding('safeplace')">
+          <div class="gc-icon">🏡</div>
+          <div>
+            <div class="gc-title">Safe Place Visualization</div>
+            <div class="gc-desc">A mental sanctuary for when everything feels too much</div>
+          </div>
+        </div>
+        <div class="gc" onclick="openGrounding('coldwater')">
+          <div class="gc-icon">🧊</div>
+          <div>
+            <div class="gc-title">Cold Water Reset</div>
+            <div class="gc-desc">A physical reset to interrupt an emotional spiral</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="crisis-section">
+        <div class="crisis-label">🆘 Crisis Support — Available 24/7</div>
+        <div class="crisis-line"><div class="ci">📞</div><div><div class="cn">988 Suicide & Crisis Lifeline</div><div class="cc">Call or text 988 · United States</div></div></div>
+        <div class="crisis-line"><div class="ci">💬</div><div><div class="cn">Crisis Text Line</div><div class="cc">Text HOME to 741741 · United States</div></div></div>
+        <div class="crisis-line"><div class="ci">🌍</div><div><div class="cn">International Crisis Centres</div><div class="cc">iasp.info/resources/Crisis_Centres</div></div></div>
+        <div class="crisis-line"><div class="ci">🚨</div><div><div class="cn">Emergency Services</div><div class="cc">911 (US) or your local emergency number</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ TAB BAR ══ -->
+  <div class="tab-bar">
+    <button class="tab active" id="tab-home" onclick="goTab('home')">
+      <span class="tab-icon">🏠</span>Home
+    </button>
+    <button class="tab" id="tab-chat" onclick="goTab('chat')">
+      <span class="tab-icon">💬</span>Soul
+    </button>
+    <button class="tab" id="tab-checkin" onclick="goTab('checkin')">
+      <span class="tab-icon">✅</span>Check-In
+    </button>
+    <button class="tab" id="tab-journal" onclick="goTab('journal')">
+      <span class="tab-icon">📓</span>Journal
+    </button>
+    <button class="tab" id="tab-panic" onclick="goTab('panic')">
+      <span class="tab-icon">🫂</span>Support
+    </button>
+  </div>
+
+</div><!-- end #app -->
+
+<!-- ══ GROUNDING MODAL ══ -->
+<div class="modal-overlay" id="grounding-modal" onclick="closeModal(event)">
+  <div class="modal" id="modal-content">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modal-title"></div>
+    <div class="modal-sub" id="modal-sub"></div>
+    <div id="modal-steps"></div>
+    <button class="modal-close" onclick="closeGrounding()">I'm feeling better ✓</button>
+  </div>
+</div>
+
+<!-- ══ JOURNAL COMPOSE MODAL ══ -->
+<div class="modal-overlay" id="journal-modal" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">New Entry</div>
+    <div class="modal-sub">Write freely. This is just for you.</div>
+    <textarea class="compose-area" id="journal-compose" style="height:200px" placeholder="What's on your mind today?"></textarea>
+    <button class="modal-close" onclick="saveJournalEntry()">Save Entry</button>
+  </div>
+</div>
+
+<!-- ══ TOAST ══ -->
+<div class="toast" id="toast"></div>
+
+<!-- ══ INSTALL BANNER ══ -->
+<div id="install-banner">
+  <div class="ib-icon">📲</div>
+  <div class="ib-text">
+    <div class="ibt">Add SoulCap to Home Screen</div>
+    <div class="ibs">Install for the full app experience</div>
+  </div>
+  <div class="ib-btns">
+    <button class="ib-install" id="install-btn">Install</button>
+    <button class="ib-dismiss" onclick="dismissInstall()">Not now</button>
+  </div>
+</div>
+
+<script>
+// ── NAVIGATION ──
+function goTab(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+  document.getElementById('tab-' + name).classList.add('active');
+}
+
+// ── MOOD PICKER (HOME) ──
+function pickMood(el, emoji) {
+  document.querySelectorAll('.mood-dot').forEach(d => d.classList.remove('selected'));
+  el.classList.add('selected');
+  showToast('Mood noted: ' + emoji);
+}
+
+// ── SLIDER UPDATE ──
+function updateSlider(el) {
+  const pct = el.value + '%';
+  el.style.background = `linear-gradient(to right, var(--accent) 0%, var(--accent) ${pct}, var(--surface3) ${pct})`;
+}
+
+// ── CHECK-IN SELECTION ──
+function selectOpt(el, group) {
+  el.closest('.emoji-grid').querySelectorAll('.emoji-opt').forEach(o => o.classList.remove('sel'));
+  el.classList.add('sel');
+}
+
+function submitCheckIn() {
+  showToast('✅ Check-in logged! LMM updated.');
+  setTimeout(() => goTab('home'), 1200);
+}
+
+// ── CHAT ──
+const aiResponses = [
+  "Thank you for sharing that with me. Can you tell me more about what's been bringing that feeling up?",
+  "That sounds really hard. It makes complete sense that you'd feel that way given what you're going through.",
+  "I hear you. What do you think you need most right now — to be heard, to problem-solve, or just to breathe?",
+  "You're not alone in this. What's the heaviest thing on your mind right now?",
+  "I'm with you. Sometimes just saying it out loud helps it feel less overwhelming. What else is there?",
+  "That took courage to share. How long have you been carrying this?",
+  "It sounds like things have been really heavy lately. I want you to know that what you feel is valid.",
+  "Let's slow down for a second. Take a breath with me. What's one small thing that felt okay today, even if everything else didn't?",
+];
+let aiIdx = 0;
+
+function sendMessage() {
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text) return;
+
+  appendMsg('user', text);
+  input.value = '';
+  autoResize(input);
+
+  const typing = document.getElementById('typing');
+  typing.classList.add('visible');
+  document.getElementById('messages').appendChild(typing);
+  scrollMessages();
+
+  setTimeout(() => {
+    typing.classList.remove('visible');
+    const response = aiResponses[aiIdx % aiResponses.length];
+    aiIdx++;
+    appendMsg('ai', response);
+  }, 1200 + Math.random() * 800);
+}
+
+function appendMsg(role, text) {
+  const now = new Date();
+  const time = now.toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+  const div = document.createElement('div');
+  div.className = 'msg ' + role;
+  div.innerHTML = `<div class="bubble">${text}</div><div class="msg-time">${time}</div>`;
+  document.getElementById('messages').appendChild(div);
+  scrollMessages();
+}
+
+function scrollMessages() {
+  const m = document.getElementById('messages');
+  setTimeout(() => m.scrollTop = m.scrollHeight, 50);
+}
+
+function clearChat() {
+  document.getElementById('messages').innerHTML = `
+    <div class="msg ai">
+      <div class="bubble">Hi, I'm Soul 🌙 I'm here with you. How are you feeling right now? You can share anything — I'm listening.</div>
+      <div class="msg-time">Just now</div>
+    </div>`;
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+
+// ── JOURNAL ──
+const journals = [
+  { title: 'Feeling more settled lately', body: "I've been noticing that mornings feel lighter. There's still the usual noise but I'm not as caught in it as I used to be. Maybe the check-ins are helping.", mood: '😌', date: 'Today' },
+  { title: 'Hard day at work', body: "Everything felt like too much today. The meeting went badly and I couldn't shake the feeling that I said the wrong thing. Soul helped me get perspective.", mood: '😟', date: 'Yesterday' },
+  { title: 'Small win', body: "Actually finished the project I'd been avoiding for two weeks. Felt good. Need to remember this feeling when the next hard thing comes up.", mood: '😊', date: '2 days ago' },
+];
+
+function openJournal(idx) {
+  const j = journals[idx];
+  document.getElementById('modal-title').textContent = j.title;
+  document.getElementById('modal-sub').textContent = j.body;
+  document.getElementById('modal-steps').innerHTML = '';
+  document.querySelector('#grounding-modal .modal-close').textContent = 'Close';
+  document.querySelector('#grounding-modal .modal-close').onclick = closeGrounding;
+  document.getElementById('grounding-modal').classList.add('open');
+}
+
+function openNewEntry() {
+  document.getElementById('journal-compose').value = '';
+  document.getElementById('journal-modal').classList.add('open');
+}
+
+function saveJournalEntry() {
+  const text = document.getElementById('journal-compose').value.trim();
+  if (!text) { closeGrounding(); return; }
+  const list = document.getElementById('journal-list');
+  const card = document.createElement('div');
+  card.className = 'journal-card';
+  card.innerHTML = `<div class="jc-mood">✏️</div><div class="jc-date">Just now</div><div class="jc-title">New entry</div><div class="jc-preview">${text}</div>`;
+  list.insertBefore(card, list.firstChild);
+  document.getElementById('journal-modal').classList.remove('open');
+  showToast('📓 Entry saved');
+}
+
+// ── GROUNDING FLOWS ──
+const flows = {
+  '54321': {
+    title: '5-4-3-2-1 Grounding',
+    sub: 'Use your senses to anchor yourself in the present moment. Work through each step slowly.',
+    steps: [
+      { n: 'Step 1 — See', t: 'Look around you. Name 5 things you can see right now. Take your time.' },
+      { n: 'Step 2 — Touch', t: 'Notice 4 things you can physically touch. Feel their texture and temperature.' },
+      { n: 'Step 3 — Hear', t: 'Listen carefully. What are 3 things you can hear? Near and far.' },
+      { n: 'Step 4 — Smell', t: 'Notice 2 things you can smell — or imagine a scent that feels safe to you.' },
+      { n: 'Step 5 — Taste', t: 'Notice 1 thing you can taste. Take one slow, deep breath.' },
+    ]
+  },
+  'breathing': {
+    title: 'Box Breathing',
+    sub: 'This simple pattern activates your parasympathetic nervous system. Repeat 4–6 times.',
+    steps: [
+      { n: 'Breathe IN', t: 'Inhale slowly for 4 counts: 1… 2… 3… 4…' },
+      { n: 'HOLD', t: 'Hold your breath for 4 counts: 1… 2… 3… 4…' },
+      { n: 'Breathe OUT', t: 'Exhale slowly for 4 counts: 1… 2… 3… 4…' },
+      { n: 'HOLD empty', t: 'Hold with empty lungs for 4 counts: 1… 2… 3… 4… Then repeat.' },
+    ]
+  },
+  'safeplace': {
+    title: 'Safe Place Visualization',
+    sub: 'Close your eyes if that feels okay. This is your mental sanctuary.',
+    steps: [
+      { n: 'Step 1 — Settle', t: 'Take three slow breaths. Feel the chair or floor beneath you.' },
+      { n: 'Step 2 — Imagine', t: 'Picture a place — real or imagined — where you feel completely safe and at ease.' },
+      { n: 'Step 3 — Explore', t: 'Notice the details. What do you see? What sounds are there? What does the air feel like?' },
+      { n: 'Step 4 — Anchor', t: 'Feel the ground beneath you in this place. You are safe here. Nothing can reach you here.' },
+      { n: 'Step 5 — Breathe', t: 'Breathe this place in. You can return here anytime you need to.' },
+    ]
+  },
+  'coldwater': {
+    title: 'Cold Water Reset',
+    sub: 'Cold water triggers your dive reflex, quickly calming your nervous system.',
+    steps: [
+      { n: 'Step 1', t: 'If possible, go to a sink. Cold water helps regulate your nervous system immediately.' },
+      { n: 'Step 2', t: 'Splash cold water on your face, or hold cold water in your hands for 20–30 seconds.' },
+      { n: 'Step 3', t: 'Or hold ice, or put your wrists under cold running water. Feel the sensation fully.' },
+      { n: 'Step 4', t: 'Notice your body responding. Your heart rate is slowing. You are present.' },
+      { n: 'Step 5', t: 'Take a slow breath. The intensity is passing. You are okay.' },
+    ]
+  }
+};
+
+function openGrounding(key) {
+  const f = flows[key];
+  document.getElementById('modal-title').textContent = f.title;
+  document.getElementById('modal-sub').textContent = f.sub;
+  document.getElementById('modal-steps').innerHTML = f.steps.map(s =>
+    `<div class="step-card"><div class="step-num">${s.n}</div><div class="step-text">${s.t}</div></div>`
+  ).join('');
+  document.querySelector('#grounding-modal .modal-close').textContent = "I'm feeling better ✓";
+  document.querySelector('#grounding-modal .modal-close').onclick = closeGrounding;
+  document.getElementById('grounding-modal').classList.add('open');
+}
+
+function closeGrounding() {
+  document.getElementById('grounding-modal').classList.remove('open');
+  document.getElementById('journal-modal').classList.remove('open');
+}
+
+function closeModal(e) {
+  if (e.target.classList.contains('modal-overlay')) closeGrounding();
+}
+
+// ── TOAST ──
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+// ── PWA INSTALL ──
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', e => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('install-banner').classList.add('show');
+});
+
+document.getElementById('install-btn').addEventListener('click', async () => {
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+  deferredPrompt = null;
+  dismissInstall();
+  if (outcome === 'accepted') showToast('🎉 SoulCap installed!');
+});
+
+function dismissInstall() {
+  document.getElementById('install-banner').classList.remove('show');
+}
+
+window.addEventListener('appinstalled', () => showToast('✅ SoulCap installed!'));
+
+// ── SERVICE WORKER ──
+if ('serviceWorker' in navigator) {
+  const swPath = location.hostname === 'localhost' ? '/sw.js' : '/SoulCap/sw.js';
+  navigator.serviceWorker.register(swPath).catch(() => {});
+}
+</script>
+
+</body>
+</html>
