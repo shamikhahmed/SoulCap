@@ -1,7 +1,7 @@
 {
   "name": "SoulCap",
   "short_name": "SoulCap",
-  "description": "AI emotional wellness companion (pre-production — not clinical care)",
+  "description": "Clinician-supported wellness companion (clinical path — not a medical device)",
   "start_url": "/SoulCap/",
   "scope": "/SoulCap/",
   "display": "standalone",
