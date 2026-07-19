@@ -1,3 +1,9 @@
+## 0.2.2 — 2026-07-19
+
+- Check-ins persist to `sc_checkins`
+- Thin `docs/pitch.html` + Capricorn QR
+- SW `soulcap-v022`
+
 ## 0.2.1 — 2026-07-19 — PWA truth + no dead ends
 
 - README: live product = Pages PWA; Nest/Expo labeled source lab (not AI marketing).

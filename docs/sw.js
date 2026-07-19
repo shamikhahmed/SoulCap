@@ -1,8 +1,10 @@
-const CACHE = 'soulcap-v021';
+const CACHE = 'soulcap-v022';
 const ASSETS = [
   '/SoulCap/',
   '/SoulCap/index.html',
   '/SoulCap/manifest.json',
+  '/SoulCap/pitch.html',
+  '/SoulCap/assets/qr-soulcap.png',
   '/SoulCap/icons/icon-192.png',
   '/SoulCap/icons/icon-512.png',
   '/SoulCap/icons/icon-maskable-192.png',

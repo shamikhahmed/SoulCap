@@ -1108,6 +1108,7 @@ const state = {
   journals: JSON.parse(localStorage.getItem('sc_journals') || 'null') || (DEMO ? SAMPLE_JOURNALS.slice() : []),
   clinicNotes: JSON.parse(localStorage.getItem('sc_clinic_notes') || '[]'),
   audit: JSON.parse(localStorage.getItem('sc_audit') || '[]'),
+  checkIns: JSON.parse(localStorage.getItem('sc_checkins') || '[]'),
   notifs: localStorage.getItem('sc_notif_reminder') === '1',
   ciStep: 0,
   groundStep: 0,
@@ -1302,9 +1303,22 @@ function ciNext() {
 }
 
 function submitCheckIn() {
+  const entry = {
+    at: new Date().toISOString(),
+    mood: ciData.mood || '',
+    energy: ciData.energy || '',
+    sleep: ciData.sleep || '',
+    note: ciData.note || '',
+  };
+  state.checkIns = state.checkIns || JSON.parse(localStorage.getItem('sc_checkins') || '[]');
+  state.checkIns.unshift(entry);
+  if (state.checkIns.length > 60) state.checkIns.length = 60;
+  localStorage.setItem('sc_checkins', JSON.stringify(state.checkIns));
+  audit('checkin.create', 'checkin', { mood: entry.mood });
   closeCheckIn();
-  showToast('Check-in saved ✓');
-  document.getElementById('today-context').textContent = 'Just checked in. Soul is listening.';
+  showToast('Check-in saved on this device ✓');
+  const ctx = document.getElementById('today-context');
+  if (ctx) ctx.textContent = 'Checked in · ' + state.checkIns.length + ' on this device.';
 }
 
 // Chat
@@ -1584,7 +1598,7 @@ window.addEventListener('appinstalled', () => showToast('SoulCap installed ✓')
 // Service Worker
 if ('serviceWorker' in navigator) {
   const p = location.hostname === 'localhost' ? '/sw.js' : '/SoulCap/sw.js';
-  navigator.serviceWorker.register(p + '?v=021').catch(() => {});
+  navigator.serviceWorker.register(p + '?v=022').catch(() => {});
 }
 
 // Soften overclaiming insight tile
