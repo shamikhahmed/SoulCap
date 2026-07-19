@@ -1,6 +1,6 @@
 # SoulCap — Safety & Truth Inventory
 
-**Version:** 0.2.0 · **Updated:** 2026-07-19  
+**Version:** 0.2.1 · **Updated:** 2026-07-19  
 **Status:** **Clinical path** — clinician-supported wellness companion.  
 **Not** a cleared SaMD / medical device. **Not** a substitute for licensed care.  
 See also `CLINICAL.md`.

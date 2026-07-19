@@ -1,9 +1,11 @@
 # SoulCap — Features (S/W/L/R)
 
-**Updated:** 2026-07-19 · Clinical path · **v0.2.0**  
+**Updated:** 2026-07-19 · Clinical path · **v0.2.1**  
 **Codes:** S = shipped · W = this wave · L = later · R = rejected
 
 ## S
+- Real delete / privacy sheet / local reminder preference / Capricorn QR / `?demo=1`
+- Honest README: PWA = product; Nest/Expo = source lab
 - Nest backend **source**: LMM modules, orchestration, keyword safety gate, panic, Prisma schema · **ClinicalModule** stubs
 - Expo thin client source: Auth / Chat / Check-in
 - PWA clinical path: consent · Tier-3 chat rail · Panic/988 · clinician notes + local audit

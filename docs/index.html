@@ -731,11 +731,11 @@ html,body{
       </div>
 
       <div class="today-section" style="padding-bottom:16px;">
-        <div class="today-section-title">Soul noticed</div>
+        <div class="today-section-title">Companion note</div>
         <div class="today-insight">
-          <div class="ti-label">This week</div>
-          <div class="ti-text">"You feel most at ease on days when you move your body in the morning. Something to keep."</div>
-          <div class="ti-source">— Soul, based on 4 weeks</div>
+          <div class="ti-label">On-device</div>
+          <div class="ti-text">Check in when you can. Reflections here are rules-based — not a clinician and not a live AI model on this Pages build.</div>
+          <div class="ti-source">— Smart Companion · clinical path</div>
         </div>
       </div>
 
@@ -961,36 +961,63 @@ html,body{
   </div>
   <div class="profile-body">
     <div class="profile-avatar">🌙</div>
-    <div class="profile-name" id="profile-name-display">Shamikh</div>
-    <div class="profile-since">Member since June 2026 · Day 12</div>
-    <div class="profile-soul-line" id="soul-sees">"Shamikh shows up more openly this month."</div>
+    <div class="profile-name" id="profile-name-display">Guest</div>
+    <div class="profile-since" id="profile-since">On-device companion · local only</div>
+    <div class="profile-soul-line" id="soul-sees">Smart Companion — rules-based reflections, not a live LLM.</div>
     <div class="profile-section">
-      <div class="profile-section-title">Relationship with Soul</div>
+      <div class="profile-section-title">On this device</div>
       <div class="profile-group">
         <div class="profile-row">
-          <span class="profile-row-label">Stage</span>
-          <span class="profile-row-val">Soul is starting to know you.</span>
+          <span class="profile-row-label">Journal entries</span>
+          <span class="profile-row-val" id="profile-journal-count">0</span>
         </div>
         <div class="profile-row">
-          <span class="profile-row-label">Conversations</span>
-          <span class="profile-row-val">18 this month</span>
+          <span class="profile-row-label">Audit events</span>
+          <span class="profile-row-val" id="profile-audit-count">0</span>
         </div>
       </div>
     </div>
     <div class="profile-section">
       <div class="profile-section-title">Settings</div>
       <div class="profile-group">
-        <button class="profile-row" onclick="showToast('Notifications coming soon')">
-          <span class="profile-row-label">Notifications</span>
-          <span class="profile-row-val">Off ›</span>
+        <button type="button" class="profile-row" id="notif-row" onclick="toggleNotifs()">
+          <span class="profile-row-label">Check-in reminder</span>
+          <span class="profile-row-val" id="notif-val">Off ›</span>
         </button>
-        <button class="profile-row" onclick="showToast('Privacy settings coming soon')">
+        <button type="button" class="profile-row" onclick="openPrivacy()">
           <span class="profile-row-label">Data &amp; Privacy</span>
-          <span class="profile-row-val">›</span>
+          <span class="profile-row-val">On device ›</span>
         </button>
       </div>
     </div>
-    <button class="profile-delete" onclick="showToast('Delete everything — coming in full app')">Delete all my data</button>
+    <div class="profile-section">
+      <div class="profile-section-title">Open on phone</div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px;padding:12px 0 4px">
+        <img src="assets/qr-soulcap.png" width="128" height="128" alt="QR — open SoulCap" style="border-radius:12px;border:2px solid #c9a227;background:#fffaf3;padding:6px" decoding="async">
+        <span style="font-size:11px;letter-spacing:.08em;text-transform:uppercase;opacity:.45">Scan · Capricorn Systems</span>
+      </div>
+    </div>
+    <button type="button" class="profile-delete" onclick="deleteAllData()">Delete all my data</button>
+  </div>
+</div>
+
+<!-- PRIVACY SHEET -->
+<div class="clinic-overlay" id="privacy-overlay" aria-label="Data and privacy">
+  <div class="clinic-nav">
+    <strong>Data &amp; Privacy</strong>
+    <button type="button" class="soul-action" onclick="closePrivacy()">Close</button>
+  </div>
+  <div class="clinic-body">
+    <p class="clinical-banner" style="margin:0 0 12px">Everything below stays in this browser’s localStorage. No cloud account. Nest API is not wired.</p>
+    <div class="clinic-card">
+      <h3>Stored on this device</h3>
+      <ul style="margin:8px 0 0 18px;line-height:1.6;font-size:.9rem;opacity:.85" id="privacy-keys"></ul>
+    </div>
+    <div class="clinic-card">
+      <h3>Companion honesty</h3>
+      <p style="font-size:.9rem;opacity:.85;line-height:1.5">Chat replies are a rules-based Smart Companion with keyword safety rails — not a live AI model on this Pages build.</p>
+    </div>
+    <button type="button" class="profile-delete" style="margin-top:8px" onclick="deleteAllData()">Delete all local data</button>
   </div>
 </div>
 
@@ -1062,24 +1089,42 @@ html,body{
 <script>
 'use strict';
 
+const SAMPLE_JOURNALS = [
+  {title:'Feeling more settled lately',mood:'😌',date:'Today',text:"I've been noticing that mornings feel lighter. There's still the usual noise but I'm not as caught in it as I used to be. Maybe the check-ins are helping.",ref:"There's something shifting in how you describe mornings. A month ago it was the hardest part of the day."},
+  {title:'Hard day at work',mood:'😟',date:'Yesterday · 9:42 PM',text:"Everything felt like too much today. The meeting went badly and I couldn't shake the feeling that I said the wrong thing. Companion helped me get perspective.",ref:"You came here instead of isolating. That's worth noticing."},
+  {title:'Small win',mood:'😊',date:'2 days ago',text:"Actually finished the project I'd been avoiding for two weeks. Felt good. Need to remember this feeling when the next hard thing comes up.",ref:"You named this a win before I could. That's new."},
+];
+
+const DEMO = new URLSearchParams(location.search).get('demo') === '1'
+  || sessionStorage.getItem('sc_demo') === '1';
+if (DEMO) sessionStorage.setItem('sc_demo', '1');
+
 const state = {
   name: localStorage.getItem('sc_name') || '',
   onboarded: localStorage.getItem('sc_onboarded') === '1',
   consented: localStorage.getItem('sc_consent_v1') === '1',
   memberId: localStorage.getItem('sc_member_id') || ('m_' + Math.random().toString(36).slice(2, 10)),
-  habits: JSON.parse(localStorage.getItem('sc_habits') || '[false,true,false,false,false]'),
-  journals: JSON.parse(localStorage.getItem('sc_journals') || 'null') || [
-    {title:'Feeling more settled lately',mood:'😌',date:'Today',text:"I've been noticing that mornings feel lighter. There's still the usual noise but I'm not as caught in it as I used to be. Maybe the check-ins are helping.",ref:"There's something shifting in how you describe mornings. A month ago it was the hardest part of the day."},
-    {title:'Hard day at work',mood:'😟',date:'Yesterday · 9:42 PM',text:"Everything felt like too much today. The meeting went badly and I couldn't shake the feeling that I said the wrong thing. Soul helped me get perspective.",ref:"You came here instead of isolating. That's worth noticing."},
-    {title:'Small win',mood:'😊',date:'2 days ago',text:"Actually finished the project I'd been avoiding for two weeks. Felt good. Need to remember this feeling when the next hard thing comes up.",ref:"You named this a win before I could. That's new."},
-  ],
+  habits: JSON.parse(localStorage.getItem('sc_habits') || '[false,false,false,false,false]'),
+  journals: JSON.parse(localStorage.getItem('sc_journals') || 'null') || (DEMO ? SAMPLE_JOURNALS.slice() : []),
   clinicNotes: JSON.parse(localStorage.getItem('sc_clinic_notes') || '[]'),
   audit: JSON.parse(localStorage.getItem('sc_audit') || '[]'),
+  notifs: localStorage.getItem('sc_notif_reminder') === '1',
   ciStep: 0,
   groundStep: 0,
   groundFlow: null,
 };
 localStorage.setItem('sc_member_id', state.memberId);
+
+if (DEMO && !state.onboarded) {
+  state.name = state.name || 'Demo';
+  state.consented = true;
+  state.onboarded = true;
+  localStorage.setItem('sc_name', state.name);
+  localStorage.setItem('sc_onboarded', '1');
+  localStorage.setItem('sc_consent_v1', '1');
+  localStorage.setItem('sc_journals', JSON.stringify(state.journals));
+  localStorage.setItem('sc_habits', JSON.stringify(state.habits));
+}
 
 const CRISIS_HARD = [
   'kill myself', 'end my life', 'want to die', 'suicide', 'suicidal',
@@ -1465,8 +1510,50 @@ function saveEntry() {
 }
 
 // Profile
-function openProfile() { document.getElementById('profile-overlay').classList.add('open'); }
+function openProfile() {
+  refreshProfileMeta();
+  document.getElementById('profile-overlay').classList.add('open');
+}
 function closeProfile() { document.getElementById('profile-overlay').classList.remove('open'); }
+
+function refreshProfileMeta() {
+  const jc = document.getElementById('profile-journal-count');
+  const ac = document.getElementById('profile-audit-count');
+  if (jc) jc.textContent = String(state.journals.length);
+  if (ac) ac.textContent = String(state.audit.length);
+  const nv = document.getElementById('notif-val');
+  if (nv) nv.textContent = state.notifs ? 'On ›' : 'Off ›';
+}
+
+function toggleNotifs() {
+  state.notifs = !state.notifs;
+  localStorage.setItem('sc_notif_reminder', state.notifs ? '1' : '0');
+  refreshProfileMeta();
+  audit('settings.notif', 'prefs', { on: state.notifs });
+  showToast(state.notifs
+    ? 'Reminder preference on (local) — no browser push on this PWA yet'
+    : 'Check-in reminder off');
+}
+
+function openPrivacy() {
+  const keys = [
+    'sc_name', 'sc_onboarded', 'sc_consent_v1', 'sc_member_id',
+    'sc_habits', 'sc_journals', 'sc_clinic_notes', 'sc_audit', 'sc_notif_reminder',
+  ].filter((k) => localStorage.getItem(k) != null);
+  document.getElementById('privacy-keys').innerHTML = keys.length
+    ? keys.map((k) => '<li><code>' + k + '</code></li>').join('')
+    : '<li>No SoulCap keys stored yet</li>';
+  document.getElementById('privacy-overlay').classList.add('open');
+}
+function closePrivacy() { document.getElementById('privacy-overlay').classList.remove('open'); }
+
+function deleteAllData() {
+  if (!confirm('Delete all SoulCap data on this device? This cannot be undone.')) return;
+  Object.keys(localStorage).filter((k) => k.startsWith('sc_')).forEach((k) => localStorage.removeItem(k));
+  sessionStorage.removeItem('sc_demo');
+  showToast('All local data deleted');
+  setTimeout(() => { location.href = location.pathname; }, 600);
+}
 
 // Toast
 let toastT;
@@ -1497,7 +1584,18 @@ window.addEventListener('appinstalled', () => showToast('SoulCap installed ✓')
 // Service Worker
 if ('serviceWorker' in navigator) {
   const p = location.hostname === 'localhost' ? '/sw.js' : '/SoulCap/sw.js';
-  navigator.serviceWorker.register(p).catch(() => {});
+  navigator.serviceWorker.register(p + '?v=021').catch(() => {});
+}
+
+// Soften overclaiming insight tile
+refreshProfileMeta();
+if (DEMO && state.onboarded && state.consented) {
+  document.getElementById('onboarding').classList.add('hidden');
+  const app = document.getElementById('app');
+  app.style.display = 'flex';
+  if (typeof setName === 'function' && state.name) setName(state.name);
+  if (typeof renderJournalList === 'function') renderJournalList();
+  showToast('Demo mode · sample journal on device');
 }
 </script>
 </body>

@@ -1,3 +1,10 @@
+## 0.2.1 — 2026-07-19 — PWA truth + no dead ends
+
+- README: live product = Pages PWA; Nest/Expo labeled source lab (not AI marketing).
+- Profile: real journal/audit counts; privacy sheet; reminder preference; delete clears `sc_*`.
+- `?demo=1` walkthrough; Capricorn QR in profile; SW `soulcap-v021`.
+- Removed “coming soon” settings toasts.
+
 # Changelog
 
 ## 0.2.0 — 2026-07-19 — Clinical path

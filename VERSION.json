@@ -1,8 +1,8 @@
 {
   "app": "SoulCap",
-  "version": "0.2.0",
-  "swCache": "soulcap-v020",
+  "version": "0.2.1",
+  "swCache": "soulcap-v021",
   "updated": "2026-07-19",
   "status": "clinical-path",
-  "note": "Clinician-supported wellness companion. Not a medical device. See CLINICAL.md + SAFETY.md."
+  "note": "Clinical-path PWA shipped on Pages. Nest/Expo source lab not deployed. See README + SAFETY.md."
 }
