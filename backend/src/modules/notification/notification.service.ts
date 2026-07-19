@@ -1,11 +1,15 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import * as apn from 'apn';
+// APNs optional — package removed from deps until registry version stabilizes
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let apn: any = null;
+try { apn = require('apn'); } catch { /* optional */ }
 
 @Injectable()
 export class NotificationService {
   private readonly logger = new Logger(NotificationService.name);
-  private readonly apnProvider: apn.Provider | null = null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private readonly apnProvider: any = null;
   private readonly bundleId: string;
 
   constructor(private readonly config: ConfigService) {
@@ -14,7 +18,7 @@ export class NotificationService {
     const key = this.config.get<string>('apns.key');
     this.bundleId = this.config.get<string>('apns.bundleId', 'com.livingmind.app');
 
-    if (keyId && teamId && key) {
+    if (apn && keyId && teamId && key) {
       this.apnProvider = new apn.Provider({
         token: { key, keyId, teamId },
         production: this.config.get('app.env') === 'production',

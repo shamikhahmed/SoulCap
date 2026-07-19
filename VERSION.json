@@ -1,8 +1,8 @@
 {
   "app": "SoulCap",
-  "version": "0.1.0",
-  "swCache": "soulcap-v010",
+  "version": "0.2.0",
+  "swCache": "soulcap-v020",
   "updated": "2026-07-19",
-  "status": "pre-production",
-  "note": "Not clinical care. Not store-ready. See SAFETY.md."
+  "status": "clinical-path",
+  "note": "Clinician-supported wellness companion. Not a medical device. See CLINICAL.md + SAFETY.md."
 }

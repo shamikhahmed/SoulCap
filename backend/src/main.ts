@@ -18,7 +18,7 @@ async function bootstrap() {
   app.enableCors({
     origin: config.get<string>('app.allowedOrigins', '*').split(','),
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Organization-Id', 'X-Idempotency-Key', 'X-Request-Id', 'svix-id', 'svix-timestamp', 'svix-signature'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Organization-Id', 'X-Idempotency-Key', 'X-Request-Id', 'X-Clinical-Demo', 'svix-id', 'svix-timestamp', 'svix-signature'],
     credentials: true,
   });
 

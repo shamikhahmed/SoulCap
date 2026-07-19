@@ -1,25 +1,24 @@
 # SoulCap — Features (S/W/L/R)
 
-**Updated:** 2026-07-19 · Cap Family Mega-Wave · **v0.1.0**  
-**Codes:** S = shipped (in-repo source or this wave) · W = this wave · L = later · R = rejected
-
+**Updated:** 2026-07-19 · Clinical path · **v0.2.0**  
+**Codes:** S = shipped · W = this wave · L = later · R = rejected
 
 ## S
-- Nest backend **source**: LMM modules, orchestration, keyword safety gate, panic resources, Prisma schema
-- Expo **thin client** source: Auth / Chat / Check-in (legacy Living Mind strings may remain)
-- PWA **demo shell** in `docs/` (localStorage; Panic/988 UI cues)
-- Cap Family brand icons · `VERSION.json` 0.1.0 · `SAFETY.md` · honesty README
+- Nest backend **source**: LMM modules, orchestration, keyword safety gate, panic, Prisma schema · **ClinicalModule** stubs
+- Expo thin client source: Auth / Chat / Check-in
+- PWA clinical path: consent · Tier-3 chat rail · Panic/988 · clinician notes + local audit
+- Cap brand icons · `VERSION.json` 0.2.0 · `SAFETY.md` · `CLINICAL.md`
+- Safety-gate unit tests (`npm run test:safety`)
 
 ## W
-- Truth inventory vs code · SAFETY.md · brand wire (Expo `assets/` + `docs/icons`) · versioning · push/tag v0.1.0
-- Tone down “clinical-grade / production therapy” claims
-- Minimal Expo entry/icon fixes so mobile config matches reality
+- Clinical path v0.2.0 (all four bars: safety prod gate, clinician MVP, honest clinical-path copy, SaMD checklist)
+- Auth orphan deps declared (`bcrypt`, `@nestjs/jwt`) · Prisma migrate baseline stub
 
 ## L
-- Fix auth package deps · Prisma migrations · FE↔BE wire for PWA · deploy · CI/e2e
-- Clinical safety review before any real-user exposure
-- Store builds · clinical validation · therapist workflows
+- Clerk THERAPIST role enforcement on `/clinical` · Prisma-backed notes/audit · PWA↔Nest live wire · deploy · CI
+- Licensed clinician protocol review · QMS / SaMD classification if product claims harden
+- Store builds · HIPAA/BAA ops proof
 
 ## R
-- Fake “production therapy” / clinical-care marketing without validation
-- Full clinical launch in this Mega-Wave (skipped by design)
+- Claiming FDA/CE clearance, “clinical-grade therapy,” diagnosis, or crisis-counselor identity without validation
+- Treating PWA localStorage notes as an EHR

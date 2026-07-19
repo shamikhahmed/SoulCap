@@ -1,6 +1,9 @@
-# SoulCap — AI Emotional Wellness Companion
+# SoulCap
 
-**Version 0.1.0 · Pre-production** · Cap Family Mega-Wave (safety-first)
+**v0.2.0 — Clinical path.** Clinician-supported wellness companion. **Not** a medical device / not therapy / not crisis counseling. See `CLINICAL.md` + `SAFETY.md`.
+ — AI Emotional Wellness Companion
+
+**Version 0.2.0 · Pre-production** · Cap Family Mega-Wave (safety-first)
 
 SoulCap is an **AI emotional wellness companion** built around a **Living Mind Model (LMM)** architecture — a psychological profile that can evolve with interaction. This repository is a **source MVP**, not a clinical care product and **not** production therapy.
 

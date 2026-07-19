@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.0 — 2026-07-19 — Clinical path
+
+- **CLINICAL.md** — SaMD gap checklist + clinician MVP + safety production rules.
+- PWA: informed consent gate · keyword Tier-3 crisis rail (pause companion + Panic/988) · clinician panel (notes + audit) · escaped chat HTML.
+- Backend: `ClinicalModule` `/api/v1/clinical/*` demo stubs · Prisma migrate baseline placeholder · `bcrypt` + `@nestjs/jwt` declared · safety-gate Jest unit tests.
+- Version `0.2.0` · SW `soulcap-v020`.
+- Honesty: **clinician-supported wellness companion / clinical path** — **not** a cleared medical device, not therapy, not diagnosis.
+
 ## 0.1.0 — 2026-07-19 — Cap Family Mega-Wave (safety-first)
 
 - Added `VERSION.json` (0.1.0) and `SAFETY.md` (not clinical care; wired vs claimed; blockers).

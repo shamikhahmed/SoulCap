@@ -1,37 +1,35 @@
 # SoulCap — Roadmap
 
-> Updated 2026-07-19. Fleet order & standard: `capricorn-tooling/shared/CAP-STANDARD.md`.  
-> **Safety-first:** see `SAFETY.md`. No clinical / store launch until review gate passes.
+> Updated 2026-07-19. Fleet: `capricorn-tooling/shared/CAP-STANDARD.md`.  
+> **Clinical path:** `CLINICAL.md` + `SAFETY.md`. No SaMD claim until review gate passes.
 
-## Now — v0.1.0 (pre-production)
-Docs + brand Mega-Wave shipped. Backend/mobile/PWA are source/demo — not production care.
+## Now — v0.2.0 (clinical path)
+Consent + crisis rail + clinician panel (PWA) · Clinical API stubs · SaMD checklist · safety unit tests.
 
 ## Cap Standard gaps
-| Cap Standard item | Status |
+| Item | Status |
 |---|---|
 | Docs pack | ✅ |
-| SAFETY.md / honesty | ✅ (v0.1.0) |
-| Version discipline | ✅ 0.1.0 |
+| SAFETY + CLINICAL | ✅ |
+| Version | ✅ 0.2.0 |
 | Brand icons | ✅ |
 | Screen gallery | ❌ |
-| QA / e2e | ❌ |
+| QA / e2e | 🟡 safety unit only |
 | CI gate | ❌ |
-| PWA ↔ API | ❌ (localStorage demo) |
-| Demo mode | 🟡 PWA mock only |
+| PWA ↔ API | ❌ local demo |
+| Clinician authz | 🟡 demo header |
 
-## Next (ordered)
-1. Unblock local backend install (`bcrypt`, `@nestjs/jwt` in package.json) + Prisma migrate path
-2. Wire or clearly demote PWA vs Nest (no fake live LMM demo)
-3. Clinical safety review pass before any real-user exposure — non-negotiable
-4. CI + smoke tests on safety gate
+## Next
+1. Clerk `THERAPIST`/`ADMIN` enforcement on `/api/v1/clinical`
+2. Persist clinical notes/audit in Prisma (not memory)
+3. Wire PWA → Nest optional API URL
+4. Licensed clinician protocol review
+5. CI on `test:safety`
 
 ## Later
-- Backend deploy target
-- App store strategy
-- Clinical validation partnership (only if product direction continues)
+- Deploy · store · HIPAA/BAA · SaMD classification only if intended use hardens
 
 ## Ground rules
-- No dirty trees: commit or discard before ending a session.
-- Tag `vX.Y.Z` per release; bump `VERSION.json` + SW cache together.
-- Never claim clinical care / production therapy without validation.
-- Never commit `.env` / secrets.
+- Never claim medical device clearance without evidence
+- Tag `vX.Y.Z`; bump `VERSION.json` + SW together
+- Never commit `.env` / secrets

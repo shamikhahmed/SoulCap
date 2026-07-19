@@ -7,11 +7,11 @@
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
 <meta name="apple-mobile-web-app-title" content="SoulCap"/>
-<meta name="description" content="AI emotional wellness companion (pre-production — not clinical care). See SAFETY.md."/>
+<meta name="description" content="Clinician-supported wellness companion (clinical path — not a medical device). See CLINICAL.md + SAFETY.md."/>
 <link rel="manifest" href="manifest.json"/>
 <link rel="apple-touch-icon" href="icons/apple-touch-icon-180.png"/>
 <link rel="icon" type="image/svg+xml" href="icons/favicon.svg"/>
-<title>SoulCap</title>
+<title>SoulCap Clinical Path</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 button,textarea,input{font-family:inherit;cursor:pointer;}
@@ -570,6 +570,26 @@ html,body{
 .ib-dismiss{background:none;border:none;color:var(--l3);font-size:12px;}
 
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);}
+
+/* Clinical path */
+.ob-consent{width:100%;margin-top:20px;text-align:left;font-size:14px;color:var(--l2);line-height:1.45;}
+.ob-consent label{display:flex;gap:10px;align-items:flex-start;padding:12px;border-radius:12px;background:var(--bg2);border:1px solid var(--sep2);}
+.ob-consent input{margin-top:3px;accent-color:var(--acc);}
+.clinical-banner{margin:12px 16px 0;padding:10px 12px;border-radius:12px;background:rgba(125,122,255,.12);border:1px solid rgba(125,122,255,.28);font-size:12px;color:var(--l2);line-height:1.4;}
+.clinic-fab{position:fixed;right:16px;bottom:calc(70px + var(--sab));z-index:40;padding:10px 14px;border-radius:999px;border:none;background:var(--acc);color:#fff;font-size:12px;font-weight:700;box-shadow:0 8px 24px rgba(0,0,0,.4);}
+.clinic-overlay{position:fixed;inset:0;z-index:900;background:var(--bg);transform:translateY(100%);transition:transform .32s var(--spring);display:flex;flex-direction:column;max-width:430px;margin:0 auto;}
+.clinic-overlay.open{transform:translateY(0);}
+.clinic-nav{display:flex;align-items:center;justify-content:space-between;padding:calc(12px + var(--sat)) 16px 12px;border-bottom:1px solid var(--sep2);}
+.clinic-body{flex:1;overflow:auto;padding:16px;padding-bottom:calc(24px + var(--sab));}
+.clinic-card{background:var(--bg2);border:1px solid var(--sep2);border-radius:14px;padding:14px;margin-bottom:12px;}
+.clinic-card h3{font-size:13px;font-weight:700;margin-bottom:8px;color:var(--l1);}
+.clinic-card textarea,.clinic-card input{width:100%;background:var(--bg3);border:1px solid var(--sep);border-radius:10px;color:var(--l1);padding:10px;font-size:14px;resize:vertical;min-height:88px;}
+.clinic-card button{margin-top:10px;width:100%;padding:11px;border:none;border-radius:12px;background:var(--acc);color:#fff;font-weight:600;font-size:14px;}
+.clinic-audit{font-size:12px;color:var(--l2);line-height:1.45;max-height:180px;overflow:auto;font-family:ui-monospace,Menlo,monospace;}
+.clinic-note{font-size:13px;padding:10px 0;border-bottom:1px solid var(--sep2);color:var(--l1);}
+.clinic-note time{display:block;font-size:11px;color:var(--l3);margin-bottom:4px;}
+.crisis-banner{display:none;margin:8px 12px;padding:12px;border-radius:12px;background:rgba(255,69,58,.12);border:1px solid rgba(255,69,58,.35);color:#ff8a80;font-size:13px;line-height:1.45;}
+.crisis-banner.show{display:block;}
 </style>
 </head>
 <body>
@@ -594,13 +614,19 @@ html,body{
     </div>
   </div>
   <div class="ob-step" id="ob-3">
-    <div class="ob-heading">Before we begin.</div>
+    <div class="ob-heading">Clinical path consent</div>
     <div class="ob-notice">
-      <p>Soul is not a therapist. Soul is not a diagnosis.</p>
-      <small>Soul is a companion that listens, remembers, and grows with you. Everything you share stays private. You can delete everything, anytime.</small>
+      <p>SoulCap is a clinician-supported wellness companion — not a medical device, not therapy, not diagnosis.</p>
+      <small>In crisis: call/text <strong>988</strong> (US), text HOME to 741741, or local emergency. See CLINICAL.md + SAFETY.md.</small>
+    </div>
+    <div class="ob-consent">
+      <label>
+        <input type="checkbox" id="ob-consent-check"/>
+        <span>I understand SoulCap is not clinical care or crisis counseling, and I consent to on-device check-ins / companion chat for wellness support.</span>
+      </label>
     </div>
     <div class="ob-spacer"></div>
-    <button class="ob-btn" onclick="obNext(4)">I understand</button>
+    <button class="ob-btn" id="ob-consent-btn" onclick="obAcceptConsent()" style="opacity:0.35;pointer-events:none">I understand &amp; consent</button>
   </div>
   <div class="ob-step" id="ob-4">
     <div class="ob-orb" id="ob-name-orb"></div>
@@ -620,6 +646,7 @@ html,body{
 
     <!-- TODAY -->
     <div id="screen-today" class="screen active">
+      <div class="clinical-banner" id="clinical-banner">Clinical path · wellness companion · not a medical device · 988 if in crisis</div>
       <div class="today-top">
         <div class="today-greeting" id="today-greeting">Good morning</div>
         <div class="today-name" id="today-name">Shamikh</div>
@@ -728,11 +755,12 @@ html,body{
           <div class="soul-orb-sm"></div>
           <div>
             <div class="soul-name">Soul</div>
-            <div class="soul-status"><span class="soul-status-dot"></span>Present</div>
+            <div class="soul-status"><span class="soul-status-dot"></span>Present · clinical path</div>
           </div>
         </div>
         <button class="soul-action" onclick="clearChat()">Clear</button>
       </div>
+      <div class="crisis-banner" id="crisis-banner">Crisis language detected. Companion paused. Call/text <strong>988</strong> · text HOME to <strong>741741</strong> · or open Panic for grounding.</div>
       <div class="messages" id="messages">
         <div class="msg-ai">
           <div class="msg-ai-text">How are you feeling right now?<br/>You can share anything — I'm listening.</div>
@@ -994,6 +1022,34 @@ html,body{
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+<button type="button" class="clinic-fab" id="clinic-fab" onclick="openClinic()">Clinician</button>
+<div class="clinic-overlay" id="clinic-overlay" aria-label="Clinician panel">
+  <div class="clinic-nav">
+    <strong>Clinician panel</strong>
+    <button type="button" class="soul-action" onclick="closeClinic()">Close</button>
+  </div>
+  <div class="clinic-body">
+    <p class="clinical-banner" style="margin:0 0 12px">Wellness notes only · not EHR / not a medical record unless your practice makes it one</p>
+    <div class="clinic-card">
+      <h3>Consent status</h3>
+      <div id="clinic-consent">Loading…</div>
+    </div>
+    <div class="clinic-card">
+      <h3>Session note</h3>
+      <textarea id="clinic-note-body" placeholder="Session observations (local device)…"></textarea>
+      <button type="button" onclick="saveClinicNote()">Save note</button>
+    </div>
+    <div class="clinic-card">
+      <h3>Notes</h3>
+      <div id="clinic-notes"></div>
+    </div>
+    <div class="clinic-card">
+      <h3>Safety / audit log</h3>
+      <div class="clinic-audit" id="clinic-audit"></div>
+    </div>
+  </div>
+</div>
+
 <div id="install-banner" role="complementary">
   <div class="ib-icon">📲</div>
   <div><div class="ib-t">Add to Home Screen</div><div class="ib-s">Install for the full experience</div></div>
@@ -1009,23 +1065,70 @@ html,body{
 const state = {
   name: localStorage.getItem('sc_name') || '',
   onboarded: localStorage.getItem('sc_onboarded') === '1',
+  consented: localStorage.getItem('sc_consent_v1') === '1',
+  memberId: localStorage.getItem('sc_member_id') || ('m_' + Math.random().toString(36).slice(2, 10)),
   habits: JSON.parse(localStorage.getItem('sc_habits') || '[false,true,false,false,false]'),
   journals: JSON.parse(localStorage.getItem('sc_journals') || 'null') || [
     {title:'Feeling more settled lately',mood:'😌',date:'Today',text:"I've been noticing that mornings feel lighter. There's still the usual noise but I'm not as caught in it as I used to be. Maybe the check-ins are helping.",ref:"There's something shifting in how you describe mornings. A month ago it was the hardest part of the day."},
     {title:'Hard day at work',mood:'😟',date:'Yesterday · 9:42 PM',text:"Everything felt like too much today. The meeting went badly and I couldn't shake the feeling that I said the wrong thing. Soul helped me get perspective.",ref:"You came here instead of isolating. That's worth noticing."},
     {title:'Small win',mood:'😊',date:'2 days ago',text:"Actually finished the project I'd been avoiding for two weeks. Felt good. Need to remember this feeling when the next hard thing comes up.",ref:"You named this a win before I could. That's new."},
   ],
+  clinicNotes: JSON.parse(localStorage.getItem('sc_clinic_notes') || '[]'),
+  audit: JSON.parse(localStorage.getItem('sc_audit') || '[]'),
   ciStep: 0,
   groundStep: 0,
   groundFlow: null,
 };
+localStorage.setItem('sc_member_id', state.memberId);
 
-// Init
-if (state.onboarded) {
+const CRISIS_HARD = [
+  'kill myself', 'end my life', 'want to die', 'suicide', 'suicidal',
+  'hurt myself', 'cut myself', 'overdose', 'not worth living',
+  "don't want to be here", 'no reason to live', 'everyone would be better without me',
+];
+
+function audit(action, resource, metadata) {
+  state.audit.unshift({ at: new Date().toISOString(), action, resource, metadata: metadata || {} });
+  if (state.audit.length > 100) state.audit.length = 100;
+  localStorage.setItem('sc_audit', JSON.stringify(state.audit));
+}
+
+function crisisTier(text) {
+  const lower = String(text || '').toLowerCase();
+  return CRISIS_HARD.some((kw) => lower.includes(kw)) ? 3 : 0;
+}
+
+// Init — re-consent if onboarded without clinical consent
+if (state.onboarded && state.consented) {
   document.getElementById('onboarding').classList.add('hidden');
   if (state.name) setName(state.name);
+} else if (state.onboarded && !state.consented) {
+  document.getElementById('app').style.display = 'none';
+  obNext(3);
 } else {
   document.getElementById('app').style.display = 'none';
+}
+
+const consentCheck = document.getElementById('ob-consent-check');
+const consentBtn = document.getElementById('ob-consent-btn');
+if (consentCheck && consentBtn) {
+  consentCheck.addEventListener('change', () => {
+    const on = consentCheck.checked;
+    consentBtn.style.opacity = on ? '1' : '0.35';
+    consentBtn.style.pointerEvents = on ? 'auto' : 'none';
+  });
+}
+
+function obAcceptConsent() {
+  if (!consentCheck || !consentCheck.checked) return;
+  localStorage.setItem('sc_consent_v1', '1');
+  state.consented = true;
+  audit('consent.update', 'consent', { clinicalCompanion: true });
+  if (state.name && state.onboarded) {
+    startApp();
+    return;
+  }
+  obNext(4);
 }
 
 // Onboarding
@@ -1052,6 +1155,7 @@ function onNameInput() {
 function obSubmitName() {
   const v = document.getElementById('ob-name').value.trim();
   if (!v) return;
+  if (!state.consented) { obNext(3); showToast('Consent required first'); return; }
   state.name = v;
   localStorage.setItem('sc_name', v);
   localStorage.setItem('sc_onboarded', '1');
@@ -1062,6 +1166,7 @@ function obSubmitName() {
 }
 
 function startApp() {
+  if (!state.consented) { obNext(3); return; }
   document.getElementById('onboarding').classList.add('hidden');
   const app = document.getElementById('app');
   app.style.display = 'flex';
@@ -1180,9 +1285,20 @@ function sendMessage() {
   const input = document.getElementById('chat-input');
   const text = input.value.trim();
   if (!text) return;
+  if (!state.consented) { obNext(3); showToast('Consent required'); return; }
   addMsg('user', text);
   input.value = ''; input.style.height = '';
   document.getElementById('send-btn').classList.remove('visible');
+
+  if (crisisTier(text) === 3) {
+    audit('safety.tier3', 'chat', { preview: text.slice(0, 80) });
+    document.getElementById('crisis-banner').classList.add('show');
+    addMsg('ai', "I can hear you're in real pain. I'm not a crisis counselor. Please call or text 988 (US), text HOME to 741741, or use local emergency services. Opening grounding / panic support.");
+    openPanic();
+    return;
+  }
+
+  document.getElementById('crisis-banner').classList.remove('show');
   const typing = document.getElementById('typing');
   typing.classList.add('visible');
   scrollChat();
@@ -1192,15 +1308,41 @@ function sendMessage() {
   }, 900 + Math.random() * 600);
 }
 
+function openClinic() {
+  const c = localStorage.getItem('sc_consent_v1') === '1';
+  document.getElementById('clinic-consent').innerHTML = c
+    ? '<span style="color:var(--green)">Clinical companion consent: recorded on device</span>'
+    : '<span style="color:var(--red)">No consent on this device</span>';
+  document.getElementById('clinic-notes').innerHTML = state.clinicNotes.length
+    ? state.clinicNotes.map((n) => `<div class="clinic-note"><time>${n.at}</time>${n.body.replace(/</g,'&lt;')}</div>`).join('')
+    : '<div class="clinic-note">No notes yet.</div>';
+  document.getElementById('clinic-audit').textContent = state.audit.length
+    ? state.audit.slice(0, 30).map((a) => `${a.at} · ${a.action} · ${a.resource}`).join('\n')
+    : 'No audit events.';
+  document.getElementById('clinic-overlay').classList.add('open');
+}
+function closeClinic() { document.getElementById('clinic-overlay').classList.remove('open'); }
+function saveClinicNote() {
+  const body = document.getElementById('clinic-note-body').value.trim();
+  if (!body) return;
+  state.clinicNotes.unshift({ at: new Date().toISOString(), body, clinicianId: 'local-clinician' });
+  localStorage.setItem('sc_clinic_notes', JSON.stringify(state.clinicNotes));
+  audit('note.create', 'clinical_note', { len: body.length });
+  document.getElementById('clinic-note-body').value = '';
+  openClinic();
+  showToast('Note saved locally');
+}
+
 function addMsg(role, text) {
   const now = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+  const safe = String(text).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   const el = document.createElement('div');
   if (role === 'ai') {
     el.className = 'msg-ai';
-    el.innerHTML = `<div class="msg-ai-text">${text}</div><div class="msg-ai-time">${now}</div>`;
+    el.innerHTML = `<div class="msg-ai-text">${safe}</div><div class="msg-ai-time">${now}</div>`;
   } else {
     el.className = 'msg-user';
-    el.innerHTML = `<div class="msg-user-bubble">${text}</div><div class="msg-user-time">${now}</div>`;
+    el.innerHTML = `<div class="msg-user-bubble">${safe}</div><div class="msg-user-time">${now}</div>`;
   }
   const msgs = document.getElementById('messages');
   msgs.insertBefore(el, document.getElementById('typing').parentElement);
@@ -1222,7 +1364,10 @@ function clearChat() {
 }
 
 // Panic
-function openPanic() { document.getElementById('panic-overlay').classList.add('open'); }
+function openPanic() {
+  audit('panic.open', 'panic');
+  document.getElementById('panic-overlay').classList.add('open');
+}
 function closePanic() { document.getElementById('panic-overlay').classList.remove('open'); }
 function closePanicGoChat() { closePanic(); goTab('soul'); }
 

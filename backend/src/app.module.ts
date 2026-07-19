@@ -39,6 +39,7 @@ import { PatternDetectionProcessor } from './queue/processors/pattern-detection.
 import { InsightGenerationProcessor } from './queue/processors/insight-generation.processor';
 import { InterventionModule } from './modules/intervention/intervention.module';
 import { PanicModule } from './modules/panic/panic.module';
+import { ClinicalModule } from './modules/clinical/clinical.module';
 
 @Module({
   imports: [
@@ -75,6 +76,7 @@ import { PanicModule } from './modules/panic/panic.module';
     SchedulerModule,
     InterventionModule,
     PanicModule,
+    ClinicalModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: ClerkAuthGuard },
