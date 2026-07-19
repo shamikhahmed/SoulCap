@@ -1,5 +1,7 @@
 # SoulCap — Platform Presentation
 
+> **Honesty (shipped product):** The live PWA at [`docs/`](./docs/) / GitHub Pages is a **Smart Companion** — rules-based reflections, keyword safety tiers, on-device journal. **Not** a live LLM. NestJS + model providers in `backend/` are a **lab only** (not deployed). See `README.md` + `SAFETY.md`.
+
 ---
 
 ## Slide 1: The Problem
@@ -17,15 +19,15 @@
 
 ## Slide 2: Introducing SoulCap
 
-**SoulCap** is a pre-production AI emotional wellness companion powered by a **Living Mind Model** architecture — a dynamic psychological profile designed to evolve with conversation. **Not clinical care or production therapy.** See `SAFETY.md`.
+**SoulCap** ships as an offline-first **clinical-path wellness PWA** with a **Smart Companion** (canned reflections + keyword safety rails). Architecture work toward a Living Mind Model lives in undeployed Nest lab source. **Not clinical care or production therapy.** See `SAFETY.md`.
 
-Not a chatbot. Not a mood tracker. A companion that grows with you.
+Not a chatbot pretending to be a therapist. A companion shell that stays honest about what runs on-device today.
 
 ---
 
-## Slide 3: The Living Mind Model (LMM)
+## Slide 3: The Living Mind Model (LMM) — Lab Direction
 
-The core innovation: **a persistent psychological profile** that updates in real time.
+**Lab IP (Nest source):** a persistent psychological profile design intended to update with interaction.
 
 **30+ tracked traits including:**
 - Emotional regulation capacity
@@ -36,28 +38,32 @@ The core innovation: **a persistent psychological profile** that updates in real
 - Trauma sensitivity
 - Help-seeking behavior
 
-**How it works:**
-- Every interaction updates traits via Exponential Moving Average (α = 0.05)
+**How the lab design works:**
+- Trait updates via Exponential Moving Average (α = 0.05)
 - Daily decay prevents stagnation
 - Weekly snapshots capture growth over time
-- The AI adapts its tone, strategy, and depth to your current psychological state
+- A future orchestration layer would adapt tone/strategy from that profile
+
+**Shipped PWA today:** local check-ins, journals, habits, and Smart Companion replies — no live LMM or LLM.
 
 ---
 
-## Slide 4: The AI Orchestration Pipeline
+## Slide 4: Orchestration Pipeline (Nest Lab)
 
-Every message goes through **10 intelligent steps** before a response is generated:
+Every Nest-lab message path is designed to go through **10 steps** before a model response (not live on Pages):
 
 1. **Quick Scan** — Intent and emotion detection
-2. **Emotion Analysis** — Valence, arousal, dominant emotions (Claude Haiku)
+2. **Emotion Analysis** — Valence, arousal, dominant emotions (Haiku when keys present)
 3. **Safety Assessment** — 4-tier crisis detection
 4. **LMM Retrieval** — Pull current psychological profile
 5. **Memory Retrieval** — Semantic search of past conversations (pgvector)
 6. **Strategy Selection** — CBT / DBT / ACT / Psychodynamic / Motivational
 7. **Prompt Assembly** — Personalized context construction
 8. **Model Routing** — Haiku for speed, Sonnet for depth
-9. **Response Generation** — Contextually appropriate, emotionally intelligent
+9. **Response Generation** — Contextually appropriate reply
 10. **Hard Rail Check** — Safety re-validation before delivery
+
+**Shipped PWA:** keyword safety first; Smart Companion canned replies; Panic/988 resources.
 
 ---
 
@@ -67,10 +73,10 @@ SoulCap operates a **4-Tier Safety System**:
 
 | Tier | Level | Response |
 |------|-------|----------|
-| 0 | NONE | Normal conversation |
+| 0 | NONE | Normal Smart Companion dialogue |
 | 1 | DISTRESS | Gentle acknowledgment + resources offered |
 | 2 | ELEVATED | Direct safety check-in + escalation prompt |
-| 3 | ACUTE | **LLM bypassed entirely** — hardcoded crisis response + immediate resource delivery |
+| 3 | ACUTE | **Hardcoded crisis response** — no model required; 988 / emergency contacts |
 
 **Panic Mode** — One-tap crisis support:
 - 5-4-3-2-1 grounding exercise
@@ -87,122 +93,37 @@ SoulCap operates a **4-Tier Safety System**:
 
 | Feature | Description |
 |---------|-------------|
-| **AI Conversations** | Therapeutically-informed dialogue with memory and context |
-| **Daily Check-Ins** | Valence, arousal, groundedness, energy tracking |
-| **Voice Notes** | Whisper transcription → AI reflection |
-| **Journaling** | Guided journaling with emotional state extraction |
-| **Pattern Detection** | Automatic psychological pattern recognition |
-| **Weekly Insights** | AI-synthesized observations about your growth |
-| **Monthly Reports** | Narrative growth report with timeline |
-| **Goal Tracking** | Goals with milestone detection and LMM updates |
-| **Habit Tracking** | Streaks with psychological reinforcement |
-| **Intervention Tools** | Coping mechanisms, triggers, activity recommendations |
+| **Smart Companion** | Rules-based reflections (PWA); Nest lab holds LLM orchestration source |
+| **Daily Check-Ins** | Mood, energy, sleep tracking on-device |
+| **Voice Notes** | Lab path: optional Whisper when keys exist — not required for PWA |
+| **Journaling** | Local journals + clinician notes path |
+| **Pattern Detection** | Lab direction; PWA keeps honest local history |
+| **Weekly Insights** | Lab narrative reports — not fabricated in the PWA |
+| **Goal / Habit Tracking** | On-device habits with simple streaks |
+| **Intervention Tools** | Grounding flows in Panic mode |
 | **Panic Mode** | Instant crisis support with grounding flows |
 
 ---
 
 ## Slide 7: Technical Architecture
 
-**Backend:** NestJS (TypeScript) — production-grade, multi-tenant API
+**Shipped:** vanilla JS PWA in `docs/` — localStorage, Service Worker, keyword safety.
 
-**Database:** PostgreSQL + pgvector — 65+ models, semantic memory search
+**Lab (not deployed):** NestJS + PostgreSQL/pgvector + optional Claude/OpenAI keys — see `backend/`.
 
-**AI:** Claude Sonnet 4.6 + Haiku 4.5 — orchestrated pipeline
-
-**Queue:** BullMQ — 15 async job queues for background processing
-
-**Auth:** Clerk — enterprise-grade multi-tenant authentication
-
-**Storage:** AWS S3 — encrypted media storage
-
-**Mobile:** React Native + Expo — iOS & Android
-
-**Privacy:** All message content encrypted. No raw content in logs. HIPAA-aligned design.
+**Mobile lab:** React Native / Expo source in `mobile/` — not the Pages demo.
 
 ---
 
-## Slide 8: The Market
+## Slide 8: What We Are Not Claiming
 
-**Global Mental Health Market: $537B by 2030**
-
-- Digital mental health: fastest-growing segment ($17B → $88B by 2033)
-- 3.8B smartphone users globally
-- Gen Z: 42% report mental health conditions; most likely to seek app-based support
-- Employer mental health benefits: $10B+ annual spend in the US alone
-
-**SoulCap's addressable market:**
-- B2C: Direct-to-consumer wellness subscribers
-- B2B: Employee mental health benefits packages
-- B2B2C: Healthcare systems, insurance, telehealth platforms
+- Not a medical device
+- Not licensed therapy
+- Not a substitute for crisis counseling
+- Nest + LLM stack = **lab**, not production SaaS on GitHub Pages
 
 ---
 
-## Slide 9: Business Model
+## Closing
 
-| Revenue Stream | Description | ARPU |
-|---------------|-------------|------|
-| **Personal** | Monthly subscription | $19.99/mo |
-| **Premium** | Full access + voice + reports | $39.99/mo |
-| **Enterprise** | Per-seat annual license | $200–500/seat/yr |
-| **Healthcare** | System integration + white-label | Custom |
-
-**Unit Economics (target):**
-- CAC: $25–45 (B2C), $200–400 (B2B)
-- LTV: $360–720 (12–18mo retention)
-- LTV/CAC ratio: 8–15x
-
----
-
-## Slide 10: Traction & Roadmap
-
-**Current Status:**
-- Full platform built: backend API, AI pipeline, mobile app
-- Living Mind Model: deployed and validated
-- Safety system: 4-tier with Tier 3 hardcoded bypass
-
-**6-Month Roadmap:**
-- Beta launch: 500 users
-- Therapist co-pilot mode (session prep + between-session support)
-- Group support features
-- Clinical validation partnership
-
-**12-Month Roadmap:**
-- 50,000 active users
-- Enterprise pilot: 3 companies
-- ISO 27001 certification
-- Series A raise
-
----
-
-## Slide 11: Team
-
-**Building at the intersection of AI, clinical psychology, and product.**
-
-SoulCap was architected with input from:
-- Staff-level software engineers
-- AI/ML architects
-- Clinical psychologists
-- Privacy and compliance experts
-- Database architects
-
----
-
-## Slide 12: The Ask
-
-**We are raising a $2M seed round** to:
-
-- Launch beta and acquire first 10,000 users
-- Complete HIPAA compliance audit
-- Hire: Clinical Advisor, 2x Engineers, Growth Lead
-- Enterprise pilot program
-- Series A preparation
-
-**In return:** You get in early on the platform that finally gets mental health personalization right.
-
----
-
-> *"The mind is not static. Your wellness companion shouldn't be either."*
->
-> — SoulCap
-
-**Contact:** shamikh73@gmail.com
+> *"Safety gates first. Honest companion language second. Models only when we actually ship them."*

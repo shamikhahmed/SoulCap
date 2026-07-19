@@ -1,13 +1,11 @@
 **Version:** 0.2.3 · SW `soulcap-v023`
 
-# Living Mind — Project Handover Document
+# SoulCap — Project Handover
 
-> **This document is the single source of truth for anyone picking up this project.**
-> It is updated at the end of every significant build session. If code and this document disagree, investigate before assuming either is correct.
+> **Shipped truth:** GitHub Pages deploys **`docs/`** (vanilla PWA). Companion replies are a **Smart Companion** (rules + keyword safety) — **not** a live LLM. NestJS in `backend/` and Expo in `mobile/` are **lab source only**. Cap Store demo: `?demo=1`.
 
-**Last updated:** 2026-06-14
-**Build sessions completed:** 2
-**Status:** MVP backend + mobile client built. Not yet deployed. Ready for `npm install` and local run.
+**Last updated:** 2026-07-19  
+**Status:** Clinical-path PWA live · Nest/Expo lab not deployed · Ready for `python3 -m http.server` in `docs/`
 
 ---
 
@@ -17,7 +15,7 @@
 2. [What Has Been Built (Session Log)](#2-what-has-been-built)
 3. [Architecture Overview](#3-architecture-overview)
 4. [Codebase Map](#4-codebase-map)
-5. [The AI Companion — Behavioral Specification](#5-the-ai-companion-behavioral-specification)
+5. [The Smart Companion / Nest Lab Spec](#5-the-ai-companion-behavioral-specification)
 6. [The Living Mind Model](#6-the-living-mind-model)
 7. [The Orchestration Loop (Core Intelligence)](#7-the-orchestration-loop)
 8. [Database Schema](#8-database-schema)
@@ -32,22 +30,17 @@
 
 ## 1. What This Product Is
 
-**Living Mind** is an AI emotional wellness and personal growth companion.
+**SoulCap** is a clinical-path wellness companion.
+
+**Shipped (PWA):** Smart Companion reflections, check-ins, journals, habits, safety tiers, Panic/988, clinician notes — all on-device.
+
+**Lab (Nest / mobile):** Living Mind Model + LLM orchestration source for a future hosted API. Do not describe Pages demos as "AI therapy."
 
 **It is NOT:**
 - A therapy replacement
 - A medical or diagnostic system
-- A generic chatbot
-- A mood tracker with AI features
-
-**It IS:**
-- A long-term companion that builds a continuously deepening model of one user over time
-- A system that remembers, detects patterns, and personalizes every response to that specific person
-- A product whose primary differentiator is the **Living Mind Model** — a structured psychological representation of the user that improves over months and years
-
-**The core product thesis:** Two users must never receive identical responses. The system should feel, after 30 days, like talking to someone who genuinely knows you. After a year, it should be irreplaceable because of the accumulated understanding it holds.
-
-**Mission:** Help people understand themselves well enough to live better.
+- A live LLM product on GitHub Pages
+- A mood tracker with fake AI marketing
 
 ---
 

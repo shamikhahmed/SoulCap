@@ -1,11 +1,13 @@
 # SoulCap — Investor Deck
 
-## $2M Seed Round
+> **Product honesty (read first):** Live GitHub Pages product is the **clinical-path PWA** — **Smart Companion** (rules-based), keyword safety, on-device journal. NestJS + Claude/OpenAI orchestration in `backend/` is **lab source only (not deployed)**. Do not pitch the Pages demo as a live LLM therapy product. See `README.md`, `CLINICAL.md`, `SAFETY.md`.
 
-**Category:** AI Mental Health & Emotional Wellness
-**Stage:** Seed
-**Raise:** $2,000,000
-**Use of Funds:** Product launch, compliance, team, enterprise pilots
+## Directional narrative (lab + raise framing)
+
+**Category:** Clinical-path wellness companion (Smart Companion shipped; Nest/LMM lab)
+**Stage:** Seed narrative · PWA MVP live
+**Raise (aspirational doc):** $2,000,000
+**Use of Funds:** Product hardening, compliance exploration, team, enterprise pilots
 
 ---
 
@@ -36,23 +38,23 @@ Current solutions fail in three ways:
 
 Every person has a unique psychological fingerprint.
 
-Current apps ignore it. Therapists know it intuitively. AI can model it persistently.
+Current apps ignore it. Therapists know it intuitively. A persistent profile can model it — carefully, with safety first.
 
-**SoulCap builds a Living Mind Model for every user** — a dynamic psychological profile that updates with every interaction and powers truly personalized AI support.
+**SoulCap's Living Mind Model is lab IP** — a dynamic psychological profile design. The shipped PWA supports personalized **Smart Companion** check-ins without pretending an LLM is online.
 
 ---
 
 ## The Solution: SoulCap
 
-SoulCap is the first AI emotional wellness platform with a **persistent, evolving psychological profile** at its core.
+SoulCap ships an honest clinical-path companion with safety tiers and on-device memory. Nest lab explores a **persistent psychological profile** + optional LLM orchestration — not marketed as live therapy AI on Pages.
 
-> Think of it as the difference between a generic chatbot and an AI that has known you for years.
+> Think: Smart Companion today; deeper Personalization when models are actually deployed with keys and compliance.
 
 **Three pillars:**
 
-1. **Know You** — Living Mind Model tracks 30+ psychological traits in real time
-2. **Support You** — AI conversations, check-ins, journaling, voice notes, grounding exercises
-3. **Help You Grow** — Pattern detection, insights, growth reports, goal and habit tracking
+1. **Know You** — Local check-ins / journals on device; LMM design in Nest lab
+2. **Support You** — Smart Companion conversations, check-ins, journaling, grounding exercises
+3. **Help You Grow** — Habits + local history; lab pattern/report engines not claimed as shipped AI
 
 ---
 
@@ -87,16 +89,16 @@ The LMM is what makes SoulCap defensible.
 
 ## Safety Architecture: Built Right
 
-Mental health AI done wrong is dangerous. We built safety first.
+Mental health software done wrong is dangerous. We built safety first.
 
 **4-Tier Safety System:**
 
 | Tier | Trigger | Response |
 |------|---------|----------|
-| NONE | Normal conversation | Standard AI dialogue |
+| NONE | Normal conversation | Smart Companion dialogue |
 | DISTRESS | Mild distress signals | Gentle check-in, resources offered |
 | ELEVATED | Elevated risk signals | Direct safety assessment, escalation |
-| ACUTE | Crisis signals | **LLM bypassed entirely** — hardcoded response, 988, emergency contacts |
+| ACUTE | Crisis signals | **Hardcoded response** (no model required) — 988, emergency contacts |
 
 **Panic Mode — one tap:**
 - 5-4-3-2-1 sensory grounding
@@ -116,27 +118,18 @@ Mental health AI done wrong is dangerous. We built safety first.
 
 ## Product — What We've Built
 
-**Backend API (NestJS + PostgreSQL + pgvector)**
-- 65+ database models
-- 15 async job queues
-- 10-step AI orchestration pipeline
-- 4-tier safety gate
-- Multi-tenant with Clerk auth
+**Shipped PWA (`docs/` → GitHub Pages)**
+- Smart Companion chat (rules-based)
+- Check-ins, journals, habits, Panic/988
+- Clinician notes + local audit path
+- `?demo=1` walkthrough seed
 
-**AI Stack**
-- Claude Sonnet 4.6 for depth
-- Claude Haiku 4.5 for speed and tool-use
-- OpenAI Whisper for voice transcription
-- pgvector for semantic memory search
+**Nest lab (not deployed)**
+- NestJS + PostgreSQL/pgvector source modules
+- Orchestration / LMM / safety gate designs
+- Optional Claude / Whisper when keys exist locally
 
-**Mobile (React Native + Expo)**
-- AI chat with memory
-- Daily check-ins
-- Voice notes
-- Journaling
-- Pattern insights
-- Panic mode
-- Goal and habit tracking
+**Mobile lab:** React Native / Expo source — not the Pages product
 
 **Full feature set:**
 Conversations · Check-ins · Voice Notes · Journaling · Patterns · Insights · Growth Reports · Goals · Habits · Coping Mechanisms · Trigger Tracking · Activity Recommendations · Panic Mode · Push Notifications · Multi-tenant Orgs · Stripe Billing
@@ -277,18 +270,15 @@ SoulCap was built by a team with deep expertise in:
 ## Traction
 
 **What's done:**
-- Full platform built and ready for beta
-- Living Mind Model: implemented and tested
-- 10-step AI pipeline: fully operational
-- 4-tier safety system: ACUTE tier bypasses LLM entirely
-- Mobile app: iOS and Android ready
-- 65+ database models with encrypted fields
+- Clinical-path PWA live on GitHub Pages with honest Smart Companion
+- 4-tier keyword safety + Panic resources
+- Nest/LMM lab source intact for future hosting
+- Demo seed (`?demo=1`) for Cap Store walkthroughs
 
-**What's next with your capital:**
-- Beta launch
-- Enterprise pilots
-- Clinical validation
-- Series A
+**What's next:**
+- Harden PWA / clinician path
+- Only call features "AI" when a real LLM is deployed with keys + compliance
+- Clinical validation before any care-adjacent claims
 
 ---
 
@@ -310,7 +300,7 @@ SoulCap is positioned to be the **emotional OS** for a generation that grew up w
 
 **We are not building another mood tracker.**
 
-We are building the first AI that genuinely knows you — and uses that knowledge to help you become who you want to be.
+We are building an honest wellness companion — Smart Companion on-device first; Nest lab for deeper personalization when we actually ship models.
 
 ---
 

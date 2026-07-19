@@ -1,5 +1,6 @@
 ## 0.2.3
 - Museum honesty: live check-ins/journals; demo seeds; SW soulcap-v023.
+- Soften INVESTOR_DECK / PRESENTATION / HANDOVER: Smart Companion shipped; Nest = lab only.
 
 ## 0.2.2 — 2026-07-19
 
