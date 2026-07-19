@@ -1,3 +1,5 @@
+**Version:** 0.2.3 · SW `soulcap-v023`
+
 # Living Mind — Project Handover Document
 
 > **This document is the single source of truth for anyone picking up this project.**

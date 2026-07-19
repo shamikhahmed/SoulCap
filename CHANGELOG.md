@@ -1,3 +1,6 @@
+## 0.2.3
+- Museum honesty: live check-ins/journals; demo seeds; SW soulcap-v023.
+
 ## 0.2.2 — 2026-07-19
 
 - Check-ins persist to `sc_checkins`
