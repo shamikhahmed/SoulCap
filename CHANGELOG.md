@@ -1,6 +1,7 @@
 ## 0.2.3
 - Museum honesty: live check-ins/journals; demo seeds; SW soulcap-v023.
 - Soften INVESTOR_DECK / PRESENTATION / HANDOVER: Smart Companion shipped; Nest = lab only.
+- `?demo=1` always skips onboarding UI (half localStorage state); Skip on step 1 for non-demo.
 
 ## 0.2.2 — 2026-07-19
 
