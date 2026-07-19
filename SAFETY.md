@@ -1,6 +1,6 @@
 # SoulCap — Safety & Truth Inventory
 
-**Version:** 0.2.1 · **Updated:** 2026-07-19  
+**Version:** 0.2.3 · **Updated:** 2026-07-19  
 **Status:** **Clinical path** — clinician-supported wellness companion.  
 **Not** a cleared SaMD / medical device. **Not** a substitute for licensed care.  
 See also `CLINICAL.md`.
@@ -55,4 +55,4 @@ SoulCap is **not** clinical care, therapy, medical advice, diagnosis, or crisis 
 | Safety keyword gate + crisis resource handoff | Clinically validated crisis care |
 | Links to CLINICAL.md + SAFETY.md | Imply FDA clearance or diagnosed treatment |
 
-Docs ship under **v0.2.0** so Cap Family truth records the clinical path without overclaiming SaMD readiness.
+Docs ship under **v0.2.3** so Cap Family truth records the clinical path without overclaiming SaMD readiness.

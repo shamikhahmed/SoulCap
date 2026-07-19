@@ -649,8 +649,8 @@ html,body{
       <div class="clinical-banner" id="clinical-banner">Clinical path · wellness companion · not a medical device · 988 if in crisis</div>
       <div class="today-top">
         <div class="today-greeting" id="today-greeting">Good morning</div>
-        <div class="today-name" id="today-name">Shamikh</div>
-        <div class="today-context" id="today-context">You've been checking in for 12 days. Something is building.</div>
+        <div class="today-name" id="today-name"></div>
+        <div class="today-context" id="today-context">Tap the orb when you're ready to check in.</div>
       </div>
 
       <div class="orb-center">
@@ -660,9 +660,9 @@ html,body{
       </div>
 
       <div class="today-stats">
-        <div class="stat"><div class="stat-val">12</div><div class="stat-label">Day streak</div></div>
-        <div class="stat"><div class="stat-val">😌</div><div class="stat-label">Yesterday</div></div>
-        <div class="stat"><div class="stat-val">3</div><div class="stat-label">This week</div></div>
+        <div class="stat"><div class="stat-val" id="stat-streak">—</div><div class="stat-label">Day streak</div></div>
+        <div class="stat"><div class="stat-val" id="stat-yesterday">—</div><div class="stat-label">Yesterday</div></div>
+        <div class="stat"><div class="stat-val" id="stat-week">—</div><div class="stat-label">This week</div></div>
       </div>
 
       <div class="today-section">
@@ -670,9 +670,9 @@ html,body{
         <button class="today-card" onclick="goTab('soul')">
           <div class="tc-row">
             <div>
-              <div class="tc-label">Soul is here</div>
-              <div class="tc-title">How are you carrying last week?</div>
-              <div class="tc-sub">Soul noticed something worth exploring.</div>
+              <div class="tc-label">Soul</div>
+              <div class="tc-title">Rules-based companion chat</div>
+              <div class="tc-sub">Not a live AI model on this Pages build.</div>
             </div>
             <div class="tc-arrow">›</div>
           </div>
@@ -701,7 +701,7 @@ html,body{
           </div>
           <div class="habit-ring-wrap" onclick="toggleHabit(this,1)">
             <div class="habit-ring">
-              <svg viewBox="0 0 56 56"><circle cx="28" cy="28" r="24" fill="none" stroke="rgba(10,132,255,0.15)" stroke-width="4"/><circle cx="28" cy="28" r="24" fill="none" stroke="#0A84FF" stroke-width="4" stroke-dasharray="150.8" stroke-dashoffset="37.7" stroke-linecap="round" class="h-arc" id="h1" style="transition:stroke-dashoffset 0.55s var(--spring)"/></svg>
+              <svg viewBox="0 0 56 56"><circle cx="28" cy="28" r="24" fill="none" stroke="rgba(10,132,255,0.15)" stroke-width="4"/><circle cx="28" cy="28" r="24" fill="none" stroke="#0A84FF" stroke-width="4" stroke-dasharray="150.8" stroke-dashoffset="150.8" stroke-linecap="round" class="h-arc" id="h1" style="transition:stroke-dashoffset 0.55s var(--spring)"/></svg>
               <span class="habit-ring-icon">📖</span>
             </div>
             <div class="habit-ring-label">Read</div>
@@ -784,45 +784,26 @@ html,body{
         <div class="you-title">You</div>
         <button class="you-profile-btn" onclick="openProfile()">👤</button>
       </div>
-      <div class="soul-letter">
-        <div class="sl-from">Soul's reflection · This week</div>
-        <div class="sl-body">You showed up 6 out of 7 days. Your mood was highest on Tuesday afternoon. Something shifted Thursday — you seemed more guarded than usual. Sunday evenings remain a pattern worth exploring.<br/><br/>You're trending toward openness. That's new.</div>
-        <div class="sl-date">June 9–15, 2026</div>
+      <div class="soul-letter" id="soul-letter">
+        <div class="sl-from" id="sl-from">Soul's reflection</div>
+        <div class="sl-body" id="sl-body">Check in to unlock weekly reflections from your on-device data.</div>
+        <div class="sl-date" id="sl-date"></div>
       </div>
       <div class="you-section">
         <div class="you-section-head">
           <div class="you-section-title">Journal</div>
           <button class="you-new-btn" onclick="openCompose()">+ New</button>
         </div>
-        <div id="journal-list">
-          <button class="journal-entry" onclick="openEntry(0)">
-            <div class="je-meta"><span class="je-date">Today</span><span class="je-mood">😌</span></div>
-            <div class="je-title">Feeling more settled lately</div>
-            <div class="je-preview">I've been noticing that mornings feel lighter. There's still the usual noise but I'm not as caught in it as I used to be.</div>
-          </button>
-          <button class="journal-entry" onclick="openEntry(1)">
-            <div class="je-meta"><span class="je-date">Yesterday · 9:42 PM</span><span class="je-mood">😟</span></div>
-            <div class="je-title">Hard day at work</div>
-            <div class="je-preview">Everything felt like too much. The meeting went badly and I couldn't shake the feeling that I said the wrong thing.</div>
-          </button>
-          <button class="journal-entry" onclick="openEntry(2)">
-            <div class="je-meta"><span class="je-date">2 days ago</span><span class="je-mood">😊</span></div>
-            <div class="je-title">Small win</div>
-            <div class="je-preview">Actually finished the project I'd been avoiding for two weeks. Felt good. Need to remember this feeling.</div>
-          </button>
-        </div>
+        <div id="journal-list"></div>
       </div>
       <div class="you-section" style="padding-bottom:40px;">
         <div class="you-section-head"><div class="you-section-title">Patterns</div></div>
-        <div class="pattern-card">
-          <div class="pc-type">Temporal pattern · Confirmed</div>
-          <div class="pc-text">Sunday evenings consistently carry a different kind of weight for you.</div>
-          <div class="pc-confidence">Noticed across 6 weeks</div>
-        </div>
-        <div class="pattern-card">
-          <div class="pc-type">Behavioral pattern · Developing</div>
-          <div class="pc-text">You tend to be hardest on yourself after social situations — even ones that went well.</div>
-          <div class="pc-confidence">Noticed 4 times</div>
+        <div id="patterns-list">
+          <div class="pattern-card">
+            <div class="pc-type">On-device</div>
+            <div class="pc-text">Check in to unlock</div>
+            <div class="pc-confidence">Needs local check-in data</div>
+          </div>
         </div>
       </div>
     </div>
@@ -1095,9 +1076,26 @@ const SAMPLE_JOURNALS = [
   {title:'Small win',mood:'😊',date:'2 days ago',text:"Actually finished the project I'd been avoiding for two weeks. Felt good. Need to remember this feeling when the next hard thing comes up.",ref:"You named this a win before I could. That's new."},
 ];
 
+function daysAgoIso(n, hour) {
+  const d = new Date();
+  d.setDate(d.getDate() - n);
+  d.setHours(hour || 9, 12, 0, 0);
+  return d.toISOString();
+}
+
+const SAMPLE_CHECKINS = [
+  { at: daysAgoIso(0, 8), mood: '😌Calm', energy: 'Mostly good', sleep: 'Mostly steady', note: 'Demo: morning check-in' },
+  { at: daysAgoIso(1, 21), mood: '😟Worried', energy: 'Low, but present', sleep: 'A bit unsettled', note: 'Demo: rough evening' },
+  { at: daysAgoIso(2, 10), mood: '😊Happy', energy: 'Energized and clear', sleep: 'Rooted and clear', note: 'Demo: small win day' },
+  { at: daysAgoIso(3, 19), mood: '😐Neutral', energy: 'Somewhere in the middle', sleep: 'Okay, getting there', note: '' },
+  { at: daysAgoIso(5, 9), mood: '🙂Good', energy: 'Mostly good', sleep: 'Mostly steady', note: 'Demo: walking helped' },
+];
+
 const DEMO = new URLSearchParams(location.search).get('demo') === '1'
   || sessionStorage.getItem('sc_demo') === '1';
 if (DEMO) sessionStorage.setItem('sc_demo', '1');
+
+const hadHabitsKey = localStorage.getItem('sc_habits') != null;
 
 const state = {
   name: localStorage.getItem('sc_name') || '',
@@ -1115,6 +1113,17 @@ const state = {
   groundFlow: null,
 };
 localStorage.setItem('sc_member_id', state.memberId);
+
+if (DEMO) {
+  if (!state.checkIns.length) {
+    state.checkIns = SAMPLE_CHECKINS.slice();
+    localStorage.setItem('sc_checkins', JSON.stringify(state.checkIns));
+  }
+  if (!hadHabitsKey) {
+    state.habits = [true, true, false, true, false];
+    localStorage.setItem('sc_habits', JSON.stringify(state.habits));
+  }
+}
 
 if (DEMO && !state.onboarded) {
   state.name = state.name || 'Demo';
@@ -1218,7 +1227,12 @@ function startApp() {
   app.style.display = 'flex';
   setName(state.name);
   state.onboarded = true;
-  openCheckIn();
+  refreshMuseumUI();
+  const firstSession = localStorage.getItem('sc_first_session_done') !== '1';
+  if (firstSession) {
+    localStorage.setItem('sc_first_session_done', '1');
+    openCheckIn();
+  }
 }
 
 // Navigation
@@ -1230,11 +1244,114 @@ function goTab(name) {
 }
 
 function setName(n) {
-  document.getElementById('today-name').textContent = n;
-  document.getElementById('profile-name-display').textContent = n;
+  document.getElementById('today-name').textContent = n || '';
+  document.getElementById('profile-name-display').textContent = n || '—';
   const h = new Date().getHours();
   const g = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
   document.getElementById('today-greeting').textContent = g;
+}
+
+function moodIcon(mood) {
+  const m = String(mood || '').match(/\p{Extended_Pictographic}/u);
+  return m ? m[0] : '—';
+}
+
+function localDayKeyFromDate(d) {
+  return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+}
+
+function localDayKey(iso) {
+  return localDayKeyFromDate(new Date(iso));
+}
+
+function refreshTodayStats() {
+  const cis = state.checkIns || [];
+  const streakEl = document.getElementById('stat-streak');
+  const yEl = document.getElementById('stat-yesterday');
+  const wEl = document.getElementById('stat-week');
+  const ctx = document.getElementById('today-context');
+  if (!cis.length) {
+    if (streakEl) streakEl.textContent = '—';
+    if (yEl) yEl.textContent = '—';
+    if (wEl) wEl.textContent = '—';
+    if (ctx) ctx.textContent = 'Tap the orb when you\'re ready to check in.';
+    return;
+  }
+  const days = new Set(cis.map((c) => localDayKey(c.at)));
+  let streak = 0;
+  const cursor = new Date();
+  cursor.setHours(12, 0, 0, 0);
+  for (;;) {
+    const key = localDayKeyFromDate(cursor);
+    if (!days.has(key)) break;
+    streak++;
+    cursor.setDate(cursor.getDate() - 1);
+  }
+  const y = new Date();
+  y.setHours(12, 0, 0, 0);
+  y.setDate(y.getDate() - 1);
+  const yKey = localDayKeyFromDate(y);
+  const yEntry = cis.find((c) => localDayKey(c.at) === yKey);
+  const weekStart = new Date();
+  weekStart.setHours(0, 0, 0, 0);
+  weekStart.setDate(weekStart.getDate() - weekStart.getDay());
+  const weekCount = cis.filter((c) => new Date(c.at) >= weekStart).length;
+  if (streakEl) streakEl.textContent = String(streak);
+  if (yEl) yEl.textContent = yEntry ? moodIcon(yEntry.mood) : '—';
+  if (wEl) wEl.textContent = String(weekCount);
+  if (ctx) {
+    ctx.textContent = streak
+      ? 'You\'ve checked in ' + streak + ' day' + (streak === 1 ? '' : 's') + ' in a row · ' + cis.length + ' on this device.'
+      : cis.length + ' check-in' + (cis.length === 1 ? '' : 's') + ' on this device.';
+  }
+}
+
+function refreshYouInsights() {
+  const cis = state.checkIns || [];
+  const from = document.getElementById('sl-from');
+  const body = document.getElementById('sl-body');
+  const date = document.getElementById('sl-date');
+  const plist = document.getElementById('patterns-list');
+  if (!cis.length) {
+    if (from) from.textContent = 'Soul\'s reflection';
+    if (body) body.textContent = 'Check in to unlock weekly reflections from your on-device data.';
+    if (date) date.textContent = '';
+    if (plist) {
+      plist.innerHTML = '<div class="pattern-card"><div class="pc-type">On-device</div><div class="pc-text">Check in to unlock</div><div class="pc-confidence">Needs local check-in data</div></div>';
+    }
+    return;
+  }
+  const weekStart = new Date();
+  weekStart.setHours(0, 0, 0, 0);
+  weekStart.setDate(weekStart.getDate() - weekStart.getDay());
+  const week = cis.filter((c) => new Date(c.at) >= weekStart);
+  const moods = week.map((c) => moodIcon(c.mood)).filter((m) => m !== '—');
+  const uniqueDays = new Set(week.map((c) => localDayKey(c.at))).size;
+  if (from) from.textContent = 'Soul\'s reflection · This week';
+  if (body) {
+    body.textContent = week.length
+      ? 'You checked in on ' + uniqueDays + ' day' + (uniqueDays === 1 ? '' : 's') + ' this week (' + week.length + ' total). Recent moods: ' + (moods.slice(0, 5).join(' ') || '—') + '. Reflections are rules-based from your on-device check-ins — not a clinician and not a live AI model.'
+      : 'You have ' + cis.length + ' check-in' + (cis.length === 1 ? '' : 's') + ' on this device. No check-ins yet this calendar week.';
+  }
+  if (date) {
+    date.textContent = week.length
+      ? weekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) + ' – today'
+      : 'On-device · ' + cis.length + ' check-ins';
+  }
+  if (plist) {
+    const latest = cis[0];
+    const noteBit = latest.note ? ' Latest note saved.' : '';
+    plist.innerHTML =
+      '<div class="pattern-card"><div class="pc-type">Check-ins · On-device</div>' +
+      '<div class="pc-text">' + cis.length + ' check-in' + (cis.length === 1 ? '' : 's') + ' stored locally. Latest mood: ' + moodIcon(latest.mood) + '.' + noteBit + '</div>' +
+      '<div class="pc-confidence">Rules-based · not clinical diagnosis</div></div>';
+  }
+}
+
+function refreshMuseumUI() {
+  renderJournalList();
+  refreshTodayStats();
+  refreshYouInsights();
 }
 
 const questions = [
@@ -1317,8 +1434,8 @@ function submitCheckIn() {
   audit('checkin.create', 'checkin', { mood: entry.mood });
   closeCheckIn();
   showToast('Check-in saved on this device ✓');
-  const ctx = document.getElementById('today-context');
-  if (ctx) ctx.textContent = 'Checked in · ' + state.checkIns.length + ' on this device.';
+  refreshTodayStats();
+  refreshYouInsights();
 }
 
 // Chat
@@ -1483,7 +1600,13 @@ function closeGrounding() { document.getElementById('ground-overlay').classList.
 
 // Journal
 function renderJournalList() {
-  document.getElementById('journal-list').innerHTML = state.journals.map((j,i) => `
+  const list = document.getElementById('journal-list');
+  if (!list) return;
+  if (!state.journals.length) {
+    list.innerHTML = '<div class="pattern-card"><div class="pc-type">Journal</div><div class="pc-text">No entries yet. Tap + New to write.</div><div class="pc-confidence">Stored on this device only</div></div>';
+    return;
+  }
+  list.innerHTML = state.journals.map((j,i) => `
     <button class="journal-entry" onclick="openEntry(${i})">
       <div class="je-meta"><span class="je-date">${j.date}</span><span class="je-mood">${j.mood}</span></div>
       <div class="je-title">${j.title}</div>
@@ -1552,7 +1675,7 @@ function toggleNotifs() {
 function openPrivacy() {
   const keys = [
     'sc_name', 'sc_onboarded', 'sc_consent_v1', 'sc_member_id',
-    'sc_habits', 'sc_journals', 'sc_clinic_notes', 'sc_audit', 'sc_notif_reminder',
+    'sc_habits', 'sc_journals', 'sc_clinic_notes', 'sc_audit', 'sc_notif_reminder', 'sc_checkins',
   ].filter((k) => localStorage.getItem(k) != null);
   document.getElementById('privacy-keys').innerHTML = keys.length
     ? keys.map((k) => '<li><code>' + k + '</code></li>').join('')
@@ -1598,18 +1721,18 @@ window.addEventListener('appinstalled', () => showToast('SoulCap installed ✓')
 // Service Worker
 if ('serviceWorker' in navigator) {
   const p = location.hostname === 'localhost' ? '/sw.js' : '/SoulCap/sw.js';
-  navigator.serviceWorker.register(p + '?v=022').catch(() => {});
+  navigator.serviceWorker.register(p + '?v=023').catch(() => {});
 }
 
-// Soften overclaiming insight tile
+// Boot paint — journals + stats from localStorage (not static HTML)
 refreshProfileMeta();
+refreshMuseumUI();
 if (DEMO && state.onboarded && state.consented) {
   document.getElementById('onboarding').classList.add('hidden');
   const app = document.getElementById('app');
   app.style.display = 'flex';
   if (typeof setName === 'function' && state.name) setName(state.name);
-  if (typeof renderJournalList === 'function') renderJournalList();
-  showToast('Demo mode · sample journal on device');
+  showToast('Demo mode · sample check-ins + habits on device');
 }
 </script>
 </body>

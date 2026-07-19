@@ -1,8 +1,8 @@
 {
   "app": "SoulCap",
-  "version": "0.2.2",
-  "swCache": "soulcap-v022",
+  "version": "0.2.3",
+  "swCache": "soulcap-v023",
   "updated": "2026-07-19",
   "status": "clinical-path",
-  "note": "Clinical-path PWA shipped on Pages. Nest/Expo source lab not deployed. See README + SAFETY.md."
+  "note": "Museum honesty: real check-in stats, demo seed, no fake insights. Nest/Expo source lab not deployed. See README + SAFETY.md."
 }

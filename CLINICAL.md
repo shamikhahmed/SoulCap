@@ -1,4 +1,4 @@
-# SoulCap — Clinical Path (v0.2.0)
+# SoulCap — Clinical Path (v0.2.3)
 
 **Updated:** 2026-07-19  
 **Status:** Clinical **path** — clinician-supported wellness companion.  
@@ -99,4 +99,4 @@ Revert tag to `v0.1.0`. Restore `docs/sw.js` cache name. Hide clinician tab via 
 
 ## Version
 
-Tracks `VERSION.json` → **0.2.0** · SW `soulcap-v020`.
+Tracks `VERSION.json` → **0.2.3** · SW `soulcap-v023`.

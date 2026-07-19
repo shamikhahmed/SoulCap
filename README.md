@@ -1,6 +1,6 @@
 # SoulCap
 
-**v0.2.1 — Clinical-path PWA.** On-device clinician-supported wellness companion. **Not** a medical device · not therapy · not crisis counseling. See [`CLINICAL.md`](CLINICAL.md) + [`SAFETY.md`](SAFETY.md).
+**v0.2.3 — Clinical-path PWA.** On-device clinician-supported wellness companion. **Not** a medical device · not therapy · not crisis counseling. See [`CLINICAL.md`](CLINICAL.md) + [`SAFETY.md`](SAFETY.md).
 
 > Crisis: call/text **988** (US) · text **HOME** to **741741** · [IASP](https://www.iasp.info/resources/Crisis_Centres/).
 
