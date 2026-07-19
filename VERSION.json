@@ -1,8 +1,8 @@
 {
   "app": "SoulCap",
-  "version": "0.2.3",
-  "swCache": "soulcap-v023",
-  "updated": "2026-07-19",
+  "version": "0.3.0",
+  "swCache": "soulcap-v030",
+  "updated": "2026-07-20",
   "status": "clinical-path",
-  "note": "Museum honesty: real check-in stats, demo seed, no fake insights. Nest/Expo source lab not deployed. See README + SAFETY.md."
+  "note": "Quiet journal beauty. Nest/Expo lab not deployed. See README + SAFETY.md."
 }

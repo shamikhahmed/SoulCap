@@ -1,3 +1,10 @@
+## [0.3.0] — 2026-07-20
+
+### Beauty — quiet journal / safety gate
+- Splash journal cover; soft sage orb (no purple glow)
+- Light+dark tokens + Appearance settings; theme-color aligned
+- SW `soulcap-v030`
+
 ## 0.2.3
 - Museum honesty: live check-ins/journals; demo seeds; SW soulcap-v023.
 - Soften INVESTOR_DECK / PRESENTATION / HANDOVER: Smart Companion shipped; Nest = lab only.

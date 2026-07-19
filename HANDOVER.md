@@ -1,4 +1,4 @@
-**Version:** 0.2.3 · SW `soulcap-v023`
+**Version:** 0.3.0 · SW `soulcap-v030`
 
 # SoulCap — Project Handover
 
