@@ -1,7 +1,7 @@
 {
-  "name": "living-mind-mobile",
-  "version": "1.0.0",
-  "main": "expo-router/entry",
+  "name": "soulcap-mobile",
+  "version": "0.1.0",
+  "main": "expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
     "ios": "expo run:ios",

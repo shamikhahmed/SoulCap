@@ -1,28 +1,32 @@
 {
   "expo": {
-    "name": "Living Mind",
-    "slug": "living-mind",
-    "version": "1.0.0",
+    "name": "SoulCap",
+    "slug": "soulcap",
+    "version": "0.1.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#0d0d12"
+    },
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.livingmind.app"
+      "bundleIdentifier": "com.soulcap.app"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#0d0d12"
       },
-      "package": "com.livingmind.app"
+      "package": "com.soulcap.app"
     },
     "plugins": [
-      "expo-router",
       "expo-secure-store"
     ],
-    "scheme": "livingmind",
+    "scheme": "soulcap",
     "extra": {
       "apiUrl": "http://localhost:3000"
     }

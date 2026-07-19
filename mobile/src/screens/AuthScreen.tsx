@@ -32,8 +32,8 @@ export default function AuthScreen() {
   return (
     <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <View style={styles.inner}>
-        <Text style={styles.wordmark}>Living Mind</Text>
-        <Text style={styles.tagline}>Your companion for self-understanding</Text>
+        <Text style={styles.wordmark}>SoulCap</Text>
+        <Text style={styles.tagline}>Emotional wellness companion (not therapy)</Text>
 
         <View style={styles.tabRow}>
           <TouchableOpacity

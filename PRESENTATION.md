@@ -17,7 +17,7 @@
 
 ## Slide 2: Introducing SoulCap
 
-**SoulCap** is the world's first AI emotional wellness platform powered by a **Living Mind Model** — a dynamic psychological profile that evolves with every conversation, remembers what matters, and delivers clinically-informed support that feels genuinely personal.
+**SoulCap** is a pre-production AI emotional wellness companion powered by a **Living Mind Model** architecture — a dynamic psychological profile designed to evolve with conversation. **Not clinical care or production therapy.** See `SAFETY.md`.
 
 Not a chatbot. Not a mood tracker. A companion that grows with you.
 

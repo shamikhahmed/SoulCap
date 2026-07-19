@@ -1,10 +1,12 @@
-const CACHE = 'soulcap-v1';
+const CACHE = 'soulcap-v010';
 const ASSETS = [
   '/SoulCap/',
   '/SoulCap/index.html',
   '/SoulCap/manifest.json',
   '/SoulCap/icons/icon-192.png',
   '/SoulCap/icons/icon-512.png',
+  '/SoulCap/icons/icon-maskable-192.png',
+  '/SoulCap/icons/icon-maskable-512.png',
 ];
 
 self.addEventListener('install', e => {
