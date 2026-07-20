@@ -68,7 +68,7 @@ export class VoiceService {
   private async transcribe(voiceNoteId: string, audioBuffer: Buffer, mimeType: string, filename: string) {
     try {
       const ext = mimeType.split('/')[1] ?? 'm4a';
-      const file = new File([audioBuffer], `audio.${ext}`, { type: mimeType });
+      const file = new File([new Uint8Array(audioBuffer)], `audio.${ext}`, { type: mimeType });
 
       const response = await this.openai.audio.transcriptions.create({
         file,

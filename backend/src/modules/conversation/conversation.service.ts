@@ -6,7 +6,7 @@ import { MemoryService } from '../memory/memory.service';
 import { AIPipelineService } from '../../ai/pipeline/pipeline.service';
 import { EmbeddingService } from '../../ai/embeddings/embedding.service';
 import { MessageReceivedEvent, MessageSentEvent } from '../../events/contracts/domain.events';
-import { AuthenticatedUser } from '../../common/types';
+import { AuthenticatedUser, SAFETY_TIER_BY_VALUE } from '../../common/types';
 import { SendMessageDto } from './dto/send-message.dto';
 
 @Injectable()
@@ -97,7 +97,7 @@ export class ConversationService {
       aiMessage.id,
       result.mode,
       result.strategy,
-      result.safetyTier as import('@prisma/client').SafetyTier,
+      SAFETY_TIER_BY_VALUE[result.safetyTier],
     ));
 
     void this.lmm.updateFromInteraction(user.id, user.organizationId, {

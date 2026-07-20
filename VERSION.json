@@ -1,8 +1,8 @@
 {
   "app": "SoulCap",
-  "version": "0.3.2",
-  "swCache": "soulcap-v032",
-  "updated": "2026-07-20",
+  "version": "0.4.0",
+  "swCache": "soulcap-v040",
+  "updated": "2026-07-21",
   "status": "clinical-path",
-  "note": "Quiet room home deep MOBILE≠DESKTOP. Nest/Expo lab not deployed. See README + SAFETY.md."
+  "note": "PWA rebuilt on Design System v1. Offline skills engine, Constellation, safety kernel ported from Nest. No LLM. Skill content NOT yet clinician-reviewed. No PK crisis directory — international only until local lines verified."
 }

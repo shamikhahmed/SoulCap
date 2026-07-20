@@ -22,7 +22,7 @@ export class GoalService {
         organizationId,
         title: data.title,
         description: data.description,
-        domain: data.domain ?? GoalDomain.WELLBEING,
+        domain: data.domain ?? GoalDomain.PERSONAL,
         targetDate: data.targetDate,
       },
     });

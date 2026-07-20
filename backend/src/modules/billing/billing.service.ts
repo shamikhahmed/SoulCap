@@ -14,7 +14,8 @@ export class BillingService {
     private readonly config: ConfigService,
     private readonly prisma: PrismaService,
   ) {
-    this.stripe = new Stripe(this.config.getOrThrow<string>('stripe.secretKey'), { apiVersion: '2024-12-18.acacia' });
+    // Pinned to the version `stripe@16.12.0` ships types for. Bump both together.
+    this.stripe = new Stripe(this.config.getOrThrow<string>('stripe.secretKey'), { apiVersion: '2024-06-20' });
     this.webhookSecret = this.config.getOrThrow<string>('stripe.webhookSecret');
   }
 

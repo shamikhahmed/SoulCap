@@ -1,3 +1,41 @@
+## [0.4.0] — 2026-07-21
+
+Full PWA rebuild on Design System v1. Offline-first, local-only, no LLM.
+
+### Fixed — safety
+- **Inflected crisis phrasings escaped the safety gate.** `end my life` is not a substring of
+  `ending my life`, so "I have been thinking about ending my life" scored tier 0. Crisis
+  keyword lists now carry inflected forms in both `docs/app.js` and the Nest
+  `SafetyGateService`. Found by the new e2e suite.
+
+### Added
+- Design System v1 — deep evergreen UI accent, warm green-cast neutrals, serif/sans two-register
+  typography, both themes designed separately. Brand mark stays purple per `BRAND-LOCK.json`.
+- **Constellation** — relationship map. You at centre, people placed by closeness across three
+  rings. `hard right now` permanently suppresses suggestions for that person, with no
+  reconciliation nudges. The app never contacts anyone.
+- Offline skills engine — 17 cards across breath / rest / clarity / move / warmth / connect /
+  reflect, with a step-by-step runner and helpfulness feedback.
+- Suggestion engine with a stated reason on every suggestion, capacity filtering, and time-of-day
+  weighting (sleep skills win late at night).
+- Onboarding: 18+ age gate, region selection, plain-language consent, optional concerns.
+- "What SoulCap thinks it knows" — trust tiers (you said / observed / a guess), guesses shown as
+  questions the user answers rather than conclusions.
+- Export and permanent delete on the main surface, not buried in settings.
+- 54 Playwright e2e tests (mobile + desktop) covering risk tiers, false-positive guard, help
+  reachability, age gate, Constellation suppression, a11y and offline.
+- CI workflow — safety tests gate the Pages deploy.
+
+### Changed
+- Service worker rewritten: relative paths, cache-first for assets, network-first for navigation.
+  Previous SW was network-first for everything, which broke offline on flaky connections.
+- Crisis directory is region-aware. **No Pakistan-specific numbers ship** — none verified as
+  live and staffed, so PK routes to the international directory. Absent beats wrong.
+- SW `soulcap-v040`.
+
+### Preserved
+- `docs/legacy-v032.html` — previous release, still reachable.
+
 ## [0.3.2] — 2026-07-20
 
 ### Home deep — quiet room MOBILE≠DESKTOP

@@ -213,12 +213,14 @@ enum SubscriptionStatus {
   CANCELED
   UNPAID
   PAUSED
+  INCOMPLETE
 }
 
 enum SubscriptionTier {
   FREE
   PLUS
   PRO
+  TEAM
   ENTERPRISE
 }
 
@@ -319,6 +321,7 @@ model User {
   riskAssessments     RiskAssessment[]
   safetyFlags         SafetyFlag[]
   growthReports       GrowthReport[]
+  psychologicalPatterns PsychologicalPattern[]
 
   @@index([clerkId])
   @@index([email])

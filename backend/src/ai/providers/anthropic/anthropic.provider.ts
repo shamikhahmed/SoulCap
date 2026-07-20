@@ -72,12 +72,13 @@ export class AnthropicProvider implements IAIProvider, IAnalysisProvider {
     return toolUse.input as T;
   }
 
+  /**
+   * Configuration check, not a liveness probe.
+   * `@anthropic-ai/sdk@0.32.1` has no models endpoint, and the alternatives all
+   * cost a billed request — too expensive to run on every health check.
+   * Upgrade the SDK if a real reachability check is ever needed.
+   */
   async isAvailable(): Promise<boolean> {
-    try {
-      await this.client.models.list();
-      return true;
-    } catch {
-      return false;
-    }
+    return Boolean(this.config.get<string>('anthropic.apiKey'));
   }
 }

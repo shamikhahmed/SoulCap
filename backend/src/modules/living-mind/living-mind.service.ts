@@ -1,6 +1,31 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { LivingMindRepository } from './living-mind.repository';
-import { LmmSummary, EmotionalStateDto } from '../../common/types';
+import {
+  LmmSummary,
+  EmotionalStateDto,
+  ActiveRisk,
+  ActiveGoal,
+  ActiveTrigger,
+  ActiveStressor,
+} from '../../common/types';
+
+/**
+ * Prisma `Json` columns arrive as `JsonValue`, and the previous code cast them
+ * straight to domain types — so malformed stored JSON became a runtime crash.
+ * These coerce instead, falling back to empty rather than trusting the column.
+ *
+ * NOTE: this module is slated for rebuild against the trust-tier spec; these are
+ * deliberately minimal, not a foundation to build on.
+ */
+function toArray<T>(value: unknown): T[] {
+  return Array.isArray(value) ? (value as T[]) : [];
+}
+
+function toObject<T>(value: unknown, fallback: T): T {
+  return value !== null && typeof value === 'object' && !Array.isArray(value)
+    ? (value as T)
+    : fallback;
+}
 
 @Injectable()
 export class LivingMindService {
@@ -50,17 +75,17 @@ export class LivingMindService {
         stressResponse: model.stressResponse ?? 'unknown',
         conflictStyle: model.conflictStyle ?? 'unknown',
       },
-      activeRisks: (model.activeRisks as object[]) ?? [],
-      activeGoals: (model.activeGoals as object[]) ?? [],
-      activeTriggers: (model.activeTriggers as object[]) ?? [],
-      activeStressors: (model.activeStressors as object[]) ?? [],
-      currentEmotionalState: (model.currentEmotionalState as EmotionalStateDto) ?? {
+      activeRisks: toArray<ActiveRisk>(model.activeRisks),
+      activeGoals: toArray<ActiveGoal>(model.activeGoals),
+      activeTriggers: toArray<ActiveTrigger>(model.activeTriggers),
+      activeStressors: toArray<ActiveStressor>(model.activeStressors),
+      currentEmotionalState: toObject<EmotionalStateDto>(model.currentEmotionalState, {
         valence: 0, arousal: 0.5, groundedness: 0.7, dominantEmotions: [], intensity: 0.3, updatedAt: new Date().toISOString(),
-      },
+      }),
       keyMemories: [],
-      strengths: (model.strengths as string[]) ?? [],
-      growthAreas: (model.growthAreas as string[]) ?? [],
-      preferredCopingMechanisms: (model.preferredCopingMechanisms as string[]) ?? [],
+      strengths: toArray<string>(model.strengths),
+      growthAreas: toArray<string>(model.growthAreas),
+      preferredCopingMechanisms: toArray<string>(model.preferredCopingMechanisms),
       interventionEffectiveness: effectiveness,
     };
   }

@@ -1,4 +1,4 @@
-import { AIMode, InterventionStrategy, SafetyTier } from '../../../common/types';
+import { AIMode, InterventionStrategy, SafetyTier } from '../../common/types';
 
 // ─── LMM Update ──────────────────────────────────────────────────────────────
 

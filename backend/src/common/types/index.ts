@@ -1,5 +1,6 @@
-// ─── Re-export Prisma enums for use across modules ───────────────────────────
-export {
+// ─── Prisma enums ────────────────────────────────────────────────────────────
+// Imported (not bare re-exported) so they are also bound locally in this file.
+import {
   AIMode,
   SafetyTier,
   InterventionStrategy,
@@ -25,6 +26,33 @@ export {
   FileType,
   LifeEventCategory,
 } from '@prisma/client';
+
+export {
+  AIMode,
+  SafetyTier,
+  InterventionStrategy,
+  MemoryType,
+  MemorySource,
+  PatternType,
+  PatternStatus,
+  InsightType,
+  RiskLevel,
+  GoalStatus,
+  GoalDomain,
+  RelationshipType,
+  HabitFrequency,
+  HabitStatus,
+  MembershipRole,
+  PredictionType,
+  NotificationType,
+  SubscriptionTier,
+  SubscriptionStatus,
+  ThreadStatus,
+  MessageRole,
+  JobStatus,
+  FileType,
+  LifeEventCategory,
+};
 
 // ─── Authenticated Request ────────────────────────────────────────────────────
 
@@ -76,6 +104,25 @@ export interface SafetyAssessmentResult {
 }
 
 export type SafetyTierValue = 0 | 1 | 2 | 3;
+
+/**
+ * The pipeline works in numeric tiers; Prisma persists a named enum.
+ * Casting between them is unsafe — `0 as SafetyTier` writes an invalid value —
+ * so conversion always goes through these maps.
+ */
+export const SAFETY_TIER_BY_VALUE: Record<SafetyTierValue, SafetyTier> = {
+  0: SafetyTier.NONE,
+  1: SafetyTier.DISTRESS,
+  2: SafetyTier.ELEVATED,
+  3: SafetyTier.ACUTE,
+};
+
+export const SAFETY_VALUE_BY_TIER: Record<SafetyTier, SafetyTierValue> = {
+  [SafetyTier.NONE]: 0,
+  [SafetyTier.DISTRESS]: 1,
+  [SafetyTier.ELEVATED]: 2,
+  [SafetyTier.ACUTE]: 3,
+};
 
 // ─── AI Pipeline ──────────────────────────────────────────────────────────────
 

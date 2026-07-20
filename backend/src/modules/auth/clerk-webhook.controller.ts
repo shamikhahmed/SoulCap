@@ -40,9 +40,13 @@ export class ClerkWebhookController {
     const secret = this.config.getOrThrow<string>('clerk.webhookSecret');
     const wh = new Webhook(secret);
 
+    if (!req.rawBody) {
+      throw new BadRequestException('Missing raw body — rawBody must be enabled on the Nest app');
+    }
+
     let event: ClerkWebhookEvent;
     try {
-      event = wh.verify(req.rawBody as string, {
+      event = wh.verify(req.rawBody, {
         'svix-id': svixId,
         'svix-timestamp': svixTimestamp,
         'svix-signature': svixSignature,
@@ -53,27 +57,39 @@ export class ClerkWebhookController {
 
     this.logger.log(`Clerk webhook: ${event.type}`);
 
+    // The signature is verified above, so the sender is genuinely Clerk — but the
+    // payload *shape* still isn't guaranteed across their API changes. Narrow before use
+    // so a changed field degrades to a logged skip instead of a runtime crash.
     switch (event.type) {
       case 'user.created':
-        await this.handleUserCreated(event.data as ClerkUserCreatedData);
+        if (isUserData(event.data)) await this.handleUserCreated(event.data);
+        else this.logUnexpected(event.type);
         break;
       case 'user.updated':
-        await this.handleUserUpdated(event.data as ClerkUserUpdatedData);
+        if (isUserData(event.data)) await this.handleUserUpdated(event.data);
+        else this.logUnexpected(event.type);
         break;
       case 'user.deleted':
-        await this.handleUserDeleted(event.data as { id: string });
+        if (typeof event.data.id === 'string') await this.handleUserDeleted({ id: event.data.id });
+        else this.logUnexpected(event.type);
         break;
       case 'organizationMembership.created':
-        await this.handleMembershipCreated(event.data as ClerkMembershipData);
+        if (isMembershipData(event.data)) await this.handleMembershipCreated(event.data);
+        else this.logUnexpected(event.type);
         break;
       case 'organizationMembership.deleted':
-        await this.handleMembershipDeleted(event.data as ClerkMembershipData);
+        if (isMembershipData(event.data)) await this.handleMembershipDeleted(event.data);
+        else this.logUnexpected(event.type);
         break;
       default:
         this.logger.debug(`Unhandled Clerk event: ${event.type}`);
     }
 
     return { received: true };
+  }
+
+  private logUnexpected(eventType: string) {
+    this.logger.warn(`Clerk webhook ${eventType} had an unexpected payload shape — skipped`);
   }
 
   private async handleUserCreated(data: ClerkUserCreatedData) {
@@ -137,10 +153,18 @@ interface ClerkUserCreatedData {
   email_addresses?: Array<{ id: string; email_address: string }>;
 }
 
-interface ClerkUserUpdatedData extends ClerkUserCreatedData {}
+type ClerkUserUpdatedData = ClerkUserCreatedData;
 
 interface ClerkMembershipData {
   role: string;
   organization?: { id: string; name: string };
   public_user_data?: { user_id: string };
+}
+
+function isUserData(data: Record<string, unknown>): data is ClerkUserCreatedData & Record<string, unknown> {
+  return typeof data.id === 'string';
+}
+
+function isMembershipData(data: Record<string, unknown>): data is ClerkMembershipData & Record<string, unknown> {
+  return typeof data.role === 'string';
 }

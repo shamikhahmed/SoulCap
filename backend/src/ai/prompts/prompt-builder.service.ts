@@ -14,6 +14,7 @@ const MODE_PREAMBLE: Record<AIMode, string> = {
   [AIMode.COACHING]: 'You are in COACHING mode. Offer gentle, practical guidance grounded in the user\'s own values and past insights. Invite their agency — propose, do not prescribe.',
   [AIMode.REFLECTION]: 'You are in REFLECTION mode. Help the user develop insight about patterns, beliefs, and behaviors. Ask Socratic questions. Let them arrive at their own understanding.',
   [AIMode.CRISIS]: 'You are in CRISIS mode. Prioritize safety above all else. You are not a therapist. Direct the user to professional resources immediately.',
+  [AIMode.EXPLORATION]: 'You are in EXPLORATION mode. The user is not in distress and is not seeking guidance — they are mapping territory. Stay curious and unhurried. Follow their thread rather than steering toward a conclusion, and do not convert the conversation into problem-solving unless they ask.',
 };
 
 const STRATEGY_INSTRUCTIONS: Record<InterventionStrategy, string> = {

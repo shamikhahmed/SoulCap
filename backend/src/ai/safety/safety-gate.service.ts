@@ -2,11 +2,25 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { SafetyAssessmentResult, SafetySignalDto, SafetyTierValue } from '../../common/types';
 
-// Unambiguous — no context needed, always Tier 3
+// Unambiguous — no context needed, always Tier 3.
+//
+// Inflected forms are listed explicitly: matching is substring-based, and
+// "end my life" is NOT a substring of "ending my life". Listing only base forms
+// let the most common phrasings through the gate entirely. Keep this list in sync
+// with docs/app.js — the PWA runs the same kernel offline.
 const CRISIS_HARD = [
-  'kill myself', 'end my life', 'want to die', 'suicide', 'suicidal',
-  'hurt myself', 'cut myself', 'overdose', 'not worth living',
-  "don't want to be here", 'no reason to live', 'everyone would be better without me',
+  'kill myself', 'killing myself', 'kill my self',
+  'end my life', 'ending my life', 'end my own life', 'ending my own life',
+  'take my own life', 'taking my own life',
+  'end it all', 'ending it all',
+  'want to die', 'wanna die', 'want to be dead',
+  'suicide', 'suicidal',
+  'hurt myself', 'hurting myself', 'harm myself', 'harming myself',
+  'cut myself', 'cutting myself',
+  'overdose', 'overdosing',
+  'not worth living', 'no reason to live', 'nothing to live for',
+  "don't want to be here", 'dont want to be here',
+  'everyone would be better without me', 'better off without me',
 ];
 
 // Contextual — require co-occurrence with distress language
