@@ -1,216 +1,331 @@
 /* SoulCap — content layer
- * Skill cards and crisis directory.
  *
- * CLINICAL REVIEW STATUS: every card below carries reviewedBy:null, which means
- * it has NOT been signed off by a licensed clinician. The UI surfaces this.
- * Do not remove the banner until a named reviewer has signed each card.
+ * CLINICAL REVIEW STATUS: nothing here has been signed off by a licensed clinician.
+ * The UI states this. Do not remove that banner until a named reviewer has signed
+ * each card. See SAFETY.md.
+ *
+ * Card fields
+ *   mechanism        why it works, in one plain sentence — this is the documentation
+ *   indication       states it suits
+ *   contraindication when NOT to offer it (filtered out before ranking, never ranked down)
+ *   needs            what must be to hand: 'none' | 'water' | 'cold' | 'sour' | 'space' | 'quiet'
+ *   discreet         true if it can be done unseen in public
+ *   capacity         'low' works mid-panic | 'medium' needs some reserve | 'any'
  */
 
 const SKILLS = [
-  // ── breath ──────────────────────────────────────────────
-  { id:'box-breathing', name:'Box breathing', domain:'breath', mins:4, capacity:'low',
+  /* ─────────────── AUTONOMIC — works on the nervous system directly ─────────── */
+  { id:'physiological-sigh', name:'Physiological sigh', domain:'breath', family:'autonomic',
+    mins:2, capacity:'low', needs:'none', discreet:true,
+    indication:['panic','wired','acute','anxiety'], contraindication:[],
+    mechanism:'A second short inhale reopens collapsed air sacs, and the long exhale slows the heart through the vagus nerve. It is the fastest voluntary way down from peak arousal.',
+    blurb:'Two inhales, one long exhale. The quickest way down.',
+    steps:['Breathe in through your nose.','Now a second, shorter sniff on top. Fill the last bit.','Long, slow breath out through your mouth. Let it all go.','Again — twice in, once long out.','Three more. Then just breathe normally.'],
+    source:'Cyclic sighing — respiratory physiology literature' },
+
+  { id:'box-breathing', name:'Box breathing', domain:'breath', family:'autonomic',
+    mins:4, capacity:'low', needs:'none', discreet:true,
     indication:['anxiety','panic','wired'], contraindication:[],
-    blurb:'Even, counted breathing. Slows the exhale, which nudges the nervous system toward rest.',
-    steps:[
-      'Sit or lie however you are. Nothing to fix.',
-      'Breathe in through your nose while I count to four.',
-      'Hold for four. Loose, not clenched.',
-      'Out through your mouth for four. Slow.',
-      'Hold empty for four.',
-      'Again. Four more rounds, then we stop.'
-    ], source:'Paced breathing — widely used; see WHO mhGAP self-help materials' },
+    mechanism:'Equal counts lengthen the exhale relative to a panicking breath rate, which shifts the balance from fight-or-flight toward rest.',
+    blurb:'Even, counted breathing. Steady and portable.',
+    steps:['Sit or lie however you are. Nothing to fix.','In through your nose while I count four.','Hold for four. Loose, not clenched.','Out through your mouth for four. Slow.','Hold empty for four.','Again. Four more rounds, then we stop.'],
+    source:'Paced breathing — WHO mhGAP self-help materials' },
 
-  { id:'physiological-sigh', name:'Physiological sigh', domain:'breath', mins:2, capacity:'low',
-    indication:['panic','wired','acute'], contraindication:[],
-    blurb:'Two inhales, one long exhale. The fastest way to bring arousal down.',
-    steps:[
-      'Breathe in through your nose.',
-      'Now a second, shorter sniff on top. Fill the last bit.',
-      'Long, slow breath out through your mouth. Let it all go.',
-      'Again — twice in, once long out.',
-      'Three more. Then just breathe normally.'
-    ], source:'Cyclic sighing — respiratory physiology literature' },
+  { id:'four-seven-eight', name:'4-7-8 breathing', domain:'breath', family:'autonomic',
+    mins:4, capacity:'low', needs:'none', discreet:true,
+    indication:['sleep','wired','anxiety'], contraindication:[],
+    mechanism:'A much longer exhale than inhale maximises the vagal braking effect on heart rate. Good for winding down rather than for peak panic.',
+    blurb:'Long exhales. Best for settling toward sleep.',
+    steps:['In through your nose for four.','Hold for seven. If seven is too long, shorten everything but keep the ratio.','Out through your mouth for eight, slowly.','That is one round. Do four.','Stop if you feel lightheaded — that is normal and it passes.'],
+    source:'Extended-exhale breathing — relaxation training literature' },
 
-  { id:'tipp-temperature', name:'Cold water reset', domain:'breath', mins:3, capacity:'low',
-    indication:['acute','panic','overwhelmed'], contraindication:['heart condition','eating disorder'],
-    blurb:'Cold on the face triggers a reflex that slows the heart. Blunt, physical, fast.',
-    steps:[
-      'Get to a sink, or hold something cold.',
-      'Cold water on your face — especially around the eyes.',
-      'Or hold the cold thing against your cheeks for thirty seconds.',
-      'Breathe out slowly while you do it.',
-      'Notice if anything shifted. Even slightly counts.'
-    ], source:'DBT distress tolerance (TIPP) — technique in general clinical use' },
+  { id:'cold-water', name:'Cold water on your face', domain:'breath', family:'autonomic',
+    mins:3, capacity:'low', needs:'water', discreet:false,
+    indication:['acute','panic','overwhelmed','dissociation'],
+    contraindication:['heart condition','eating disorder','self-harm history'],
+    mechanism:'Cold on the face around the eyes triggers the mammalian dive reflex, which slows the heart within seconds. Blunt, physical, and faster than anything cognitive.',
+    blurb:'Cold on the face. Physically slows your heart.',
+    steps:['Get to a sink, or hold something cold.','Cold water on your face — especially around the eyes.','Or hold the cold thing against your cheeks for thirty seconds.','Breathe out slowly while you do it.','Notice if anything shifted. Even slightly counts.'],
+    source:'TIPP temperature, DBT distress tolerance' },
 
-  // ── grounding ───────────────────────────────────────────
-  { id:'grounding-54321', name:'5-4-3-2-1', domain:'breath', mins:3, capacity:'low',
+  { id:'ice-hold', name:'Hold something cold', domain:'breath', family:'autonomic',
+    mins:2, capacity:'low', needs:'cold', discreet:true,
+    indication:['acute','dissociation','overwhelmed'],
+    contraindication:['self-harm history','eating disorder','circulation problems'],
+    mechanism:'A strong, harmless physical sensation competes for attention with distress and pulls you back into the present body.',
+    blurb:'An ice cube or cold can. Strong sensation, no harm.',
+    steps:['Hold an ice cube, a cold drink, or anything from the fridge.','Hold it in one hand. Notice exactly where the cold is.','Swap hands when it gets uncomfortable.','Breathe out slowly.','Put it down when you feel more here than you did.'],
+    source:'TIPP temperature, DBT distress tolerance' },
+
+  { id:'humming', name:'Humming', domain:'breath', family:'autonomic',
+    mins:3, capacity:'low', needs:'quiet', discreet:false,
+    indication:['anxiety','wired','panic'], contraindication:[],
+    mechanism:'Humming vibrates the vocal folds, stimulating the vagus nerve, and forces a long controlled exhale at the same time.',
+    blurb:'Low humming. Two calming effects at once.',
+    steps:['Breathe in normally through your nose.','Hum on the way out — low and steady, any note.','Let the hum run until the breath runs out.','Feel the buzz in your chest and throat.','Six or seven rounds.'],
+    source:'Vagal tone and vocalisation — autonomic regulation literature' },
+
+  { id:'pmr', name:'Muscle release', domain:'breath', family:'autonomic',
+    mins:8, capacity:'medium', needs:'space', discreet:false,
+    indication:['wired','sleep','anxiety'], contraindication:['recent injury'],
+    mechanism:'Deliberately tensing then releasing a muscle produces a deeper relaxation than trying to relax it directly, and gives the mind something concrete to track.',
+    blurb:'Tense, then let go. Whole body, one part at a time.',
+    steps:['Start at your feet. Curl them tight for five seconds.','Let go completely. Notice the difference.','Calves. Tense, hold five, release.','Work upward — thighs, stomach, hands, arms, shoulders, face.','Finish with everything at once: tense, hold, release.','Lie still for a minute.'],
+    source:'Progressive muscle relaxation — Jacobson method' },
+
+  { id:'burst-movement', name:'Thirty seconds of effort', domain:'move', family:'autonomic',
+    mins:2, capacity:'medium', needs:'space', discreet:false,
+    indication:['wired','panic','anger'],
+    contraindication:['heart condition','acute','injury'],
+    mechanism:'Short intense movement burns off circulating adrenaline that has nowhere to go, which is what much of panic physically is.',
+    blurb:'Short and hard. Burns off the adrenaline.',
+    steps:['Somewhere you can move. Thirty seconds only.','Star jumps, running on the spot, fast stairs — anything hard.','Go properly hard. Thirty seconds.','Stop. Stand still. Let your breathing settle on its own.','Notice what changed.'],
+    source:'TIPP intense exercise, DBT distress tolerance' },
+
+  /* ─────────────── SENSORY — anchoring through the senses ───────────────────── */
+  { id:'grounding-54321', name:'5-4-3-2-1', domain:'ground', family:'sensory',
+    mins:3, capacity:'low', needs:'none', discreet:true,
     indication:['dissociation','anxiety','panic'], contraindication:[],
-    blurb:'Sensory grounding. Pulls attention out of your head and into the room.',
-    steps:[
-      'Five things you can see. Say them, or just notice them.',
-      'Four things you can feel. Chair, floor, fabric, air.',
-      'Three things you can hear.',
-      'Two things you can smell.',
-      'One thing you can taste.',
-      'You are here. That is the whole point of the exercise.'
-    ], source:'Sensory grounding — standard technique, no single owner' },
+    mechanism:'Deliberately cataloguing sensory input occupies the attention that panic is using, and re-anchors you in the room rather than the thought.',
+    blurb:'Five senses, counted down. The classic.',
+    steps:['Five things you can see. Say them, or just notice them.','Four things you can feel. Chair, floor, fabric, air.','Three things you can hear.','Two things you can smell.','One thing you can taste.','You are here. That is the whole point of the exercise.'],
+    source:'Sensory grounding — standard technique, no single owner' },
 
-  // ── rest ────────────────────────────────────────────────
-  { id:'stimulus-control', name:'Getting back to sleep', domain:'rest', mins:6, capacity:'any',
-    indication:['sleep','3am','rumination'], contraindication:[],
-    blurb:'If you have been awake a while, staying in bed makes it worse. Counterintuitive but well supported.',
-    steps:[
-      'If you have been lying awake more than about twenty minutes, get up.',
-      'Go to another room if you can. Keep the light low.',
-      'Do something dull. Not your phone.',
-      'Wait until you feel sleepy — not tired, sleepy.',
-      'Then go back to bed.',
-      'If it happens again, do it again. The bed is for sleeping.'
-    ], source:'Stimulus control, CBT-I — see NICE guidance on insomnia' },
+  { id:'sour-anchor', name:'Something sharply sour', domain:'ground', family:'sensory',
+    mins:2, capacity:'low', needs:'sour', discreet:true,
+    indication:['dissociation','panic','numb'], contraindication:['eating disorder','dental problems'],
+    mechanism:'A strong sour taste is nearly impossible to ignore, so it cuts through dissociation and drags attention back into the body.',
+    blurb:'Lemon, strong mint, sour sweet. Impossible to ignore.',
+    steps:['Lemon, a sour sweet, strong mint — whatever you have.','Put it in your mouth. Do not rush it.','Notice exactly where the sharpness lands on your tongue.','Notice your face reacting.','Stay with it until it fades.'],
+    source:'Sensory grounding via strong taste — trauma-informed practice' },
 
-  { id:'wind-down', name:'Wind-down', domain:'rest', mins:10, capacity:'any',
-    indication:['sleep','wired'], contraindication:[],
-    blurb:'A boundary between the day and the night, so your body gets a signal.',
-    steps:[
-      'Pick a time. Roughly an hour before you want to sleep.',
-      'Lights down. Screens away or dimmed.',
-      'Write down anything you are holding on to. It will keep until morning.',
-      'Something slow — stretching, washing, reading paper.',
-      'Same order, most nights. Predictability is the active ingredient.'
-    ], source:'Sleep hygiene — CBT-I components' },
+  { id:'texture-focus', name:'Find five textures', domain:'ground', family:'sensory',
+    mins:3, capacity:'low', needs:'none', discreet:true,
+    indication:['dissociation','anxiety'], contraindication:[],
+    mechanism:'Touch is processed fast and hard to fake, so detailed tactile attention is a reliable route back into the present.',
+    blurb:'Touch five different things. Properly notice each.',
+    steps:['Look around for five things with different surfaces.','Touch the first. Rough or smooth? Warm or cool?','Describe it to yourself in three words.','Move to the next. Take your time.','All five. No rush.'],
+    source:'Tactile grounding — sensory anchoring practice' },
 
-  { id:'worry-postponement', name:'Worry postponement', domain:'rest', mins:5, capacity:'any',
-    indication:['rumination','3am','sleep'], contraindication:[],
-    blurb:'Not suppressing the worry. Scheduling it.',
-    steps:[
-      'Write the worry down. One line is enough.',
-      'Pick a time tomorrow to think about it properly. Fifteen minutes.',
-      'Tell yourself: not now, then. It is on the list.',
-      'When it comes back — and it will — point at the list.',
-      'Keep the appointment tomorrow. That is what makes it work next time.'
-    ], source:'Stimulus control for worry — CBT for GAD' },
+  { id:'cold-sip', name:'Slow cold drink', domain:'ground', family:'sensory',
+    mins:3, capacity:'low', needs:'water', discreet:true,
+    indication:['panic','wired','dissociation'], contraindication:[],
+    mechanism:'Swallowing engages the throat and interrupts hyperventilation, and the cold gives the attention a clear track to follow.',
+    blurb:'Cold water, drunk slowly. Interrupts fast breathing.',
+    steps:['Cold water if you can get it.','Small sip. Hold it in your mouth a moment.','Swallow slowly. Follow the cold down.','Breathe out.','Repeat until the glass is done or you feel steadier.'],
+    source:'Sensory grounding — interoceptive attention' },
 
-  // ── clarity ─────────────────────────────────────────────
-  { id:'thought-record', name:'Thought record', domain:'clarity', mins:9, capacity:'any',
-    indication:['rumination','low','self-critical'], contraindication:['acute'],
-    blurb:'Get the thought out of your head and onto something you can look at.',
-    steps:[
-      'What happened? Just the facts, no interpretation.',
-      'What went through your mind?',
-      'How much do you believe it, zero to a hundred?',
-      'What supports it? Actual evidence, not feelings.',
-      'What does not support it?',
-      'Given both — is there a fairer way to say it?',
-      'How much do you believe the original now?'
-    ], source:'Cognitive restructuring — core CBT technique' },
+  /* ─────────────── ORIENTING — spatial, safety-focused ──────────────────────── */
+  { id:'feet-floor', name:'Feet on the floor', domain:'ground', family:'orienting',
+    mins:2, capacity:'low', needs:'none', discreet:true,
+    indication:['dissociation','panic','anxiety'], contraindication:[],
+    mechanism:'Pressing into a solid surface gives the body clear proprioceptive proof of where it is, which is what dissociation temporarily loses.',
+    blurb:'Press down. Feel the ground hold you.',
+    steps:['Put both feet flat on the floor.','Press down. Push properly.','Feel the floor pushing back. It is holding you.','Notice your heels, then the balls of your feet, then your toes.','Keep pressing while you breathe out slowly. Five breaths.'],
+    source:'Grounding through proprioception — somatic practice' },
 
-  { id:'defusion', name:'Stepping back from a thought', domain:'clarity', mins:4, capacity:'any',
-    indication:['rumination','self-critical'], contraindication:[],
-    blurb:'You do not have to argue with a thought to loosen its grip.',
-    steps:[
-      'Catch the thought. Say it plainly to yourself.',
-      'Now put "I am having the thought that" in front of it.',
-      'Say it again with that added.',
-      'Now: "I notice I am having the thought that…"',
-      'Same words. Slightly more room around them.',
-      'You are not trying to make it untrue. Just less close.'
-    ], source:'Cognitive defusion — ACT technique' },
+  { id:'orient-room', name:'Look around the room', domain:'ground', family:'orienting',
+    mins:3, capacity:'low', needs:'none', discreet:true,
+    indication:['panic','dissociation','hypervigilance'], contraindication:[],
+    mechanism:'Slowly turning the head and scanning the space signals to a threat-primed nervous system that it has checked its surroundings and found no danger.',
+    blurb:'Slow scan of the space. Tells your body it is safe.',
+    steps:['Turn your head slowly to the left. Really look.','Now slowly to the right.','Find the door. Find the window.','Name three things that are not a threat.','Let your shoulders drop.'],
+    source:'Orienting response — polyvagal-informed practice' },
 
-  { id:'worry-vs-problem', name:'Worry or problem?', domain:'clarity', mins:5, capacity:'any',
-    indication:['rumination','anxiety'], contraindication:[],
-    blurb:'Some worries have an action. Most do not. Sorting them helps.',
-    steps:[
-      'Name the worry.',
-      'Is there something you could actually do about it today?',
-      'If yes — what is the smallest first step? Write it down. Do that.',
-      'If no — it is a worry, not a problem. Nothing to solve.',
-      'For worries: let it be there without working on it. It is allowed to exist.'
-    ], source:'Worry classification — CBT for GAD' },
+  { id:'name-colours', name:'Name the colours', domain:'ground', family:'orienting',
+    mins:2, capacity:'low', needs:'none', discreet:true,
+    indication:['panic','dissociation','rumination'], contraindication:[],
+    mechanism:'Naming requires language, and language competes with the wordless alarm state, which reduces its intensity.',
+    blurb:'Find every colour you can see. Say them.',
+    steps:['Find something red. Say "red" to yourself.','Now blue. Now green.','Now something yellow, or the nearest to it.','Keep going through as many colours as you can find.','Notice you are looking outward now, not inward.'],
+    source:'Verbal labelling of sensory input — affect labelling research' },
 
-  // ── move ────────────────────────────────────────────────
-  { id:'ten-minute-walk', name:'Ten-minute walk', domain:'move', mins:10, capacity:'medium',
-    indication:['low','flat','rumination'], contraindication:['acute','panic'],
-    blurb:'Among the best-evidenced things for low mood. Unglamorous and it works.',
-    steps:[
-      'Shoes on. That is the hard part, genuinely.',
-      'Out the door. Any direction.',
-      'Five minutes out, five minutes back. That is the whole plan.',
-      'You do not have to enjoy it or think about anything.',
-      'If ten is too much, go to the end of the road and come back.'
-    ], source:'Physical activity for depression — see NICE depression guidance' },
+  /* ─────────────── COGNITIVE LOAD — crowding out the spiral ─────────────────── */
+  { id:'count-backwards', name:'Count backwards by seven', domain:'clarity', family:'load',
+    mins:3, capacity:'low', needs:'none', discreet:true,
+    indication:['panic','rumination','spiralling'], contraindication:[],
+    mechanism:'Effortful arithmetic occupies working memory, and a spiral needs that same working memory to keep running.',
+    blurb:'From 100, subtract seven. Hard enough to crowd out the spiral.',
+    steps:['Start at one hundred.','Take away seven. Say the answer.','Take away seven again.','Keep going. Losing your place is fine — start again.','Stop when the thought has loosened.'],
+    source:'Cognitive load interference — attentional control practice' },
 
-  { id:'behavioural-activation', name:'One small thing', domain:'move', mins:6, capacity:'medium',
-    indication:['low','flat','withdrawn'], contraindication:['acute'],
-    blurb:'Action before motivation, not after. Waiting to feel like it is the trap.',
-    steps:[
-      'Think of something you used to do that you have stopped doing.',
-      'Shrink it until it is almost too small to count.',
-      'Not "cook a meal" — "take one thing out of the fridge".',
-      'Pick a time today. Any time.',
-      'Do the small version. Motivation shows up afterwards, not before.'
-    ], source:'Behavioural activation — see NICE depression guidance' },
+  { id:'categories-game', name:'Categories', domain:'clarity', family:'load',
+    mins:3, capacity:'low', needs:'none', discreet:true,
+    indication:['panic','rumination','3am'], contraindication:[],
+    mechanism:'Retrieval from memory is demanding enough to interrupt rumination, but easy enough to manage while distressed.',
+    blurb:'Name five of something. Then five of something else.',
+    steps:['Five animals. Go.','Five countries.','Five things in a kitchen.','Five songs you know all the words to.','Keep inventing categories until it eases.'],
+    source:'Distraction via structured recall — DBT distress tolerance' },
 
-  // ── warmth ──────────────────────────────────────────────
-  { id:'self-compassion-break', name:'Self-compassion break', domain:'warmth', mins:5, capacity:'low',
+  { id:'alphabet-game', name:'Alphabet run', domain:'clarity', family:'load',
+    mins:4, capacity:'low', needs:'none', discreet:true,
+    indication:['3am','rumination','sleep'], contraindication:[],
+    mechanism:'A fixed structure gives the mind a track to run on instead of the worry, and it is dull enough to let sleep arrive.',
+    blurb:'A to Z on a theme. Dull on purpose.',
+    steps:['Pick something ordinary. Foods, or towns.','A. Then B. Then C.','Stuck on a letter? Skip it.','Reach Z, or fall asleep first. Both are fine.'],
+    source:'Cognitive shuffling — sleep-onset distraction' },
+
+  /* ─────────────── SELF-SOOTHING & BILATERAL ────────────────────────────────── */
+  { id:'butterfly-hug', name:'Butterfly hug', domain:'warmth', family:'soothing',
+    mins:4, capacity:'low', needs:'quiet', discreet:false,
+    indication:['panic','distress','dissociation'], contraindication:[],
+    mechanism:'Slow alternating taps left and right provide bilateral stimulation, which tends to reduce the intensity of a distressing feeling as you hold it.',
+    blurb:'Cross your arms. Tap slowly, side to side.',
+    steps:['Cross your arms over your chest, hands on opposite shoulders.','Tap one hand, then the other. Slow — about one per second.','Breathe normally. Keep tapping.','Notice the feeling without trying to change it.','Thirty taps or so, then rest your hands.'],
+    source:'Bilateral stimulation — EMDR-adjacent self-soothing' },
+
+  { id:'hand-on-heart', name:'Hand on your heart', domain:'warmth', family:'soothing',
+    mins:3, capacity:'low', needs:'none', discreet:true,
+    indication:['shame','distress','lonely'], contraindication:[],
+    mechanism:'Warm pressure on the chest is a self-directed soothing signal, and it works even when you feel silly doing it.',
+    blurb:'Warm hand, own chest. Simple and it works.',
+    steps:['Put one hand flat on your chest.','Feel the warmth and the weight of it.','Feel your chest rise and fall underneath.','Say something kind to yourself. Anything.','Stay for five breaths.'],
+    source:'Soothing touch — self-compassion practice' },
+
+  { id:'self-compassion-break', name:'Self-compassion break', domain:'warmth', family:'soothing',
+    mins:5, capacity:'low', needs:'none', discreet:true,
     indication:['self-critical','shame','low'], contraindication:[],
+    mechanism:'Naming a difficulty, normalising it, and offering yourself warmth interrupts the shame loop that turns a hard moment into a verdict about you.',
     blurb:'Speak to yourself the way you would to someone you like.',
-    steps:[
-      'Name what is hard right now. "This is difficult."',
-      'Remind yourself: other people feel this too. You are not defective for it.',
-      'Hand on your chest, if that is not uncomfortable.',
-      'Say what you would say to a friend in this exact spot.',
-      'Say it to yourself. It will feel false. Do it anyway.'
-    ], source:'Self-compassion practice — mindful self-compassion literature' },
+    steps:['Name what is hard right now. "This is difficult."','Remind yourself: other people feel this too. You are not defective for it.','Hand on your chest, if that is not uncomfortable.','Say what you would say to a friend in this exact spot.','Say it to yourself. It will feel false. Do it anyway.'],
+    source:'Mindful self-compassion practice' },
 
-  { id:'opposite-action', name:'Opposite action', domain:'warmth', mins:6, capacity:'medium',
+  { id:'rocking', name:'Slow rocking', domain:'warmth', family:'soothing',
+    mins:3, capacity:'low', needs:'quiet', discreet:false,
+    indication:['distress','dissociation','overwhelmed'], contraindication:[],
+    mechanism:'Rhythmic, predictable movement is one of the oldest soothing signals there is, and the vestibular system responds to it regardless of what you are thinking.',
+    blurb:'Gentle rocking. Old, and it works.',
+    steps:['Sit somewhere you will not be watched.','Rock slowly forward and back. Small movements.','Let it find its own rhythm.','Breathe with the rhythm.','Slow to a stop when you are ready.'],
+    source:'Rhythmic vestibular soothing — trauma-informed practice' },
+
+  /* ─────────────── IMAGERY ──────────────────────────────────────────────────── */
+  { id:'safe-place', name:'Safe place', domain:'reflect', family:'imagery',
+    mins:6, capacity:'medium', needs:'quiet', discreet:true,
+    indication:['anxiety','distress'], contraindication:['acute','psychosis'],
+    mechanism:'A vividly imagined safe scene recruits the same sensory systems as the real thing, so the body responds to some of it as though it were true.',
+    blurb:'Build somewhere calm in detail, and go there.',
+    steps:['Think of a place where you feel settled. Real or invented.','What can you see there? Look around properly.','What can you hear?','What is the temperature on your skin?','Is there a smell?','Stay a while. You can come back here any time.'],
+    source:'Guided imagery — anxiety management practice' },
+
+  { id:'container', name:'Container', domain:'reflect', family:'imagery',
+    mins:5, capacity:'medium', needs:'quiet', discreet:true,
+    indication:['intrusive','rumination','overwhelmed'], contraindication:['acute'],
+    mechanism:'Imagining a thought sealed away is not suppression — it is a deliberate postponement that reduces intrusion without pretending the thing is resolved.',
+    blurb:'Put it somewhere safe. Not gone — just not now.',
+    steps:['Picture a container. Any size, any material. Strong.','Give it a lid that seals properly.','Put the thought inside. Watch it go in.','Close it. Lock it if it has a lock.','Put it somewhere out of sight.','You know where it is. You can open it when you choose.'],
+    source:'Containment imagery — trauma stabilisation practice' },
+
+  { id:'body-scan', name:'Body scan', domain:'reflect', family:'imagery',
+    mins:8, capacity:'medium', needs:'quiet', discreet:true,
+    indication:['wired','sleep','disconnected'], contraindication:['acute','dissociation'],
+    mechanism:'Moving attention deliberately through the body rebuilds the connection to physical sensation that stress and rumination tend to sever.',
+    blurb:'Attention through the whole body, slowly.',
+    steps:['Lie or sit comfortably. Eyes closed if that is okay.','Start at the top of your head. What is there?','Move down slowly — face, neck, shoulders.','Arms, hands, chest, stomach.','Hips, legs, feet.','Nothing to fix. Just noticing.'],
+    source:'Body scan — mindfulness-based stress reduction' },
+
+  /* ─────────────── SLEEP ────────────────────────────────────────────────────── */
+  { id:'stimulus-control', name:'Getting back to sleep', domain:'rest', family:'sleep',
+    mins:6, capacity:'any', needs:'space', discreet:true,
+    indication:['sleep','3am','rumination'], contraindication:[],
+    mechanism:'Lying awake teaches your brain that bed is a place for being awake. Getting up protects the association between bed and sleep.',
+    blurb:'Counterintuitive, and among the best-supported sleep advice there is.',
+    steps:['Awake more than about twenty minutes? Get up.','Another room if you can. Keep the light low.','Something dull. Not your phone.','Wait until you feel sleepy — not tired, sleepy.','Then go back to bed.','Happens again? Do it again. The bed is for sleeping.'],
+    source:'Stimulus control, CBT-I — NICE insomnia guidance' },
+
+  { id:'wind-down', name:'Wind-down', domain:'rest', family:'sleep',
+    mins:10, capacity:'any', needs:'none', discreet:true,
+    indication:['sleep','wired'], contraindication:[],
+    mechanism:'A consistent pre-sleep sequence becomes a learned cue, so the body starts preparing for sleep before you get into bed.',
+    blurb:'A boundary between the day and the night.',
+    steps:['Pick a time. Roughly an hour before you want to sleep.','Lights down. Screens away or dimmed.','Write down anything you are holding. It will keep until morning.','Something slow — stretching, washing, reading paper.','Same order most nights. Predictability is the active ingredient.'],
+    source:'Sleep hygiene — CBT-I components' },
+
+  { id:'worry-postponement', name:'Worry postponement', domain:'rest', family:'sleep',
+    mins:5, capacity:'any', needs:'none', discreet:true,
+    indication:['rumination','3am','sleep'], contraindication:[],
+    mechanism:'Worry resists suppression but responds to scheduling, because the mind stops rehearsing what it trusts you will return to.',
+    blurb:'Not suppressing the worry. Scheduling it.',
+    steps:['Write the worry down. One line is enough.','Pick a time tomorrow to think about it properly. Fifteen minutes.','Tell yourself: not now, then. It is on the list.','When it comes back — and it will — point at the list.','Keep the appointment tomorrow. That is what makes it work next time.'],
+    source:'Stimulus control for worry — CBT for GAD' },
+
+  /* ─────────────── COGNITIVE ───────────────────────────────────────────────── */
+  { id:'thought-record', name:'Thought record', domain:'clarity', family:'cognitive',
+    mins:9, capacity:'any', needs:'none', discreet:true,
+    indication:['rumination','low','self-critical'], contraindication:['acute'],
+    mechanism:'Writing a thought down converts it from an atmosphere you are inside into an object you can examine, which is most of the work.',
+    blurb:'Get the thought out of your head and onto something you can look at.',
+    steps:['What happened? Just the facts, no interpretation.','What went through your mind?','How much do you believe it, zero to a hundred?','What supports it? Actual evidence, not feelings.','What does not support it?','Given both — is there a fairer way to say it?','How much do you believe the original now?'],
+    source:'Cognitive restructuring — core CBT technique' },
+
+  { id:'defusion', name:'Stepping back from a thought', domain:'clarity', family:'cognitive',
+    mins:4, capacity:'any', needs:'none', discreet:true,
+    indication:['rumination','self-critical'], contraindication:[],
+    mechanism:'Adding "I am having the thought that" restores the gap between you and the thought, without needing to argue about whether it is true.',
+    blurb:'You do not have to argue with a thought to loosen its grip.',
+    steps:['Catch the thought. Say it plainly to yourself.','Now put "I am having the thought that" in front of it.','Say it again with that added.','Now: "I notice I am having the thought that…"','Same words. Slightly more room around them.'],
+    source:'Cognitive defusion — ACT' },
+
+  { id:'worry-vs-problem', name:'Worry or problem?', domain:'clarity', family:'cognitive',
+    mins:5, capacity:'any', needs:'none', discreet:true,
+    indication:['rumination','anxiety'], contraindication:[],
+    mechanism:'Worries with an available action and worries without one need opposite responses, and most distress comes from treating the second kind like the first.',
+    blurb:'Some worries have an action. Most do not.',
+    steps:['Name the worry.','Is there something you could actually do about it today?','If yes — what is the smallest first step? Write it. Do that.','If no — it is a worry, not a problem. Nothing to solve.','For worries: let it be there without working on it.'],
+    source:'Worry classification — CBT for GAD' },
+
+  /* ─────────────── ACTIVATION & CONNECTION ─────────────────────────────────── */
+  { id:'ten-minute-walk', name:'Ten-minute walk', domain:'move', family:'activation',
+    mins:10, capacity:'medium', needs:'space', discreet:true,
+    indication:['low','flat','rumination'], contraindication:['acute','panic'],
+    mechanism:'Physical activity has among the strongest evidence of anything for low mood, and short walks are the version people actually do.',
+    blurb:'Unglamorous, and among the best-evidenced things there is.',
+    steps:['Shoes on. That is the hard part, genuinely.','Out the door. Any direction.','Five minutes out, five minutes back. That is the plan.','You do not have to enjoy it or think about anything.','If ten is too much, go to the end of the road and back.'],
+    source:'Physical activity for depression — NICE depression guidance' },
+
+  { id:'behavioural-activation', name:'One small thing', domain:'move', family:'activation',
+    mins:6, capacity:'medium', needs:'none', discreet:true,
+    indication:['low','flat','withdrawn'], contraindication:['acute'],
+    mechanism:'In low mood, motivation follows action rather than preceding it. Waiting to feel like it is the trap that keeps the low going.',
+    blurb:'Action before motivation, not after.',
+    steps:['Think of something you used to do and have stopped.','Shrink it until it is almost too small to count.','Not "cook a meal" — "take one thing out of the fridge".','Pick a time today. Any time.','Do the small version. Motivation shows up afterwards.'],
+    source:'Behavioural activation — NICE depression guidance' },
+
+  { id:'opposite-action', name:'Opposite action', domain:'warmth', family:'activation',
+    mins:6, capacity:'medium', needs:'none', discreet:true,
     indication:['shame','anger','withdrawn'], contraindication:['acute'],
-    blurb:'When the urge does not fit the facts, do the opposite of what it says.',
-    steps:[
-      'Name the feeling and what it is pushing you to do.',
-      'Does the action actually fit the situation? Be honest.',
-      'If it does not — what would the opposite look like?',
-      'Shame says hide. Opposite is to stay visible.',
-      'Do the opposite, all the way, not half.'
-    ], source:'Opposite action — DBT emotion regulation' },
+    mechanism:'Emotions push toward actions that often deepen them. Acting opposite, fully, tends to reduce the emotion rather than suppress it.',
+    blurb:'When the urge does not fit the facts, do the opposite.',
+    steps:['Name the feeling and what it is pushing you to do.','Does the action actually fit the situation? Be honest.','If not — what would the opposite look like?','Shame says hide. Opposite is to stay visible.','Do the opposite, all the way, not half.'],
+    source:'Opposite action — DBT emotion regulation' },
 
-  // ── connect ─────────────────────────────────────────────
-  { id:'reach-out', name:'Reach out to one person', domain:'connect', mins:5, capacity:'medium',
+  { id:'reach-out', name:'Reach out to one person', domain:'connect', family:'connection',
+    mins:5, capacity:'medium', needs:'none', discreet:true,
     indication:['lonely','withdrawn','low'], contraindication:['acute'],
-    blurb:'Withdrawal is one of the most reliable signs things are sliding. One message counts.',
-    steps:[
-      'Pick one person. Your Constellation can suggest someone if you have set it up.',
-      'You do not have to explain how you are.',
-      '"Thinking of you" is a complete message.',
-      'Send it before you talk yourself out of it.',
-      'No obligation to reply-manage anything after.'
-    ], source:'Social connection and mood — behavioural activation component' },
+    mechanism:'Withdrawal is one of the most reliable markers of a worsening episode, and reversing it in one small way interrupts the slide.',
+    blurb:'One message counts. It does not have to explain anything.',
+    steps:['Pick one person. Your Constellation can suggest someone.','You do not have to explain how you are.','"Thinking of you" is a complete message.','Send it before you talk yourself out of it.','No obligation to manage the reply.'],
+    source:'Social connection — behavioural activation component' },
 
-  { id:'sit-near-people', name:'Be around people', domain:'connect', mins:20, capacity:'medium',
+  { id:'sit-near-people', name:'Be around people', domain:'connect', family:'connection',
+    mins:20, capacity:'medium', needs:'space', discreet:true,
     indication:['lonely','withdrawn'], contraindication:['acute'],
-    blurb:'Not socialising. Just being in the same room as other humans.',
-    steps:[
-      'Somewhere public with people in it. Café, library, park bench.',
-      'Bring something to do so you have a reason to be there.',
-      'You do not have to speak to anyone.',
-      'Twenty minutes is plenty.',
-      'Presence counts even without conversation.'
-    ], source:'Behavioural activation — social contact hierarchy' },
+    mechanism:'Co-presence provides some of the regulating benefit of company without the demand of conversation, which makes it accessible on days talking is not.',
+    blurb:'Not socialising. Just being near other humans.',
+    steps:['Somewhere public with people. Café, library, park bench.','Bring something to do so you have a reason to be there.','You do not have to speak to anyone.','Twenty minutes is plenty.','Presence counts without conversation.'],
+    source:'Behavioural activation — social contact hierarchy' },
 
-  // ── reflect ─────────────────────────────────────────────
-  { id:'values-check', name:'Values check', domain:'reflect', mins:8, capacity:'any',
+  { id:'values-check', name:'Values check', domain:'reflect', family:'cognitive',
+    mins:8, capacity:'any', needs:'none', discreet:true,
     indication:['stuck','stable'], contraindication:['acute'],
-    blurb:'For steadier days. What actually matters to you, versus what you are spending yourself on.',
-    steps:[
-      'Name three things that matter to you. Not goals — directions.',
-      'For each, how much of last week went toward it? Rough guess.',
-      'Where is the biggest gap?',
-      'What is one small thing this week that closes it slightly?',
-      'Small. This is not a life overhaul.'
-    ], source:'Values clarification — ACT' }
+    mechanism:'Comparing how you spend your time against what you say matters surfaces gaps that low mood usually explains as personal failure.',
+    blurb:'For steadier days. What matters, versus where you are spending yourself.',
+    steps:['Name three things that matter to you. Not goals — directions.','For each, how much of last week went toward it?','Where is the biggest gap?','One small thing this week that closes it slightly?','Small. This is not a life overhaul.'],
+    source:'Values clarification — ACT' }
 ];
 
 const DOMAIN_META = {
   breath:  { label:'Breath',  cssVar:'--breath'  },
+  ground:  { label:'Ground',  cssVar:'--ground-h'},
   rest:    { label:'Rest',    cssVar:'--rest'    },
   clarity: { label:'Clarity', cssVar:'--clarity' },
   move:    { label:'Move',    cssVar:'--move'    },
@@ -219,11 +334,34 @@ const DOMAIN_META = {
   reflect: { label:'Reflect', cssVar:'--reflect' }
 };
 
+const FAMILY_META = {
+  autonomic:  { label:'Nervous system', note:'Works on your body directly — fastest in a spike.' },
+  sensory:    { label:'Senses',         note:'Anchors you through what you can feel and taste.' },
+  orienting:  { label:'Orienting',      note:'Tells a threat-primed body that it has checked the room.' },
+  load:       { label:'Crowding out',   note:'Occupies the mental space a spiral needs to run.' },
+  soothing:   { label:'Self-soothing',  note:'Rhythm, warmth and touch you give yourself.' },
+  imagery:    { label:'Imagery',        note:'Builds a scene vivid enough for the body to respond to.' },
+  sleep:      { label:'Sleep',          note:'For nights, and for 3am.' },
+  cognitive:  { label:'Thinking',       note:'For when there is enough room to look at a thought.' },
+  activation: { label:'Doing',          note:'Small actions that shift mood from the outside in.' },
+  connection: { label:'People',         note:'Reversing withdrawal, one small step.' }
+};
+
+/* What must be to hand for a technique to be possible right now. */
+const NEEDS_META = {
+  none:  { label:'Nothing needed' },
+  water: { label:'A tap or a drink' },
+  cold:  { label:'Something cold' },
+  sour:  { label:'Something sour' },
+  space: { label:'Room to move' },
+  quiet: { label:'Somewhere private' }
+};
+
 /* Crisis directory.
- * Only services that are long-established and publicly documented are listed.
+ * Only long-established, publicly documented services are listed.
  * NO Pakistan-specific entry: no local service has been independently verified as
- * live and staffed. PK users get the international directory instead — an absent
- * local number is safer than a wrong one. Do not add entries without verification.
+ * live and staffed. PK routes to the international directory — an absent local
+ * number is safer than a wrong one. Do not add entries without verification.
  */
 const CRISIS = {
   US: [
@@ -262,4 +400,26 @@ const RELATIONSHIP_TYPES = [
   { code:'CARE',      label:'Care team', cssVar:'--breath'  },
   { code:'COLLEAGUE', label:'Work',      cssVar:'--reflect' },
   { code:'OTHER',     label:'Other',     cssVar:'--connect' }
+];
+
+/* Stanley-Brown safety planning steps. Written when steady, surfaced when not. */
+const SAFETY_PLAN_STEPS = [
+  { key:'signs',    title:'My warning signs',
+    hint:'Thoughts, feelings or situations that tell you things are sliding.',
+    placeholder:'e.g. stop replying to messages, stay up past 3am' },
+  { key:'coping',   title:'What helps me on my own',
+    hint:'Things you can do without anyone else.',
+    placeholder:'e.g. walk to the park, cold shower, put music on' },
+  { key:'distract', title:'Places and people that take me out of my head',
+    hint:'Not for talking about it — just for being somewhere else.',
+    placeholder:'e.g. the café on the corner, my brother’s flat' },
+  { key:'contacts', title:'People I can tell',
+    hint:'Pulled from your Constellation, or add anyone.',
+    placeholder:'e.g. Amina' },
+  { key:'pros',     title:'Professionals and services',
+    hint:'GP, therapist, crisis line.',
+    placeholder:'e.g. Dr. Naveed, Samaritans 116 123' },
+  { key:'safer',    title:'Making my space safer',
+    hint:'What you would move, lock away, or ask someone to hold.',
+    placeholder:'e.g. give spare medication to Bilal' }
 ];

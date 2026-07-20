@@ -1,3 +1,41 @@
+## [0.5.0] — 2026-07-21
+
+Design System v2 and a much larger technique library.
+
+### Added
+- **Design System v2 — "deep plum & warm sand."** Palette anchored to the brand mark
+  (`BRAND-LOCK.json`), which is violet. Chroma held low throughout so it reads calm rather than
+  as the usual purple-gradient wellness look. Three themes: light, dark, and **night** — dimmer
+  than dark, deliberately below AA contrast, for waking at 3am when a normal screen is too
+  alerting. Opt-in only, never the default.
+- **Splash and welcome screens**, with the real mark.
+- **Calm tab** (fifth tab) — a dedicated grounding hub with **context filtering**: "where are
+  you" and "what have you got to hand" narrow the list to techniques you can actually perform.
+  Cold water needs a sink; humming needs privacy. Most apps hand you something you can't do.
+- **37 techniques**, up from 17, organised by mechanism: nervous system, senses, orienting,
+  crowding out, self-soothing, imagery, sleep, thinking, doing, people. Each documents *why it
+  works*, its contraindications, what it needs to hand, and whether it's discreet enough for public.
+- **Safety plan** — Stanley-Brown safety planning. Warning signs, what helps alone, places and
+  people, professionals, making your space safer. Written when steady, surfaced when not.
+- **Voice guidance** using device speech synthesis, with voice, speed and pitch pickers. Local
+  only — no audio files, no network.
+- **Breathing haptics** synced to the pacer, so exercises work with eyes closed.
+- **Post-episode capture** — one tap after a hard moment, feeding the suggestion engine.
+- **Journey** view inside You — what's happened, no score and no rating.
+- Constellation: **slow orbital rotation** (one turn per 2.5 min, frozen under reduced-motion),
+  **3–5 user-selectable rings**, optional links between people, optional contact history.
+  Both extras are off by default and contact history never nags.
+- Technique detail sheets — every card is tappable and explains its own mechanism.
+- Shortlist: save techniques, and they surface first in Calm.
+
+### Fixed
+- Constellation outer ring radius overflowed the viewBox (204 in a 400 box) at 3 rings.
+- Node labels rotated with the orbiting group and read upside down half a revolution in.
+  They now counter-rotate about their own centres.
+
+### Changed
+- SW `soulcap-v050`. Tests now 56 across mobile and desktop.
+
 ## [0.4.0] — 2026-07-21
 
 Full PWA rebuild on Design System v1. Offline-first, local-only, no LLM.

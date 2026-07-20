@@ -1,8 +1,28 @@
 import { test, expect, Page } from '@playwright/test';
 
+async function dismissSplash(page: Page) {
+  await page.evaluate(() => document.getElementById('splash')?.classList.add('gone'));
+  await page.waitForFunction(() => {
+    const s = document.getElementById('splash');
+    return !s || getComputedStyle(s).visibility === 'hidden';
+  }, null, { timeout: 4000 });
+}
+
 async function seedDemo(page: Page) {
   await page.goto('/?demo=1');
   await page.waitForFunction(() => !!(window as any).__soulcap);
+  await dismissSplash(page);
+}
+
+/** Fresh install, straight through onboarding into the app. */
+async function freshThrough(page: Page) {
+  await page.goto('/');
+  await dismissSplash(page);
+  await page.getByRole('button', { name: 'Begin' }).click();
+  await page.getByRole('button', { name: '18 or older' }).click();
+  await page.getByRole('button', { name: /United Kingdom/ }).click();
+  await page.getByRole('button', { name: 'I understand' }).click();
+  await page.getByRole('button', { name: /Skip — just let me in/ }).click();
 }
 
 test.describe('Smoke', () => {
@@ -14,13 +34,14 @@ test.describe('Smoke', () => {
     expect(errors).toEqual([]);
   });
 
-  test('all four tabs render content', async ({ page }) => {
+  test('all five tabs render content', async ({ page }) => {
     await seedDemo(page);
     for (const [tab, heading] of [
       ['now', /Good |It’s late/],
+      ['calm', /Something for right now/],
       ['skills', /Things that help/],
       ['map', /The people around you/],
-      ['me', /What SoulCap thinks it knows/]
+      ['me', /What SoulCap knows/]
     ] as const) {
       await page.evaluate((t) => {
         (document.querySelector(`#tabs button[data-tab="${t}"]`) as HTMLElement).click();
@@ -71,11 +92,7 @@ test.describe('Suggestion engine', () => {
   });
 
   test('cold start never claims personal history it does not have', async ({ page }) => {
-    await page.goto('/');
-    await page.getByRole('button', { name: '18 or older' }).click();
-    await page.getByRole('button', { name: /United Kingdom/ }).click();
-    await page.getByRole('button', { name: 'I understand' }).click();
-    await page.getByRole('button', { name: /Skip — just let me in/ }).click();
+    await freshThrough(page);
 
     // Context the app genuinely has (time of day) is fair game. Claims about the
     // user — past sessions, stated feelings, things that "helped before" — are not,
@@ -89,11 +106,7 @@ test.describe('Suggestion engine', () => {
 
 test.describe('Constellation', () => {
   test('empty state offers a way in without implying failure', async ({ page }) => {
-    await page.goto('/');
-    await page.getByRole('button', { name: '18 or older' }).click();
-    await page.getByRole('button', { name: /United Kingdom/ }).click();
-    await page.getByRole('button', { name: 'I understand' }).click();
-    await page.getByRole('button', { name: /Skip — just let me in/ }).click();
+    await freshThrough(page);
     await page.evaluate(() => {
       (document.querySelector('#tabs button[data-tab="map"]') as HTMLElement).click();
     });

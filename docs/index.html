@@ -4,10 +4,10 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
 <title>SoulCap — a quiet place to steady yourself</title>
-<meta name="description" content="Skills for hard moments. Works offline, stays on your device. Not therapy, not a crisis service."/>
+<meta name="description" content="Techniques that work in a few minutes. Works offline, stays on your device. Not therapy, not a crisis service."/>
 <meta name="color-scheme" content="light dark"/>
-<meta name="theme-color" content="#F2F1EC" media="(prefers-color-scheme: light)"/>
-<meta name="theme-color" content="#10120F" media="(prefers-color-scheme: dark)"/>
+<meta name="theme-color" content="#F6F2EC" media="(prefers-color-scheme: light)"/>
+<meta name="theme-color" content="#16131A" media="(prefers-color-scheme: dark)"/>
 <meta name="apple-mobile-web-app-capable" content="yes"/>
 <meta name="apple-mobile-web-app-status-bar-style" content="default"/>
 <meta name="apple-mobile-web-app-title" content="SoulCap"/>
@@ -17,41 +17,55 @@
 <script>
 /* Apply stored theme before first paint so there is no flash. */
 (function(){try{var t=localStorage.getItem('soulcap_theme');
-if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
+if(t==='light'||t==='dark'||t==='night')document.documentElement.setAttribute('data-theme',t);}catch(e){}})();
 </script>
 <link rel="stylesheet" href="app.css"/>
 </head>
 <body>
 
-<a class="sr" href="#view-now">Skip to content</a>
+<a class="sr" href="#views">Skip to content</a>
+
+<!-- ── Splash ────────────────────────────────────────────────── -->
+<div id="splash" aria-hidden="true">
+  <div class="halo"></div>
+  <img class="mark" src="icons/mark.svg" alt="" width="84" height="84"/>
+  <p class="word">SoulCap</p>
+  <p class="tag">A quiet place to steady yourself</p>
+</div>
 
 <div id="app">
 
   <p id="offline" class="offline-tag" hidden>Offline — everything here still works.</p>
 
   <main id="views">
+    <section id="view-welcome"    class="view" aria-label="Welcome"></section>
     <section id="view-onboarding" class="view" aria-label="Getting started"></section>
     <section id="view-now"        class="view" aria-label="Now"></section>
-    <section id="view-skills"     class="view" aria-label="Skills"></section>
+    <section id="view-calm"       class="view" aria-label="Calm"></section>
+    <section id="view-skills"     class="view" aria-label="Techniques"></section>
     <section id="view-map"        class="view" aria-label="Constellation"></section>
     <section id="view-me"         class="view" aria-label="About you"></section>
   </main>
 
   <nav id="tabs" role="tablist" aria-label="Main">
     <button data-tab="now" role="tab" aria-selected="true" aria-controls="view-now">
-      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
       Now
     </button>
+    <button data-tab="calm" role="tab" aria-selected="false" aria-controls="view-calm">
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M3 12c3.5 0 3.5-4 7-4s3.5 4 7 4 3.5-2 4-2"/><path d="M3 17c3.5 0 3.5-3 7-3s3.5 3 7 3 3.5-1.5 4-1.5"/></svg>
+      Calm
+    </button>
     <button data-tab="skills" role="tab" aria-selected="false" aria-controls="view-skills">
-      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
-      Skills
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>
+      Techniques
     </button>
     <button data-tab="map" role="tab" aria-selected="false" aria-controls="view-map">
-      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="2.6"/><circle cx="12" cy="12" r="9"/><circle cx="12" cy="3" r="1.6" fill="currentColor"/><circle cx="20" cy="15" r="1.6" fill="currentColor"/></svg>
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="2.6"/><circle cx="12" cy="12" r="9"/><circle cx="12" cy="3" r="1.6" fill="currentColor"/><circle cx="20" cy="15" r="1.6" fill="currentColor"/></svg>
       Constellation
     </button>
     <button data-tab="me" role="tab" aria-selected="false" aria-controls="view-me">
-      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c1.2-3.6 4-5.4 7-5.4s5.8 1.8 7 5.4"/></svg>
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c1.2-3.6 4-5.4 7-5.4s5.8 1.8 7 5.4"/></svg>
       You
     </button>
   </nav>
@@ -64,6 +78,7 @@ if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)
     <p id="panicInstruction" class="panic-instruction">Breathe in, slowly.</p>
   </div>
   <div class="pacer-hold">
+    <div id="pacerRing" class="pacer-ring"></div>
     <div id="pacer" class="pacer"><span id="pacerCount" class="pacer-count">4</span></div>
   </div>
   <p class="panic-sub">Nothing to get right. Follow the circle if it helps, ignore it if it doesn’t.</p>
@@ -71,10 +86,12 @@ if(t==='light'||t==='dark')document.documentElement.setAttribute('data-theme',t)
   <button id="panicExit" class="btn quiet">I’m okay — go back</button>
 </div>
 
-<!-- ── Skill runner ──────────────────────────────────────────── -->
+<!-- ── Exercise runner ───────────────────────────────────────── -->
 <div id="runner" role="dialog" aria-modal="true" aria-label="Exercise" aria-hidden="true">
-  <p id="runStep" class="run-step">Step 1</p>
+  <p id="runStep" class="run-step"></p>
+  <div id="runProgress" class="run-progress"></div>
   <p id="runText" class="run-text"></p>
+  <p id="runWhy" class="run-why"></p>
   <div id="runActions" class="stack"></div>
   <button id="runClose" class="sr">Close exercise</button>
 </div>

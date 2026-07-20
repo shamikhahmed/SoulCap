@@ -1,6 +1,6 @@
 # SoulCap — Safety & Truth Inventory
 
-**Version:** 0.4.0 · **Updated:** 2026-07-21
+**Version:** 0.5.0 · **Updated:** 2026-07-21
 **Status:** **Clinical path** — self-guided wellness companion.
 **Not** a cleared SaMD / medical device. **Not** a substitute for licensed care.
 See also `CLINICAL.md` and `Capricorn-Brain/AI/Claude-Code/SoulCap-Eval-Harness.md`.
@@ -32,8 +32,9 @@ Previous release preserved at `docs/legacy-v032.html`.
 
 ---
 
-## Safety rails (v0.4)
+## Safety rails (v0.5)
 
+- 37 techniques, each carrying its contraindications; the Calm filter removes contraindicated cards rather than ranking them down.
 - Keyword tier gate (0–3) ported from Nest `SafetyGateService` into `docs/app.js`, so the
   same kernel runs offline. **The two lists must be kept in sync manually until the shared
   engine package exists.**
@@ -43,7 +44,7 @@ Previous release preserved at `docs/legacy-v032.html`.
 - Constellation `hard right now` suppresses all suggestions for that person, permanently
   and silently. No reconciliation nudges.
 - The app never contacts anyone. "Open messages" hands off to the OS with an empty draft.
-- 54 Playwright tests across mobile + desktop; safety tests gate the deploy in CI.
+- 56 Playwright tests across mobile + desktop; safety tests gate the deploy in CI.
 
 ### Known gap fixed this release
 

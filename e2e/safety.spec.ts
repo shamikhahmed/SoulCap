@@ -4,9 +4,27 @@ import { test, expect, Page } from '@playwright/test';
  * See Capricorn-Brain/AI/Claude-Code/SoulCap-Eval-Harness.md for the full spec;
  * these are the subset that can be asserted without a clinician-reviewed case set. */
 
+/** Demo state, splash dismissed. Demo already marks welcome + onboarding done. */
 async function seedDemo(page: Page) {
   await page.goto('/?demo=1');
   await page.waitForFunction(() => !!(window as any).__soulcap);
+  await dismissSplash(page);
+}
+
+/** The splash covers the viewport for ~2s. Tests dismiss it rather than wait. */
+async function dismissSplash(page: Page) {
+  await page.evaluate(() => document.getElementById('splash')?.classList.add('gone'));
+  await page.waitForFunction(() => {
+    const s = document.getElementById('splash');
+    return !s || getComputedStyle(s).visibility === 'hidden';
+  }, null, { timeout: 4000 });
+}
+
+/** Fresh install through the welcome screen to the age gate. */
+async function toAgeGate(page: Page) {
+  await page.goto('/');
+  await dismissSplash(page);
+  await page.getByRole('button', { name: 'Begin' }).click();
 }
 
 test.describe('Safety kernel — risk tiers', () => {
@@ -63,7 +81,7 @@ test.describe('Safety kernel — risk tiers', () => {
 test.describe('Help is always reachable', () => {
   test('every main screen exposes a help affordance', async ({ page }) => {
     await seedDemo(page);
-    for (const tab of ['now', 'skills', 'map', 'me']) {
+    for (const tab of ['now', 'calm', 'skills', 'map', 'me']) {
       await page.evaluate((t) => {
         (document.querySelector(`#tabs button[data-tab="${t}"]`) as HTMLElement).click();
       }, tab);
@@ -71,8 +89,14 @@ test.describe('Help is always reachable', () => {
     }
   });
 
-  test('help is reachable during onboarding, before consent', async ({ page }) => {
+  test('help is reachable on the welcome screen, before anything is agreed', async ({ page }) => {
     await page.goto('/');
+    await dismissSplash(page);
+    await expect(page.locator('#view-welcome .help-btn')).toBeVisible();
+  });
+
+  test('help is reachable during onboarding, before consent', async ({ page }) => {
+    await toAgeGate(page);
     await expect(page.locator('#view-onboarding .help-btn')).toBeVisible();
   });
 
@@ -105,7 +129,7 @@ test.describe('Help is always reachable', () => {
 
 test.describe('Age gate', () => {
   test('under 18 does not enter the app', async ({ page }) => {
-    await page.goto('/');
+    await toAgeGate(page);
     await page.getByRole('button', { name: /Under 18/ }).click();
     // Still on onboarding, and offered an external route instead.
     await expect(page.locator('#view-onboarding')).toBeVisible();
@@ -114,7 +138,7 @@ test.describe('Age gate', () => {
   });
 
   test('18+ proceeds to region', async ({ page }) => {
-    await page.goto('/');
+    await toAgeGate(page);
     await page.getByRole('button', { name: '18 or older' }).click();
     await expect(page.getByText('Where are you?')).toBeVisible();
   });
@@ -162,7 +186,8 @@ test.describe('Data control', () => {
 
     const stored = await page.evaluate(() => localStorage.getItem('soulcap_v1'));
     expect(stored).toBeNull();
-    // Back to onboarding — no residual session.
-    await expect(page.locator('#view-onboarding')).toBeVisible();
+    // Right back to a fresh install — welcome screen, no residual session.
+    await expect(page.locator('#view-welcome')).toBeVisible();
+    await expect(page.locator('#tabs')).toBeHidden();
   });
 });
