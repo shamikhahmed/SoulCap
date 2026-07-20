@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<meta name="theme-color" content="#0E0D0C" id="themeColorMeta"/>
+<meta name="theme-color" content="#121110" id="themeColorMeta"/>
 <meta name="color-scheme" content="dark light"/>
 <script>
 (function(){
@@ -12,7 +12,7 @@
     if(t!=='light'&&t!=='dark') t=(matchMedia('(prefers-color-scheme: light)').matches)?'light':'dark';
     document.documentElement.setAttribute('data-theme',t);
     var m=document.querySelector('meta[name="theme-color"]');
-    if(m) m.setAttribute('content', t==='light'?'#F4F0EA':'#0E0D0C');
+    if(m) m.setAttribute('content', t==='light'?'#F2EDE6':'#121110');
   }catch(e){}
 })();
 </script>
@@ -23,28 +23,31 @@
 <link rel="manifest" href="manifest.json"/>
 <link rel="apple-touch-icon" href="icons/apple-touch-icon-180.png"/>
 <link rel="icon" type="image/svg+xml" href="icons/favicon.svg"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,500;0,600;0,700;1,500&family=Source+Sans+3:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet"/>
 <title>SoulCap Clinical Path</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 button,textarea,input{font-family:inherit;cursor:pointer;}
 
 :root{
-  --bg:#0E0D0C;
-  --bg2:#1A1816;
-  --bg3:#24211E;
-  --bg4:#2E2A26;
-  --l1:#F4F0EA;
-  --l2:rgba(244,240,234,0.62);
-  --l3:rgba(244,240,234,0.38);
-  --l4:rgba(244,240,234,0.18);
-  --sep:rgba(160,140,120,0.28);
-  --sep2:rgba(160,140,120,0.16);
-  --acc:#8B9A7A;
-  --acc-bg:rgba(139,154,122,0.16);
+  --bg:#121110;
+  --bg2:#1C1A18;
+  --bg3:#262320;
+  --bg4:#302C28;
+  --l1:#F2EDE6;
+  --l2:rgba(242,237,230,0.62);
+  --l3:rgba(242,237,230,0.38);
+  --l4:rgba(242,237,230,0.18);
+  --sep:rgba(150,130,110,0.28);
+  --sep2:rgba(150,130,110,0.16);
+  --acc:#6B9A84;
+  --acc-bg:rgba(107,154,132,0.16);
   --purple:#8A7A90;
-  --green:#5A8F72;
+  --green:#5A7A6E;
   --orange:#C4A35A;
-  --red:#C45B4E;
+  --red:#B86A5E;
   --teal:#6A9A9A;
   --blue:#6A849A;
   --sat:env(safe-area-inset-top,0px);
@@ -52,27 +55,27 @@ button,textarea,input{font-family:inherit;cursor:pointer;}
   --tab-h:49px;
   --spring:cubic-bezier(0.32,0.72,0,1);
   --ease:cubic-bezier(0.25,0.46,0.45,0.94);
-  --font-display:Georgia,'Times New Roman',serif;
+  --font-display:'EB Garamond',Georgia,'Times New Roman',serif;
 }
 
 html[data-theme="light"]{
-  --bg:#F4F0EA;
-  --bg2:#FFFBF5;
-  --bg3:#EBE5DC;
-  --bg4:#E0D8CC;
-  --l1:#1C1810;
-  --l2:rgba(28,24,16,0.62);
-  --l3:rgba(28,24,16,0.4);
-  --l4:rgba(28,24,16,0.18);
-  --sep:rgba(90,70,40,0.14);
-  --sep2:rgba(90,70,40,0.08);
-  --acc:#5A6B4E;
-  --acc-bg:rgba(90,107,78,0.12);
+  --bg:#F2EDE6;
+  --bg2:#FAF7F2;
+  --bg3:#E8E2D8;
+  --bg4:#DDD6CA;
+  --l1:#1A1612;
+  --l2:rgba(26,22,18,0.62);
+  --l3:rgba(26,22,18,0.4);
+  --l4:rgba(26,22,18,0.18);
+  --sep:rgba(90,70,50,0.14);
+  --sep2:rgba(90,70,50,0.08);
+  --acc:#5A7A6E;
+  --acc-bg:rgba(90,122,110,0.12);
 }
 
 html,body{
   height:100%;background:var(--bg);color:var(--l1);
-  font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','SF Pro Display','Helvetica Neue',Arial,sans-serif;
+  font-family:'Source Sans 3',-apple-system,BlinkMacSystemFont,'Segoe UI','Helvetica Neue',Arial,sans-serif;
   -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
   overflow:hidden;user-select:none;-webkit-user-select:none;
 }
@@ -114,7 +117,7 @@ html,body{
 .ob-orb,.orb,.soul-orb-sm,.typing-orb-ball,.panic-orb{
   background:
     radial-gradient(circle at 35% 30%, rgba(255,255,255,0.2) 0%, transparent 40%),
-    radial-gradient(ellipse at 50% 50%, #8B9A7A 0%, #5A6B4E 55%, #2A3024 100%);
+    radial-gradient(ellipse at 50% 50%, #6B9A84 0%, #5A7A6E 55%, #2A3530 100%);
   box-shadow:none !important;
 }
 .ob-orb{
@@ -124,24 +127,54 @@ html,body{
 }
 .ob-heading{font-size:32px;font-weight:700;letter-spacing:-0.4px;text-align:center;line-height:1.15;margin-top:36px;color:var(--l1);font-family:var(--font-display);}
 
-/* Quiet journal splash (first paint gate) */
+/* Quiet therapy room splash (first paint gate) */
+@keyframes splashReveal{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@keyframes doorEase{from{transform:perspective(520px) rotateY(-6deg)}to{transform:perspective(520px) rotateY(-24deg)}}
+@keyframes chairFade{from{opacity:0}to{opacity:1}}
 .soul-splash{
-  position:fixed;inset:0;z-index:2000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
-  background:var(--bg);transition:opacity .45s ease,visibility .45s;
+  position:fixed;inset:0;z-index:2000;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:28px;padding:calc(48px + var(--sat)) 32px calc(56px + var(--sab));
+  background:var(--bg);transition:opacity .55s ease,visibility .55s;
 }
 .soul-splash.hide{opacity:0;visibility:hidden;pointer-events:none}
-.soul-splash__book{
-  width:min(48vw,150px);aspect-ratio:3/4;position:relative;border-radius:4px 10px 10px 4px;
-  background:linear-gradient(160deg,var(--bg3),var(--bg2));
-  border:1px solid var(--sep);box-shadow:0 14px 36px rgba(0,0,0,.35);
+.soul-splash__scene{
+  position:relative;width:min(72vw,220px);height:min(42vh,200px);margin-bottom:12px;
+  animation:splashReveal 1.4s var(--ease) both;
 }
-.soul-splash__book::before{
-  content:'';position:absolute;inset:12% 10% 14% 14%;border:1px solid color-mix(in srgb,var(--acc) 35%,transparent);
-  background-image:repeating-linear-gradient(0deg,transparent,transparent 10px,color-mix(in srgb,var(--l3) 40%,transparent) 10px,color-mix(in srgb,var(--l3) 40%,transparent) 11px);
+.soul-splash__doorframe{
+  position:absolute;left:50%;top:8%;width:58%;height:78%;transform:translateX(-50%);
+  border:1.5px solid color-mix(in srgb,var(--acc) 45%,transparent);border-radius:3px 3px 0 0;
+  background:linear-gradient(180deg,color-mix(in srgb,var(--bg3) 80%,transparent),var(--bg2));
+  overflow:hidden;
 }
-.soul-splash__book::after{content:'';position:absolute;left:0;top:8%;bottom:8%;width:6px;background:var(--acc);border-radius:0 2px 2px 0}
-.soul-splash__title{font-family:var(--font-display);font-size:1.75rem;color:var(--l1)}
-.soul-splash__tag{font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;color:var(--l3)}
+.soul-splash__door{
+  position:absolute;left:0;top:0;width:52%;height:100%;transform-origin:left center;
+  background:linear-gradient(135deg,var(--bg4),var(--bg3));
+  border-right:1px solid color-mix(in srgb,var(--acc) 30%,transparent);
+  animation:doorEase 2.8s var(--ease) .3s both;
+}
+.soul-splash__chair{
+  position:absolute;right:8%;bottom:6%;width:38%;height:42%;
+  opacity:0;animation:chairFade 1.6s var(--ease) .9s both;
+}
+.soul-splash__chair::before{
+  content:'';position:absolute;left:12%;right:12%;bottom:18%;height:14%;
+  background:color-mix(in srgb,var(--l3) 70%,transparent);border-radius:3px;
+}
+.soul-splash__chair::after{
+  content:'';position:absolute;left:22%;right:22%;top:0;bottom:28%;
+  background:color-mix(in srgb,var(--l3) 55%,transparent);border-radius:4px 4px 2px 2px;
+  clip-path:polygon(0 0,100% 0,92% 100%,8% 100%);
+}
+.soul-splash__title{
+  font-family:var(--font-display);font-size:2.1rem;font-weight:600;color:var(--l1);
+  letter-spacing:.02em;animation:splashReveal 1.2s var(--ease) .5s both;
+}
+.soul-splash__tag{
+  font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--l3);
+  text-align:center;max-width:260px;line-height:1.6;
+  animation:splashReveal 1.2s var(--ease) .75s both;
+}
 .ob-sub{font-size:17px;color:var(--l2);text-align:center;margin-top:10px;line-height:1.55;max-width:300px;font-weight:400;}
 .ob-spacer{flex:1;}
 .ob-pills{display:flex;flex-direction:column;gap:8px;width:100%;margin-top:28px;}
@@ -172,6 +205,10 @@ html,body{
 .ob-notice small{display:block;font-size:13px;color:var(--l2);margin-top:8px;line-height:1.55;}
 
 /* ── TAB BAR ── */
+@keyframes crisisRailPulse{
+  0%,100%{box-shadow:inset 0 -2px 0 0 transparent}
+  50%{box-shadow:inset 0 -2px 0 0 color-mix(in srgb,var(--red) 55%,transparent)}
+}
 .tab-bar{
   height:calc(var(--tab-h) + var(--sab));padding-bottom:var(--sab);
   background:rgba(0,0,0,0.86);
@@ -179,6 +216,7 @@ html,body{
   border-top:0.5px solid rgba(255,255,255,0.08);
   display:flex;flex-shrink:0;position:relative;z-index:10;
 }
+.tab-bar.crisis-pulse{animation:crisisRailPulse 2.6s ease-in-out infinite}
 .tab{
   flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
   gap:4px;border:none;background:none;color:var(--l3);
@@ -472,14 +510,14 @@ html,body{
 .panic-orb{
   width:100px;height:100px;border-radius:50%;
   background:
-    radial-gradient(circle at 32% 27%, rgba(255,200,200,0.5) 0%, transparent 36%),
-    radial-gradient(ellipse at 50% 50%, #FF8080 0%, var(--red) 44%, #6b1010 100%);
-  box-shadow:0 0 36px rgba(255,69,58,0.48),0 0 72px rgba(255,69,58,0.2);
+    radial-gradient(circle at 32% 27%, rgba(255,255,255,0.25) 0%, transparent 36%),
+    radial-gradient(ellipse at 50% 50%, #7AADA0 0%, #5A7A6E 50%, #2A3530 100%);
+  box-shadow:none;
   animation:breathe 5s ease-in-out infinite;margin-bottom:32px;
 }
-.panic-title{font-size:30px;font-weight:700;letter-spacing:-0.5px;color:var(--l1);margin-bottom:10px;}
+.panic-title{font-size:30px;font-weight:700;letter-spacing:-0.5px;color:var(--l1);margin-bottom:10px;font-family:var(--font-display);}
 .panic-sub{font-size:17px;color:var(--l2);line-height:1.6;max-width:300px;font-weight:400;}
-.panic-988{margin-top:28px;font-size:14px;color:var(--red);font-weight:500;padding:14px 24px;background:rgba(255,69,58,0.08);border-radius:14px;}
+.panic-988{margin-top:28px;font-size:14px;color:var(--l2);font-weight:500;padding:14px 24px;background:var(--bg2);border:1px solid var(--sep);border-radius:14px;}
 .panic-choices{display:flex;gap:10px;padding:24px;flex-shrink:0;}
 .panic-choice{
   flex:1;background:var(--bg2);border:none;border-radius:16px;
@@ -635,15 +673,20 @@ html,body{
 .clinic-audit{font-size:12px;color:var(--l2);line-height:1.45;max-height:180px;overflow:auto;font-family:ui-monospace,Menlo,monospace;}
 .clinic-note{font-size:13px;padding:10px 0;border-bottom:1px solid var(--sep2);color:var(--l1);}
 .clinic-note time{display:block;font-size:11px;color:var(--l3);margin-bottom:4px;}
-.crisis-banner{display:none;margin:8px 12px;padding:12px;border-radius:12px;background:rgba(255,69,58,.12);border:1px solid rgba(255,69,58,.35);color:#ff8a80;font-size:13px;line-height:1.45;}
+.crisis-banner{display:none;margin:8px 12px;padding:12px;border-radius:12px;background:var(--bg2);border:1px solid var(--sep);color:var(--l2);font-size:13px;line-height:1.45;}
 .crisis-banner.show{display:block;}
 </style>
 </head>
 <body>
 <div id="soul-splash" class="soul-splash" role="status" aria-label="SoulCap loading">
-  <div class="soul-splash__book" aria-hidden="true"></div>
+  <div class="soul-splash__scene" aria-hidden="true">
+    <div class="soul-splash__doorframe">
+      <div class="soul-splash__door"></div>
+    </div>
+    <div class="soul-splash__chair"></div>
+  </div>
   <div class="soul-splash__title">SoulCap</div>
-  <div class="soul-splash__tag">Quiet journal · private</div>
+  <div class="soul-splash__tag">An honest companion · not clinical care</div>
 </div>
 
 <!-- ══ ONBOARDING ══ -->
@@ -864,7 +907,7 @@ html,body{
   </div><!-- end #screens -->
 
   <!-- TAB BAR -->
-  <div class="tab-bar">
+  <div class="tab-bar" id="tab-bar">
     <button class="tab active" id="tab-today" onclick="goTab('today')">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/>
@@ -1209,6 +1252,11 @@ function audit(action, resource, metadata) {
   localStorage.setItem('sc_audit', JSON.stringify(state.audit));
 }
 
+function setCrisisRail(on) {
+  const rail = document.getElementById('tab-bar');
+  if (rail) rail.classList.toggle('crisis-pulse', !!on);
+}
+
 function crisisTier(text) {
   const lower = String(text || '').toLowerCase();
   return CRISIS_HARD.some((kw) => lower.includes(kw)) ? 3 : 0;
@@ -1537,13 +1585,13 @@ function sendMessage() {
 
   if (crisisTier(text) === 3) {
     audit('safety.tier3', 'chat', { preview: text.slice(0, 80) });
-    document.getElementById('crisis-banner').classList.add('show');
+    setCrisisRail(true);
     addMsg('companion', "I can hear you're in real pain. I'm not a crisis counselor. Please call or text 988 (US), text HOME to 741741, or use local emergency services. Opening grounding / panic support.");
     openPanic();
     return;
   }
 
-  document.getElementById('crisis-banner').classList.remove('show');
+  setCrisisRail(false);
   const typing = document.getElementById('typing');
   typing.classList.add('visible');
   scrollChat();
@@ -1790,7 +1838,7 @@ window.addEventListener('appinstalled', () => showToast('SoulCap installed ✓')
 // Service Worker
 if ('serviceWorker' in navigator) {
   const p = location.hostname === 'localhost' ? '/sw.js' : '/SoulCap/sw.js';
-  navigator.serviceWorker.register(p + '?v=030').catch(() => {});
+  navigator.serviceWorker.register(p + '?v=031').catch(() => {});
 }
 
 function setSoulTheme(mode) {
@@ -1798,7 +1846,7 @@ function setSoulTheme(mode) {
   try { localStorage.setItem('soulcap-theme', t); } catch (e) {}
   document.documentElement.setAttribute('data-theme', t);
   const m = document.getElementById('themeColorMeta') || document.querySelector('meta[name="theme-color"]');
-  if (m) m.setAttribute('content', t === 'light' ? '#F4F0EA' : '#0E0D0C');
+  if (m) m.setAttribute('content', t === 'light' ? '#F2EDE6' : '#121110');
   const lv = document.getElementById('theme-light-val');
   const dv = document.getElementById('theme-dark-val');
   if (lv) lv.textContent = t === 'light' ? 'On' : '›';
@@ -1807,7 +1855,7 @@ function setSoulTheme(mode) {
 setTimeout(() => {
   const s = document.getElementById('soul-splash');
   if (s) { s.classList.add('hide'); setTimeout(() => s.remove(), 500); }
-}, 1300);
+}, 1900);
 try {
   const cur = document.documentElement.getAttribute('data-theme') || 'dark';
   const lv = document.getElementById('theme-light-val');

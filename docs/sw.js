@@ -1,4 +1,4 @@
-const CACHE = 'soulcap-v030';
+const CACHE = 'soulcap-v031';
 const ASSETS = [
   '/SoulCap/',
   '/SoulCap/index.html',

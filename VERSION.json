@@ -1,7 +1,7 @@
 {
   "app": "SoulCap",
-  "version": "0.3.0",
-  "swCache": "soulcap-v030",
+  "version": "0.3.1",
+  "swCache": "soulcap-v031",
   "updated": "2026-07-20",
   "status": "clinical-path",
   "note": "Quiet journal beauty. Nest/Expo lab not deployed. See README + SAFETY.md."
