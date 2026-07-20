@@ -1,3 +1,11 @@
+## [0.3.2] — 2026-07-20
+
+### Home deep — quiet room MOBILE≠DESKTOP
+- Mobile: linen texture + room strip (half-open door, empty chair, light ray)
+- Desktop ≥900px: 3-pane layout — room visual + check-in center + care rail (stats, habits, companion note, grounding)
+- Sage orb glow (no purple takeover); clinical banner sage tokens
+- SW `soulcap-v032`
+
 ## [0.3.0] — 2026-07-20
 
 ### Beauty — quiet journal / safety gate

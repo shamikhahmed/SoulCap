@@ -228,21 +228,169 @@ html,body{
 .tab.active svg{transform:scale(1.1);}
 .tab-label{font-size:10px;margin-top:1px;}
 
-/* ── TODAY SCREEN ── */
+/* ── TODAY SCREEN — quiet room home deep ── */
+#screen-today{
+  background:
+    repeating-linear-gradient(92deg,transparent,transparent 3px,color-mix(in srgb,var(--l4) 8%,transparent) 3px,color-mix(in srgb,var(--l4) 8%,transparent) 4px),
+    var(--bg);
+}
+.today-home{flex:1;min-height:0;}
+.today-layout{display:flex;flex-direction:column;}
+.today-room-pane{display:none;}
+.today-room-strip{
+  margin:8px 20px 0;padding:14px 16px;border-radius:18px;
+  background:var(--bg2);border:1px solid var(--sep2);
+}
+.today-room-strip__scene{
+  position:relative;height:72px;overflow:hidden;border-radius:12px;
+  background:linear-gradient(135deg,var(--bg3),var(--bg2));
+}
+.today-room-strip__doorframe{
+  position:absolute;left:18%;top:10%;width:38%;height:78%;
+  border:1px solid color-mix(in srgb,var(--acc) 40%,transparent);border-radius:2px 2px 0 0;
+  background:linear-gradient(180deg,color-mix(in srgb,var(--bg3) 80%,transparent),var(--bg2));
+  overflow:hidden;
+}
+.today-room-strip__door{
+  position:absolute;left:0;top:0;width:52%;height:100%;transform-origin:left center;
+  transform:perspective(420px) rotateY(-18deg);
+  background:linear-gradient(135deg,var(--bg4),var(--bg3));
+  border-right:1px solid color-mix(in srgb,var(--acc) 28%,transparent);
+}
+.today-room-strip__chair{
+  position:absolute;right:14%;bottom:8%;width:22%;height:38%;
+  background:color-mix(in srgb,var(--l3) 55%,transparent);border-radius:3px 3px 2px 2px;
+  clip-path:polygon(8% 0,92% 0,100% 100%,0 100%);
+}
+.today-room-strip__ray{
+  position:absolute;left:28%;top:0;width:40%;height:100%;
+  background:linear-gradient(180deg,color-mix(in srgb,var(--acc) 18%,transparent),transparent 70%);
+  pointer-events:none;
+}
+.today-room-strip__label{
+  font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--l3);margin-top:10px;text-align:center;
+}
+.today-main-pane{min-width:0;}
+.today-care-pane{min-width:0;}
 .today-top{padding:calc(var(--sat) + 24px) 20px 0;}
 .today-greeting{font-size:15px;color:var(--l2);font-weight:400;margin-bottom:3px;}
-.today-name{font-size:34px;font-weight:700;letter-spacing:-0.5px;color:var(--l1);line-height:1.1;}
+.today-name{font-size:34px;font-weight:700;letter-spacing:-0.5px;color:var(--l1);line-height:1.1;font-family:var(--font-display);}
 .today-context{font-size:15px;color:var(--l2);margin-top:8px;line-height:1.55;font-weight:400;}
+.today-room-pane{
+  flex-direction:column;align-items:stretch;padding:calc(var(--sat) + 20px) 0 24px;
+}
+.today-room-pane__frame{
+  position:relative;flex:1;min-height:320px;border-radius:20px;
+  border:1px solid var(--sep2);background:var(--bg2);overflow:hidden;
+  box-shadow:0 2px 8px color-mix(in srgb,var(--bg) 40%,transparent);
+}
+.today-room-pane__light{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse 70% 55% at 32% 18%,color-mix(in srgb,var(--acc) 22%,transparent),transparent 68%);
+  animation:roomLightShift 8s ease-in-out infinite alternate;
+}
+@keyframes roomLightShift{from{opacity:.85}to{opacity:1}}
+.today-room-pane__scene{
+  position:absolute;inset:12% 10% 14%;display:flex;align-items:flex-end;justify-content:center;
+}
+.today-room-pane__doorframe{
+  position:absolute;left:8%;bottom:0;width:46%;height:88%;
+  border:1.5px solid color-mix(in srgb,var(--acc) 45%,transparent);border-radius:4px 4px 0 0;
+  background:linear-gradient(180deg,color-mix(in srgb,var(--bg3) 85%,transparent),var(--bg2));
+  overflow:hidden;
+}
+.today-room-pane__door{
+  position:absolute;left:0;top:0;width:54%;height:100%;transform-origin:left center;
+  transform:perspective(640px) rotateY(-22deg);
+  background:linear-gradient(135deg,var(--bg4),var(--bg3));
+  border-right:1px solid color-mix(in srgb,var(--acc) 32%,transparent);
+}
+.today-room-pane__chair{
+  position:absolute;right:12%;bottom:0;width:32%;height:46%;opacity:.92;
+}
+.today-room-pane__chair::before{
+  content:'';position:absolute;left:10%;right:10%;bottom:16%;height:14%;
+  background:color-mix(in srgb,var(--l3) 65%,transparent);border-radius:3px;
+}
+.today-room-pane__chair::after{
+  content:'';position:absolute;left:20%;right:20%;top:0;bottom:26%;
+  background:color-mix(in srgb,var(--l3) 50%,transparent);border-radius:4px 4px 2px 2px;
+  clip-path:polygon(0 0,100% 0,92% 100%,8% 100%);
+}
+.today-room-pane__plaque{
+  margin-top:16px;padding:14px 16px;border-radius:16px;
+  background:var(--bg2);border:1px solid var(--sep2);
+}
+.today-room-pane__plaque h2{
+  font-family:var(--font-display);font-size:18px;font-weight:600;color:var(--l1);margin-bottom:6px;
+}
+.today-room-pane__plaque p{font-size:13px;color:var(--l2);line-height:1.55;}
+.today-room-pane__crisis{
+  margin-top:10px;display:flex;flex-wrap:wrap;gap:8px;
+}
+.today-room-pane__crisis a,.today-room-pane__crisis button{
+  font-size:12px;padding:8px 12px;border-radius:999px;border:1px solid var(--sep2);
+  background:var(--bg3);color:var(--l1);text-decoration:none;
+  transition:background .15s,border-color .15s;
+}
+.today-room-pane__crisis a:hover,.today-room-pane__crisis button:hover{
+  background:color-mix(in srgb,var(--acc) 12%,var(--bg3));border-color:color-mix(in srgb,var(--acc) 35%,transparent);
+}
+.today-care-pane .today-stats{margin:20px 0 0;}
+.today-care-pane .today-section{padding-top:24px;}
+.today-care-pane .ground-btn{margin:16px 0 32px;width:100%;}
+
+@media (min-width:900px){
+  html,body{overflow:auto;}
+  #app{max-width:100%;}
+  #screen-today{
+    overflow-y:auto;-webkit-overflow-scrolling:touch;
+    background:
+      radial-gradient(ellipse 55% 45% at 18% 22%,color-mix(in srgb,var(--acc) 16%,transparent),transparent 62%),
+      var(--bg);
+  }
+  .today-top{padding-top:calc(var(--sat) + 16px);}
+  .today-name{font-size:32px;}
+  .today-context,.today-greeting,.orb-question{font-size:15.5px;}
+  .today-layout{
+    display:grid;
+    grid-template-columns:minmax(240px,280px) minmax(0,1fr) minmax(260px,300px);
+    gap:24px;align-items:start;
+    padding:8px 28px 32px;max-width:1180px;margin:0 auto;
+  }
+  .today-room-pane{display:flex;position:sticky;top:12px;}
+  .today-room-strip{display:none;}
+  .today-main-pane{
+    background:var(--bg2);border:1px solid var(--sep2);border-radius:20px;
+    padding:0 4px 20px;box-shadow:0 2px 8px color-mix(in srgb,var(--bg) 35%,transparent);
+  }
+  .today-care-pane{
+    position:sticky;top:12px;
+    background:var(--bg2);border:1px solid var(--sep2);border-radius:20px;
+    padding:0 16px 8px;
+  }
+  .today-care-pane .today-section{padding-left:0;padding-right:0;}
+  .today-care-pane .today-insight{margin:0;}
+  .today-care-pane .habit-row{flex-wrap:wrap;justify-content:flex-start;gap:10px;}
+  .today-care-pane .habit-ring-wrap{flex:0 0 calc(33.33% - 8px);}
+  .clinical-banner{max-width:1180px;margin-left:auto;margin-right:auto;}
+  .orb-center{padding:36px 24px 28px;}
+  .ground-btn{margin-left:0;margin-right:0;}
+}
+@media (prefers-reduced-motion:reduce){
+  .today-room-pane__light{animation:none;}
+}
 
 /* ORB */
 .orb-center{display:flex;flex-direction:column;align-items:center;padding:44px 24px 32px;}
 .orb{
   width:120px;height:120px;border-radius:50%;
   box-shadow:
-    0 0 0 1px rgba(125,122,255,0.14),
-    0 0 36px rgba(125,122,255,0.52),
-    0 0 72px rgba(125,122,255,0.26),
-    0 0 140px rgba(125,122,255,0.1);
+    0 0 0 1px color-mix(in srgb,var(--acc) 22%,transparent),
+    0 0 36px color-mix(in srgb,var(--acc) 38%,transparent),
+    0 0 72px color-mix(in srgb,var(--acc) 18%,transparent),
+    0 0 140px color-mix(in srgb,var(--acc) 8%,transparent);
   animation:breathe 5s ease-in-out infinite;
   cursor:pointer;
   transition:transform 0.18s var(--spring);
@@ -385,7 +533,7 @@ html,body{
 .soul-presence{display:flex;align-items:center;gap:10px;}
 .soul-orb-sm{
   width:34px;height:34px;border-radius:50%;flex-shrink:0;
-  box-shadow:0 0 14px rgba(125,122,255,0.5);
+  box-shadow:0 0 14px color-mix(in srgb,var(--acc) 45%,transparent);
   animation:breathe 5s ease-in-out infinite;
 }
 .soul-name{font-size:17px;font-weight:600;color:var(--l1);}
@@ -660,7 +808,7 @@ html,body{
 .ob-consent{width:100%;margin-top:20px;text-align:left;font-size:14px;color:var(--l2);line-height:1.45;}
 .ob-consent label{display:flex;gap:10px;align-items:flex-start;padding:12px;border-radius:12px;background:var(--bg2);border:1px solid var(--sep2);}
 .ob-consent input{margin-top:3px;accent-color:var(--acc);}
-.clinical-banner{margin:12px 16px 0;padding:10px 12px;border-radius:12px;background:rgba(125,122,255,.12);border:1px solid rgba(125,122,255,.28);font-size:12px;color:var(--l2);line-height:1.4;}
+.clinical-banner{margin:12px 16px 0;padding:10px 12px;border-radius:12px;background:color-mix(in srgb,var(--acc) 12%,transparent);border:1px solid color-mix(in srgb,var(--acc) 28%,transparent);font-size:12px;color:var(--l2);line-height:1.4;}
 .clinic-fab{position:fixed;right:16px;bottom:calc(70px + var(--sab));z-index:40;padding:10px 14px;border-radius:999px;border:none;background:var(--acc);color:#fff;font-size:12px;font-weight:700;box-shadow:0 8px 24px rgba(0,0,0,.4);}
 .clinic-overlay{position:fixed;inset:0;z-index:900;background:var(--bg);transform:translateY(100%);transition:transform .32s var(--spring);display:flex;flex-direction:column;max-width:430px;margin:0 auto;}
 .clinic-overlay.open{transform:translateY(0);}
@@ -743,105 +891,144 @@ html,body{
     <!-- TODAY -->
     <div id="screen-today" class="screen active">
       <div class="clinical-banner" id="clinical-banner">Clinical path · wellness companion · not a medical device · 988 if in crisis</div>
-      <div class="today-top">
-        <div class="today-greeting" id="today-greeting">Good morning</div>
-        <div class="today-name" id="today-name"></div>
-        <div class="today-context" id="today-context">Tap the orb when you're ready to check in.</div>
-      </div>
+      <div class="today-home">
+        <div class="today-layout">
+          <aside class="today-room-pane" aria-label="Quiet therapy room">
+            <div class="today-room-pane__frame">
+              <div class="today-room-pane__light" aria-hidden="true"></div>
+              <div class="today-room-pane__scene" aria-hidden="true">
+                <div class="today-room-pane__doorframe">
+                  <div class="today-room-pane__door"></div>
+                </div>
+                <div class="today-room-pane__chair"></div>
+              </div>
+            </div>
+            <div class="today-room-pane__plaque">
+              <h2>Quiet room</h2>
+              <p>Half-open door, empty chair, stillness. SoulCap is a wellness companion on your device — not clinical care, not a medical device.</p>
+              <div class="today-room-pane__crisis">
+                <a href="tel:988" title="US Suicide &amp; Crisis Lifeline">988 · Crisis line</a>
+                <button type="button" onclick="openPanic()">Grounding steps</button>
+              </div>
+            </div>
+          </aside>
 
-      <div class="orb-center">
-        <div class="orb" id="home-orb" onclick="openCheckIn()"></div>
-        <div class="orb-question" id="today-question">"What's the first thing you noticed this morning?"</div>
-        <div class="orb-hint">Tap to check in</div>
-      </div>
+          <div class="today-room-strip" aria-hidden="true">
+            <div class="today-room-strip__scene">
+              <div class="today-room-strip__ray"></div>
+              <div class="today-room-strip__doorframe">
+                <div class="today-room-strip__door"></div>
+              </div>
+              <div class="today-room-strip__chair"></div>
+            </div>
+            <div class="today-room-strip__label">Quiet room · stillness</div>
+          </div>
 
-      <div class="today-stats">
-        <div class="stat"><div class="stat-val" id="stat-streak">—</div><div class="stat-label">Day streak</div></div>
-        <div class="stat"><div class="stat-val" id="stat-yesterday">—</div><div class="stat-label">Yesterday</div></div>
-        <div class="stat"><div class="stat-val" id="stat-week">—</div><div class="stat-label">This week</div></div>
-      </div>
+          <main class="today-main-pane">
+            <div class="today-top">
+              <div class="today-greeting" id="today-greeting">Good morning</div>
+              <div class="today-name" id="today-name"></div>
+              <div class="today-context" id="today-context">Tap the orb when you're ready to check in.</div>
+            </div>
 
-      <div class="today-section">
-        <div class="today-section-title">Today</div>
-        <button class="today-card" onclick="goTab('soul')">
-          <div class="tc-row">
-            <div>
-              <div class="tc-label">Soul</div>
-              <div class="tc-title">Rules-based companion chat</div>
-              <div class="tc-sub">Not a live AI model on this Pages build.</div>
+            <div class="orb-center">
+              <div class="orb" id="home-orb" onclick="openCheckIn()"></div>
+              <div class="orb-question" id="today-question">"What's the first thing you noticed this morning?"</div>
+              <div class="orb-hint">Tap to check in</div>
             </div>
-            <div class="tc-arrow">›</div>
-          </div>
-        </button>
-        <button class="today-card" onclick="openCheckIn()">
-          <div class="tc-row">
-            <div>
-              <div class="tc-label">Daily check-in</div>
-              <div class="tc-title">A moment for yourself.</div>
-              <div class="tc-sub">Takes 30 seconds. Your profile updates quietly.</div>
-            </div>
-            <div class="tc-arrow">›</div>
-          </div>
-        </button>
-      </div>
 
-      <div class="today-section">
-        <div class="today-section-title">Habits</div>
-        <div class="habit-row">
-          <div class="habit-ring-wrap" onclick="toggleHabit(this,0)">
-            <div class="habit-ring">
-              <svg viewBox="0 0 56 56"><circle cx="28" cy="28" r="24" fill="none" stroke="rgba(48,209,88,0.15)" stroke-width="4"/><circle cx="28" cy="28" r="24" fill="none" stroke="#30D158" stroke-width="4" stroke-dasharray="150.8" stroke-dashoffset="150.8" stroke-linecap="round" class="h-arc" id="h0" style="transition:stroke-dashoffset 0.55s var(--spring)"/></svg>
-              <span class="habit-ring-icon">🚶</span>
+            <div class="today-section">
+              <div class="today-section-title">Today</div>
+              <button class="today-card" onclick="goTab('soul')">
+                <div class="tc-row">
+                  <div>
+                    <div class="tc-label">Soul</div>
+                    <div class="tc-title">Rules-based companion chat</div>
+                    <div class="tc-sub">Not a live AI model on this Pages build.</div>
+                  </div>
+                  <div class="tc-arrow">›</div>
+                </div>
+              </button>
+              <button class="today-card" onclick="openCheckIn()">
+                <div class="tc-row">
+                  <div>
+                    <div class="tc-label">Daily check-in</div>
+                    <div class="tc-title">A moment for yourself.</div>
+                    <div class="tc-sub">Takes 30 seconds. Your profile updates quietly.</div>
+                  </div>
+                  <div class="tc-arrow">›</div>
+                </div>
+              </button>
             </div>
-            <div class="habit-ring-label">Walk</div>
-          </div>
-          <div class="habit-ring-wrap" onclick="toggleHabit(this,1)">
-            <div class="habit-ring">
-              <svg viewBox="0 0 56 56"><circle cx="28" cy="28" r="24" fill="none" stroke="rgba(10,132,255,0.15)" stroke-width="4"/><circle cx="28" cy="28" r="24" fill="none" stroke="#0A84FF" stroke-width="4" stroke-dasharray="150.8" stroke-dashoffset="150.8" stroke-linecap="round" class="h-arc" id="h1" style="transition:stroke-dashoffset 0.55s var(--spring)"/></svg>
-              <span class="habit-ring-icon">📖</span>
+          </main>
+
+          <aside class="today-care-pane" aria-label="Care rail">
+            <div class="today-stats">
+              <div class="stat"><div class="stat-val" id="stat-streak">—</div><div class="stat-label">Day streak</div></div>
+              <div class="stat"><div class="stat-val" id="stat-yesterday">—</div><div class="stat-label">Yesterday</div></div>
+              <div class="stat"><div class="stat-val" id="stat-week">—</div><div class="stat-label">This week</div></div>
             </div>
-            <div class="habit-ring-label">Read</div>
-          </div>
-          <div class="habit-ring-wrap" onclick="toggleHabit(this,2)">
-            <div class="habit-ring">
-              <svg viewBox="0 0 56 56"><circle cx="28" cy="28" r="24" fill="none" stroke="rgba(191,90,242,0.15)" stroke-width="4"/><circle cx="28" cy="28" r="24" fill="none" stroke="#BF5AF2" stroke-width="4" stroke-dasharray="150.8" stroke-dashoffset="150.8" stroke-linecap="round" class="h-arc" id="h2" style="transition:stroke-dashoffset 0.55s var(--spring)"/></svg>
-              <span class="habit-ring-icon">🧘</span>
+
+            <div class="today-section">
+              <div class="today-section-title">Habits</div>
+              <div class="habit-row">
+                <div class="habit-ring-wrap" onclick="toggleHabit(this,0)">
+                  <div class="habit-ring">
+                    <svg viewBox="0 0 56 56"><circle cx="28" cy="28" r="24" fill="none" stroke="rgba(48,209,88,0.15)" stroke-width="4"/><circle cx="28" cy="28" r="24" fill="none" stroke="#30D158" stroke-width="4" stroke-dasharray="150.8" stroke-dashoffset="150.8" stroke-linecap="round" class="h-arc" id="h0" style="transition:stroke-dashoffset 0.55s var(--spring)"/></svg>
+                    <span class="habit-ring-icon">🚶</span>
+                  </div>
+                  <div class="habit-ring-label">Walk</div>
+                </div>
+                <div class="habit-ring-wrap" onclick="toggleHabit(this,1)">
+                  <div class="habit-ring">
+                    <svg viewBox="0 0 56 56"><circle cx="28" cy="28" r="24" fill="none" stroke="rgba(10,132,255,0.15)" stroke-width="4"/><circle cx="28" cy="28" r="24" fill="none" stroke="#0A84FF" stroke-width="4" stroke-dasharray="150.8" stroke-dashoffset="150.8" stroke-linecap="round" class="h-arc" id="h1" style="transition:stroke-dashoffset 0.55s var(--spring)"/></svg>
+                    <span class="habit-ring-icon">📖</span>
+                  </div>
+                  <div class="habit-ring-label">Read</div>
+                </div>
+                <div class="habit-ring-wrap" onclick="toggleHabit(this,2)">
+                  <div class="habit-ring">
+                    <svg viewBox="0 0 56 56"><circle cx="28" cy="28" r="24" fill="none" stroke="rgba(191,90,242,0.15)" stroke-width="4"/><circle cx="28" cy="28" r="24" fill="none" stroke="#BF5AF2" stroke-width="4" stroke-dasharray="150.8" stroke-dashoffset="150.8" stroke-linecap="round" class="h-arc" id="h2" style="transition:stroke-dashoffset 0.55s var(--spring)"/></svg>
+                    <span class="habit-ring-icon">🧘</span>
+                  </div>
+                  <div class="habit-ring-label">Breathe</div>
+                </div>
+                <div class="habit-ring-wrap" onclick="toggleHabit(this,3)">
+                  <div class="habit-ring">
+                    <svg viewBox="0 0 56 56"><circle cx="28" cy="28" r="24" fill="none" stroke="rgba(255,159,10,0.15)" stroke-width="4"/><circle cx="28" cy="28" r="24" fill="none" stroke="#FF9F0A" stroke-width="4" stroke-dasharray="150.8" stroke-dashoffset="150.8" stroke-linecap="round" class="h-arc" id="h3" style="transition:stroke-dashoffset 0.55s var(--spring)"/></svg>
+                    <span class="habit-ring-icon">💧</span>
+                  </div>
+                  <div class="habit-ring-label">Hydrate</div>
+                </div>
+                <div class="habit-ring-wrap" onclick="toggleHabit(this,4)">
+                  <div class="habit-ring">
+                    <svg viewBox="0 0 56 56"><circle cx="28" cy="28" r="24" fill="none" stroke="rgba(125,122,255,0.15)" stroke-width="4"/><circle cx="28" cy="28" r="24" fill="none" stroke="#7D7AFF" stroke-width="4" stroke-dasharray="150.8" stroke-dashoffset="150.8" stroke-linecap="round" class="h-arc" id="h4" style="transition:stroke-dashoffset 0.55s var(--spring)"/></svg>
+                    <span class="habit-ring-icon">✍️</span>
+                  </div>
+                  <div class="habit-ring-label">Journal</div>
+                </div>
+              </div>
             </div>
-            <div class="habit-ring-label">Breathe</div>
-          </div>
-          <div class="habit-ring-wrap" onclick="toggleHabit(this,3)">
-            <div class="habit-ring">
-              <svg viewBox="0 0 56 56"><circle cx="28" cy="28" r="24" fill="none" stroke="rgba(255,159,10,0.15)" stroke-width="4"/><circle cx="28" cy="28" r="24" fill="none" stroke="#FF9F0A" stroke-width="4" stroke-dasharray="150.8" stroke-dashoffset="150.8" stroke-linecap="round" class="h-arc" id="h3" style="transition:stroke-dashoffset 0.55s var(--spring)"/></svg>
-              <span class="habit-ring-icon">💧</span>
+
+            <div class="today-section" style="padding-bottom:16px;">
+              <div class="today-section-title">Companion note</div>
+              <div class="today-insight">
+                <div class="ti-label">On-device</div>
+                <div class="ti-text">Check in when you can. Reflections here are rules-based — not a clinician and not a live AI model on this Pages build.</div>
+                <div class="ti-source">— Smart Companion · clinical path</div>
+              </div>
             </div>
-            <div class="habit-ring-label">Hydrate</div>
-          </div>
-          <div class="habit-ring-wrap" onclick="toggleHabit(this,4)">
-            <div class="habit-ring">
-              <svg viewBox="0 0 56 56"><circle cx="28" cy="28" r="24" fill="none" stroke="rgba(125,122,255,0.15)" stroke-width="4"/><circle cx="28" cy="28" r="24" fill="none" stroke="#7D7AFF" stroke-width="4" stroke-dasharray="150.8" stroke-dashoffset="150.8" stroke-linecap="round" class="h-arc" id="h4" style="transition:stroke-dashoffset 0.55s var(--spring)"/></svg>
-              <span class="habit-ring-icon">✍️</span>
-            </div>
-            <div class="habit-ring-label">Journal</div>
-          </div>
+
+            <button class="ground-btn" onclick="openPanic()">
+              <span class="ground-btn-icon">🫂</span>
+              <div>
+                <div class="gbt">Need grounding?</div>
+                <div class="gbs">Breathing, visualization, and crisis support</div>
+              </div>
+            </button>
+          </aside>
         </div>
       </div>
-
-      <div class="today-section" style="padding-bottom:16px;">
-        <div class="today-section-title">Companion note</div>
-        <div class="today-insight">
-          <div class="ti-label">On-device</div>
-          <div class="ti-text">Check in when you can. Reflections here are rules-based — not a clinician and not a live AI model on this Pages build.</div>
-          <div class="ti-source">— Smart Companion · clinical path</div>
-        </div>
-      </div>
-
-      <button class="ground-btn" onclick="openPanic()">
-        <span class="ground-btn-icon">🫂</span>
-        <div>
-          <div class="gbt">Need grounding?</div>
-          <div class="gbs">Breathing, visualization, and crisis support</div>
-        </div>
-      </button>
     </div>
 
     <!-- SOUL -->
@@ -1838,7 +2025,7 @@ window.addEventListener('appinstalled', () => showToast('SoulCap installed ✓')
 // Service Worker
 if ('serviceWorker' in navigator) {
   const p = location.hostname === 'localhost' ? '/sw.js' : '/SoulCap/sw.js';
-  navigator.serviceWorker.register(p + '?v=031').catch(() => {});
+  navigator.serviceWorker.register(p + '?v=032').catch(() => {});
 }
 
 function setSoulTheme(mode) {

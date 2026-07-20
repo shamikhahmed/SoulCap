@@ -1,8 +1,8 @@
 {
   "app": "SoulCap",
-  "version": "0.3.1",
-  "swCache": "soulcap-v031",
+  "version": "0.3.2",
+  "swCache": "soulcap-v032",
   "updated": "2026-07-20",
   "status": "clinical-path",
-  "note": "Quiet journal beauty. Nest/Expo lab not deployed. See README + SAFETY.md."
+  "note": "Quiet room home deep MOBILE≠DESKTOP. Nest/Expo lab not deployed. See README + SAFETY.md."
 }
