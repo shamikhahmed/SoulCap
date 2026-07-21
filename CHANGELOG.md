@@ -1,3 +1,28 @@
+## [0.7.0] — 2026-07-21
+
+The journal becomes a book, the theme goes purple, and two annoyances are fixed.
+
+### Added
+- **Journal book cover.** A customisable cover sets the mood of the tab — editable title and
+  subtitle, eight cover colours, and a sticker. Entries list under a "Contents" heading like a
+  book's index.
+- **Stickers in entries** — a sticker button in the editor drops an emoji into your writing.
+- **Bigger "Your story" fields** — history text areas auto-grow as you write, with "add as many
+  as you like, one per line" guidance. Easy to write a lot.
+
+### Fixed
+- **Journal lines now align with the text.** The ruled lines moved onto the writing surface and
+  share its line-height, so words always sit on the rules no matter how tall the title is. It
+  reads like a real notebook now.
+- **No more auto-scroll to the top** when you change theme (or toggle any setting). The view
+  re-renders in place and keeps your scroll position.
+
+### Changed
+- **Purple theme, matched to the logo.** The accent is now the logo's violet (`#6C5CE7` light,
+  `#A78BFA` dark, dimmer in night mode) across buttons, the constellation centre, and highlights.
+  Warm neutrals kept so it stays calm rather than neon.
+- SW `soulcap-v070`. Tests now 84 across mobile + desktop.
+
 ## [0.6.1] — 2026-07-21
 
 ### Fixed

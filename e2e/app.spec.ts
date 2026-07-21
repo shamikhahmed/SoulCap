@@ -46,7 +46,7 @@ test.describe('Smoke', () => {
     for (const [tab, heading] of [
       ['now', /Good |It’s late/],
       ['calm', /What do you need/],
-      ['journal', /Your pages/],
+      ['journal', /My Journal|Contents/],
       ['map', /The people around you/],
       ['me', /Shamikh|Your space/]
     ] as const) {
@@ -123,6 +123,25 @@ test.describe('Journal', () => {
     const after = await page.evaluate(() => (window as any).__soulcap.getState().journal.length);
     expect(after).toBe(before + 1);
     await expect(page.locator('#view-journal')).toContainText('A quiet test entry.');
+  });
+
+  test('the journal book cover can be customised', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="journal"]') as HTMLElement).click());
+    await page.locator('.book-cover').click();
+    const title = page.locator('#sheetPanel input').first();
+    await title.fill('Night Pages');
+    await page.locator('#sheetPanel').getByRole('button', { name: 'Save' }).click();
+    await expect(page.locator('.book-cover')).toContainText('Night Pages');
+  });
+
+  test('changing theme does not scroll the page to the top', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="me"]') as HTMLElement).click());
+    await page.evaluate(() => window.scrollTo(0, 700));
+    await page.locator('#view-me .chips .chip', { hasText: 'Dark' }).first().click();
+    const y = await page.evaluate(() => window.scrollY);
+    expect(y).toBeGreaterThan(300); // stayed roughly where it was, no jump to 0
   });
 
   test('the paper editor uses the serif reading face', async ({ page }) => {

@@ -41,11 +41,12 @@
   /* ── State ─────────────────────────────────────────────────────────────── */
   var KEY = 'soulcap_v1';
   var DEFAULT = {
-    v: 4, onboarded: false, welcomed: false, ageOk: null, region: null, consent: false,
+    v: 5, onboarded: false, welcomed: false, ageOk: null, region: null, consent: false,
     profile: { name: '', age: '', pronouns: '' },
     history: {},
     concerns: [], checkins: [], skillRuns: [], people: [], links: [], inferences: [],
     safetyPlan: {}, episodes: [], favourites: [], journal: [],
+    journalCover: { title: 'My Journal', subtitle: '', color: 0, sticker: '📔' },
     theme: null, rings: 3, ringNames: {}, pace: 1,
     voice: { on: false, name: null, rate: 0.85, pitch: 1 },
     haptics: true, showLinks: false, trackContact: false
@@ -61,6 +62,7 @@
       p.voice = Object.assign(clone(DEFAULT.voice), p.voice || {});
       p.history = p.history || {};
       p.ringNames = p.ringNames || {};
+      p.journalCover = Object.assign(clone(DEFAULT.journalCover), p.journalCover || {});
       return p;
     } catch (e) { return clone(DEFAULT); }
   }
@@ -635,19 +637,29 @@
   var JOURNAL_MOODS = ['😌', '🙂', '😐', '😔', '😣'];
   var draft = null;
 
+  function coverColors() { return COVER_COLORS[state.journalCover.color] || COVER_COLORS[0]; }
   function renderJournal() {
     var v = $('#view-journal'); clear(v);
-    v.appendChild(el('div', {}, [
-      el('p', { class: 'eyebrow', text: 'Journal · ' + state.journal.length + (state.journal.length === 1 ? ' entry' : ' entries') }),
-      el('h1', { class: 'h-voice', text: 'Your pages.' })
-    ]));
+    var cov = state.journalCover, cc = coverColors();
+
+    // The book cover — customisable, sets the mood of the whole tab.
+    var cover = el('button', { class: 'book-cover',
+      style: '--bc-a:' + cc[0] + ';--bc-b:' + cc[1], onclick: coverSheet }, [
+      el('span', { class: 'bc-edit', text: 'Customise' }),
+      cov.sticker ? el('span', { class: 'bc-sticker', text: cov.sticker }) : null,
+      el('h1', { class: 'bc-title', text: cov.title || 'My Journal' }),
+      el('p', { class: 'bc-sub', text: cov.subtitle || (state.journal.length + (state.journal.length === 1 ? ' entry' : ' entries')) })
+    ]);
+    v.appendChild(cover);
     v.appendChild(el('button', { class: 'btn', text: '＋  New entry', onclick: function () { openEditor(null); } }));
 
     if (!state.journal.length) {
       v.appendChild(el('div', { class: 'card' }, [
         el('p', { class: 'p-voice', text: 'A private place to put things down. No one else can read it — it lives on your phone.' }),
-        el('p', { class: 'p-sm', text: 'Write freely, add a photo, tag how the day felt. Or don’t. It’s yours.' })
+        el('p', { class: 'p-sm', text: 'Write freely, add a photo, drop in a sticker, tag how the day felt. Or don’t. It’s yours.' })
       ]));
+    } else {
+      v.appendChild(el('p', { class: 'eyebrow', style: 'margin-top:4px', text: 'Contents' }));
     }
     var sorted = state.journal.slice().sort(function (a, b) { return b.t - a.t; });
     sorted.forEach(function (e) {
@@ -662,6 +674,36 @@
       ]));
     });
     v.appendChild(el('button', { class: 'help-btn', text: 'I need help now', onclick: openPanic }));
+  }
+
+  function coverSheet() {
+    openSheet(function (p) {
+      p.appendChild(el('h2', { class: 'h-sec', text: 'Your book' }));
+      p.appendChild(el('p', { class: 'p-sm', text: 'Make it yours. This is just for you.' }));
+      var title = el('input', { type: 'text', placeholder: 'My Journal', 'aria-label': 'Book title', value: state.journalCover.title });
+      var sub = el('input', { type: 'text', placeholder: 'A subtitle, if you like', 'aria-label': 'Subtitle', value: state.journalCover.subtitle });
+      p.appendChild(el('p', { class: 'eyebrow', text: 'Title' })); p.appendChild(title);
+      p.appendChild(el('p', { class: 'eyebrow', text: 'Subtitle' })); p.appendChild(sub);
+      p.appendChild(el('p', { class: 'eyebrow', text: 'Cover colour' }));
+      var sw = el('div', { class: 'cover-swatches' }, COVER_COLORS.map(function (c, i) {
+        return el('button', { class: 'cover-swatch', 'aria-label': 'Colour ' + (i + 1), 'aria-pressed': state.journalCover.color === i ? 'true' : 'false',
+          style: 'background:linear-gradient(150deg,' + c[0] + ',' + c[1] + ')',
+          onclick: function () { state.journalCover.color = i; Array.prototype.forEach.call(sw.children, function (b, j) { b.setAttribute('aria-pressed', j === i ? 'true' : 'false'); }); } });
+      }));
+      p.appendChild(sw);
+      p.appendChild(el('p', { class: 'eyebrow', text: 'Sticker' }));
+      var st = el('div', { class: 'sticker-row' }, [''].concat(JOURNAL_STICKERS).map(function (s) {
+        return el('button', { text: s || '—', 'aria-label': s ? 'Sticker ' + s : 'No sticker', 'aria-pressed': state.journalCover.sticker === s ? 'true' : 'false',
+          onclick: function () { state.journalCover.sticker = s; Array.prototype.forEach.call(st.children, function (b) { b.setAttribute('aria-pressed', b.textContent === (s || '—') ? 'true' : 'false'); }); } });
+      }));
+      p.appendChild(st);
+      p.appendChild(el('button', { class: 'btn', text: 'Save', onclick: function () {
+        state.journalCover.title = title.value.trim().slice(0, 40) || 'My Journal';
+        state.journalCover.subtitle = sub.value.trim().slice(0, 60);
+        save(); closeSheet(); render();
+      } }));
+      p.appendChild(el('button', { class: 'btn quiet', text: 'Cancel', onclick: closeSheet }));
+    });
   }
 
   function openEditor(id) {
@@ -1001,9 +1043,16 @@
           }));
           p.appendChild(wrap);
         } else {
-          var ta = el('textarea', { placeholder: sec.placeholder, 'aria-label': sec.title }); ta.value = state.history[sec.key] || '';
+          // Roomy field — write as much as you like, add as many things as you want.
+          var ta = el('textarea', { placeholder: sec.placeholder, 'aria-label': sec.title, style: 'min-height:130px' });
+          ta.value = state.history[sec.key] || '';
+          var grow = function () { ta.style.height = 'auto'; ta.style.height = Math.min(ta.scrollHeight + 4, 460) + 'px'; };
+          ta.addEventListener('input', grow);
           ta.addEventListener('change', function () { state.history[sec.key] = ta.value; save(); });
           p.appendChild(ta);
+          if (['family', 'relatives', 'hobbies', 'habits'].indexOf(sec.key) !== -1)
+            p.appendChild(el('p', { class: 'p-sm', text: 'Add as many as you like — one per line.' }));
+          setTimeout(grow, 0);
         }
       });
       p.appendChild(el('div', { class: 'notice', html: '<b>How this changes things.</b> If you note that things are hard from your past, SoulCap keeps potentially-activating exercises out of its suggestions and leans toward gentle grounding. It never labels or diagnoses you.' }));
@@ -1158,20 +1207,20 @@
     v.appendChild(el('hr', { class: 'sep' }));
     settingsGroup(v, 'Appearance', [
       settingChips([{ k: null, l: 'Auto' }, { k: 'light', l: 'Light' }, { k: 'dark', l: 'Dark' }, { k: 'night', l: 'Night' }],
-        function (o) { return state.theme === o.k; }, function (o) { state.theme = o.k; save(); applyTheme(); render(); }),
+        function (o) { return state.theme === o.k; }, function (o) { state.theme = o.k; save(); applyTheme(); reRender(); }),
       el('p', { class: 'p-sm', text: 'Night is dimmer than dark — for 3am, when a normal screen is still too bright.' })
     ]);
     settingsGroup(v, 'Guided exercises', [
       el('div', { class: 'stack' }, [
-        toggleBtn('Spoken guidance', state.voice.on, function () { state.voice.on = !state.voice.on; save(); render(); }),
+        toggleBtn('Spoken guidance', state.voice.on, function () { state.voice.on = !state.voice.on; save(); reRender(); }),
         state.voice.on ? el('button', { class: 'btn ghost', text: 'Voice & speed', onclick: voiceSheet }) : null,
-        toggleBtn('Vibration', state.haptics, function () { state.haptics = !state.haptics; save(); buzz(14); render(); })
+        toggleBtn('Vibration', state.haptics, function () { state.haptics = !state.haptics; save(); buzz(14); reRender(); })
       ])
     ]);
     settingsGroup(v, 'Constellation extras', [
       el('div', { class: 'stack' }, [
-        toggleBtn('Show links between people', state.showLinks, function () { state.showLinks = !state.showLinks; save(); render(); }),
-        toggleBtn('Track when we last spoke', state.trackContact, function () { state.trackContact = !state.trackContact; save(); render(); })
+        toggleBtn('Show links between people', state.showLinks, function () { state.showLinks = !state.showLinks; save(); reRender(); }),
+        toggleBtn('Track when we last spoke', state.trackContact, function () { state.trackContact = !state.trackContact; save(); reRender(); })
       ]),
       el('p', { class: 'p-sm', text: 'Both off by default. Contact tracking only ever shows you the number — it will never tell you to reach out to anyone.' })
     ]);
@@ -1186,7 +1235,7 @@
     v.appendChild(el('p', { class: 'p-sm', style: 'text-align:center', text: 'SoulCap · v' + APP_VERSION }));
     v.appendChild(el('button', { class: 'help-btn', text: 'I need help now', onclick: openPanic }));
   }
-  var APP_VERSION = '0.6.0';
+  var APP_VERSION = '0.7.0';
   function settingsGroup(v, title, kids) { v.appendChild(el('p', { class: 'eyebrow', style: 'margin-top:14px', text: title })); kids.forEach(function (k) { if (k) v.appendChild(k); }); }
   function toggleBtn(label, on, fn) { return el('button', { class: 'btn ghost', style: 'display:flex;justify-content:space-between', onclick: fn, html: '<span>' + label + '</span><span style="color:var(--accent);font-weight:600">' + (on ? 'On' : 'Off') + '</span>' }); }
   function settingChips(opts, isOn, fn) { return el('div', { class: 'chips' }, opts.map(function (o) { return el('button', { class: 'chip', 'aria-pressed': isOn(o) ? 'true' : 'false', text: o.l, onclick: function () { fn(o); } }); })); }
@@ -1291,6 +1340,10 @@
   /* ── Router ────────────────────────────────────────────────────────────── */
   var tab = 'now';
   function selectTab(t) { tab = t; render(); window.scrollTo(0, 0); }
+  // Re-render in place without jumping to the top — for toggles/pickers inside a
+  // scrolled view (theme, vibration, etc). Rebuilding the view otherwise resets
+  // scroll to 0, which read as an unwanted auto-scroll.
+  function reRender() { var y = window.scrollY; render(); window.scrollTo(0, y); }
   var VIEWS = ['welcome', 'onboarding', 'now', 'calm', 'journal', 'map', 'me'];
   function render() {
     applyTheme();
@@ -1352,6 +1405,18 @@
     $('#jeCancel').addEventListener('click', closeEditor);
     $('#jePhotoBtn').addEventListener('click', function () { $('#jeFile').click(); });
     $('#jeFile').addEventListener('change', function (e) { var f = e.target.files && e.target.files[0]; if (f) addPhotoFromFile(f); e.target.value = ''; });
+    $('#jeStickerBtn').addEventListener('click', function () {
+      openSheet(function (p) {
+        p.appendChild(el('h2', { class: 'h-sec', text: 'Add a sticker' }));
+        p.appendChild(el('div', { class: 'sticker-row' }, JOURNAL_STICKERS.map(function (s) {
+          return el('button', { text: s, 'aria-label': 'Sticker ' + s, onclick: function () {
+            var ta = $('#jeBody'); ta.value = (ta.value + (ta.value && !/\s$/.test(ta.value) ? ' ' : '') + s + ' ');
+            closeSheet(); ta.focus();
+          } });
+        })));
+        p.appendChild(el('button', { class: 'btn quiet', text: 'Close', onclick: closeSheet }));
+      });
+    });
     $('#jePromptBtn').addEventListener('click', function () {
       var pr = JOURNAL_PROMPTS[Math.floor(Math.random() * JOURNAL_PROMPTS.length)];
       var pEl = $('#jePrompt'); pEl.textContent = pr; pEl.classList.add('on'); $('#jeBody').focus();
@@ -1384,7 +1449,7 @@
 
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
-    getState: function () { return state; }, skillCount: SKILLS.length, version: '0.6.0',
+    getState: function () { return state; }, skillCount: SKILLS.length, version: '0.7.0',
     startSkill: startSkill // test hook
   };
 

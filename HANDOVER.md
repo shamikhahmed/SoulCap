@@ -1,4 +1,4 @@
-**Version:** 0.6.1 · SW `soulcap-v061`
+**Version:** 0.7.0 · SW `soulcap-v070`
 
 # SoulCap — Project Handover
 
@@ -6,7 +6,7 @@
 > first — it is the current truth as of 2026-07-21. The sections further down describe an
 > earlier architecture and are kept for reference only.
 
-## Current state (v0.6.1 — 2026-07-21)
+## Current state (v0.7.0 — 2026-07-21)
 
 **The product is the PWA in `docs/`.** Fully rewritten. Offline-first, local-only, **no network
 calls at all** after load — no account, no server, no LLM, no analytics. Everything is
@@ -28,8 +28,12 @@ calls at all** after load — no account, no server, no LLM, no analytics. Every
   Driven by a `pattern` field on those skills in `data.js`.
 - **Calm tab** — a *guided front door*, not a library mirror: "what do you need right now?"
   → where you are / what's to hand → a fitted shortlist, with "browse all" behind it.
-- **Journal** — private paper-feeling diary (serif, ruled lines): title, free writing, mood,
-  and photos down-scaled on device to protect local storage. Optional prompts.
+- **Journal** — private paper-feeling diary (serif, ruled lines that the text actually sits on):
+  title, free writing, mood, stickers, and photos down-scaled on device to protect local storage.
+  Optional prompts. **Customisable book cover** (title, subtitle, colour, sticker); entries list
+  under a "Contents" heading.
+- **Theme** — purple, matched to the logo mark (`#6C5CE7` light, `#A78BFA` dark, dimmer at night).
+  Toggling theme/settings no longer scrolls the page to the top (in-place re-render).
 - **Profile** — name / age / pronouns (optional, local). Home greeting uses the name.
 - **History / "Your story"** — optional, never in onboarding (in You): relationship status,
   household, family, relatives, work/study, habits, hobbies, past relationships, and (marked
@@ -63,7 +67,7 @@ it. An earlier duplicate AI stack and a dead JWT auth path are quarantined in `b
 `mobile/` (Expo) is lab source only.
 
 ### Tests & CI
-62 Playwright tests across mobile + desktop (`e2e/`). `.github/workflows/deploy.yml` gates the
+84 Playwright tests across mobile + desktop (`e2e/`). `.github/workflows/deploy.yml` gates the
 GitHub Pages deploy on `npm run verify`. `?demo=1` seeds a Pakistan-region demo.
 
 ### Open blockers (not code)
@@ -72,7 +76,7 @@ GitHub Pages deploy on `npm run verify`. `?demo=1` seeds a Pakistan-region demo.
 3. Kernel is keyword-based — blind to oblique risk. Needs the classifier in the eval-harness spec.
 4. Prisma schema has uncommitted enum additions needing a migration before any real DB use.
 
-Planning docs live in `~/Capricorn-Brain/AI/Claude-Code/SoulCap-*.md`.
+Planning docs (incl. the living **roadmap**) live in `~/Capricorn-Brain/AI/Claude-Code/SoulCap-*.md` — see SoulCap-Roadmap.md.
 
 ---
 
