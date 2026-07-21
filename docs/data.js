@@ -369,11 +369,9 @@ const CRISIS = {
     { name:'Crisis Text Line', detail:'Text HOME to 741741', href:'sms:741741&body=HOME' },
     { name:'Emergency services', detail:'911', href:'tel:911' }
   ],
-  UK: [
-    { name:'Samaritans', detail:'Call 116 123 — free, 24 hours', href:'tel:116123' },
-    { name:'Shout', detail:'Text SHOUT to 85258', href:'sms:85258&body=SHOUT' },
-    { name:'Emergency services', detail:'999', href:'tel:999' }
-  ],
+  // No region-specific UK list — removed at the owner's instruction. UK routes to
+  // the international directory (below) rather than an empty screen. findahelpline
+  // resolves to the user's real country, so it remains a working help path.
   INTL: [
     { name:'Find a Helpline', detail:'Verified crisis lines by country', href:'https://findahelpline.com' },
     { name:'IASP crisis centres', detail:'International directory', href:'https://www.iasp.info/resources/Crisis_Centres/' },
@@ -383,7 +381,7 @@ const CRISIS = {
 
 const REGIONS = [
   { code:'US',   label:'United States',  crisis:'US'   },
-  { code:'UK',   label:'United Kingdom', crisis:'UK'   },
+  { code:'UK',   label:'United Kingdom', crisis:'INTL' },
   { code:'PK',   label:'Pakistan',       crisis:'INTL' },
   { code:'INTL', label:'Somewhere else', crisis:'INTL' }
 ];

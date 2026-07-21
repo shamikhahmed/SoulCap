@@ -1,6 +1,72 @@
-**Version:** 0.3.0 · SW `soulcap-v030`
+**Version:** 0.5.1 · SW `soulcap-v051`
 
 # SoulCap — Project Handover
+
+> **⚠️ This document below the divider is historical (v0.3.0).** Read this header block
+> first — it is the current truth as of 2026-07-21. The sections further down describe an
+> earlier architecture and are kept for reference only.
+
+## Current state (v0.5.1 — 2026-07-21)
+
+**The product is the PWA in `docs/`.** Fully rewritten. Offline-first, local-only, **no network
+calls at all** after load — no account, no server, no LLM, no analytics. Everything is
+`localStorage`.
+
+### What the PWA is now
+- **Design System v2 "plum & sand"** — palette anchored to the brand mark (violet), chroma held
+  low so it reads calm. Three themes: light, dark, and **night** (dimmer than dark, for 3am).
+- **Five tabs:** Now · Calm · Techniques · Constellation · You. Splash + welcome screens.
+- **37 techniques** organised by mechanism (nervous system, senses, orienting, crowding out,
+  self-soothing, imagery, sleep, thinking, doing, people). Each documents *why it works*, its
+  contraindications, what it needs to hand, and whether it's discreet enough for public.
+- **Guided runner** — the app moves through each exercise *with* you: a breathing orb, spoken
+  steps (device speech synthesis, local), breathing haptics, and a "Guide me" auto-advance that
+  paces you like a therapist. Manual Next always available.
+- **Calm tab** with context filtering — "where are you" / "what have you got" narrows the library
+  to techniques you can actually perform right now.
+- **Constellation** — relationship map. Orbiting (frozen under reduced-motion), 3–5 rings,
+  drag people in/out to change closeness, optional person-to-person links and contact history
+  (both off by default; contact history never nags). `hard right now` suppresses all suggestions
+  for that person, permanently, silently.
+- **Safety plan** (Stanley-Brown), post-episode capture, Journey view (no score).
+- **Persistent floating Help** on every tab, plus a Help button on every screen and full-screen
+  panic pacer. Crisis routing is hard-coded, never generated.
+
+### Safety kernel
+Keyword tier gate (0–3) in `docs/app.js`, ported from `backend/src/ai/safety/safety-gate.service.ts`.
+**The two lists must be kept in sync by hand** until a shared engine package exists. Inflected
+crisis forms are covered (`ending my life`, not just `end my life`). Crisis flows are hard-coded.
+
+### Crisis directory (`docs/data.js`)
+- **US:** 988, Crisis Text Line, 911.
+- **UK:** the named lines (Samaritans / Shout / 999) were **removed at the owner's instruction**;
+  UK now routes to the international directory rather than an empty screen.
+- **Pakistan / elsewhere:** international directory (findahelpline resolves to the user's country,
+  IASP, local emergency). **No PK-specific line ships** — none verified as live and staffed.
+
+### Backend / mobile
+`backend/` (NestJS) builds clean (0 TS errors) but is **not deployed** and the PWA does not call
+it. An earlier duplicate AI stack and a dead JWT auth path are quarantined in `backend/_legacy/`.
+`mobile/` (Expo) is lab source only.
+
+### Tests & CI
+62 Playwright tests across mobile + desktop (`e2e/`). `.github/workflows/deploy.yml` gates the
+GitHub Pages deploy on `npm run verify`. `?demo=1` seeds a Pakistan-region demo.
+
+### Open blockers (not code)
+1. **No clinician has reviewed any technique.** Stated in-product on the Techniques screen.
+2. No Urdu clinical reviewer; no Urdu localisation.
+3. Kernel is keyword-based — blind to oblique risk. Needs the classifier in the eval-harness spec.
+4. Prisma schema has uncommitted enum additions needing a migration before any real DB use.
+
+Planning docs live in `~/Capricorn-Brain/AI/Claude-Code/SoulCap-*.md`.
+
+---
+
+<details>
+<summary><b>Historical handover (v0.3.0) — earlier architecture, kept for reference</b></summary>
+
+# SoulCap — Project Handover (v0.3.0, historical)
 
 > **Shipped truth:** GitHub Pages deploys **`docs/`** (vanilla PWA). Companion replies are a **Smart Companion** (rules + keyword safety) — **not** a live LLM. NestJS in `backend/` and Expo in `mobile/` are **lab source only**. Cap Store demo: `?demo=1`.
 
@@ -760,3 +826,5 @@ A full panel review was conducted (Staff Engineers, AI Architect, Clinical Psych
 *This document was last updated in Session 4 (2026-06-14) — full architectural review completed.*
 *Next update due: after Week 1 fixes land.*
 *Owner: update this document whenever you change architecture, add a module, or complete a backlog item.*
+
+</details>

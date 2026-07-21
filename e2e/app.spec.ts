@@ -72,6 +72,21 @@ test.describe('Skills', () => {
     await expect(page.locator('#runner')).toBeHidden();
   });
 
+  test('guided mode advances through steps on its own', async ({ page }) => {
+    await seedDemo(page);
+    await page.locator('#view-now .card .btn', { hasText: 'Begin' }).first().click();
+    await expect(page.locator('#runner')).toBeVisible();
+    const first = await page.locator('#runText').innerText();
+
+    await page.locator('#runGuide').click();
+    await expect(page.locator('#runGuide')).toHaveAttribute('aria-pressed', 'true');
+
+    // With no further taps, the step should change on the pacing timer.
+    await expect(async () => {
+      expect(await page.locator('#runText').innerText()).not.toBe(first);
+    }).toPass({ timeout: 12000 });
+  });
+
   test('an exercise can be abandoned without penalty', async ({ page }) => {
     await seedDemo(page);
     await page.locator('#view-now .card .btn', { hasText: 'Begin' }).first().click();

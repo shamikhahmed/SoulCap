@@ -298,49 +298,93 @@
     return 'Because ' + uniq.join(', and ') + '.';
   }
 
-  /* ── Skill runner ──────────────────────────────────────────────────────── */
+  /* ── Skill runner — guided, paced, spoken ──────────────────────────────────
+   * "Guide me" turns it into a therapist pacing you through: the orb breathes,
+   * each step is spoken, and it advances on its own at a calm reading pace.
+   * Manual Next is always there for anyone who wants to move faster.  */
   var runState = null;
+
   function startSkill(id) {
     var s = SKILLS.filter(function (x) { return x.id === id; })[0];
     if (!s) return;
-    runState = { skill: s, i: 0 };
+    runState = { skill: s, i: 0, guide: false, timer: null };
     $('#runner').classList.add('on');
     $('#runner').setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
     renderRunner();
   }
+
+  function clearRunTimer() { if (runState && runState.timer) { clearTimeout(runState.timer); runState.timer = null; } }
+
+  function stepDuration(text) {
+    // A calm reading pace, with a floor so short steps don't rush.
+    return Math.max(5200, text.split(/\s+/).length * 420);
+  }
+
+  function scheduleAdvance() {
+    clearRunTimer();
+    var s = runState.skill;
+    runState.timer = setTimeout(function () {
+      runState.i++;
+      renderRunner();
+    }, stepDuration(s.steps[runState.i]));
+  }
+
   function renderRunner() {
+    clearRunTimer();
     var s = runState.skill, done = runState.i >= s.steps.length;
+    var orb = $('#runOrb'), ring = $('#runOrbRing'), count = $('#runOrbCount');
+    count.textContent = '';
+
     $('#runStep').textContent = done ? s.name + ' · done' : s.name;
     var prog = $('#runProgress'); clear(prog);
-    s.steps.forEach(function (_, i) {
-      prog.appendChild(el('i', { class: i <= runState.i && !done ? 'on' : (done ? 'on' : '') }));
-    });
+    s.steps.forEach(function (_, i) { prog.appendChild(el('i', { class: (done || i <= runState.i) ? 'on' : '' })); });
+
     $('#runText').textContent = done ? 'That’s it. Did that help at all?' : s.steps[runState.i];
     var why = $('#runWhy');
     why.textContent = done ? '' : (runState.i === 0 ? s.mechanism : '');
     why.style.display = (!done && runState.i === 0) ? '' : 'none';
 
-    if (!done) { speak(s.steps[runState.i]); buzz(10); }
+    var guideBtn = $('#runGuide');
+    guideBtn.style.display = done ? 'none' : '';
+    guideBtn.setAttribute('aria-pressed', runState.guide ? 'true' : 'false');
+    $('#runGuideLabel').textContent = runState.guide ? 'Guiding' : 'Guide me';
+    $('#runGuideIcon').innerHTML = runState.guide ? '<path d="M6 5h4v14H6zM14 5h4v14h-4z"/>' : '<path d="M8 5v14l11-7z"/>';
+
+    if (!done) {
+      speak(s.steps[runState.i]); buzz(10);
+      if (runState.guide) scheduleAdvance();
+    } else {
+      hushVoice();
+      orb.style.transform = 'scale(.82)';
+    }
 
     var actions = $('#runActions'); clear(actions);
     if (done) {
-      hushVoice();
       actions.appendChild(el('button', { class: 'btn', text: 'It helped', onclick: function () { finishSkill(true); } }));
       actions.appendChild(el('button', { class: 'btn ghost', text: 'Not really', onclick: function () { finishSkill(false); } }));
       actions.appendChild(el('button', { class: 'btn quiet', text: 'Skip', onclick: function () { finishSkill(null); } }));
     } else {
       actions.appendChild(el('button', { class: 'btn',
         text: runState.i === s.steps.length - 1 ? 'Finish' : 'Next',
-        onclick: function () { runState.i++; renderRunner(); } }));
+        onclick: function () { clearRunTimer(); runState.i++; renderRunner(); } }));
       actions.appendChild(el('button', { class: 'btn quiet', text: 'Stop — no problem', onclick: closeRunner }));
     }
   }
+
+  function toggleGuide() {
+    if (!runState || runState.i >= runState.skill.steps.length) return;
+    runState.guide = !runState.guide;
+    buzz(12);
+    renderRunner();
+  }
+
   function finishSkill(helpful) {
     state.skillRuns.push({ t: Date.now(), id: runState.skill.id, helpful: helpful });
     save(); closeRunner(); render();
   }
   function closeRunner() {
+    clearRunTimer();
     $('#runner').classList.remove('on');
     $('#runner').setAttribute('aria-hidden', 'true');
     document.body.style.overflow = '';
@@ -511,7 +555,7 @@
     }
     var rings = ringDefs();
     rings.forEach(function (ring) {
-      svg.appendChild(s('circle', { class: 'orbit', cx: 200, cy: 200, r: ring.r }));
+      svg.appendChild(s('circle', { class: 'orbit', 'data-key': ring.key, cx: 200, cy: 200, r: ring.r }));
       var lab = s('text', { class: 'orbit-lab', x: 146, y: 200 - ring.r + 14, 'text-anchor': 'middle' });
       lab.textContent = ring.label;
       svg.appendChild(lab);
@@ -538,11 +582,10 @@
       var c = s('circle', { cx: pt.x, cy: pt.y, r: 15, fill: 'var(' + typeMeta(p.type).cssVar + ')',
                             stroke: p.hard ? 'var(--ink-3)' : 'var(--surface)', 'stroke-width': p.hard ? 1.5 : 2 });
       if (p.hard) c.setAttribute('stroke-dasharray', '3 3');
-      // Counter-rotate the label so text stays upright while the group spins.
       var t = s('text', { class: 'node-lab', x: pt.x, y: pt.y + (pt.y >= 200 ? 32 : -22) });
       t.textContent = p.name;
       node.appendChild(c); node.appendChild(t);
-      node.addEventListener('click', function () { personSheet(p.id); });
+      attachNodeDrag(node, c, t, p, svg);
       node.addEventListener('keydown', function (e) {
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); personSheet(p.id); }
       });
@@ -550,10 +593,69 @@
     });
     svg.appendChild(g);
 
-    svg.appendChild(s('circle', { cx: 200, cy: 200, r: 31, fill: 'var(--accent)' }));
+    // Sun on top of the orbiting group so it never sits behind a node.
+    svg.appendChild(s('circle', { class: 'sun', cx: 200, cy: 200, r: 31, fill: 'var(--accent)' }));
     var you = s('text', { class: 'sun-lab', x: 200, y: 205 });
     you.textContent = 'You';
     svg.appendChild(you);
+  }
+
+  /* Drag a person in or out to change how close they feel. Tap (no drag) opens
+   * their detail. The map freezes while dragging so screen↔SVG maths stays clean. */
+  function attachNodeDrag(node, circle, label, p, svg) {
+    var drag = null;
+    function localPoint(clientX, clientY) {
+      var gEl = document.getElementById('orbitGroup') || svg;
+      var pt = svg.createSVGPoint(); pt.x = clientX; pt.y = clientY;
+      var ctm = gEl.getScreenCTM();
+      return ctm ? pt.matrixTransform(ctm.inverse()) : null;
+    }
+    function nearestRing(x, y) {
+      var d = Math.hypot(x - 200, y - 200), rings = ringDefs(), best = rings[0], bd = Infinity;
+      rings.forEach(function (r) { var dd = Math.abs(r.r - d); if (dd < bd) { bd = dd; best = r; } });
+      return best;
+    }
+    function highlight(key) {
+      Array.prototype.forEach.call(svg.querySelectorAll('.orbit'), function (o) {
+        o.classList.toggle('drop', o.getAttribute('data-key') === key);
+      });
+    }
+    node.addEventListener('pointerdown', function (e) {
+      e.preventDefault();
+      drag = { moved: false, x: e.clientX, y: e.clientY };
+      node.classList.add('dragging');
+      svg.classList.add('frozen');
+      try { node.setPointerCapture(e.pointerId); } catch (_) {}
+    });
+    node.addEventListener('pointermove', function (e) {
+      if (!drag) return;
+      if (Math.abs(e.clientX - drag.x) + Math.abs(e.clientY - drag.y) > 5) drag.moved = true;
+      var lp = localPoint(e.clientX, e.clientY);
+      if (!lp) return;
+      // Inverse-then-forward transform is identity, so the node sits exactly under the finger.
+      circle.setAttribute('cx', lp.x); circle.setAttribute('cy', lp.y);
+      label.setAttribute('x', lp.x); label.setAttribute('y', lp.y + (lp.y >= 200 ? 32 : -22));
+      highlight(nearestRing(lp.x, lp.y).key);
+    });
+    function end(e) {
+      if (!drag) return;
+      var wasDrag = drag.moved;
+      node.classList.remove('dragging');
+      svg.classList.remove('frozen');
+      highlight(null);
+      if (wasDrag) {
+        var lp = localPoint(e.clientX, e.clientY);
+        if (lp) { p.ring = nearestRing(lp.x, lp.y).key; save(); buzz(12); }
+        render();
+      } else {
+        personSheet(p.id);
+      }
+      drag = null;
+    }
+    node.addEventListener('pointerup', end);
+    node.addEventListener('pointercancel', function () {
+      if (drag) { node.classList.remove('dragging'); svg.classList.remove('frozen'); highlight(null); drag = null; render(); }
+    });
   }
 
   function pos(p, rings) {
@@ -1090,13 +1192,16 @@
 
     if (!state.welcomed) {
       $('#tabs').style.display = 'none';
+      $('#fab').classList.remove('on');
       renderWelcome(); $('#view-welcome').classList.add('on'); return;
     }
     if (!state.onboarded) {
       $('#tabs').style.display = 'none';
+      $('#fab').classList.remove('on');
       renderOnboarding(); $('#view-onboarding').classList.add('on'); return;
     }
     $('#tabs').style.display = 'flex';
+    $('#fab').classList.add('on');
 
     if (tab === 'now') renderNow();
     if (tab === 'calm') renderCalm();
@@ -1115,7 +1220,9 @@
   function seedDemo() {
     state = clone(DEFAULT);
     state.welcomed = true; state.onboarded = true; state.ageOk = true;
-    state.region = 'UK'; state.consent = true;
+    // Pakistan is the target market — demo shows what those users actually see
+    // (the international directory), not a region-specific list they'd never get.
+    state.region = 'PK'; state.consent = true;
     state.concerns = ['Hard to switch off', 'Low mood'];
     var day = 86400000, now = Date.now();
     ['Wired','Flat','Steady','Heavy','Wired','Steady'].forEach(function (s, i) {
@@ -1142,7 +1249,9 @@
 
     $('#panicExit').addEventListener('click', closePanic);
     $('#runClose').addEventListener('click', closeRunner);
+    $('#runGuide').addEventListener('click', toggleGuide);
     $('#sheetScrim').addEventListener('click', closeSheet);
+    $('#fab').addEventListener('click', function () { buzz(14); openPanic(); });
 
     Array.prototype.forEach.call($('#tabs').children, function (b) {
       b.addEventListener('click', function () { buzz(8); selectTab(b.dataset.tab); });

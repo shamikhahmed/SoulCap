@@ -1,7 +1,7 @@
 {
   "app": "SoulCap",
-  "version": "0.5.0",
-  "swCache": "soulcap-v050",
+  "version": "0.5.1",
+  "swCache": "soulcap-v051",
   "updated": "2026-07-21",
   "status": "clinical-path",
   "note": "Design System v2 (plum & sand, brand-matched). 37 techniques with mechanisms + contraindications. Calm tab with context filtering. Orbiting Constellation, 3-5 rings. Safety plan. Voice guidance, haptics, night mode. No LLM. Skill content NOT clinician-reviewed. No PK crisis directory."

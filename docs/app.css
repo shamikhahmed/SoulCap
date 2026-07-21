@@ -272,21 +272,26 @@ input[type="range"]{width:100%;accent-color:var(--accent)}
 
 /* ── Constellation ─────────────────────────────────────── */
 .map-wrap{
-  background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
+  background:radial-gradient(circle at 50% 46%,var(--accent-soft) 0%,var(--surface) 60%);
+  border:1px solid var(--line);border-radius:var(--r-lg);
   padding:12px;box-shadow:var(--shadow-1);overflow:hidden;
 }
 #map{display:block;width:100%;height:auto;touch-action:none}
 .orbit{fill:none;stroke:var(--line-strong);stroke-width:1}
+.orbit.drop{stroke:var(--accent);stroke-width:2;opacity:.7}
 .orbit-lab{font-family:var(--ui);font-size:9px;font-weight:700;letter-spacing:.13em;fill:var(--ink-3)}
 .node-lab{font-family:var(--ui);font-size:11.5px;font-weight:600;fill:var(--ink-2);text-anchor:middle;pointer-events:none}
+.sun{filter:drop-shadow(0 0 10px var(--accent-glow));animation:sunPulse 7s var(--ease-soft) infinite}
+@keyframes sunPulse{0%,100%{opacity:.94}50%{opacity:1}}
 .sun-lab{font-family:var(--voice);font-size:15px;font-weight:500;fill:var(--accent-ink);text-anchor:middle;pointer-events:none}
 .node{cursor:grab}
 .node.dragging{cursor:grabbing}
 .node circle{transition:stroke-width var(--dur-fast) var(--ease),r var(--dur-fast) var(--ease)}
 .node:hover circle,.node:focus-visible circle{stroke-width:3.5}
+.node.dragging circle{stroke-width:3.5;filter:drop-shadow(0 3px 8px rgba(0,0,0,.3))}
 .node.hard circle{opacity:.42}
 .node.hard text{opacity:.55}
-.edge{stroke:var(--line-strong);stroke-width:1;opacity:.5}
+.edge{stroke:var(--accent);stroke-width:1;opacity:.28}
 /* The map turns slowly — one revolution every two and a half minutes. Slow
    enough to read as drift rather than motion, and frozen under reduced-motion. */
 #orbitGroup{transform-origin:200px 200px;animation:spin 150s linear infinite}
@@ -300,6 +305,8 @@ input[type="range"]{width:100%;accent-color:var(--accent)}
   animation:spinBack 150s linear infinite;
 }
 @keyframes spinBack{from{transform:rotate(0deg)}to{transform:rotate(-360deg)}}
+/* While a person is being dragged, hold the whole map still so coordinates map cleanly. */
+#map.frozen #orbitGroup,#map.frozen #orbitGroup .node-lab{animation-play-state:paused}
 .legend{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
 .legend span{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink-2)}
 .legend i{width:9px;height:9px;border-radius:50%;display:block;flex:none}
@@ -318,20 +325,63 @@ input[type="range"]{width:100%;accent-color:var(--accent)}
 @keyframes sheetUp{from{transform:translateY(100%)}to{transform:none}}
 #sheet .grab{width:38px;height:4px;border-radius:2px;background:var(--line-strong);margin:0 auto 8px;flex:none}
 
-/* ── Runner ────────────────────────────────────────────── */
-#runner{position:fixed;inset:0;background:var(--ground);z-index:90;display:none;flex-direction:column;padding:calc(var(--sat) + 28px) 24px calc(var(--sab) + 20px);gap:18px}
+/* ── Runner — the app exercises *with* you ─────────────────
+   Every technique gets a living companion: a slow breathing orb, paced
+   auto-advance, and spoken steps. It should feel guided, not read. */
+#runner{position:fixed;inset:0;background:var(--ground);z-index:90;display:none;flex-direction:column;padding:calc(var(--sat) + 26px) 24px calc(var(--sab) + 20px);gap:16px}
 #runner.on{display:flex;animation:viewIn 320ms var(--ease-soft) both}
+.run-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .run-step{font-size:12px;letter-spacing:.13em;text-transform:uppercase;font-weight:700;color:var(--ink-3);margin:0}
 .run-progress{display:flex;gap:4px}
 .run-progress i{height:3px;flex:1;border-radius:2px;background:var(--line-strong);display:block;transition:background var(--dur-base) var(--ease)}
 .run-progress i.on{background:var(--accent)}
-.run-text{font-size:27px;line-height:1.36;letter-spacing:-.015em;font-weight:500;margin:0;flex:1;display:flex;align-items:center;text-wrap:balance}
-.run-why{
-  font-family:var(--voice);font-style:italic;font-size:15.5px;line-height:1.5;color:var(--ink-3);
-  margin:0;padding-left:13px;border-left:2px solid var(--line);
+
+.run-stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;text-align:center;position:relative}
+.run-orb-hold{position:relative;width:210px;height:210px;display:flex;align-items:center;justify-content:center;flex:none}
+.run-orb{
+  width:150px;height:150px;border-radius:50%;
+  background:radial-gradient(circle at 40% 35%,var(--accent-glow) 0%,var(--accent-soft) 55%,transparent 78%);
+  border:1.5px solid var(--accent);
+  display:flex;align-items:center;justify-content:center;
+  animation:orbBreathe 11s var(--ease-soft) infinite;
 }
+.run-orb-ring{position:absolute;width:150px;height:150px;border-radius:50%;border:1px solid var(--accent);opacity:.22;animation:orbBreathe 11s var(--ease-soft) infinite;animation-delay:.25s}
+/* Breath-family techniques drive the orb on a real 4-4-4-4 count via JS instead. */
+.run-orb.paced{animation:none;transition:transform 4s var(--ease-soft)}
+.run-orb-ring.paced{animation:none;transition:transform 4s var(--ease-soft)}
+@keyframes orbBreathe{0%,100%{transform:scale(.82)}50%{transform:scale(1.04)}}
+.run-orb-count{font-size:44px;font-weight:200;color:var(--accent);font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+
+.run-text{font-size:26px;line-height:1.36;letter-spacing:-.015em;font-weight:500;margin:0;max-width:16em;text-wrap:balance}
+.run-why{
+  font-family:var(--voice);font-style:italic;font-size:15px;line-height:1.5;color:var(--ink-3);
+  margin:0;max-width:26em;
+}
+.run-guide{
+  display:inline-flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600;color:var(--ink-3);
+  background:var(--sunken);border:1px solid var(--line);border-radius:999px;padding:8px 15px;min-height:40px;
+  transition:color var(--dur-fast) var(--ease),border-color var(--dur-fast) var(--ease);
+}
+.run-guide[aria-pressed="true"]{color:var(--accent);border-color:var(--accent)}
+.run-guide svg{display:block}
 
 /* ── Misc ──────────────────────────────────────────────── */
+/* Persistent floating help — reachable from any tab in one tap, always. */
+#fab{
+  position:fixed;right:16px;z-index:60;
+  bottom:calc(var(--tab-h) + var(--sab) + 14px);
+  display:none;align-items:center;gap:8px;
+  background:var(--crisis);color:#fff;border:none;border-radius:999px;
+  padding:12px 17px;min-height:48px;font-size:14.5px;font-weight:600;
+  box-shadow:0 6px 20px rgba(0,0,0,.28);
+  animation:fabIn 400ms var(--ease-soft) both;
+}
+#fab.on{display:inline-flex}
+#fab:active{transform:scale(.96)}
+#fab svg{display:block}
+@keyframes fabIn{from{opacity:0;transform:translateY(10px) scale(.9)}to{opacity:1;transform:none}}
+@media (min-width:600px){#fab{right:calc(50% - 290px + 16px)}}
+
 .bar{height:6px;border-radius:3px;background:var(--sunken);overflow:hidden}
 .bar i{display:block;height:100%;border-radius:3px;background:var(--accent);transition:width var(--dur-base) var(--ease)}
 .spark{display:block;width:100%;height:46px}

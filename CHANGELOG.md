@@ -1,3 +1,24 @@
+## [0.5.1] — 2026-07-21
+
+### Added
+- **Guided runner — the app exercises *with* you.** Every technique now runs with a breathing
+  orb, spoken steps, and a **"Guide me"** mode that paces you step-by-step on a calm timer, like
+  a therapist walking you through it. Manual Next stays available for anyone who wants to move
+  faster. Breathing haptics on the pacer.
+- **Persistent floating Help button** on every tab, so crisis routing is always one tap away
+  without scrolling.
+- **Drag people in and out on the Constellation** to change how close they feel — the map freezes
+  while you drag, snaps to the nearest ring, and resumes its slow orbit on release.
+- Constellation polish — centre glow, a gently pulsing "you", a soft radial field behind the map.
+
+### Changed
+- **Removed the UK crisis lines** (Samaritans, Shout, 999) at the owner's instruction. UK now
+  routes to the international directory (findahelpline, which resolves to the user's real country)
+  rather than an empty help screen. US 988 unchanged.
+- Demo (`?demo=1`) now seeds the Pakistan region, so it shows what target users actually see.
+- SW `soulcap-v051`. Tests now 62 across mobile + desktop, incl. guided mode, persistent help,
+  and a guard that the removed UK lines appear for no one.
+
 ## [0.5.0] — 2026-07-21
 
 Design System v2 and a much larger technique library.

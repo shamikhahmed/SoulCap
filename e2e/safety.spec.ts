@@ -108,13 +108,42 @@ test.describe('Help is always reachable', () => {
     const links = page.locator('#panicLinks a');
     expect(await links.count()).toBeGreaterThan(0);
 
-    // Demo region is UK — Samaritans must be present and be a real tel: link.
+    // Demo region is Pakistan → international directory. Find a Helpline resolves
+    // to the user's real country and must be a working https link.
     const first = links.first();
-    await expect(first).toContainText('Samaritans');
-    expect(await first.getAttribute('href')).toBe('tel:116123');
+    await expect(first).toContainText('Find a Helpline');
+    expect(await first.getAttribute('href')).toContain('findahelpline.com');
 
     await page.locator('#panicExit').click();
     await expect(page.locator('#panic')).toBeHidden();
+  });
+
+  test('persistent help button sits on every tab and opens help', async ({ page }) => {
+    await seedDemo(page);
+    for (const tab of ['now', 'calm', 'skills', 'map', 'me']) {
+      await page.evaluate((t) => {
+        (document.querySelector(`#tabs button[data-tab="${t}"]`) as HTMLElement).click();
+      }, tab);
+      await expect(page.locator('#fab')).toBeVisible();
+    }
+    await page.locator('#fab').click();
+    await expect(page.locator('#panic')).toBeVisible();
+  });
+
+  test('the removed UK lines appear for no one', async ({ page }) => {
+    await page.goto('/');
+    await dismissSplash(page);
+    await page.getByRole('button', { name: 'Begin' }).click();
+    await page.getByRole('button', { name: '18 or older' }).click();
+    await page.getByRole('button', { name: /United Kingdom/ }).click();
+    await page.getByRole('button', { name: 'I understand' }).click();
+    await page.getByRole('button', { name: /Skip — just let me in/ }).click();
+    await page.locator('.view.on .help-btn').click();
+    const text = await page.locator('#panicLinks').innerText();
+    expect(text).not.toContain('Samaritans');
+    expect(text).not.toContain('85258');
+    expect(text).not.toContain('116 123');
+    expect(text).toContain('Find a Helpline'); // international floor, never empty
   });
 
   test('no placeholder or unverified crisis text ships', async ({ page }) => {

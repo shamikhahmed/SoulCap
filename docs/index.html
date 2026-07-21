@@ -71,6 +71,12 @@ if(t==='light'||t==='dark'||t==='night')document.documentElement.setAttribute('d
   </nav>
 </div>
 
+<!-- Persistent help — reachable from every tab in one tap -->
+<button id="fab" aria-label="I need help now">
+  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a7 7 0 0 0-4 12.7V18h8v-2.3A7 7 0 0 0 12 3z"/><path d="M10 21h4"/></svg>
+  Help
+</button>
+
 <!-- ── Help now ──────────────────────────────────────────────── -->
 <div id="panic" role="dialog" aria-modal="true" aria-label="Help now" aria-hidden="true">
   <div>
@@ -86,12 +92,24 @@ if(t==='light'||t==='dark'||t==='night')document.documentElement.setAttribute('d
   <button id="panicExit" class="btn quiet">I’m okay — go back</button>
 </div>
 
-<!-- ── Exercise runner ───────────────────────────────────────── -->
+<!-- ── Exercise runner — the app moves through it with you ────── -->
 <div id="runner" role="dialog" aria-modal="true" aria-label="Exercise" aria-hidden="true">
-  <p id="runStep" class="run-step"></p>
+  <div class="run-top">
+    <p id="runStep" class="run-step"></p>
+    <button id="runGuide" class="run-guide" aria-pressed="false">
+      <svg id="runGuideIcon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+      <span id="runGuideLabel">Guide me</span>
+    </button>
+  </div>
   <div id="runProgress" class="run-progress"></div>
-  <p id="runText" class="run-text"></p>
-  <p id="runWhy" class="run-why"></p>
+  <div class="run-stage">
+    <div class="run-orb-hold">
+      <div id="runOrbRing" class="run-orb-ring"></div>
+      <div id="runOrb" class="run-orb"><span id="runOrbCount" class="run-orb-count"></span></div>
+    </div>
+    <p id="runText" class="run-text"></p>
+    <p id="runWhy" class="run-why"></p>
+  </div>
   <div id="runActions" class="stack"></div>
   <button id="runClose" class="sr">Close exercise</button>
 </div>

@@ -1,6 +1,6 @@
 # SoulCap — Safety & Truth Inventory
 
-**Version:** 0.5.0 · **Updated:** 2026-07-21
+**Version:** 0.5.1 · **Updated:** 2026-07-21
 **Status:** **Clinical path** — self-guided wellness companion.
 **Not** a cleared SaMD / medical device. **Not** a substitute for licensed care.
 See also `CLINICAL.md` and `Capricorn-Brain/AI/Claude-Code/SoulCap-Eval-Harness.md`.
@@ -44,7 +44,7 @@ Previous release preserved at `docs/legacy-v032.html`.
 - Constellation `hard right now` suppresses all suggestions for that person, permanently
   and silently. No reconciliation nudges.
 - The app never contacts anyone. "Open messages" hands off to the OS with an empty draft.
-- 56 Playwright tests across mobile + desktop; safety tests gate the deploy in CI.
+- 62 Playwright tests across mobile + desktop; safety tests gate the deploy in CI.
 
 ### Known gap fixed this release
 
@@ -62,7 +62,7 @@ certainly more of them still in there.
 | Region | Shipped | Basis |
 |---|---|---|
 | US | 988, Crisis Text Line 741741, 911 | Long-established, publicly documented |
-| UK | Samaritans 116 123, Shout 85258, 999 | Long-established, publicly documented |
+| UK | **Removed at owner request — routed to international** | Named lines deleted 2026-07-21; floor kept so the screen is never empty |
 | **Pakistan** | **None — routed to international directory** | **No local service independently verified as live and staffed** |
 | Elsewhere | findahelpline.com, IASP directory | International aggregators |
 
