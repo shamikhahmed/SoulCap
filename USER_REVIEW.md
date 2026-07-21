@@ -1,4 +1,4 @@
-# SoulCap v0.8.0 — Synthetic User Review
+# SoulCap v0.8.1 — Synthetic User Review
 
 **Reviewed:** 2026-07-21  
 **Scope:** onboarding, Help, Now, Calm, journal, Constellation, persistence, privacy, mobile,
@@ -115,7 +115,7 @@ is effectively immediate, Escape closes the editor, and Help remains directly re
 
 ## Release evidence
 
-- 130 Playwright checks across mobile and desktop.
+- 132 Playwright checks across mobile and desktop.
 - Five synthetic personas, each executed in both projects.
 - Ten deduplicated SoulCap gallery captures: eight phone screens, one iPad, one Mac.
 - Static website product page reviewed for content, gallery wiring, launch link, version, and

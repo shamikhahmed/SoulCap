@@ -1,12 +1,12 @@
-**Version:** 0.8.0 · SW `soulcap-v080`
+**Version:** 0.8.1 · SW `soulcap-v081`
 
 # SoulCap — Project Handover
 
 > **⚠️ This document below the divider is historical (v0.3.0).** Read this header block
-> first — it is the current truth as of 2026-07-21. The sections further down describe an
+> first — it is the current truth as of 2026-07-22. The sections further down describe an
 > earlier architecture and are kept for reference only.
 
-## Current state (v0.8.0 — 2026-07-21)
+## Current state (v0.8.1 — 2026-07-22)
 
 **The product is the PWA in `docs/`.** Fully rewritten. Offline-first, local-only, **no network
 calls at all** after load — no account, no server, no LLM, no analytics. Everything is
@@ -14,7 +14,8 @@ calls at all** after load — no account, no server, no LLM, no analytics. Every
 
 ### What the PWA is now
 - **Design System v2 "plum & sand"** — palette anchored to the brand mark (violet), chroma held
-  low so it reads calm. Three themes: light, dark, and **night** (dimmer than dark, for 3am).
+  low so it reads calm. Compact iPhone chrome uses a small label scale over 48px tap areas.
+  Three themes: light, dark, and **night** (dimmer than dark, for 3am).
 - **Five tabs:** Now · Calm · Journal · People · You (Techniques folded into Calm as a guided front door). Splash + welcome screens.
 - **37 techniques** organised by mechanism (nervous system, senses, orienting, crowding out,
   self-soothing, imagery, sleep, thinking, doing, people). Each documents *why it works*, its
@@ -67,7 +68,7 @@ it. An earlier duplicate AI stack and a dead JWT auth path are quarantined in `b
 `mobile/` (Expo) is lab source only.
 
 ### Tests & CI
-130 Playwright checks across mobile + desktop (`e2e/`). `.github/workflows/deploy.yml` gates the
+132 Playwright checks across mobile + desktop (`e2e/`). `.github/workflows/deploy.yml` gates the
 GitHub Pages deploy on `npm run verify`. `?demo=1` seeds a Pakistan-region demo.
 
 ### Open blockers (not code)

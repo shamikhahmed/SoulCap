@@ -1,3 +1,16 @@
+## [0.8.1] — 2026-07-22
+
+### Fixed
+- Restored the compact iPhone type hierarchy used before v0.8.0. Footer tabs, eyebrows,
+  metadata, status badges, map labels, journal dates, and small guidance no longer compete with
+  primary content.
+- Kept interactive hit areas at 48px while reducing only their visual label scale. Body copy,
+  headings, input text, and browser zoom remain unchanged.
+
+### Changed
+- SW `soulcap-v081`. Playwright now runs 132 checks across mobile + desktop, including a visual
+  density regression check for footer labels and compact chrome.
+
 ## [0.8.0] — 2026-07-21
 
 ### Added

@@ -1,6 +1,6 @@
 # SoulCap — Investor Deck
 
-> **Product honesty (read first):** Live v0.8.0 GitHub Pages product is an offline
+> **Product honesty (read first):** Live v0.8.1 GitHub Pages product is an offline
 > **self-guided wellness PWA** — deterministic suggestions, keyword safety, and a private
 > on-device journal. NestJS + model orchestration in `backend/` is **lab source only (not
 > deployed)**. Do not pitch the Pages demo as AI, therapy, clinical care, or a crisis service.

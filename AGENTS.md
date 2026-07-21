@@ -54,7 +54,9 @@ Success = the user needs the app **less** over time. Never optimise for time-in-
   fake typing indicators, confetti on emotional content, or "I care about you" copy.
 - One filled (accent) button per screen; everything else outlined/plain.
 - Motion is ease-out, no overshoot; honour `prefers-reduced-motion`.
-- Nothing below 15px. Serif (`--voice`) = the app speaking; sans (`--ui`) = chrome/labels.
+- Body copy stays 15px or larger. Compact iPhone chrome and metadata may use 9–14.5px when
+  contrast is strong and browser zoom remains enabled. Tap areas stay at least 48px.
+  Serif (`--voice`) = the app speaking; sans (`--ui`) = chrome/labels.
 - Purple accent, matched to the logo (`--accent`). Low chroma, warm neutrals.
 - Emoji are allowed **as user content** (journal moods/stickers) but never as UI section markers.
 
@@ -173,5 +175,6 @@ change after the SW cached the old build, unregister SW + clear caches in DevToo
 
 Does it reduce stress? Is it calming, simple, honest about limits? Is it private (no network)?
 Could it overwhelm someone mid-panic? Is it accessible (contrast both themes, ≥48px targets,
-reduced-motion, ≥15px text)? Does the safety behaviour have a test? Would Apple ship this?
+reduced-motion, readable body copy, zoomable compact labels)? Does the safety behaviour have a
+test? Would Apple ship this?
 If any answer is no, it's not done.

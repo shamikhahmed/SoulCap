@@ -1,6 +1,6 @@
 # SoulCap — Features (S/W/L/R)
 
-**Updated:** 2026-07-21 · Self-guided wellness companion · **v0.8.0**
+**Updated:** 2026-07-22 · Self-guided wellness companion · **v0.8.1**
 **Codes:** S = shipped · W = next wave · L = later · R = rejected
 
 ## S
@@ -14,7 +14,7 @@
   search, and optional page decoration
 - Constellation relationship map, optional history, safety plan, and correction-friendly Journey
 - Light, dark, and night themes; reduced-motion support; local export and delete
-- 130 Playwright checks across mobile + desktop; CI gates GitHub Pages deploy
+- 132 Playwright checks across mobile + desktop; CI gates GitHub Pages deploy
 - Nest backend and Expo mobile **source labs only**; neither is wired to the PWA
 
 ## W

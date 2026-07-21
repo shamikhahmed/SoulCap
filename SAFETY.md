@@ -1,6 +1,6 @@
 # SoulCap — Safety & Truth Inventory
 
-**Version:** 0.8.0 · **Updated:** 2026-07-21
+**Version:** 0.8.1 · **Updated:** 2026-07-22
 **Status:** **Clinical path** — self-guided wellness companion.
 **Not** a cleared SaMD / medical device. **Not** a substitute for licensed care.
 See also `CLINICAL.md` and `Capricorn-Brain/AI/Claude-Code/SoulCap-Eval-Harness.md`.
@@ -52,7 +52,7 @@ Historical releases remain available through Git history, not as publicly served
 - Constellation `hard right now` suppresses all suggestions for that person, permanently
   and silently. No reconciliation nudges.
 - The app never contacts anyone. "Open messages" hands off to the OS with an empty draft.
-- 130 Playwright checks across mobile + desktop; safety tests gate the deploy in CI.
+- 132 Playwright checks across mobile + desktop; safety tests gate the deploy in CI.
 - Installed-app `?panic=1` now opens Help immediately and has a deploy-gating regression test.
 
 ### Known safety fixes
@@ -66,7 +66,7 @@ certainly more of them still in there.
 
 ---
 
-## Reaching out — no crisis directory (v0.8.0)
+## Reaching out — no crisis directory (v0.8.1)
 
 **All crisis phone numbers and the country/region selection were removed at the owner's
 instruction** (v0.7.1). Rationale: we cannot promise any specific line is reachable, and a number

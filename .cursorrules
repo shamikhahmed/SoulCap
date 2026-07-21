@@ -29,8 +29,9 @@ NOT an AI therapist, mood tracker, or crisis service. Success = the user needs t
 - After a state change call `save()` then `render()` (or `reRender()` to keep scroll position).
 - Keep the safety keyword lists in `docs/app.js` (`CRISIS_HARD` etc) in sync with
   `backend/src/ai/safety/safety-gate.service.ts`.
-- Honour `prefers-reduced-motion`; ≥15px text; ≥48px touch targets; contrast in both themes;
-  one filled accent button per screen.
+- Honour `prefers-reduced-motion`; keep body copy ≥15px; allow compact 9–14.5px iPhone
+ labels/metadata only with strong contrast and browser zoom; keep touch targets ≥48px;
+ one filled accent button per screen.
 - Safety-critical behaviour MUST get a Playwright test in `e2e/` (it gates the deploy).
 
 ## Ship workflow (every change that touches `docs/`)

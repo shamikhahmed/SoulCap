@@ -514,6 +514,18 @@ test.describe('History & adaptation', () => {
 });
 
 test.describe('Accessibility', () => {
+  test('compact labels preserve the iPhone visual hierarchy', async ({ page }) => {
+    await seedDemo(page);
+    const sizes = await page.evaluate(() => ({
+      tab: parseFloat(getComputedStyle(document.querySelector('#tabs button span')!).fontSize),
+      eyebrow: parseFloat(getComputedStyle(document.querySelector('.view.on .eyebrow')!).fontSize),
+      tabTarget: document.querySelector('#tabs button')!.getBoundingClientRect().height,
+    }));
+    expect(sizes.tab).toBeLessThanOrEqual(10.5);
+    expect(sizes.eyebrow).toBeLessThanOrEqual(12);
+    expect(sizes.tabTarget).toBeGreaterThanOrEqual(48);
+  });
+
   test('touch targets meet the 48px minimum', async ({ page }) => {
     await seedDemo(page);
     const small = await page.evaluate(() => {

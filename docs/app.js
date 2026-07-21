@@ -1608,7 +1608,7 @@
     v.appendChild(el('p', { class: 'p-sm', style: 'text-align:center', text: 'SoulCap · v' + APP_VERSION }));
     v.appendChild(el('button', { class: 'help-btn', text: 'I need help now', onclick: openPanic }));
   }
-  var APP_VERSION = '0.8.0';
+  var APP_VERSION = '0.8.1';
   function settingsGroup(v, title, kids) { v.appendChild(el('p', { class: 'eyebrow', style: 'margin-top:14px', text: title })); kids.forEach(function (k) { if (k) v.appendChild(k); }); }
   function toggleBtn(label, on, fn) { return el('button', { class: 'btn ghost', style: 'display:flex;justify-content:space-between', onclick: fn, html: '<span>' + label + '</span><span style="color:var(--accent);font-weight:600">' + (on ? 'On' : 'Off') + '</span>' }); }
   function settingChips(opts, isOn, fn) { return el('div', { class: 'chips' }, opts.map(function (o) { return el('button', { class: 'chip', 'aria-pressed': isOn(o) ? 'true' : 'false', text: o.l, onclick: function () { fn(o); } }); })); }
@@ -1863,7 +1863,7 @@
 
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
-    getState: function () { return state; }, skillCount: SKILLS.length, version: '0.8.0',
+    getState: function () { return state; }, skillCount: SKILLS.length, version: '0.8.1',
     startSkill: startSkill // test hook
   };
 
