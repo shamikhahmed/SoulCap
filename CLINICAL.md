@@ -1,20 +1,21 @@
-# SoulCap — Clinical Path (v0.2.3)
+# SoulCap — Clinical Readiness Gaps (v0.8.0)
 
-**Updated:** 2026-07-19  
-**Status:** Clinical **path** — clinician-supported wellness companion.  
+**Updated:** 2026-07-21
+**Status:** Self-guided wellness companion; clinical work is undeployed lab source only.
 **Not** a cleared SaMD / medical device. **Not** a substitute for licensed care.
 
-This file is the regulated + clinician MVP source of truth. Pair with `SAFETY.md`.
+This file records what would be required before any clinical path. `SAFETY.md` is the shipped
+product truth. Nothing here turns the PWA into clinical care.
 
 ---
 
 ## What “clinical” means here
 
-| Layer | Done in v0.2.0 | Still open |
+| Layer | Current reality | Still open |
 |---|---|---|
-| **Safety production gate** | Keyword crisis rail in PWA chat · panic/988 · consent checkbox · local audit log | Deployed Nest API · live webhook · LLM hard-rail e2e |
-| **Clinician MVP** | Clinician panel (notes, consent view, audit) in PWA · Prisma roles already include `THERAPIST` · `/api/v1/clinical/*` stubs | AuthZ org membership · real DB persistence · PHI encryption ops |
-| **Marketing / docs** | “Clinician-supported wellness companion (clinical path)” | Never claim FDA/CE clearance, diagnosis, or crisis counseling |
+| **Safety production gate** | Offline keyword gate, hard-coded number-free Help, consent, deploy-gating tests | Clinical review, broader eval set, oblique-risk classifier |
+| **Clinician MVP** | Nest/Prisma source stubs only; not deployed or connected | AuthZ, real persistence, PHI controls, audit, operations, clinical governance |
+| **Marketing / docs** | Self-guided wellness companion | Never claim FDA/CE clearance, diagnosis, treatment, or crisis counselling |
 | **Regulated (SaMD)** | Gap checklist below | Legal, QMS, clinical evaluation, IRB if research |
 
 ---
@@ -23,7 +24,7 @@ This file is the regulated + clinician MVP source of truth. Pair with `SAFETY.md
 
 1. Companion **must not** claim therapist / doctor / crisis-counselor identity.
 2. Companion **must not** diagnose.
-3. Tier-3 crisis language → force resource handoff (988 / Crisis Text / IASP / emergency).
+3. Tier-3 crisis language → force hard-coded, country-agnostic Help guidance.
 4. Clinician notes are **clinician-authored**, not generated as “medical advice.”
 5. Real-user PHI production requires: signed BAA (if US HIPAA applies), encryption, access audit, retention policy, breach process.
 
@@ -42,7 +43,7 @@ Use this before any claim that looks medical-device-shaped.
 | 5 | Usability / IEC 62366 | ❌ |
 | 6 | Cybersecurity + PHI threat model | 🟡 Inventory only |
 | 7 | Post-market surveillance plan | ❌ |
-| 8 | Labeling / IFU (instructions for use) | 🟡 Crisis copy in-app |
+| 8 | Labeling / IFU (instructions for use) | 🟡 Help copy in-app |
 | 9 | Licensed clinician protocol review | ❌ Required before real patients |
 | 10 | Informed consent (versioned, recorded) | 🟡 Local PWA consent + Profile fields in Prisma |
 | 11 | Audit trail (who/what/when) | 🟡 PWA local + `AuditLog` model |
@@ -54,12 +55,11 @@ Use this before any claim that looks medical-device-shaped.
 
 ## Clinician MVP surfaces
 
-### PWA (docs/) — works offline today
+### PWA (`docs/`) — works offline today
 
-- Mode toggle: **Member / Clinician**
-- Session notes (local)
-- Consent status (local + mirrors Profile intent)
-- Safety/audit event list (local)
+- No clinician mode, clinician notes, EHR, account, or PHI backend
+- Self-guided skills, private journal, Constellation, check-ins, and safety plan
+- Consent and all user data stay in localStorage
 
 ### Nest API stubs — `/api/v1/clinical`
 
@@ -72,31 +72,32 @@ Requires Clerk + org role `THERAPIST` or `ADMIN` for production; stubs accept `x
 
 ---
 
-## Architecture plan (v0.2)
+## Architecture boundary
 
 ```
-Member PWA ──consent──► Chat (keyword SafetyGate client) ──tier3──► Crisis UI / 988
-Clinician panel ──notes/audit──► localStorage (demo) │ Nest /clinical (when API live)
-Prisma: Profile.consent* · MembershipRole.THERAPIST · AuditLog · SafetyFlag
+Offline PWA ──local state──► deterministic skills/journal/safety kernel
+Offline PWA ──no connection──X Nest /clinical lab
+Nest lab ──future only──► auth + database + audit, after separate approval
 ```
 
 ---
 
 ## Test plan
 
-- [ ] Onboarding blocks chat until consent checked
-- [ ] Message containing crisis keywords opens Panic + freezes LLM mock reply
-- [ ] Clinician note persists after reload
-- [ ] Audit log records consent + crisis events
-- [ ] `npm test` safety-gate unit (backend)
-- [ ] No string claims “FDA”, “diagnosed”, “your therapist” in marketing HTML
+- [x] Age/consent onboarding gates the self-guided PWA
+- [x] Tier-3 response uses hard-coded copy
+- [x] Help is reachable from every screen and installed shortcut
+- [x] Data export and deletion cover shipped local state
+- [ ] Non-THERAPIST rejected from any future `/clinical` deployment
+- [ ] Clinician records encrypted, audited, retained, and deleted under reviewed policy
+- [ ] Independent clinical and safety evaluation completed before clinical claims
 
 ## Rollback
 
-Revert tag to `v0.1.0`. Restore `docs/sw.js` cache name. Hide clinician tab via `sc_clinical=0`.
+Use a normal revert and a new service-worker cache version. Never roll back by deleting user data.
 
 ---
 
 ## Version
 
-Tracks `VERSION.json` → **0.2.3** · SW `soulcap-v023`.
+Tracks `VERSION.json` → **0.8.0** · SW `soulcap-v080`.

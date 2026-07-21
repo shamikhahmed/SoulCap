@@ -87,7 +87,43 @@ test.describe('Safety kernel — risk tiers', () => {
   });
 });
 
+test.describe('Local-only spoken guidance', () => {
+  test('remote-capable system voices are never used', async ({ page }) => {
+    await page.addInitScript(() => {
+      (window as any).__spokenCount = 0;
+      const remoteVoice = { name: 'Remote English', lang: 'en-US', localService: false };
+      Object.defineProperty(window, 'speechSynthesis', {
+        configurable: true,
+        value: {
+          getVoices: () => [remoteVoice],
+          cancel: () => {},
+          speak: () => { (window as any).__spokenCount++; },
+          onvoiceschanged: null
+        }
+      });
+      Object.defineProperty(window, 'SpeechSynthesisUtterance', {
+        configurable: true,
+        value: function (this: any, text: string) { this.text = text; }
+      });
+    });
+    await seedDemo(page);
+    await page.evaluate(() => {
+      (window as any).__soulcap.getState().voice.on = true;
+      (window as any).__soulcap.startSkill('grounding-54321');
+    });
+    await page.waitForTimeout(100);
+    expect(await page.evaluate(() => (window as any).__spokenCount)).toBe(0);
+  });
+});
+
 test.describe('Help is always reachable', () => {
+  test('installed Help shortcut opens help immediately', async ({ page }) => {
+    await page.goto('/?demo=1&panic=1');
+    await page.waitForFunction(() => !!(window as any).__soulcap);
+    await expect(page.locator('#panic')).toBeVisible();
+    await expect(page.locator('#panic')).toContainText('You don’t have to get through this alone');
+  });
+
   test('every main screen exposes a help affordance', async ({ page }) => {
     await seedDemo(page);
     for (const tab of ['now', 'calm', 'journal', 'map', 'me']) {

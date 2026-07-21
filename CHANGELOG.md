@@ -1,3 +1,54 @@
+## [0.8.0] — 2026-07-21
+
+### Added
+- **Journal templates.** New entries can begin blank or from seven gentle structures: three good
+  things, morning pages, night reflection, worry dump, daily wins, a future-self letter, or a
+  dream. Templates seed a draft only; nothing is required.
+- **Private voice transcription.** The journal mic works only when the browser confirms an
+  already-installed on-device language pack. SoulCap never installs a pack, calls a remote speech
+  service, or falls back to `webkitSpeechRecognition`. Unsupported browsers keep the editor fully
+  usable and explain that nothing was sent.
+- **Photo book covers.** Local images are down-scaled on-device before becoming the journal cover.
+  Cover edits are staged until Save and can be removed without affecting entries.
+- **Real contents.** Journal entries are grouped by month, searchable by title or body, and
+  reachable through month navigation.
+- **Optional page decoration.** Entries can use a soft washi edge or folded-corner treatment,
+  with plain pages remaining the default.
+- **Synthetic user review.** Five isolated personas now exercise onboarding, Help, Calm, journal
+  persistence, Constellation privacy, reduced motion, keyboard exit, and no-penalty stopping on
+  both mobile and desktop. Findings and limits live in `USER_REVIEW.md`.
+
+### Fixed
+- Failed existing-entry and cover saves now restore the previous in-memory state and keep the
+  editor open instead of appearing saved after localStorage quota errors.
+- Installed-app shortcuts now route correctly: Help opens the hard-coded help screen immediately,
+  and the retired Skills shortcut now opens Calm.
+- Journal controls now use 48px touch targets, responsive horizontal tool scrolling, an accessible
+  transcription live region, and theme tokens for photo-cover overlays.
+- Skills marked for `any` capacity now remain eligible after Heavy or Wired check-ins. Previously,
+  the rank comparison could leave low-energy Calm journeys with no matching cards.
+- Sheet dialogs now trap focus, make background surfaces inert, and return focus to their opener.
+- Delayed photo decoding is bound to the draft that requested it, so closing one entry and opening
+  another cannot attach the earlier photo to the new page.
+- Malformed query encoding no longer interrupts boot, and a second mic tap cancels pending local
+  speech availability before recording can start.
+- Spoken guidance now accepts only voices explicitly marked `localService`; no default or
+  remote-capable voice is used.
+- Service-worker navigation caching no longer lets a visit to `pitch.html` replace the offline app
+  shell. The brand mark is now precached.
+- All shipped text remains at least 15px, compact controls meet the 48px target, and the journal
+  cover edit control keeps opaque contrast over arbitrary photos.
+
+### Changed
+- SW `soulcap-v080`. Playwright now runs 130 checks across mobile + desktop.
+- Audio-blob fallback remains deliberately unshipped: blobs do not fit the JSON/localStorage
+  contract, and base64 recordings would exhaust local quota. Voice text ships only where local
+  transcription can be verified.
+- The static pitch page now matches v0.8.0 product truth and no longer carries historical crisis
+  numbers or v0.3 positioning.
+- The publicly served v0.3 legacy page was removed; historical builds remain available in Git
+  history without exposing stale crisis numbers or CDN requests.
+
 ## [0.7.1] — 2026-07-21
 
 ### Fixed

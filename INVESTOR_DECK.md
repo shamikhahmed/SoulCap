@@ -1,10 +1,14 @@
 # SoulCap — Investor Deck
 
-> **Product honesty (read first):** Live GitHub Pages product is the **clinical-path PWA** — **Smart Companion** (rules-based), keyword safety, on-device journal. NestJS + Claude/OpenAI orchestration in `backend/` is **lab source only (not deployed)**. Do not pitch the Pages demo as a live LLM therapy product. See `README.md`, `CLINICAL.md`, `SAFETY.md`.
+> **Product honesty (read first):** Live v0.8.0 GitHub Pages product is an offline
+> **self-guided wellness PWA** — deterministic suggestions, keyword safety, and a private
+> on-device journal. NestJS + model orchestration in `backend/` is **lab source only (not
+> deployed)**. Do not pitch the Pages demo as AI, therapy, clinical care, or a crisis service.
+> See `README.md` and `SAFETY.md`.
 
 ## Directional narrative (lab + raise framing)
 
-**Category:** Clinical-path wellness companion (Smart Companion shipped; Nest/LMM lab)
+**Category:** Offline self-guided wellness companion (deterministic PWA shipped; Nest/LMM lab)
 **Stage:** Seed narrative · PWA MVP live
 **Raise (aspirational doc):** $2,000,000
 **Use of Funds:** Product hardening, compliance exploration, team, enterprise pilots
@@ -40,20 +44,24 @@ Every person has a unique psychological fingerprint.
 
 Current apps ignore it. Therapists know it intuitively. A persistent profile can model it — carefully, with safety first.
 
-**SoulCap's Living Mind Model is lab IP** — a dynamic psychological profile design. The shipped PWA supports personalized **Smart Companion** check-ins without pretending an LLM is online.
+**SoulCap's Living Mind Model is lab IP** — a dynamic psychological profile design. The shipped
+PWA uses deterministic check-ins and context-fitted skills without pretending an LLM is online.
 
 ---
 
 ## The Solution: SoulCap
 
-SoulCap ships an honest clinical-path companion with safety tiers and on-device memory. Nest lab explores a **persistent psychological profile** + optional LLM orchestration — not marketed as live therapy AI on Pages.
+SoulCap ships a private, self-guided wellness PWA with guided skills, a local journal, a
+relationship map, and on-device memory. Nest lab explores a **persistent psychological profile**
+plus optional LLM orchestration — not marketed as live therapy AI on Pages.
 
-> Think: Smart Companion today; deeper Personalization when models are actually deployed with keys and compliance.
+> Think: deterministic, offline tools today; deeper personalisation only after models, evaluation,
+> consent, security, and compliance are genuinely deployed.
 
 **Three pillars:**
 
 1. **Know You** — Local check-ins / journals on device; LMM design in Nest lab
-2. **Support You** — Smart Companion conversations, check-ins, journaling, grounding exercises
+2. **Support You** — Context-fitted skills, check-ins, journaling, and grounding exercises
 3. **Help You Grow** — Habits + local history; lab pattern/report engines not claimed as shipped AI
 
 ---
@@ -80,10 +88,11 @@ The LMM is what makes SoulCap defensible.
 - Weekly snapshots capture real psychological change over time
 - Semantic memory (pgvector) enables contextual recall across sessions
 
-**Why it's defensible:**
-- Data network effects — the longer a user is on SoulCap, the more personalized it becomes
-- Switching cost: months of psychological modeling can't be replicated elsewhere
-- Clinical co-design opportunity: therapists can subscribe to view LMM profiles of their patients
+**Potential defensibility — not yet validated:**
+- Trust from a strict offline product and precise, bounded claims
+- A curated self-regulation library, safety constraints, and trauma-aware suggestion rules
+- Future consented personalisation research in the undeployed lab
+- No data network effect, clinician portal, or switching-cost claim is proven in the shipped PWA
 
 ---
 
@@ -91,37 +100,41 @@ The LMM is what makes SoulCap defensible.
 
 Mental health software done wrong is dangerous. We built safety first.
 
-**4-Tier Safety System:**
+**4-tier keyword kernel (repository/evaluation layer):**
 
 | Tier | Trigger | Response |
 |------|---------|----------|
-| NONE | Normal conversation | Smart Companion dialogue |
-| DISTRESS | Mild distress signals | Gentle check-in, resources offered |
-| ELEVATED | Elevated risk signals | Direct safety assessment, escalation |
-| ACUTE | Crisis signals | **Hardcoded response** (no model required) — 988, emergency contacts |
+| NONE | No keyword match | No classification action |
+| DISTRESS | Reserved | Current kernel does not emit this tier |
+| ELEVATED | Elevated phrases | Regression-tested classification only |
+| ACUTE | Explicit or contextual phrases | Regression-tested classification only |
 
-**Panic Mode — one tap:**
-- 5-4-3-2-1 sensory grounding
-- Box breathing
-- Safe place visualization
-- Crisis resources always accessible
+The shipped PWA has no chat surface and does not analyse private journal text. Help Now is a
+separate, hard-coded interface reachable by the user from every screen.
 
-**Privacy principles:**
-- Message content encrypted at rest
-- No raw content in logs
-- Safety flags logged as signals only
-- HIPAA-aligned architecture
+**Help Now — one tap:**
+- Slow paced-breathing visual
+- Number-free guidance to reach someone trusted or local emergency services
+- User-controlled shortcut to the device messaging app
+- Help remains reachable from every screen
 
-> We are not a therapy replacement. We are what happens between therapy sessions — and for the people who can't access therapy at all.
+**Privacy reality:**
+- PWA content stays in browser `localStorage`; no account, server, analytics, or remote model
+- No raw content is transmitted or logged
+- Device/browser storage encryption depends on the operating system; SoulCap adds no encryption
+- PWA is not an EHR and makes no HIPAA compliance claim
+
+> SoulCap is not therapy or a replacement for care. It is a private place to learn self-regulation
+> skills, write, and notice what helps.
 
 ---
 
 ## Product — What We've Built
 
 **Shipped PWA (`docs/` → GitHub Pages)**
-- Smart Companion chat (rules-based)
-- Check-ins, journals, habits, Panic/988
-- Clinician notes + local audit path
+- Deterministic Calm suggestions and 37 guided techniques
+- Check-ins, Constellation, safety plan, and number-free Help
+- v0.8 private journal book: templates, verified local transcription, photos, search, and contents
 - `?demo=1` walkthrough seed
 
 **Nest lab (not deployed)**
@@ -131,8 +144,9 @@ Mental health software done wrong is dangerous. We built safety first.
 
 **Mobile lab:** React Native / Expo source — not the Pages product
 
-**Full feature set:**
-Conversations · Check-ins · Voice Notes · Journaling · Patterns · Insights · Growth Reports · Goals · Habits · Coping Mechanisms · Trigger Tracking · Activity Recommendations · Panic Mode · Push Notifications · Multi-tenant Orgs · Stripe Billing
+**Roadmap, not shipped:**
+Detailed check-ins · Trigger tracking · Explainable patterns · Emotional summaries ·
+No-streak micro-habits · Urdu localisation · Optional encrypted backup · Native app
 
 ---
 
@@ -147,29 +161,18 @@ Conversations · Check-ins · Voice Notes · Journaling · Patterns · Insights 
 
 **Our beachhead:** English-speaking, smartphone-owning adults aged 18–45 who seek mental health support but face access or cost barriers.
 
-**3 revenue channels:**
-1. **B2C subscriptions** — Personal ($20/mo), Premium ($40/mo)
-2. **B2B enterprise** — Per-seat license, employee wellness benefit
-3. **B2B2C** — Healthcare systems, insurance, telehealth white-label
+**Revenue hypotheses — unvalidated, not launched:**
+1. **B2C** — optional paid backup/native features while core self-regulation remains useful free
+2. **B2B wellness** — only after privacy, admin-boundary, and outcome validation
+3. **Clinical distribution** — only as a separate reviewed product, never implied by the PWA
 
 ---
 
 ## Business Model
 
-### B2C Tiers
-
-| Plan | Price | Features |
-|------|-------|---------|
-| Free | $0 | 10 messages/week, basic check-ins |
-| Personal | $19.99/mo | Unlimited chat, voice, journaling, LMM |
-| Premium | $39.99/mo | All features + growth reports + priority AI |
-
-### B2B
-
-| Plan | Price | Notes |
-|------|-------|-------|
-| Team | $15/seat/mo | Up to 250 seats |
-| Enterprise | $200–500/seat/yr | Custom integration, admin dashboard, analytics |
+No billing, paid plan, enterprise admin, or pricing is shipped. Pricing above was removed because
+it had not been tested with users. Next step: willingness-to-pay interviews and a privacy-safe
+packaging experiment before publishing tiers.
 
 ### Unit Economics (Projections — Year 2)
 
@@ -184,11 +187,11 @@ Conversations · Check-ins · Voice Notes · Journaling · Patterns · Insights 
 
 ## Go-To-Market
 
-**Phase 1: Beta (0–6 months)**
-- 500 waitlist users → closed beta
+**Phase 1: Validation (0–6 months)**
+- Recruit a consented small beta; do not claim a waitlist that does not exist
 - Influencer partnerships: mental health creators on TikTok/Instagram
-- Therapist referral program: "SoulCap between sessions"
-- Launch PR: "The AI that remembers you"
+- Clinician and lived-experience review of safety, copy, and techniques
+- Launch message: "Private tools for hard moments — offline, on your device"
 
 **Phase 2: Growth (6–18 months)**
 - Paid acquisition (Meta, TikTok, Google)
@@ -213,13 +216,13 @@ Conversations · Check-ins · Voice Notes · Journaling · Patterns · Insights 
 | BetterHelp | $4B | Async human therapy | Expensive, no AI, slow |
 | Woebot | Private | CBT chatbot | Generic, no psychological profile |
 | Wysa | Private | CBT chatbot | Generic, no memory |
-| **SoulCap** | **—** | **AI with LMM** | **The only one that knows you** |
+| **SoulCap** | **—** | Offline self-guided wellness PWA | Private journal + context-fitted skills; no account |
 
-**Our moat:**
-- Living Mind Model as persistent, proprietary data layer
-- 10-step orchestration pipeline (not a simple chatbot)
-- 4-tier safety system built to clinical standards
-- Data flywheel: the longer users stay, the better it gets
+**Potential differentiation, still to validate:**
+- Useful offline product with no account, analytics, or cloud dependency
+- Explainable local personalisation that users can inspect and correct
+- Safety behavior covered by deploy-gating tests
+- Success measured by useful outcomes and reduced dependence, not time-in-app or a data flywheel
 
 ---
 
@@ -258,25 +261,26 @@ Conversations · Check-ins · Voice Notes · Journaling · Patterns · Insights 
 
 ## The Team
 
-SoulCap was built by a team with deep expertise in:
-- AI architecture and LLM orchestration
-- Clinical psychology (advisory board)
-- Privacy and healthcare compliance
-- Consumer product and growth
-- Full-stack engineering
+**Current capability shown in the repository:**
+- Offline PWA product engineering and interaction design
+- Safety-constrained rules and LLM orchestration lab architecture
+- Automated browser, privacy, safety, and accessibility regression coverage
+
+**Open team gaps:** licensed clinical review, formal privacy/compliance counsel, human-factors
+research, distribution, and growth validation. No advisory board is claimed.
 
 ---
 
 ## Traction
 
 **What's done:**
-- Clinical-path PWA live on GitHub Pages with honest Smart Companion
-- 4-tier keyword safety + Panic resources
+- Self-guided offline PWA live on GitHub Pages with deterministic suggestions
+- User-invoked, number-free Help flow plus a regression-tested keyword kernel
 - Nest/LMM lab source intact for future hosting
 - Demo seed (`?demo=1`) for Cap Store walkthroughs
 
 **What's next:**
-- Harden PWA / clinician path
+- Validate the self-guided PWA with real users and licensed reviewers
 - Only call features "AI" when a real LLM is deployed with keys + compliance
 - Clinical validation before any care-adjacent claims
 
@@ -290,7 +294,8 @@ SoulCap was built by a team with deep expertise in:
 2. **Post-pandemic demand** — 2020–2024 permanently shifted awareness and demand for mental health tools
 3. **Enterprise pressure** — Companies are legally and culturally mandated to provide mental health benefits
 
-The window to build the definitive AI mental health platform is **now** — before a tech giant (Apple Health, Google, Microsoft) absorbs the market.
+The opportunity is to validate whether private, self-guided wellness software can earn trust
+without surveillance or care claims. That thesis is promising, not proven.
 
 ---
 
@@ -300,13 +305,14 @@ SoulCap is positioned to be the **emotional OS** for a generation that grew up w
 
 **We are not building another mood tracker.**
 
-We are building an honest wellness companion — Smart Companion on-device first; Nest lab for deeper personalization when we actually ship models.
+We are building honest, offline wellness tools first; Nest lab remains a possible route to deeper
+personalisation only if models, safeguards, and evaluation are actually shipped.
 
 ---
 
 ## Call to Action
 
-**Join us in building the mental health infrastructure for the next billion people.**
+**Join us in validating a private emotional operating system without pretending it is care.**
 
 We are raising $2M at a $10M pre-money valuation.
 

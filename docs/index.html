@@ -122,11 +122,12 @@ if(t==='light'||t==='dark'||t==='night')document.documentElement.setAttribute('d
   <div class="je-top">
     <button id="jeCancel" class="btn quiet" style="width:auto">Close</button>
     <span id="jeDate" class="je-date"></span>
-    <button id="jeSave" class="btn" style="width:auto;padding:11px 20px;min-height:44px">Save</button>
+    <button id="jeSave" class="btn" style="width:auto;padding:11px 20px;min-height:48px">Save</button>
   </div>
   <div class="je-paper">
     <input id="jeTitle" class="je-title" type="text" placeholder="Title (optional)" aria-label="Title"/>
     <div id="jePrompt" class="je-prompt"></div>
+    <div id="jeVoiceStatus" class="je-voice-status" aria-live="polite"></div>
     <textarea id="jeBody" class="je-body" placeholder="Write anything. Nobody else will ever read this." aria-label="Journal entry"></textarea>
     <div id="jePhotos" class="je-photos"></div>
   </div>
@@ -139,6 +140,12 @@ if(t==='light'||t==='dark'||t==='night')document.documentElement.setAttribute('d
     </button>
     <button id="jeStickerBtn" class="je-tool" aria-label="Add a sticker">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8l6-6V5a2 2 0 0 0-2-2z"/><path d="M14 21v-5a1 1 0 0 1 1-1h5"/></svg>
+    </button>
+    <button id="jeDecorBtn" class="je-tool" aria-label="Decorate this page">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h14v16H5z"/><path d="M5 8h14M15 4v4"/></svg>
+    </button>
+    <button id="jeMicBtn" class="je-tool" aria-label="Transcribe with microphone" aria-pressed="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M9 21h6"/></svg>
     </button>
     <div id="jeMoodWrap" class="je-mood"></div>
   </div>

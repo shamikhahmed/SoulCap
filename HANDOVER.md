@@ -1,4 +1,4 @@
-**Version:** 0.7.1 · SW `soulcap-v071`
+**Version:** 0.8.0 · SW `soulcap-v080`
 
 # SoulCap — Project Handover
 
@@ -6,7 +6,7 @@
 > first — it is the current truth as of 2026-07-21. The sections further down describe an
 > earlier architecture and are kept for reference only.
 
-## Current state (v0.7.1 — 2026-07-21)
+## Current state (v0.8.0 — 2026-07-21)
 
 **The product is the PWA in `docs/`.** Fully rewritten. Offline-first, local-only, **no network
 calls at all** after load — no account, no server, no LLM, no analytics. Everything is
@@ -31,10 +31,12 @@ calls at all** after load — no account, no server, no LLM, no analytics. Every
   Driven by a `pattern` field on those skills in `data.js`.
 - **Calm tab** — a *guided front door*, not a library mirror: "what do you need right now?"
   → where you are / what's to hand → a fitted shortlist, with "browse all" behind it.
-- **Journal** — private paper-feeling diary (serif, ruled lines that the text actually sits on):
-  title, free writing, mood, stickers, and photos down-scaled on device to protect local storage.
-  Optional prompts. **Customisable book cover** (title, subtitle, colour, sticker); entries list
-  under a "Contents" heading.
+- **Journal** — private paper-feeling book (serif, ruled lines that the text actually sits on):
+  title, free writing, mood, stickers, optional page decoration, and photos down-scaled on device.
+  New entries can start blank or from seven gentle templates. **Voice transcription runs only
+  when the browser verifies an already-installed on-device language pack** — no cloud/webkit
+  fallback and no stored audio blobs. The customisable cover supports a local photo; contents are
+  grouped by month and searchable by title/body.
 - **Theme** — purple, matched to the logo mark (`#6C5CE7` light, `#A78BFA` dark, dimmer at night).
   Toggling theme/settings no longer scrolls the page to the top (in-place re-render).
 - **Profile** — name / age / pronouns (optional, local). Home greeting uses the name.
@@ -65,7 +67,7 @@ it. An earlier duplicate AI stack and a dead JWT auth path are quarantined in `b
 `mobile/` (Expo) is lab source only.
 
 ### Tests & CI
-84 Playwright tests across mobile + desktop (`e2e/`). `.github/workflows/deploy.yml` gates the
+130 Playwright checks across mobile + desktop (`e2e/`). `.github/workflows/deploy.yml` gates the
 GitHub Pages deploy on `npm run verify`. `?demo=1` seeds a Pakistan-region demo.
 
 ### Open blockers (not code)
@@ -116,7 +118,8 @@ Deeper planning lives in `~/Capricorn-Brain/AI/Claude-Code/SoulCap-*.md`.
 
 **SoulCap** is a clinical-path wellness companion.
 
-**Shipped (PWA):** Smart Companion reflections, check-ins, journals, habits, safety tiers, Panic/988, clinician notes — all on-device.
+**Historical v0.3 PWA:** Smart Companion reflections, check-ins, journals, habits, safety tiers,
+and clinician-note experiments — all on-device. Current v0.8 truth is in the header above.
 
 **Lab (Nest / mobile):** Living Mind Model + LLM orchestration source for a future hosted API. Do not describe Pages demos as "AI therapy."
 
@@ -798,7 +801,7 @@ A full panel review was conducted (Staff Engineers, AI Architect, Clinical Psych
 
 | ID | Issue |
 |----|-------|
-| S3 | Tier-2 elevated risk has no guaranteed crisis resource in response. Add mandatory 988 postscript injection. |
+| S3 | Historical proposal to inject a country-specific number. Rejected; current Help is number-free and country-agnostic. |
 | S4 | Crisis keyword list has false positives ("giving away", "farewell") that trigger on non-crisis messages. Split into unambiguous vs. contextual keyword lists. |
 | S7 | Keyword scan runs after Haiku API call (Step 2 after Step 1). Move keyword scan to t=0 before any API call. |
 | L3 | Decay updates `currentWeight` but not `confidence`. Reinforcement increments use `confidence` — creates wrong math after decay. |

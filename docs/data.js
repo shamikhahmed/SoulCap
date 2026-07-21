@@ -417,6 +417,42 @@ const COVER_COLORS = [
 ];
 const JOURNAL_STICKERS = ['📔', '🌙', '🌿', '⭐', '🕊️', '🫧', '🌊', '🔥', '🌸', '☕', '🎧', '✨', '🧭', '🪶'];
 
+/* Starting points, not assignments. Blank always stays first. */
+var JOURNAL_TEMPLATES = [
+  { key:'blank', title:'Blank page', prompt:'Start wherever you like.', seedTitle:'', seedBody:'' },
+  { key:'gratitude', title:'Three good things', prompt:'Small things count.', seedTitle:'Three good things', seedBody:'1. \n\n2. \n\n3. ' },
+  { key:'morning', title:'Morning pages', prompt:'What is here as the day begins?', seedTitle:'Morning pages', seedBody:'Right now I notice…\n\nToday I need…\n\nOne gentle intention…' },
+  { key:'night', title:'Night reflection', prompt:'Put the day down before sleep.', seedTitle:'Night reflection', seedBody:'What stayed with me today…\n\nWhat I can leave here for tonight…\n\nSomething kind I can give myself…' },
+  { key:'worry', title:'Worry dump', prompt:'No need to solve any of it yet.', seedTitle:'What is on my mind', seedBody:'What I am worried about…\n\nWhat is in my control…\n\nWhat can wait…' },
+  { key:'wins', title:'Daily wins', prompt:'Include anything that took effort.', seedTitle:'Today’s wins', seedBody:'Something I handled…\n\nSomething I tried…\n\nSomething I want to remember…' },
+  { key:'future', title:'Letter to future me', prompt:'Write to yourself with warmth, not pressure.', seedTitle:'Dear future me', seedBody:'I hope you remember…\n\nRight now, life feels…\n\nWhat I want for you…' },
+  { key:'dream', title:'A dream', prompt:'Fragments and feelings are enough.', seedTitle:'A dream I remember', seedBody:'What happened…\n\nWhat it felt like…\n\nWhat stayed with me after waking…' }
+];
+
+var JOURNAL_DECORATIONS = [
+  { key:'', title:'Plain page', prompt:'Nothing extra.' },
+  { key:'washi', title:'Washi edge', prompt:'A soft strip along the page.' },
+  { key:'corner', title:'Folded corner', prompt:'A small page-corner detail.' }
+];
+
+var JOURNAL_UI = {
+  chooseStart:'Choose a starting page',
+  chooseStartHint:'Use a gentle structure, or begin with a blank page.',
+  decorate:'Decorate this page',
+  searchLabel:'Search your journal',
+  searchPlaceholder:'Search words or titles',
+  allMonths:'All months',
+  noMatches:'No entries match that search. Your writing is still here.',
+  localVoiceUnavailable:'On-device transcription is not available in this browser. Nothing was sent anywhere.',
+  localVoiceReady:'Listening on this device…',
+  localVoiceStopped:'Transcription stopped.',
+  localVoiceError:'Transcription stopped. You can keep writing.',
+  coverPhoto:'Choose a cover photo',
+  removeCoverPhoto:'Remove cover photo',
+  storageFullTitle:'Storage is full',
+  storageFullBody:'This phone’s local storage is out of room — usually photos. Remove a few images and try again. Nothing was lost.'
+};
+
 /* Optional journal prompts, offered but never required. */
 const JOURNAL_PROMPTS = [
   'What’s taking up the most room in your head right now?',

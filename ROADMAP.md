@@ -5,7 +5,7 @@ item and ship it **the same way the rest of the app was built** — read `AGENTS
 rules, conventions, and ship workflow. Every item below lists **what**, **why**, **files to
 touch**, **acceptance criteria (incl. a test)**, and **guardrails**.
 
-**Current: v0.7.1** · Live: https://shamikhahmed.github.io/SoulCap/
+**Current: v0.8.0** · Live: https://shamikhahmed.github.io/SoulCap/
 
 Philosophy (never drifts): a personalised emotional operating system, **not** an AI therapist.
 Help people understand and regulate; never "fix" them; never diagnose; success = needing the app
@@ -25,38 +25,17 @@ less. See `AGENTS.md §2` for the hard rules — every item inherits them.
 
 ---
 
-## v0.8 — Journal as a full book (partly begun)
+## v0.8 — Journal as a full book — shipped 2026-07-21
 
-### 0.8.1 — Voice journal · **M**
-- **What:** record a spoken entry; transcribe with the browser's built-in `SpeechRecognition`
-  (offline where the platform supports it), fall back to storing the audio blob if not.
-- **Why:** lower-friction journaling; matches the "quick/long/voice journal" vision.
-- **Files:** `docs/index.html` (a mic button in the editor tools), `docs/app.js` (`openEditor`
-  tools wiring + a `startDictation()` using `webkitSpeechRecognition`), `docs/app.css` (mic tool),
-  `e2e/app.spec.ts`.
-- **Accept:** mic button appends recognised text into `#jeBody`; graceful no-op if the API is
-  absent (feature-detect, never throw); a test asserts the button exists and the editor still
-  saves. **Guardrail:** no network — only the on-device recogniser; if it would call out, don't ship it.
-
-### 0.8.2 — Journal templates · **S–M**
-- **What:** starting layouts — gratitude (3 wins), morning pages, night reflection, worry dump,
-  daily wins, letter to future self, dream. Picked when creating an entry.
-- **Files:** `data.js` (`JOURNAL_TEMPLATES = [{key,title,prompt,seedBody}]`), `app.js`
-  (`openEditor` offers a template chooser for new entries; seeds `#jeTitle`/`#jeBody`),
-  `e2e/app.spec.ts`.
-- **Accept:** choosing a template pre-fills title + a scaffold in the body; blank entry still
-  possible; test covers one template creating a non-empty draft.
-
-### 0.8.3 — Photo cover + contents index · **M**
-- **What:** let a user photo be the journal cover (reuse `addPhotoFromFile` scaling); a real
-  contents view (jump by month, search entries).
-- **Files:** `app.js` (`coverSheet` gains a photo option storing a scaled dataURL in
-  `state.journalCover.photo`; `renderJournal` renders it; add a search input filtering entries).
-- **Accept:** cover renders the photo when set; search filters the list; storage-full is caught
-  (reuse the `save()` failure path). **Guardrail:** cover photo also down-scaled.
-
-### 0.8.4 — Per-entry decoration · **S**
-- Washi-tape borders / corner sticker per entry (a `decor` field). Purely cosmetic, opt-in.
+- [x] **Voice transcription:** appends speech only when `SpeechRecognition` verifies local
+  processing and an existing on-device language pack. No remote/webkit fallback, language-pack
+  download, or audio storage. Unsupported devices keep ordinary writing available.
+- [x] **Journal templates:** blank plus seven optional starting structures.
+- [x] **Photo cover + contents:** down-scaled local cover photo, month grouping/navigation, and
+  title/body search.
+- [x] **Per-entry decoration:** opt-in washi edge or folded corner.
+- [x] **Reliability/a11y:** failed media saves restore prior state; journal controls meet 48px;
+  mobile and desktop Playwright coverage.
 
 ---
 

@@ -1,6 +1,6 @@
 # SoulCap — Safety & Truth Inventory
 
-**Version:** 0.7.1 · **Updated:** 2026-07-21
+**Version:** 0.8.0 · **Updated:** 2026-07-21
 **Status:** **Clinical path** — self-guided wellness companion.
 **Not** a cleared SaMD / medical device. **Not** a substitute for licensed care.
 See also `CLINICAL.md` and `Capricorn-Brain/AI/Claude-Code/SoulCap-Eval-Harness.md`.
@@ -13,7 +13,7 @@ SoulCap is **not** clinical care, therapy, medical advice, diagnosis, or crisis 
 
 - Market as **self-guided wellness companion (clinical path)** only.
 - Never claim FDA/CE clearance, "clinical-grade therapy," or replacement for licensed professionals.
-- Crisis routes are region-aware and shipped in `docs/data.js`.
+- Help guidance is hard-coded, number-free, and country-agnostic.
 
 ---
 
@@ -28,7 +28,15 @@ SoulCap is **not** clinical care, therapy, medical advice, diagnosis, or crisis 
 The PWA makes **zero network requests** after load. No account, no server, no analytics,
 no LLM. Everything is `localStorage`.
 
-Previous release preserved at `docs/legacy-v032.html`.
+Journal transcription uses `SpeechRecognition` only when the browser confirms an already-installed
+on-device language pack with `processLocally: true`. SoulCap does not call `install()`, use the
+remote-capable `webkitSpeechRecognition` fallback, or store audio blobs. Unsupported devices show
+a local explanation and keep ordinary writing available.
+
+Spoken exercise guidance uses only `speechSynthesis` voices marked `localService: true`. If the
+browser exposes only remote-capable voices, SoulCap stays silent.
+
+Historical releases remain available through Git history, not as publicly served legacy pages.
 
 ---
 
@@ -44,9 +52,10 @@ Previous release preserved at `docs/legacy-v032.html`.
 - Constellation `hard right now` suppresses all suggestions for that person, permanently
   and silently. No reconciliation nudges.
 - The app never contacts anyone. "Open messages" hands off to the OS with an empty draft.
-- 88 Playwright tests across mobile + desktop; safety tests gate the deploy in CI.
+- 130 Playwright checks across mobile + desktop; safety tests gate the deploy in CI.
+- Installed-app `?panic=1` now opens Help immediately and has a deploy-gating regression test.
 
-### Known gap fixed this release
+### Known safety fixes
 
 Inflected crisis phrasings escaped the gate entirely — `end my life` is not a substring of
 `ending my life`, so "I have been thinking about ending my life" scored **tier 0**. Found by
@@ -57,7 +66,7 @@ certainly more of them still in there.
 
 ---
 
-## Reaching out — no crisis directory (v0.7.1)
+## Reaching out — no crisis directory (v0.8.0)
 
 **All crisis phone numbers and the country/region selection were removed at the owner's
 instruction** (v0.7.1). Rationale: we cannot promise any specific line is reachable, and a number

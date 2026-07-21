@@ -47,9 +47,9 @@
       "url": "./?panic=1"
     },
     {
-      "name": "Skills",
-      "short_name": "Skills",
-      "url": "./?tab=skills"
+      "name": "Calm",
+      "short_name": "Calm",
+      "url": "./?tab=calm"
     }
   ]
 }

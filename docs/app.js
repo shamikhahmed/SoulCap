@@ -46,12 +46,13 @@
     history: {},
     concerns: [], checkins: [], skillRuns: [], people: [], links: [], inferences: [],
     safetyPlan: {}, episodes: [], favourites: [], journal: [],
-    journalCover: { title: 'My Journal', subtitle: '', color: 0, sticker: '📔' },
+    journalCover: { title: 'My Journal', subtitle: '', color: 0, sticker: '📔', photo: '' },
     theme: null, rings: 3, ringNames: {}, pace: 1,
     voice: { on: false, name: null, rate: 0.85, pitch: 1 },
     haptics: true, showLinks: false, trackContact: false
   };
   var state = load();
+  var sheetOpener = null;
 
   function load() {
     try {
@@ -117,6 +118,7 @@
     if (!('speechSynthesis' in window)) return;
     voices = window.speechSynthesis.getVoices().filter(function (v) {
       if (!v.lang || v.lang.toLowerCase().indexOf('en') !== 0) return false;
+      if (v.localService !== true) return false;
       var n = v.name.toLowerCase();
       return !NOVELTY.some(function (bad) { return n.indexOf(bad) !== -1; });
     });
@@ -158,7 +160,8 @@
     try {
       window.speechSynthesis.cancel();
       var u = new SpeechSynthesisUtterance(text);
-      var v = bestVoice(); if (v) u.voice = v;
+      var v = bestVoice(); if (!v) return;
+      u.voice = v;
       u.rate = state.voice.rate; u.pitch = state.voice.pitch;
       window.speechSynthesis.speak(u);
     } catch (e) {}
@@ -256,6 +259,9 @@
     return 'any';
   }
   function capRank(c) { return c === 'low' ? 0 : c === 'medium' ? 1 : 2; }
+  function capacityFits(skillCapacity, capacity) {
+    return skillCapacity === 'any' || capacity === 'any' || capRank(skillCapacity) <= capRank(capacity);
+  }
   function helpfulScore(id) {
     var runs = state.skillRuns.filter(function (r) { return r.id === id; });
     return runs.length ? (runs.filter(function (r) { return r.helpful === true; }).length / runs.length) * 2 : 0;
@@ -278,8 +284,7 @@
     var cap = currentCapacity(), last = currentCheckin(), tags = historyTags();
     var recent = state.skillRuns.slice(-3).map(function (r) { return r.id; });
     var pool = SKILLS.filter(function (s) {
-      if (cap === 'low' && capRank(s.capacity) > 0) return false;
-      if (cap === 'medium' && capRank(s.capacity) > 1) return false;
+      if (!capacityFits(s.capacity, cap)) return false;
       // Trauma-informed: don't auto-surface potentially-activating techniques.
       // They stay fully browsable in the library, with a caution note.
       if (traumaAware() && s.traumaCaution) return false;
@@ -572,17 +577,50 @@
   }
 
   /* ── Sheet ─────────────────────────────────────────────────────────────── */
+  function setSheetBackgroundInert(on) {
+    ['#app', '#fab', '#panic', '#runner', '#journalEditor'].forEach(function (selector) {
+      var node = $(selector);
+      if (!node) return;
+      if (on) node.setAttribute('inert', '');
+      else node.removeAttribute('inert');
+    });
+  }
+  function trapSheetFocus(e) {
+    var panel = $('#sheetPanel');
+    var items = Array.prototype.filter.call(panel.querySelectorAll('button, input, select, textarea, a[href], [tabindex]:not([tabindex="-1"])'), function (node) {
+      return !node.disabled && node.getAttribute('aria-hidden') !== 'true';
+    });
+    if (!items.length) { e.preventDefault(); return; }
+    var first = items[0], last = items[items.length - 1];
+    if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+    else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+  }
   function openSheet(build) {
+    if (!$('#sheet').classList.contains('on')) sheetOpener = document.activeElement;
     var panel = $('#sheetPanel'); clear(panel);
     panel.appendChild(el('div', { class: 'grab' }));
     build(panel);
+    var heading = panel.querySelector('h1, h2, h3');
+    if (heading) {
+      heading.id = 'sheetTitle';
+      $('#sheet').removeAttribute('aria-label');
+      $('#sheet').setAttribute('aria-labelledby', 'sheetTitle');
+    } else {
+      $('#sheet').removeAttribute('aria-labelledby');
+      $('#sheet').setAttribute('aria-label', 'Options');
+    }
     $('#sheet').classList.add('on'); $('#sheet').setAttribute('aria-hidden', 'false');
+    setSheetBackgroundInert(true);
     document.body.style.overflow = 'hidden';
     var f = panel.querySelector('button, input, select, textarea, a'); if (f) f.focus();
   }
   function closeSheet() {
+    coverImageRequest++;
     $('#sheet').classList.remove('on'); $('#sheet').setAttribute('aria-hidden', 'true');
+    setSheetBackgroundInert(false);
     document.body.style.overflow = '';
+    if (sheetOpener && document.documentElement.contains(sheetOpener)) sheetOpener.focus();
+    sheetOpener = null;
   }
 
   /* ── Technique detail + card ───────────────────────────────────────────── */
@@ -695,7 +733,7 @@
     var cap = currentCapacity();
     var list = SKILLS.filter(function (s) {
       if (need.families.indexOf(s.family) === -1) return false;
-      if (capRank(s.capacity) > (cap === 'low' ? 0 : cap === 'medium' ? 1 : 2)) return false;
+      if (!capacityFits(s.capacity, cap)) return false;
       if (calm.seen === true && !s.discreet) return false;
       if (['water', 'cold', 'sour', 'space'].indexOf(s.needs) !== -1 && calm.hand !== s.needs) return false;
       return true;
@@ -711,22 +749,48 @@
   /* ── Journal ───────────────────────────────────────────────────────────── */
   var JOURNAL_MOODS = ['😌', '🙂', '😐', '😔', '😣'];
   var draft = null;
+  var journalQuery = '';
+  var journalRecognition = null;
+  var journalVoiceRequest = 0;
+  var coverImageRequest = 0;
 
   function coverColors() { return COVER_COLORS[state.journalCover.color] || COVER_COLORS[0]; }
+  function localImageSource(src) {
+    return typeof src === 'string' && /^data:image\/(?:jpeg|png|webp);base64,/i.test(src) ? src : '';
+  }
+  function journalMonthKey(t) {
+    var d = new Date(t);
+    return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2);
+  }
+  function journalMonthLabel(t) {
+    return new Date(t).toLocaleDateString(undefined, { month: 'long', year: 'numeric' });
+  }
+  function showStorageFull(retry) {
+    openSheet(function (p) {
+      p.appendChild(el('h2', { class: 'h-sec', text: JOURNAL_UI.storageFullTitle }));
+      p.appendChild(el('p', { class: 'p', text: JOURNAL_UI.storageFullBody }));
+      p.appendChild(el('button', { class: 'btn', text: 'OK', onclick: function () {
+        closeSheet();
+        if (retry) retry();
+      } }));
+    });
+  }
   function renderJournal() {
     var v = $('#view-journal'); clear(v);
-    var cov = state.journalCover, cc = coverColors();
+    var cov = state.journalCover, cc = coverColors(), coverPhoto = localImageSource(cov.photo);
 
     // The book cover — customisable, sets the mood of the whole tab.
     var cover = el('button', { class: 'book-cover',
       style: '--bc-a:' + cc[0] + ';--bc-b:' + cc[1], onclick: coverSheet }, [
+      coverPhoto ? el('img', { class: 'bc-photo', src: coverPhoto, alt: '' }) : null,
+      coverPhoto ? el('span', { class: 'bc-shade' }) : null,
       el('span', { class: 'bc-edit', text: 'Customise' }),
       cov.sticker ? el('span', { class: 'bc-sticker', text: cov.sticker }) : null,
       el('h1', { class: 'bc-title', text: cov.title || 'My Journal' }),
       el('p', { class: 'bc-sub', text: cov.subtitle || (state.journal.length + (state.journal.length === 1 ? ' entry' : ' entries')) })
     ]);
     v.appendChild(cover);
-    v.appendChild(el('button', { class: 'btn', text: '＋  New entry', onclick: function () { openEditor(null); } }));
+    v.appendChild(el('button', { class: 'btn', text: '＋  New entry', onclick: newEntrySheet }));
 
     if (!state.journal.length) {
       v.appendChild(el('div', { class: 'card' }, [
@@ -735,61 +799,174 @@
       ]));
     } else {
       v.appendChild(el('p', { class: 'eyebrow', style: 'margin-top:4px', text: 'Contents' }));
+      var search = el('input', { class: 'journal-search', type: 'search', value: journalQuery,
+        placeholder: JOURNAL_UI.searchPlaceholder, 'aria-label': JOURNAL_UI.searchLabel });
+      var contents = el('div', { class: 'journal-contents' });
+      search.addEventListener('input', function () {
+        journalQuery = search.value;
+        renderJournalContents(contents);
+      });
+      v.appendChild(search);
+
+      var sorted = state.journal.slice().sort(function (a, b) { return b.t - a.t; });
+      var seenMonths = {};
+      var months = sorted.filter(function (e) {
+        var key = journalMonthKey(e.t);
+        if (seenMonths[key]) return false;
+        seenMonths[key] = true;
+        return true;
+      });
+      if (months.length > 1) {
+        var jump = el('select', { class: 'journal-months', 'aria-label': 'Jump to month' },
+          [el('option', { value: '', text: JOURNAL_UI.allMonths })].concat(months.map(function (e) {
+            return el('option', { value: journalMonthKey(e.t), text: journalMonthLabel(e.t) });
+          })));
+        jump.addEventListener('change', function () {
+          var target = jump.value && $('#jm-' + jump.value);
+          if (target) target.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+          jump.value = '';
+        });
+        v.appendChild(jump);
+      }
+      v.appendChild(contents);
+      renderJournalContents(contents);
     }
-    var sorted = state.journal.slice().sort(function (a, b) { return b.t - a.t; });
+    v.appendChild(el('button', { class: 'help-btn', text: 'I need help now', onclick: openPanic }));
+  }
+
+  function renderJournalContents(wrap) {
+    clear(wrap);
+    var query = journalQuery.trim().toLowerCase();
+    var sorted = state.journal.slice().sort(function (a, b) { return b.t - a.t; }).filter(function (e) {
+      return !query || ((e.title || '') + ' ' + (e.body || '')).toLowerCase().indexOf(query) !== -1;
+    });
+    if (!sorted.length) {
+      wrap.appendChild(el('div', { class: 'notice', text: JOURNAL_UI.noMatches }));
+      return;
+    }
+    var lastMonth = '';
     sorted.forEach(function (e) {
+      var key = journalMonthKey(e.t);
+      if (key !== lastMonth) {
+        wrap.appendChild(el('h2', { id: 'jm-' + key, class: 'journal-month-heading', text: journalMonthLabel(e.t) }));
+        lastMonth = key;
+      }
       var d = new Date(e.t);
-      v.appendChild(el('button', { class: 'j-entry', onclick: function () { openEditor(e.id); } }, [
+      wrap.appendChild(el('button', { class: 'j-entry' + (e.decor ? ' decor-' + e.decor : ''), onclick: function () { openEditor(e.id); } }, [
         el('p', { class: 'jd', text: d.toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' }) + ' · ' + d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) + (e.mood ? '  ' + e.mood : '') }),
         e.title ? el('p', { class: 'jt', text: e.title }) : null,
         el('p', { class: 'jx', text: e.body || '…' }),
         (e.photos && e.photos.length) ? el('div', { class: 'jphotos' }, e.photos.slice(0, 4).map(function (src) {
+          src = localImageSource(src);
+          if (!src) return null;
           return el('img', { src: src, alt: '', loading: 'lazy' });
         })) : null
       ]));
     });
-    v.appendChild(el('button', { class: 'help-btn', text: 'I need help now', onclick: openPanic }));
   }
 
-  function coverSheet() {
+  function newEntrySheet() {
+    journalQuery = '';
+    openSheet(function (p) {
+      p.appendChild(el('h2', { class: 'h-sec', text: JOURNAL_UI.chooseStart }));
+      p.appendChild(el('p', { class: 'p-sm', text: JOURNAL_UI.chooseStartHint }));
+      p.appendChild(el('div', { class: 'stack' }, JOURNAL_TEMPLATES.map(function (template) {
+        return el('button', { class: 'opt', onclick: function () {
+          closeSheet();
+          openEditor(null, template.key);
+        } }, [
+          el('span', { text: template.title }),
+          el('span', { class: 'os', text: template.prompt })
+        ]);
+      })));
+      p.appendChild(el('button', { class: 'btn quiet', text: 'Cancel', onclick: closeSheet }));
+    });
+  }
+
+  function coverSheet(working) {
+    working = working || clone(state.journalCover);
+    working.photo = localImageSource(working.photo);
     openSheet(function (p) {
       p.appendChild(el('h2', { class: 'h-sec', text: 'Your book' }));
       p.appendChild(el('p', { class: 'p-sm', text: 'Make it yours. This is just for you.' }));
-      var title = el('input', { type: 'text', placeholder: 'My Journal', 'aria-label': 'Book title', value: state.journalCover.title });
-      var sub = el('input', { type: 'text', placeholder: 'A subtitle, if you like', 'aria-label': 'Subtitle', value: state.journalCover.subtitle });
+      var title = el('input', { type: 'text', placeholder: 'My Journal', 'aria-label': 'Book title', value: working.title });
+      var sub = el('input', { type: 'text', placeholder: 'A subtitle, if you like', 'aria-label': 'Subtitle', value: working.subtitle });
       p.appendChild(el('p', { class: 'eyebrow', text: 'Title' })); p.appendChild(title);
       p.appendChild(el('p', { class: 'eyebrow', text: 'Subtitle' })); p.appendChild(sub);
+      p.appendChild(el('p', { class: 'eyebrow', text: 'Cover photo' }));
+      var photoInput = el('input', { type: 'file', accept: 'image/*', hidden: 'hidden' });
+      var photoBtn = el('button', { class: 'btn ghost', text: JOURNAL_UI.coverPhoto, onclick: function () {
+        working.title = title.value;
+        working.subtitle = sub.value;
+        photoInput.click();
+      } });
+      photoInput.addEventListener('change', function () {
+        var file = photoInput.files && photoInput.files[0];
+        var imageRequest = ++coverImageRequest;
+        if (file) scaleImageFile(file, function (src) {
+          if (imageRequest !== coverImageRequest || !$('#sheet').classList.contains('on')) return;
+          working.photo = src;
+          coverSheet(working);
+        });
+      });
+      p.appendChild(photoBtn);
+      p.appendChild(photoInput);
+      if (working.photo) {
+        p.appendChild(el('img', { class: 'cover-photo-preview', src: working.photo, alt: 'Current cover photo' }));
+        p.appendChild(el('button', { class: 'btn quiet', text: JOURNAL_UI.removeCoverPhoto, onclick: function () {
+          working.title = title.value;
+          working.subtitle = sub.value;
+          working.photo = '';
+          coverSheet(working);
+        } }));
+      }
       p.appendChild(el('p', { class: 'eyebrow', text: 'Cover colour' }));
       var sw = el('div', { class: 'cover-swatches' }, COVER_COLORS.map(function (c, i) {
-        return el('button', { class: 'cover-swatch', 'aria-label': 'Colour ' + (i + 1), 'aria-pressed': state.journalCover.color === i ? 'true' : 'false',
+        return el('button', { class: 'cover-swatch', 'aria-label': 'Colour ' + (i + 1), 'aria-pressed': working.color === i ? 'true' : 'false',
           style: 'background:linear-gradient(150deg,' + c[0] + ',' + c[1] + ')',
-          onclick: function () { state.journalCover.color = i; Array.prototype.forEach.call(sw.children, function (b, j) { b.setAttribute('aria-pressed', j === i ? 'true' : 'false'); }); } });
+          onclick: function () { working.color = i; Array.prototype.forEach.call(sw.children, function (b, j) { b.setAttribute('aria-pressed', j === i ? 'true' : 'false'); }); } });
       }));
       p.appendChild(sw);
       p.appendChild(el('p', { class: 'eyebrow', text: 'Sticker' }));
       var st = el('div', { class: 'sticker-row' }, [''].concat(JOURNAL_STICKERS).map(function (s) {
-        return el('button', { text: s || '—', 'aria-label': s ? 'Sticker ' + s : 'No sticker', 'aria-pressed': state.journalCover.sticker === s ? 'true' : 'false',
-          onclick: function () { state.journalCover.sticker = s; Array.prototype.forEach.call(st.children, function (b) { b.setAttribute('aria-pressed', b.textContent === (s || '—') ? 'true' : 'false'); }); } });
+        return el('button', { text: s || '—', 'aria-label': s ? 'Sticker ' + s : 'No sticker', 'aria-pressed': working.sticker === s ? 'true' : 'false',
+          onclick: function () { working.sticker = s; Array.prototype.forEach.call(st.children, function (b) { b.setAttribute('aria-pressed', b.textContent === (s || '—') ? 'true' : 'false'); }); } });
       }));
       p.appendChild(st);
       p.appendChild(el('button', { class: 'btn', text: 'Save', onclick: function () {
-        state.journalCover.title = title.value.trim().slice(0, 40) || 'My Journal';
-        state.journalCover.subtitle = sub.value.trim().slice(0, 60);
-        save(); closeSheet(); render();
+        var previous = clone(state.journalCover);
+        working.title = title.value.trim().slice(0, 40) || 'My Journal';
+        working.subtitle = sub.value.trim().slice(0, 60);
+        state.journalCover = clone(working);
+        if (!save()) {
+          state.journalCover = previous;
+          showStorageFull(function () { coverSheet(working); });
+          return;
+        }
+        closeSheet(); render();
       } }));
       p.appendChild(el('button', { class: 'btn quiet', text: 'Cancel', onclick: closeSheet }));
     });
   }
 
-  function openEditor(id) {
+  function openEditor(id, templateKey) {
     var existing = id ? state.journal.filter(function (e) { return e.id === id; })[0] : null;
-    draft = existing ? clone(existing) : { id: uid(), t: Date.now(), title: '', body: '', mood: '', photos: [] };
+    var template = JOURNAL_TEMPLATES.filter(function (item) { return item.key === templateKey; })[0];
+    draft = existing ? clone(existing) : {
+      id: uid(), t: Date.now(), title: template ? template.seedTitle : '',
+      body: template ? template.seedBody : '', mood: '', photos: [], decor: ''
+    };
+    draft.photos = (draft.photos || []).filter(function (src) { return !!localImageSource(src); });
+    draft.decor = draft.decor || '';
     var isNew = !existing;
 
-    $('#jeDate').textContent = new Date(draft.t).toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+    $('#jeDate').textContent = new Date(draft.t).toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' });
     $('#jeTitle').value = draft.title;
     $('#jeBody').value = draft.body;
     $('#jePrompt').classList.remove('on'); $('#jePrompt').textContent = '';
+    $('#jeVoiceStatus').textContent = '';
+    $('#jeMicBtn').setAttribute('aria-pressed', 'false');
+    $('#jeDecorBtn').setAttribute('aria-pressed', draft.decor ? 'true' : 'false');
 
     var moodWrap = $('#jeMoodWrap'); clear(moodWrap);
     JOURNAL_MOODS.forEach(function (m) {
@@ -803,7 +980,7 @@
     if (existing) {
       var del = el('button', { id: 'jeDelete', class: 'je-tool', 'aria-label': 'Delete entry', onclick: deleteDraftEntry,
         html: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M6 7l1 13h10l1-13"/></svg>' });
-      $('#jePromptBtn').insertAdjacentElement('afterend', del);
+      $('#jeMoodWrap').parentNode.insertBefore(del, $('#jeMoodWrap'));
     }
 
     $('#journalEditor').classList.add('on'); $('#journalEditor').setAttribute('aria-hidden', 'false');
@@ -815,6 +992,8 @@
   function renderDraftPhotos() {
     var wrap = $('#jePhotos'); clear(wrap);
     draft.photos.forEach(function (src, idx) {
+      src = localImageSource(src);
+      if (!src) return;
       wrap.appendChild(el('div', { class: 'ph' }, [
         el('img', { src: src, alt: '' }),
         el('button', { class: 'rm', 'aria-label': 'Remove photo', text: '×',
@@ -823,32 +1002,37 @@
     });
   }
   function closeEditor() {
+    stopJournalRecognition(false);
     $('#journalEditor').classList.remove('on'); $('#journalEditor').setAttribute('aria-hidden', 'true');
     document.body.style.overflow = ''; draft = null;
   }
   function saveDraft(isNew) {
+    stopJournalRecognition(false);
     draft.title = $('#jeTitle').value.trim();
     draft.body = $('#jeBody').value.trim();
     if (!draft.title && !draft.body && !draft.photos.length) { closeEditor(); return; } // nothing to save
+    var previous = null;
+    var index = -1;
     if (isNew) state.journal.push(draft);
     else {
-      var i = state.journal.findIndex(function (e) { return e.id === draft.id; });
-      if (i !== -1) state.journal[i] = draft;
+      for (var entryIndex = 0; entryIndex < state.journal.length; entryIndex++) {
+        if (state.journal[entryIndex].id === draft.id) { index = entryIndex; break; }
+      }
+      if (index !== -1) {
+        previous = state.journal[index];
+        state.journal[index] = draft;
+      }
     }
     if (!save()) {
-      // Storage full — usually photos. Tell the user plainly, keep the editor open.
       if (isNew) state.journal.pop();
-      openSheet(function (p) {
-        p.appendChild(el('h2', { class: 'h-sec', text: 'Storage is full' }));
-        p.appendChild(el('p', { class: 'p', text: 'This phone’s local storage is out of room — usually photos. Remove a few images and try again. Nothing was lost.' }));
-        p.appendChild(el('button', { class: 'btn', text: 'OK', onclick: closeSheet }));
-      });
+      else if (index !== -1) state.journal[index] = previous;
+      showStorageFull();
       return;
     }
     closeEditor(); render();
   }
   // Down-scale before storing — full-res photos would blow the ~5MB local limit fast.
-  function addPhotoFromFile(file) {
+  function scaleImageFile(file, done) {
     var img = new Image(), url = URL.createObjectURL(file);
     img.onload = function () {
       var max = 1000, w = img.width, h = img.height;
@@ -856,10 +1040,120 @@
       var c = document.createElement('canvas'); c.width = w; c.height = h;
       c.getContext('2d').drawImage(img, 0, 0, w, h);
       URL.revokeObjectURL(url);
-      try { if (draft) { draft.photos.push(c.toDataURL('image/jpeg', 0.72)); renderDraftPhotos(); } } catch (e) {}
+      try { done(c.toDataURL('image/jpeg', 0.72)); } catch (e) {}
     };
     img.onerror = function () { URL.revokeObjectURL(url); };
     img.src = url;
+  }
+  function addPhotoFromFile(file) {
+    var targetDraft = draft;
+    var targetId = targetDraft && targetDraft.id;
+    if (!targetDraft) return;
+    scaleImageFile(file, function (src) {
+      if (draft === targetDraft && draft.id === targetId) {
+        draft.photos.push(src);
+        renderDraftPhotos();
+      }
+    });
+  }
+  function decorateDraftSheet() {
+    if (!draft) return;
+    openSheet(function (p) {
+      p.appendChild(el('h2', { class: 'h-sec', text: JOURNAL_UI.decorate }));
+      p.appendChild(el('div', { class: 'stack' }, JOURNAL_DECORATIONS.map(function (decor) {
+        return el('button', { class: 'opt', 'aria-pressed': draft.decor === decor.key ? 'true' : 'false',
+          onclick: function () {
+            draft.decor = decor.key;
+            $('#jeDecorBtn').setAttribute('aria-pressed', draft.decor ? 'true' : 'false');
+            closeSheet();
+          } }, [
+          el('span', { text: decor.title }),
+          el('span', { class: 'os', text: decor.prompt })
+        ]);
+      })));
+      p.appendChild(el('button', { class: 'btn quiet', text: 'Cancel', onclick: closeSheet }));
+    });
+  }
+  function setJournalVoiceStatus(text, active) {
+    $('#jeVoiceStatus').textContent = text;
+    $('#jeMicBtn').setAttribute('aria-pressed', active ? 'true' : 'false');
+  }
+  function stopJournalRecognition(showStatus) {
+    journalVoiceRequest++;
+    var recognition = journalRecognition;
+    journalRecognition = null;
+    if (recognition) {
+      recognition.onend = null;
+      recognition.onerror = null;
+      recognition.onresult = null;
+      try { recognition.stop(); } catch (e) {}
+    }
+    setJournalVoiceStatus(showStatus ? JOURNAL_UI.localVoiceStopped : '', false);
+  }
+  function startJournalTranscription() {
+    if (journalRecognition) {
+      stopJournalRecognition(true);
+      return;
+    }
+    var Recognition = window.SpeechRecognition;
+    var language = navigator.language || 'en-US';
+    var request = ++journalVoiceRequest;
+    if (!Recognition || typeof Recognition.available !== 'function') {
+      setJournalVoiceStatus(JOURNAL_UI.localVoiceUnavailable, false);
+      return;
+    }
+    var recognition;
+    try { recognition = new Recognition(); } catch (e) {
+      setJournalVoiceStatus(JOURNAL_UI.localVoiceUnavailable, false);
+      return;
+    }
+    if (!('processLocally' in recognition)) {
+      setJournalVoiceStatus(JOURNAL_UI.localVoiceUnavailable, false);
+      return;
+    }
+    // Store pending recognition too, so a second tap cancels before availability resolves.
+    journalRecognition = recognition;
+    Recognition.available({ langs: [language], processLocally: true }).then(function (availability) {
+      if (request !== journalVoiceRequest || availability !== 'available' || !draft) {
+        if (request !== journalVoiceRequest) return;
+        journalRecognition = null;
+        setJournalVoiceStatus(JOURNAL_UI.localVoiceUnavailable, false);
+        return;
+      }
+      recognition.lang = language;
+      recognition.continuous = true;
+      recognition.interimResults = false;
+      recognition.processLocally = true;
+      recognition.onresult = function (event) {
+        var words = [];
+        for (var i = event.resultIndex; i < event.results.length; i++) {
+          if (event.results[i].isFinal && event.results[i][0]) words.push(event.results[i][0].transcript);
+        }
+        if (words.length) {
+          var body = $('#jeBody');
+          var prefix = body.value && !/\s$/.test(body.value) ? ' ' : '';
+          body.value += prefix + words.join(' ').trim();
+        }
+      };
+      recognition.onerror = function () {
+        journalRecognition = null;
+        setJournalVoiceStatus(JOURNAL_UI.localVoiceError, false);
+      };
+      recognition.onend = function () {
+        journalRecognition = null;
+        setJournalVoiceStatus(JOURNAL_UI.localVoiceStopped, false);
+      };
+      journalRecognition = recognition;
+      setJournalVoiceStatus(JOURNAL_UI.localVoiceReady, true);
+      try { recognition.start(); } catch (e) {
+        journalRecognition = null;
+        setJournalVoiceStatus(JOURNAL_UI.localVoiceError, false);
+      }
+    }).catch(function () {
+      if (request !== journalVoiceRequest) return;
+      journalRecognition = null;
+      setJournalVoiceStatus(JOURNAL_UI.localVoiceUnavailable, false);
+    });
   }
   function deleteDraftEntry() {
     if (!draft) return;
@@ -1314,7 +1608,7 @@
     v.appendChild(el('p', { class: 'p-sm', style: 'text-align:center', text: 'SoulCap · v' + APP_VERSION }));
     v.appendChild(el('button', { class: 'help-btn', text: 'I need help now', onclick: openPanic }));
   }
-  var APP_VERSION = '0.7.1';
+  var APP_VERSION = '0.8.0';
   function settingsGroup(v, title, kids) { v.appendChild(el('p', { class: 'eyebrow', style: 'margin-top:14px', text: title })); kids.forEach(function (k) { if (k) v.appendChild(k); }); }
   function toggleBtn(label, on, fn) { return el('button', { class: 'btn ghost', style: 'display:flex;justify-content:space-between', onclick: fn, html: '<span>' + label + '</span><span style="color:var(--accent);font-weight:600">' + (on ? 'On' : 'Off') + '</span>' }); }
   function settingChips(opts, isOn, fn) { return el('div', { class: 'chips' }, opts.map(function (o) { return el('button', { class: 'chip', 'aria-pressed': isOn(o) ? 'true' : 'false', text: o.l, onclick: function () { fn(o); } }); })); }
@@ -1494,8 +1788,16 @@
   }
 
   /* ── Boot ──────────────────────────────────────────────────────────────── */
+  function queryValue(name) {
+    var match = location.search.match(new RegExp('[?&]' + name + '=([^&]*)'));
+    if (!match) return '';
+    try { return decodeURIComponent(match[1].replace(/\+/g, ' ')); }
+    catch (e) { return ''; }
+  }
   function boot() {
     if (location.search.indexOf('demo=1') !== -1) seedDemo();
+    var requestedTab = queryValue('tab');
+    if (['now', 'calm', 'journal', 'map', 'me'].indexOf(requestedTab) !== -1) tab = requestedTab;
 
     $('#panicExit').addEventListener('click', closePanic);
     $('#runClose').addEventListener('click', closeRunner);
@@ -1507,6 +1809,8 @@
     $('#jeCancel').addEventListener('click', closeEditor);
     $('#jePhotoBtn').addEventListener('click', function () { $('#jeFile').click(); });
     $('#jeFile').addEventListener('change', function (e) { var f = e.target.files && e.target.files[0]; if (f) addPhotoFromFile(f); e.target.value = ''; });
+    $('#jeDecorBtn').addEventListener('click', decorateDraftSheet);
+    $('#jeMicBtn').addEventListener('click', startJournalTranscription);
     $('#jeStickerBtn').addEventListener('click', function () {
       openSheet(function (p) {
         p.appendChild(el('h2', { class: 'h-sec', text: 'Add a sticker' }));
@@ -1527,6 +1831,10 @@
     Array.prototype.forEach.call($('#tabs').children, function (b) { b.addEventListener('click', function () { buzz(8); selectTab(b.dataset.tab); }); });
 
     document.addEventListener('keydown', function (e) {
+      if (e.key === 'Tab' && $('#sheet').classList.contains('on')) {
+        trapSheetFocus(e);
+        return;
+      }
       if (e.key !== 'Escape') return;
       if ($('#sheet').classList.contains('on')) closeSheet();
       else if ($('#journalEditor').classList.contains('on')) closeEditor();
@@ -1541,6 +1849,10 @@
     if ('speechSynthesis' in window) { loadVoices(); window.speechSynthesis.onvoiceschanged = loadVoices; }
 
     render();
+    if (queryValue('panic') === '1') {
+      $('#splash').classList.add('gone');
+      openPanic();
+    }
 
     var splash = $('#splash'), dismiss = function () { splash.classList.add('gone'); };
     setTimeout(dismiss, state.onboarded ? 1500 : 2300);
@@ -1551,7 +1863,7 @@
 
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
-    getState: function () { return state; }, skillCount: SKILLS.length, version: '0.7.1',
+    getState: function () { return state; }, skillCount: SKILLS.length, version: '0.8.0',
     startSkill: startSkill // test hook
   };
 

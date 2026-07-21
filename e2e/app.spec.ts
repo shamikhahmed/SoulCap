@@ -31,6 +31,12 @@ async function runSkill(page: Page, id: string) {
   await expect(page.locator('#runner')).toBeVisible();
 }
 
+async function openBlankJournalEntry(page: Page) {
+  await page.getByRole('button', { name: /New entry/ }).click();
+  await page.getByRole('button', { name: /Blank page/ }).click();
+  await expect(page.locator('#journalEditor')).toBeVisible();
+}
+
 test.describe('Smoke', () => {
   test('loads with no console errors', async ({ page }) => {
     const errors: string[] = [];
@@ -54,6 +60,14 @@ test.describe('Smoke', () => {
       }, tab);
       await expect(page.locator('.view.on')).toContainText(heading);
     }
+  });
+
+  test('malformed query encoding does not stop boot', async ({ page }) => {
+    await page.goto('/?tab=%E0%A4%A');
+    await page.waitForFunction(() => Boolean((window as any).__soulcap));
+    await dismissSplash(page);
+    await expect(page.locator('#app')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Begin' })).toBeVisible();
   });
 });
 
@@ -114,8 +128,7 @@ test.describe('Journal', () => {
     await seedDemo(page);
     await page.evaluate(() => (document.querySelector('#tabs button[data-tab="journal"]') as HTMLElement).click());
     const before = await page.evaluate(() => (window as any).__soulcap.getState().journal.length);
-    await page.getByRole('button', { name: /New entry/ }).click();
-    await expect(page.locator('#journalEditor')).toBeVisible();
+    await openBlankJournalEntry(page);
     await page.locator('#jeBody').fill('A quiet test entry.');
     await page.locator('#jeSave').click();
     await expect(page.locator('#journalEditor')).toBeHidden();
@@ -134,6 +147,37 @@ test.describe('Journal', () => {
     await expect(page.locator('.book-cover')).toContainText('Night Pages');
   });
 
+  test('a local photo can become the journal cover', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="journal"]') as HTMLElement).click());
+    await page.locator('.book-cover').click();
+    await page.locator('#sheetPanel input[type="file"]').setInputFiles({
+      name: 'cover.png',
+      mimeType: 'image/png',
+      buffer: Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=', 'base64')
+    });
+    await expect(page.locator('.cover-photo-preview')).toBeVisible();
+    await page.locator('#sheetPanel').getByRole('button', { name: 'Save' }).click();
+    await expect(page.locator('.book-cover .bc-photo')).toBeVisible();
+    const source = await page.locator('.book-cover .bc-photo').getAttribute('src');
+    expect(source).toMatch(/^data:image\/jpeg/);
+  });
+
+  test('rebuilt cover sheet restores focus to its external opener', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="journal"]') as HTMLElement).click());
+    const opener = page.locator('.book-cover');
+    await opener.click();
+    await page.locator('#sheetPanel input[type="file"]').setInputFiles({
+      name: 'cover.png',
+      mimeType: 'image/png',
+      buffer: Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=', 'base64')
+    });
+    await expect(page.locator('.cover-photo-preview')).toBeVisible();
+    await page.locator('#sheetPanel').getByRole('button', { name: 'Cancel' }).click();
+    await expect(opener).toBeFocused();
+  });
+
   test('changing theme does not scroll the page to the top', async ({ page }) => {
     await seedDemo(page);
     await page.evaluate(() => (document.querySelector('#tabs button[data-tab="me"]') as HTMLElement).click());
@@ -146,9 +190,186 @@ test.describe('Journal', () => {
   test('the paper editor uses the serif reading face', async ({ page }) => {
     await seedDemo(page);
     await page.evaluate(() => (document.querySelector('#tabs button[data-tab="journal"]') as HTMLElement).click());
-    await page.getByRole('button', { name: /New entry/ }).click();
+    await openBlankJournalEntry(page);
     const font = await page.locator('#jeBody').evaluate((n) => getComputedStyle(n).fontFamily);
     expect(font.toLowerCase()).toMatch(/serif|new york|georgia/);
+  });
+
+  test('a template seeds a new draft while blank stays available', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="journal"]') as HTMLElement).click());
+    await page.getByRole('button', { name: /New entry/ }).click();
+    await expect(page.getByRole('button', { name: /Blank page/ })).toBeVisible();
+    await page.getByRole('button', { name: /Three good things/ }).click();
+    await expect(page.locator('#jeTitle')).toHaveValue('Three good things');
+    await expect(page.locator('#jeBody')).toHaveValue(/1\.\s+2\.\s+3\./);
+  });
+
+  test('on-device transcription appends text and sends no external request', async ({ page }) => {
+    await page.addInitScript(() => {
+      function FakeRecognition(this: any) { this.processLocally = false; }
+      (FakeRecognition as any).available = (options: any) => {
+        (window as any).__speechAvailabilityOptions = options;
+        return Promise.resolve('available');
+      };
+      (FakeRecognition as any).prototype.start = function () {
+        (window as any).__speechRecognitionInstance = this;
+        const result: any = [{ transcript: 'spoken words' }];
+        result.isFinal = true;
+        setTimeout(() => this.onresult({ resultIndex: 0, results: [result] }), 0);
+      };
+      (FakeRecognition as any).prototype.stop = function () {};
+      (window as any).SpeechRecognition = FakeRecognition;
+    });
+    await seedDemo(page);
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="journal"]') as HTMLElement).click());
+    await openBlankJournalEntry(page);
+    await page.locator('#jeBody').fill('Before');
+    const requests: string[] = [];
+    page.on('request', (request) => requests.push(request.url()));
+    await page.getByRole('button', { name: 'Transcribe with microphone' }).click();
+    await expect(page.locator('#jeBody')).toHaveValue('Before spoken words');
+    const localOnly = await page.evaluate(() => ({
+      options: (window as any).__speechAvailabilityOptions,
+      processLocally: (window as any).__speechRecognitionInstance.processLocally
+    }));
+    expect(localOnly.options).toMatchObject({ processLocally: true });
+    expect(localOnly.processLocally).toBe(true);
+    expect(requests).toEqual([]);
+  });
+
+  test('pending transcription cannot start after editor closes', async ({ page }) => {
+    await page.addInitScript(() => {
+      (window as any).__recognitionStarts = 0;
+      function SlowRecognition(this: any) { this.processLocally = false; }
+      (SlowRecognition as any).available = () => new Promise((resolve) => setTimeout(() => resolve('available'), 120));
+      (SlowRecognition as any).prototype.start = function () { (window as any).__recognitionStarts++; };
+      (SlowRecognition as any).prototype.stop = function () {};
+      (window as any).SpeechRecognition = SlowRecognition;
+    });
+    await seedDemo(page);
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="journal"]') as HTMLElement).click());
+    await openBlankJournalEntry(page);
+    await page.getByRole('button', { name: 'Transcribe with microphone' }).click();
+    await page.getByRole('button', { name: 'Close' }).click();
+    await page.waitForTimeout(180);
+    const starts = await page.evaluate(() => (window as any).__recognitionStarts);
+    expect(starts).toBe(0);
+  });
+
+  test('a second mic tap cancels pending local transcription', async ({ page }) => {
+    await page.addInitScript(() => {
+      (window as any).__recognitionStarts = 0;
+      function SlowRecognition(this: any) { this.processLocally = false; }
+      (SlowRecognition as any).available = () => new Promise((resolve) => {
+        (window as any).__resolveSpeechAvailability = resolve;
+      });
+      (SlowRecognition as any).prototype.start = function () { (window as any).__recognitionStarts++; };
+      (SlowRecognition as any).prototype.stop = function () {};
+      (window as any).SpeechRecognition = SlowRecognition;
+    });
+    await seedDemo(page);
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="journal"]') as HTMLElement).click());
+    await openBlankJournalEntry(page);
+    const mic = page.getByRole('button', { name: 'Transcribe with microphone' });
+    await mic.click();
+    await mic.click();
+    await page.evaluate(() => (window as any).__resolveSpeechAvailability('available'));
+    await page.waitForTimeout(50);
+    expect(await page.evaluate(() => (window as any).__recognitionStarts)).toBe(0);
+    await expect(mic).toHaveAttribute('aria-pressed', 'false');
+  });
+
+  test('unsupported transcription stays private and keeps editor usable', async ({ page }) => {
+    await page.addInitScript(() => {
+      Object.defineProperty(window, 'SpeechRecognition', { configurable: true, value: undefined });
+    });
+    await seedDemo(page);
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="journal"]') as HTMLElement).click());
+    await openBlankJournalEntry(page);
+    await page.getByRole('button', { name: 'Transcribe with microphone' }).click();
+    await expect(page.locator('#jeVoiceStatus')).toContainText('not available');
+    await page.locator('#jeBody').fill('Typed instead.');
+    await page.locator('#jeSave').click();
+    await expect(page.locator('#view-journal')).toContainText('Typed instead.');
+  });
+
+  test('search filters entries and month navigation is available', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => {
+      const state = (window as any).__soulcap.getState();
+      state.journal.push({ id: 'older-entry', t: new Date(2025, 0, 12).getTime(), title: 'Winter note', body: 'A unique snow thought.', mood: '', photos: [] });
+      localStorage.setItem('soulcap_v1', JSON.stringify(state));
+      (document.querySelector('#tabs button[data-tab="journal"]') as HTMLElement).click();
+    });
+    await expect(page.locator('.journal-months')).toBeVisible();
+    await page.getByRole('searchbox', { name: 'Search your journal' }).fill('unique snow');
+    await expect(page.locator('.j-entry')).toHaveCount(1);
+    await expect(page.locator('.j-entry')).toContainText('Winter note');
+    await page.getByRole('searchbox', { name: 'Search your journal' }).fill('does not exist');
+    await expect(page.locator('.journal-contents')).toContainText('No entries match');
+  });
+
+  test('entry decoration persists', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="journal"]') as HTMLElement).click());
+    await openBlankJournalEntry(page);
+    await page.locator('#jeBody').fill('A decorated thought.');
+    await page.getByRole('button', { name: 'Decorate this page' }).click();
+    await page.getByRole('button', { name: /Washi edge/ }).click();
+    await page.locator('#jeSave').click();
+    await expect(page.locator('.j-entry.decor-washi')).toContainText('A decorated thought.');
+  });
+
+  test('failed edit save restores previous entry', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="journal"]') as HTMLElement).click());
+    const entry = page.locator('.j-entry').filter({ hasText: 'A better evening' });
+    await entry.click();
+    await page.locator('#jeTitle').fill('Changed but not saved');
+    await page.evaluate(() => {
+      Storage.prototype.setItem = function () { throw new DOMException('Quota exceeded', 'QuotaExceededError'); };
+    });
+    await page.locator('#jeSave').click();
+    await expect(page.locator('#sheetPanel')).toContainText('Storage is full');
+    const title = await page.evaluate(() => (window as any).__soulcap.getState().journal.find((e: any) => e.title === 'A better evening')?.title);
+    expect(title).toBe('A better evening');
+  });
+
+  test('failed new-entry save keeps a retryable draft', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="journal"]') as HTMLElement).click());
+    const before = await page.evaluate(() => (window as any).__soulcap.getState().journal.length);
+    await openBlankJournalEntry(page);
+    await page.locator('#jeBody').fill('Keep this draft for retry.');
+    await page.evaluate(() => {
+      Storage.prototype.setItem = function () { throw new DOMException('Quota exceeded', 'QuotaExceededError'); };
+    });
+    await page.locator('#jeSave').click();
+    await expect(page.locator('#sheetPanel')).toContainText('Storage is full');
+    await page.getByRole('button', { name: 'OK' }).click();
+    await expect(page.locator('#journalEditor')).toBeVisible();
+    await expect(page.locator('#jeBody')).toHaveValue('Keep this draft for retry.');
+    const after = await page.evaluate(() => (window as any).__soulcap.getState().journal.length);
+    expect(after).toBe(before);
+  });
+
+  test('failed cover save restores state and reopens staged edits', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="journal"]') as HTMLElement).click());
+    const original = await page.evaluate(() => (window as any).__soulcap.getState().journalCover.title);
+    await page.locator('.book-cover').click();
+    await expect(page.locator('#sheet')).toHaveAttribute('aria-labelledby', 'sheetTitle');
+    await page.locator('#sheetPanel input[type="text"]').first().fill('Retry this cover');
+    await page.evaluate(() => {
+      Storage.prototype.setItem = function () { throw new DOMException('Quota exceeded', 'QuotaExceededError'); };
+    });
+    await page.locator('#sheetPanel').getByRole('button', { name: 'Save' }).click();
+    await expect(page.locator('#sheetPanel')).toContainText('Storage is full');
+    const current = await page.evaluate(() => (window as any).__soulcap.getState().journalCover.title);
+    expect(current).toBe(original);
+    await page.getByRole('button', { name: 'OK' }).click();
+    await expect(page.locator('#sheetPanel input[type="text"]').first()).toHaveValue('Retry this cover');
   });
 });
 
@@ -343,6 +564,22 @@ test.describe('Accessibility', () => {
     for (let i = 0; i < n; i++) {
       expect((await tabs.nth(i).innerText()).trim().length).toBeGreaterThan(0);
     }
+  });
+
+  test('sheets trap focus and restore the opener', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="journal"]') as HTMLElement).click());
+    const opener = page.getByRole('button', { name: /New entry/ });
+    await opener.click();
+    const blank = page.getByRole('button', { name: /Blank page/ });
+    const cancel = page.locator('#sheetPanel').getByRole('button', { name: 'Cancel' });
+    await expect(blank).toBeFocused();
+    await page.keyboard.press('Shift+Tab');
+    await expect(cancel).toBeFocused();
+    await page.keyboard.press('Tab');
+    await expect(blank).toBeFocused();
+    await page.keyboard.press('Escape');
+    await expect(opener).toBeFocused();
   });
 });
 

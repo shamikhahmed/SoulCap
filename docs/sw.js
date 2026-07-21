@@ -7,15 +7,16 @@
  *
  * Bump CACHE on every asset change or users get a stale build.
  */
-const CACHE = 'soulcap-v071';
+var CACHE = 'soulcap-v080';
 
-const ASSETS = [
+var ASSETS = [
   './',
   'index.html',
   'app.css',
   'data.js',
   'app.js',
   'manifest.json',
+  'icons/mark.svg',
   'icons/favicon.svg',
   'icons/icon-192.png',
   'icons/icon-512.png',
@@ -24,49 +25,54 @@ const ASSETS = [
   'icons/apple-touch-icon-180.png'
 ];
 
-self.addEventListener('install', (e) => {
+self.addEventListener('install', function (e) {
   e.waitUntil(
     caches.open(CACHE)
-      .then((c) => c.addAll(ASSETS))
-      .then(() => self.skipWaiting())
+      .then(function (c) { return c.addAll(ASSETS); })
+      .then(function () { return self.skipWaiting(); })
   );
 });
 
-self.addEventListener('activate', (e) => {
+self.addEventListener('activate', function (e) {
   e.waitUntil(
     caches.keys()
-      .then((keys) => Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k))))
-      .then(() => self.clients.claim())
+      .then(function (keys) {
+        return Promise.all(keys.filter(function (k) { return k !== CACHE; }).map(function (k) { return caches.delete(k); }));
+      })
+      .then(function () { return self.clients.claim(); })
   );
 });
 
-self.addEventListener('fetch', (e) => {
-  const req = e.request;
+self.addEventListener('fetch', function (e) {
+  var req = e.request;
   if (req.method !== 'GET') return;
-  if (new URL(req.url).origin !== self.location.origin) return;
+  var url = new URL(req.url);
+  if (url.origin !== self.location.origin) return;
 
   // Navigations: network first so updates land, cache as the offline floor.
   if (req.mode === 'navigate') {
+    var scopePath = new URL(self.registration.scope).pathname;
+    var shellNavigation = url.pathname === scopePath || url.pathname === scopePath + 'index.html';
     e.respondWith(
       fetch(req)
-        .then((res) => {
-          const copy = res.clone();
-          caches.open(CACHE).then((c) => c.put('index.html', copy));
+        .then(function (res) {
+          var copy = res.clone();
+          caches.open(CACHE).then(function (c) { c.put(shellNavigation ? 'index.html' : req, copy); });
           return res;
         })
-        .catch(() => caches.match('index.html'))
+        .catch(function () { return caches.match(shellNavigation ? 'index.html' : req); })
     );
     return;
   }
 
   // Everything else cache-first — assets are versioned by the cache name.
   e.respondWith(
-    caches.match(req).then((hit) => {
+    caches.match(req).then(function (hit) {
       if (hit) return hit;
-      return fetch(req).then((res) => {
+      return fetch(req).then(function (res) {
         if (res && res.status === 200 && res.type === 'basic') {
-          const copy = res.clone();
-          caches.open(CACHE).then((c) => c.put(req, copy));
+          var copy = res.clone();
+          caches.open(CACHE).then(function (c) { c.put(req, copy); });
         }
         return res;
       });

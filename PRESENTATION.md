@@ -1,6 +1,9 @@
 # SoulCap — Platform Presentation
 
-> **Honesty (shipped product):** The live PWA at [`docs/`](./docs/) / GitHub Pages is a **Smart Companion** — rules-based reflections, keyword safety tiers, on-device journal. **Not** a live LLM. NestJS + model providers in `backend/` are a **lab only** (not deployed). See `README.md` + `SAFETY.md`.
+> **Honesty (shipped product):** The live PWA at [`docs/`](./docs/) / GitHub Pages is a
+> private, self-guided wellness tool: deterministic suggestions, guided skills, journal, and
+> Constellation. It has no chat surface or live LLM. NestJS + model providers in `backend/` are
+> an undeployed lab. See `README.md` + `SAFETY.md`.
 
 ---
 
@@ -19,7 +22,9 @@
 
 ## Slide 2: Introducing SoulCap
 
-**SoulCap** ships as an offline-first **clinical-path wellness PWA** with a **Smart Companion** (canned reflections + keyword safety rails). Architecture work toward a Living Mind Model lives in undeployed Nest lab source. **Not clinical care or production therapy.** See `SAFETY.md`.
+**SoulCap** ships as an offline-first, self-guided wellness PWA with context-fitted skills, a
+private journal book, and a relationship map. Architecture work toward a Living Mind Model lives
+in undeployed Nest lab source. **Not clinical care or therapy.** See `SAFETY.md`.
 
 Not a chatbot pretending to be a therapist. A companion shell that stays honest about what runs on-device today.
 
@@ -44,7 +49,8 @@ Not a chatbot pretending to be a therapist. A companion shell that stays honest 
 - Weekly snapshots capture growth over time
 - A future orchestration layer would adapt tone/strategy from that profile
 
-**Shipped PWA today:** local check-ins, journals, habits, and Smart Companion replies — no live LMM or LLM.
+**Shipped PWA today:** local check-ins, a full private journal book, guided techniques, and
+deterministic personalisation — no live LMM or LLM.
 
 ---
 
@@ -63,27 +69,27 @@ Every Nest-lab message path is designed to go through **10 steps** before a mode
 9. **Response Generation** — Contextually appropriate reply
 10. **Hard Rail Check** — Safety re-validation before delivery
 
-**Shipped PWA:** keyword safety first; Smart Companion canned replies; Panic/988 resources.
+**Shipped PWA:** keyword safety first, deterministic suggestions, and number-free Help guidance.
 
 ---
 
 ## Slide 5: Safety First
 
-SoulCap operates a **4-Tier Safety System**:
+The repository keeps a **4-tier keyword kernel** for regression tests and future evaluated work.
+The current PWA has no chat input and does not run private journal text through this detector.
 
 | Tier | Level | Response |
 |------|-------|----------|
-| 0 | NONE | Normal Smart Companion dialogue |
-| 1 | DISTRESS | Gentle acknowledgment + resources offered |
-| 2 | ELEVATED | Direct safety check-in + escalation prompt |
-| 3 | ACUTE | **Hardcoded crisis response** — no model required; 988 / emergency contacts |
+| 0 | NONE | No keyword match |
+| 1 | DISTRESS | Reserved; current kernel does not emit this tier |
+| 2 | ELEVATED | Regression-tested classification only |
+| 3 | ACUTE | Regression-tested classification only; no generated response |
 
-**Panic Mode** — One-tap crisis support:
-- 5-4-3-2-1 grounding exercise
-- Box breathing guide
-- Safe place visualization
-- Cold water reset
-- Direct links to 988, Crisis Text Line, local emergency services
+**Help Now** — One-tap, hard-coded support:
+- A slow paced-breathing visual
+- A reminder that there is nothing to get right
+- A user-controlled shortcut to their own messaging app
+- Number-free guidance to reach someone trusted or local emergency services
 
 > SoulCap never claims to be a therapist. Never provides diagnosis. Always encourages professional help.
 
@@ -93,15 +99,15 @@ SoulCap operates a **4-Tier Safety System**:
 
 | Feature | Description |
 |---------|-------------|
-| **Smart Companion** | Rules-based reflections (PWA); Nest lab holds LLM orchestration source |
-| **Daily Check-Ins** | Mood, energy, sleep tracking on-device |
-| **Voice Notes** | Lab path: optional Whisper when keys exist — not required for PWA |
-| **Journaling** | Local journals + clinician notes path |
+| **Context-fitted suggestions** | Deterministic skill choices based on check-ins and user context |
+| **Daily Check-Ins** | One-tap emotional check-ins stored on-device |
+| **Voice Journal** | Transcription only when the browser verifies on-device processing; no cloud fallback |
+| **Journaling** | Private local book with templates, photos, search, month contents, and decoration |
 | **Pattern Detection** | Lab direction; PWA keeps honest local history |
 | **Weekly Insights** | Lab narrative reports — not fabricated in the PWA |
-| **Goal / Habit Tracking** | On-device habits with simple streaks |
-| **Intervention Tools** | Grounding flows in Panic mode |
-| **Panic Mode** | Instant crisis support with grounding flows |
+| **Micro-habits** | Planned without streaks, scores, or guilt mechanics |
+| **Intervention Tools** | Grounding and breathing flows in Help |
+| **Help Now** | Immediate grounding and number-free reach-out guidance; not a crisis service |
 
 ---
 
