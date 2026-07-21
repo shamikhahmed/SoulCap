@@ -1,3 +1,25 @@
+## [0.7.1] — 2026-07-21
+
+### Fixed
+- **Exercises no longer race by.** Guided steps now show a **visible countdown** in the orb,
+  stay on screen much longer (min ~9s, scaled by the pace setting), and swell gently across each
+  step. Far kinder for anyone reading in a second language. New **Exercise pace** setting
+  (Slow / Steady / Brisk) and a per-run "Pause the timer / I'll tap Next" control.
+- **Voices no longer sound like a joke.** The picker now **filters out the novelty system voices**
+  (Bubbles, Zarvox, Bad News…) that made it cartoonish, lists the enhanced/natural ones first,
+  labels each by **accent** (American / British / Australian / Indian…) with an accent filter, and
+  is honest that quality is best on a phone. Speed and pitch kept.
+
+### Changed
+- **Voice auto-quiets around people.** On the panic screen (and any exercise you launch after
+  telling Calm you're "around people"), spoken guidance starts **silent** so it never blares in
+  public. A one-tap speaker toggle turns it on if you're alone.
+- **All crisis phone numbers and country selection removed** (owner decision — we can't promise any
+  specific line is reachable). The help screen now gives gentle, number-free guidance: reach out to
+  someone you trust, and contact local emergency services if in danger. Onboarding no longer asks
+  your country.
+- SW `soulcap-v071`. Tests now 88 across mobile + desktop.
+
 ## [0.7.0] — 2026-07-21
 
 The journal becomes a book, the theme goes purple, and two annoyances are fixed.

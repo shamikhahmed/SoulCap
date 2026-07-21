@@ -1,6 +1,6 @@
 # SoulCap — Safety & Truth Inventory
 
-**Version:** 0.7.0 · **Updated:** 2026-07-21
+**Version:** 0.7.1 · **Updated:** 2026-07-21
 **Status:** **Clinical path** — self-guided wellness companion.
 **Not** a cleared SaMD / medical device. **Not** a substitute for licensed care.
 See also `CLINICAL.md` and `Capricorn-Brain/AI/Claude-Code/SoulCap-Eval-Harness.md`.
@@ -44,7 +44,7 @@ Previous release preserved at `docs/legacy-v032.html`.
 - Constellation `hard right now` suppresses all suggestions for that person, permanently
   and silently. No reconciliation nudges.
 - The app never contacts anyone. "Open messages" hands off to the OS with an empty draft.
-- 84 Playwright tests across mobile + desktop; safety tests gate the deploy in CI.
+- 88 Playwright tests across mobile + desktop; safety tests gate the deploy in CI.
 
 ### Known gap fixed this release
 
@@ -57,18 +57,20 @@ certainly more of them still in there.
 
 ---
 
-## Crisis directory — what is and isn't shipped
+## Reaching out — no crisis directory (v0.7.1)
 
-| Region | Shipped | Basis |
-|---|---|---|
-| US | 988, Crisis Text Line 741741, 911 | Long-established, publicly documented |
-| UK | **Removed at owner request — routed to international** | Named lines deleted 2026-07-21; floor kept so the screen is never empty |
-| **Pakistan** | Umang (24/7), Taskeen, Rozan, Rescue 1122 | Nationally-recognised, corroborated across Umang/Taskeen/Rozan/MHIN/UNFPA; owner to re-confirm before wide launch |
-| UK / elsewhere | IASP directory + local emergency | "Find a Helpline" removed at owner instruction |
+**All crisis phone numbers and the country/region selection were removed at the owner's
+instruction** (v0.7.1). Rationale: we cannot promise any specific line is reachable, and a number
+that rings out is worse than none.
 
-**Do not add a Pakistan-specific number without independent verification that it is live,
-staffed, and its hours recorded.** A crisis number that rings out is worse than no number,
-because the person has already reached the point of asking for help. Absent beats wrong.
+The help screen now gives **gentle, number-free, country-agnostic guidance**:
+- "Reach out to someone you trust — a family member, a friend."
+- One-tap **"Message someone I trust"** → opens the user's own messages (no specific contact).
+- "If you feel unsafe or in danger, please contact your local emergency services or a crisis
+  helpline in your area." — a category, not a number.
+
+Onboarding no longer asks the user's country. If a future market wants verified local lines back,
+re-introduce them per region behind the region-pack model and verify each is live before launch.
 
 ---
 

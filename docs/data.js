@@ -380,36 +380,9 @@ const NEEDS_META = {
  * live and staffed. PK routes to the international directory — an absent local
  * number is safer than a wrong one. Do not add entries without verification.
  */
-const CRISIS = {
-  US: [
-    { name:'988 Suicide & Crisis Lifeline', detail:'Call or text 988', href:'tel:988' },
-    { name:'Crisis Text Line', detail:'Text HOME to 741741', href:'sms:741741&body=HOME' },
-    { name:'Emergency services', detail:'911', href:'tel:911' }
-  ],
-  // Pakistan — nationally-recognised services, corroborated across Umang, Taskeen,
-  // Rozan, MHIN and UNFPA (July 2026). Owner should re-confirm numbers and hours
-  // before wide distribution; hours are shown so a closed line reads honestly.
-  PK: [
-    { name:'Umang', detail:'Call 0311-7786264 — 24/7, free, Urdu & regional languages', href:'tel:03117786264' },
-    { name:'Taskeen', detail:'Call 0316-8275336 — Mon–Sat, 11am–11pm', href:'tel:03168275336' },
-    { name:'Rozan Counselling', detail:'Call 0800-22444 — Mon–Sat, 10am–6pm', href:'tel:080022444' },
-    { name:'Emergency services', detail:'Rescue 1122', href:'tel:1122' }
-  ],
-  // UK routes here (named UK lines removed at owner instruction). "Find a Helpline"
-  // removed at owner instruction. IASP + local emergency remain as a floor so the
-  // screen is never empty.
-  INTL: [
-    { name:'IASP crisis centres', detail:'International directory of crisis centres', href:'https://www.iasp.info/resources/Crisis_Centres/' },
-    { name:'Local emergency services', detail:'Your country’s emergency number', href:null }
-  ]
-};
-
-const REGIONS = [
-  { code:'US',   label:'United States',  crisis:'US'   },
-  { code:'UK',   label:'United Kingdom', crisis:'INTL' },
-  { code:'PK',   label:'Pakistan',       crisis:'PK'   },
-  { code:'INTL', label:'Somewhere else', crisis:'INTL' }
-];
+// No crisis-line directory and no region/country selection (owner decision — we
+// can't promise any specific line is reachable, so we point to people and general
+// emergency services rather than naming numbers). See renderPanicHelp in app.js.
 
 const CONCERNS = [
   'Hard to switch off','Sleep','Low mood','Panic','Grief',

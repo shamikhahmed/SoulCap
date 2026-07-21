@@ -21,7 +21,6 @@ async function freshThrough(page: Page) {
   await page.getByRole('button', { name: 'Begin' }).click();
   await page.getByRole('button', { name: '18 or older' }).click();
   await page.getByRole('button', { name: 'Skip', exact: true }).click(); // name step
-  await page.getByRole('button', { name: /United Kingdom/ }).click();
   await page.getByRole('button', { name: 'I understand' }).click();
   await page.getByRole('button', { name: /Skip — just let me in/ }).click();
 }

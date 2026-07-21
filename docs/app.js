@@ -106,12 +106,40 @@
   }
 
   /* ── Voice (device speech synthesis, local only) ───────────────────────── */
+  // Device (offline) voices only — no network TTS. The big win is filtering out
+  // the joke/novelty system voices (Bubbles, Zarvox, Bad News…) that made the
+  // picker feel cartoonish, and labelling the good ones by accent.
+  var NOVELTY = ['albert','bad news','bahh','bells','boing','bubbles','cellos','good news',
+    'jester','organ','superstar','trinoids','whisper','wobble','zarvox','deranged',
+    'hysterical','pipe organ','novelty','bells','grandma','grandpa','flo','rocko','sandy','shelley','eddy','reed'];
   var voices = [];
   function loadVoices() {
     if (!('speechSynthesis' in window)) return;
     voices = window.speechSynthesis.getVoices().filter(function (v) {
-      return v.lang && v.lang.toLowerCase().indexOf('en') === 0;
+      if (!v.lang || v.lang.toLowerCase().indexOf('en') !== 0) return false;
+      var n = v.name.toLowerCase();
+      return !NOVELTY.some(function (bad) { return n.indexOf(bad) !== -1; });
     });
+    // Enhanced / premium / Siri voices first — they sound the most natural.
+    voices.sort(function (a, b) { return voiceQuality(b) - voiceQuality(a); });
+  }
+  function voiceQuality(v) {
+    var n = v.name.toLowerCase(), q = 0;
+    if (/premium|enhanced|neural/.test(n)) q += 3;
+    if (/siri|samantha|serena|daniel|karen|moira|tessa|aaron|nicky|rishi|veena/.test(n)) q += 2;
+    if (v.localService) q += 1;
+    return q;
+  }
+  function voiceAccent(v) {
+    var l = (v.lang || '').toLowerCase();
+    if (l.indexOf('en-gb') === 0) return 'British';
+    if (l.indexOf('en-us') === 0) return 'American';
+    if (l.indexOf('en-au') === 0) return 'Australian';
+    if (l.indexOf('en-in') === 0) return 'Indian';
+    if (l.indexOf('en-ie') === 0) return 'Irish';
+    if (l.indexOf('en-za') === 0) return 'South African';
+    if (l.indexOf('en-ca') === 0) return 'Canadian';
+    return 'English';
   }
   function bestVoice() {
     if (!voices.length) return null;
@@ -119,11 +147,14 @@
       var picked = voices.filter(function (v) { return v.name === state.voice.name; })[0];
       if (picked) return picked;
     }
-    var nice = voices.filter(function (v) { return /premium|enhanced|siri|samantha|serena|daniel|karen|moira/i.test(v.name); });
-    return nice[0] || voices[0];
+    return voices[0]; // already sorted best-first
   }
+  // Per-session mute for guided speech. Defaults quiet when the user might be
+  // around people; they can turn it on with the speaker toggle if they're alone.
+  var sessionMute = false;
+  function voiceActive() { return state.voice.on && !sessionMute; }
   function speak(text) {
-    if (!state.voice.on || !('speechSynthesis' in window)) return;
+    if (!voiceActive() || !('speechSynthesis' in window)) return;
     try {
       window.speechSynthesis.cancel();
       var u = new SpeechSynthesisUtterance(text);
@@ -134,19 +165,17 @@
   }
   function hushVoice() { try { window.speechSynthesis.cancel(); } catch (e) {} }
 
-  /* ── Crisis ────────────────────────────────────────────────────────────── */
-  function crisisList() {
-    var r = REGIONS.filter(function (x) { return x.code === state.region; })[0];
-    return CRISIS[(r && r.crisis) || 'INTL'];
-  }
-  function renderCrisisLinks(container) {
+  /* ── Reaching out ──────────────────────────────────────────────────────────
+   * No phone numbers, no country-specific lines (owner decision — we can't
+   * promise any line is reachable). Gentle, general guidance instead, plus a
+   * one-tap way to message a person the user trusts. */
+  function renderPanicHelp(container) {
     clear(container);
-    crisisList().forEach(function (c, i) {
-      container.appendChild(c.href
-        ? el('a', { href: c.href, class: 'btn ' + (i === 0 ? 'panic-call' : 'crisis-alt'),
-                    style: 'text-decoration:none', text: c.name + ' — ' + c.detail })
-        : el('div', { class: 'notice', text: c.name + ' — ' + c.detail }));
-    });
+    container.appendChild(el('p', { class: 'panic-sub', style: 'margin:0',
+      text: 'You don’t have to get through this alone. Reaching out to someone — a family member, a friend, anyone who steadies you — really can help.' }));
+    container.appendChild(el('a', { href: 'sms:', class: 'btn', style: 'text-decoration:none', text: 'Message someone I trust' }));
+    container.appendChild(el('p', { class: 'p-sm', style: 'margin:2px 0 0',
+      text: 'If you feel unsafe or in danger, please contact your local emergency services or a crisis helpline in your area.' }));
   }
 
   var pacerTimer = null, pacerPhase = 0;
@@ -155,9 +184,32 @@
     { label: 'Breathe out, slowly.', scale: 0.7 }, { label: 'Hold.', scale: 0.7 }
   ];
   function openPanic() {
+    // Safest default: silent, so it never blares in a public place. If voice is
+    // enabled, the speaker toggle lets someone alone turn it on in one tap.
+    sessionMute = true;
     $('#panic').classList.add('on'); $('#panic').setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
-    renderCrisisLinks($('#panicLinks')); runPacer(); buzz(18); $('#panicExit').focus();
+    renderPanicHelp($('#panicLinks')); renderVoiceToggle($('#panicVoice'), 'panic');
+    runPacer(); buzz(18); $('#panicExit').focus();
+  }
+
+  // A small speaker control shown on panic + runner. Only appears if the user has
+  // spoken guidance switched on globally; otherwise there's nothing to toggle.
+  function renderVoiceToggle(container, ctx) {
+    if (!container) return;
+    clear(container);
+    if (!state.voice.on) return;
+    var on = voiceActive();
+    container.appendChild(el('button', { class: 'voice-toggle', 'aria-pressed': on ? 'true' : 'false',
+      onclick: function () {
+        sessionMute = !sessionMute; if (sessionMute) hushVoice(); buzz(10);
+        renderVoiceToggle(container, ctx);
+        if (ctx === 'runner' && !sessionMute && runState && runState.mode !== 'setup') { /* voice resumes on next step/phase */ }
+      },
+      html: (on
+        ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M17 8a5 5 0 0 1 0 8"/></svg>Voice on'
+        : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M22 9l-6 6M16 9l6 6"/></svg>Voice off') }));
+    if (state.voice.on) container.appendChild(el('span', { class: 'voice-hint', text: on ? 'On — tap to silence if you’re around people' : 'Silent — tap if you’re on your own' }));
   }
   function closePanic() {
     $('#panic').classList.remove('on'); $('#panic').setAttribute('aria-hidden', 'true');
@@ -307,7 +359,11 @@
   function startSkill(id) {
     var s = SKILLS.filter(function (x) { return x.id === id; })[0];
     if (!s) return;
+    // If the user told Calm they're around people, start silent. Otherwise follow
+    // their global voice setting. The speaker toggle can flip it either way.
+    sessionMute = (calm.seen === true);
     openRunnerShell();
+    renderVoiceToggle($('#runVoice'), 'runner');
     if (s.pattern) breathSetup(s);
     else startSteps(s);
   }
@@ -336,12 +392,13 @@
     $('#runOrb').classList.remove('paced'); $('#runOrb').style.transition = '';
     renderSteps();
   }
-  function stepDuration(text) { return Math.max(5200, text.split(/\s+/).length * 420) * paceMult(); }
+  // Generous, readable pacing — long enough for someone reading in a second
+  // language, and never shorter than a comfortable minimum. Pace slider scales it.
+  function stepDuration(text) { return Math.max(9000, text.split(/\s+/).length * 700) * paceMult(); }
   function renderSteps() {
-    clearTimeout(runState.timer);
+    clearTimeout(runState.timer); clearInterval(runState.ticker);
     var s = runState.skill, done = runState.i >= s.steps.length;
     if (done) { runnerDone(s); return; }
-    $('#runOrbCount').textContent = '';
     $('#runStep').textContent = s.name;
     var prog = $('#runProgress'); clear(prog);
     s.steps.forEach(function (_, i) { prog.appendChild(el('i', { class: i <= runState.i ? 'on' : '' })); });
@@ -355,11 +412,29 @@
     $('#runGuideIcon').innerHTML = runState.guide ? '<path d="M6 5h4v14H6zM14 5h4v14h-4z"/>' : '<path d="M8 5v14l11-7z"/>';
 
     speak(s.steps[runState.i]); buzz(10);
-    if (runState.guide) runState.timer = setTimeout(function () { runState.i++; renderSteps(); }, stepDuration(s.steps[runState.i]));
+    var orb = $('#runOrb'), count = $('#runOrbCount');
+    if (runState.guide) {
+      // Visible countdown so the user always knows how long they have on this step,
+      // and a gentle orb swell across the whole step. No more silent fast-forward.
+      var dur = stepDuration(s.steps[runState.i]), endAt = Date.now() + dur;
+      orb.classList.add('paced'); orb.style.transition = 'transform ' + dur + 'ms var(--ease-soft)';
+      orb.style.transform = 'scale(1.02)';
+      count.textContent = Math.ceil(dur / 1000);
+      runState.ticker = setInterval(function () {
+        var left = Math.ceil((endAt - Date.now()) / 1000);
+        count.textContent = left > 0 ? left : '';
+      }, 200);
+      runState.timer = setTimeout(function () { orb.style.transform = 'scale(.82)'; runState.i++; renderSteps(); }, dur);
+    } else {
+      count.textContent = ''; orb.classList.remove('paced'); orb.style.transition = ''; orb.style.transform = '';
+    }
 
     var actions = $('#runActions'); clear(actions);
     actions.appendChild(el('button', { class: 'btn', text: runState.i === s.steps.length - 1 ? 'Finish' : 'Next',
-      onclick: function () { clearTimeout(runState.timer); runState.i++; renderSteps(); } }));
+      onclick: function () { clearTimeout(runState.timer); clearInterval(runState.ticker); runState.i++; renderSteps(); } }));
+    actions.appendChild(el('button', { class: 'btn quiet',
+      text: runState.guide ? 'Pause the timer' : 'Timer off — I’ll tap Next',
+      onclick: function () { toggleGuide(); } }));
     actions.appendChild(el('button', { class: 'btn quiet', text: 'Stop — no problem', onclick: closeRunner }));
   }
   function toggleGuide() {
@@ -1213,9 +1288,13 @@
     settingsGroup(v, 'Guided exercises', [
       el('div', { class: 'stack' }, [
         toggleBtn('Spoken guidance', state.voice.on, function () { state.voice.on = !state.voice.on; save(); reRender(); }),
-        state.voice.on ? el('button', { class: 'btn ghost', text: 'Voice & speed', onclick: voiceSheet }) : null,
+        state.voice.on ? el('button', { class: 'btn ghost', text: 'Voice & accent', onclick: voiceSheet }) : null,
         toggleBtn('Vibration', state.haptics, function () { state.haptics = !state.haptics; save(); buzz(14); reRender(); })
-      ])
+      ]),
+      el('p', { class: 'eyebrow', style: 'margin-top:12px', text: 'Exercise pace' }),
+      settingChips([{ v: 1.35, l: 'Slow' }, { v: 1, l: 'Steady' }, { v: 0.8, l: 'Brisk' }],
+        function (o) { return (state.pace || 1) === o.v; }, function (o) { state.pace = o.v; save(); reRender(); }),
+      el('p', { class: 'p-sm', text: 'How long each step of a guided exercise stays on screen. Slow gives more time to read.' })
     ]);
     settingsGroup(v, 'Constellation extras', [
       el('div', { class: 'stack' }, [
@@ -1235,28 +1314,57 @@
     v.appendChild(el('p', { class: 'p-sm', style: 'text-align:center', text: 'SoulCap · v' + APP_VERSION }));
     v.appendChild(el('button', { class: 'help-btn', text: 'I need help now', onclick: openPanic }));
   }
-  var APP_VERSION = '0.7.0';
+  var APP_VERSION = '0.7.1';
   function settingsGroup(v, title, kids) { v.appendChild(el('p', { class: 'eyebrow', style: 'margin-top:14px', text: title })); kids.forEach(function (k) { if (k) v.appendChild(k); }); }
   function toggleBtn(label, on, fn) { return el('button', { class: 'btn ghost', style: 'display:flex;justify-content:space-between', onclick: fn, html: '<span>' + label + '</span><span style="color:var(--accent);font-weight:600">' + (on ? 'On' : 'Off') + '</span>' }); }
   function settingChips(opts, isOn, fn) { return el('div', { class: 'chips' }, opts.map(function (o) { return el('button', { class: 'chip', 'aria-pressed': isOn(o) ? 'true' : 'false', text: o.l, onclick: function () { fn(o); } }); })); }
 
+  var voiceFilter = 'All';
   function voiceSheet() {
     loadVoices();
     openSheet(function (p) {
-      p.appendChild(el('h2', { class: 'h-sec', text: 'Voice & speed' }));
-      p.appendChild(el('p', { class: 'p-sm', text: 'These are the voices your device provides. On Apple hardware the higher-quality system voices appear here.' }));
-      if (!voices.length) p.appendChild(el('div', { class: 'notice', text: 'No voices available on this device yet. Try again in a moment.' }));
-      else {
-        var sel = el('select', { 'aria-label': 'Voice' }, voices.map(function (v) { return el('option', { value: v.name, text: v.name, selected: state.voice.name === v.name ? 'selected' : null }); }));
-        sel.addEventListener('change', function () { state.voice.name = sel.value; state.voice.on = true; save(); speak('This is how I’ll sound.'); });
-        p.appendChild(sel);
+      p.appendChild(el('h2', { class: 'h-sec', text: 'Voice & accent' }));
+      p.appendChild(el('p', { class: 'p-sm', text: 'These are your device’s built-in voices. They sound most natural on a phone — a laptop may sound flatter. The enhanced ones are listed first.' }));
+      sessionMute = false; // let the previews be heard
+
+      if (!voices.length) {
+        p.appendChild(el('div', { class: 'notice', text: 'No voices available on this device yet. Try again in a moment, or on your phone.' }));
+      } else {
+        var accents = ['All'].concat(voices.map(voiceAccent).filter(function (a, i, arr) { return arr.indexOf(a) === i; }));
+        var listWrap = el('div', { class: 'stack' });
+        function renderList() {
+          clear(listWrap);
+          voices.filter(function (v) { return voiceFilter === 'All' || voiceAccent(v) === voiceFilter; }).forEach(function (v) {
+            var enhanced = voiceQuality(v) >= 3;
+            listWrap.appendChild(el('button', {
+              class: 'opt', 'aria-pressed': state.voice.name === v.name ? 'true' : 'false',
+              html: '<span>' + v.name.replace(/\s*\((enhanced|premium)\)/i, '') + (enhanced ? ' ✦' : '') + '</span><span class="os">' + voiceAccent(v) + '</span>',
+              onclick: function () {
+                state.voice.name = v.name; state.voice.on = true; save();
+                Array.prototype.forEach.call(listWrap.children, function (b) { b.setAttribute('aria-pressed', 'false'); });
+                this.setAttribute('aria-pressed', 'true');
+                speak('Breathe in through your nose, and slowly out.');
+              }
+            }));
+          });
+        }
+        if (accents.length > 2) {
+          p.appendChild(el('p', { class: 'eyebrow', text: 'Accent' }));
+          p.appendChild(el('div', { class: 'chips' }, accents.map(function (a) {
+            return el('button', { class: 'chip', 'aria-pressed': voiceFilter === a ? 'true' : 'false', text: a,
+              onclick: function () { voiceFilter = a; Array.prototype.forEach.call(this.parentNode.children, function (b) { b.setAttribute('aria-pressed', 'false'); }); this.setAttribute('aria-pressed', 'true'); renderList(); } });
+          })));
+        }
+        p.appendChild(el('p', { class: 'eyebrow', text: 'Voice' }));
+        p.appendChild(listWrap); renderList();
       }
-      [['Speed', 'rate', 0.5, 1.3, 0.05], ['Pitch', 'pitch', 0.6, 1.4, 0.05]].forEach(function (cfg) {
+
+      [['Speed', 'rate', 0.5, 1.2, 0.05], ['Pitch', 'pitch', 0.7, 1.3, 0.05]].forEach(function (cfg) {
         var r = el('input', { type: 'range', min: cfg[2], max: cfg[3], step: cfg[4], value: state.voice[cfg[1]], 'aria-label': cfg[0] });
         r.addEventListener('change', function () { state.voice[cfg[1]] = parseFloat(r.value); state.voice.on = true; save(); speak('Breathe out, slowly.'); });
-        p.appendChild(el('div', {}, [el('p', { class: 'eyebrow', text: cfg[0] }), r]));
+        p.appendChild(el('div', {}, [el('p', { class: 'eyebrow', style: 'margin-top:8px', text: cfg[0] }), r]));
       });
-      p.appendChild(el('button', { class: 'btn ghost', text: 'Hear it', onclick: function () { state.voice.on = true; speak('Breathe in through your nose. Hold. And out through your mouth.'); } }));
+      p.appendChild(el('button', { class: 'btn ghost', text: 'Hear a preview', onclick: function () { state.voice.on = true; speak('Breathe in through your nose. Hold. And slowly out through your mouth.'); } }));
       p.appendChild(el('button', { class: 'btn', text: 'Done', onclick: function () { hushVoice(); closeSheet(); render(); } }));
     });
   }
@@ -1296,7 +1404,7 @@
   var obStep = 0;
   function renderOnboarding() {
     var v = $('#view-onboarding'); clear(v);
-    v.appendChild(el('div', { style: 'display:flex;gap:5px;margin-bottom:8px' }, [0, 1, 2, 3, 4].map(function (i) {
+    v.appendChild(el('div', { style: 'display:flex;gap:5px;margin-bottom:8px' }, [0, 1, 2, 3].map(function (i) {
       return el('i', { style: 'height:3px;flex:1;border-radius:2px;display:block;background:' + (i <= obStep ? 'var(--accent)' : 'var(--line-strong)') });
     })));
     if (obStep === 0) {
@@ -1304,9 +1412,9 @@
       v.appendChild(el('p', { class: 'p', text: 'SoulCap is built for adults. We ask because the right support for someone under 18 looks different, and we’d rather point you somewhere better than get it wrong.' }));
       v.appendChild(el('div', { class: 'stack' }, [
         el('button', { class: 'opt', html: '18 or older', onclick: function () { state.ageOk = true; save(); obStep = 1; render(); } }),
-        el('button', { class: 'opt', html: 'Under 18<span class="os">We’ll show you services built for younger people</span>', onclick: function () { state.ageOk = false; save(); render(); } })
+        el('button', { class: 'opt', html: 'Under 18<span class="os">This isn’t built for you yet — please talk to a trusted adult or a service for young people</span>', onclick: function () { state.ageOk = false; save(); render(); } })
       ]));
-      if (state.ageOk === false) v.appendChild(el('div', { class: 'card' }, [el('p', { class: 'p-voice', text: 'SoulCap isn’t the right fit yet — but these are, and they’re good.' }), el('a', { class: 'btn', href: 'https://findahelpline.com', target: '_blank', rel: 'noopener', style: 'text-decoration:none', text: 'Find support for your age and country' })]));
+      if (state.ageOk === false) v.appendChild(el('div', { class: 'card' }, [el('p', { class: 'p-voice', text: 'SoulCap isn’t the right fit yet. Please reach out to a trusted adult, or a support service made for young people where you are.' })]));
     } else if (obStep === 1) {
       v.appendChild(el('h1', { class: 'h-voice', text: 'What should we call you?' }));
       v.appendChild(el('p', { class: 'p', text: 'So this feels like yours. Skip it if you’d rather not.' }));
@@ -1315,15 +1423,9 @@
       v.appendChild(el('button', { class: 'btn', text: 'Continue', onclick: function () { state.profile.name = name.value.trim().slice(0, 40); save(); obStep = 2; render(); } }));
       v.appendChild(el('button', { class: 'btn quiet', text: 'Skip', onclick: function () { obStep = 2; render(); } }));
     } else if (obStep === 2) {
-      v.appendChild(el('h1', { class: 'h-voice', text: 'Where are you?' }));
-      v.appendChild(el('p', { class: 'p', text: 'This sets which crisis services we show you. A helpline from the wrong country is worse than none.' }));
-      v.appendChild(el('div', { class: 'stack' }, REGIONS.map(function (r) {
-        return el('button', { class: 'opt', 'aria-pressed': state.region === r.code ? 'true' : 'false', html: r.label + (r.code === 'PK' ? '<span class="os">We show the international directory — we haven’t verified local lines yet</span>' : ''), onclick: function () { state.region = r.code; save(); obStep = 3; render(); } });
-      })));
-    } else if (obStep === 3) {
       v.appendChild(el('h1', { class: 'h-voice', text: 'What this is, plainly.' }));
-      v.appendChild(el('div', { class: 'notice', html: '<b>SoulCap is not therapy</b>, not a doctor, and not a crisis service. It teaches skills and helps you notice patterns.<ul style="margin:9px 0 0;padding-left:17px"><li>Everything stays on your phone. No account, no server.</li><li>We never sell your data or train on it.</li><li>You can export or delete all of it, any time.</li><li>If you’re in danger, we’ll always point you to real people.</li></ul>' }));
-      v.appendChild(el('button', { class: 'btn', text: 'I understand', onclick: function () { state.consent = true; save(); obStep = 4; render(); } }));
+      v.appendChild(el('div', { class: 'notice', html: '<b>SoulCap is not therapy</b>, not a doctor, and not a crisis service. It teaches skills and helps you notice patterns.<ul style="margin:9px 0 0;padding-left:17px"><li>Everything stays on your phone. No account, no server.</li><li>We never sell your data or train on it.</li><li>You can export or delete all of it, any time.</li><li>If you ever feel unsafe, please reach out to someone you trust or your local emergency services.</li></ul>' }));
+      v.appendChild(el('button', { class: 'btn', text: 'I understand', onclick: function () { state.consent = true; save(); obStep = 3; render(); } }));
     } else {
       v.appendChild(el('h1', { class: 'h-voice', text: 'What’s been hard lately?' }));
       v.appendChild(el('p', { class: 'p', text: 'Pick any, or none. You can change this whenever — skipping doesn’t break anything.' }));
@@ -1335,7 +1437,7 @@
     }
     v.appendChild(el('button', { class: 'help-btn', style: 'margin-top:auto', text: 'I need help now', onclick: openPanic }));
   }
-  function finishOnboarding() { state.onboarded = true; if (!state.region) state.region = 'INTL'; save(); render(); }
+  function finishOnboarding() { state.onboarded = true; save(); render(); }
 
   /* ── Router ────────────────────────────────────────────────────────────── */
   var tab = 'now';
@@ -1366,7 +1468,7 @@
   function seedDemo() {
     state = clone(DEFAULT);
     state.welcomed = true; state.onboarded = true; state.ageOk = true;
-    state.region = 'PK'; state.consent = true;
+    state.consent = true;
     state.profile = { name: 'Shamikh', age: '', pronouns: '' };
     state.history = { status: 'Single', household: 'with my family', hobbies: 'cricket, cooking, long drives' };
     state.concerns = ['Hard to switch off', 'Low mood'];
@@ -1449,7 +1551,7 @@
 
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
-    getState: function () { return state; }, skillCount: SKILLS.length, version: '0.7.0',
+    getState: function () { return state; }, skillCount: SKILLS.length, version: '0.7.1',
     startSkill: startSkill // test hook
   };
 

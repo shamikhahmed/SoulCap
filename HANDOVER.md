@@ -1,4 +1,4 @@
-**Version:** 0.7.0 · SW `soulcap-v070`
+**Version:** 0.7.1 · SW `soulcap-v071`
 
 # SoulCap — Project Handover
 
@@ -6,7 +6,7 @@
 > first — it is the current truth as of 2026-07-21. The sections further down describe an
 > earlier architecture and are kept for reference only.
 
-## Current state (v0.7.0 — 2026-07-21)
+## Current state (v0.7.1 — 2026-07-21)
 
 **The product is the PWA in `docs/`.** Fully rewritten. Offline-first, local-only, **no network
 calls at all** after load — no account, no server, no LLM, no analytics. Everything is
@@ -53,13 +53,8 @@ Keyword tier gate (0–3) in `docs/app.js`, ported from `backend/src/ai/safety/s
 **The two lists must be kept in sync by hand** until a shared engine package exists. Inflected
 crisis forms are covered (`ending my life`, not just `end my life`). Crisis flows are hard-coded.
 
-### Crisis directory (`docs/data.js`)
-- **US:** 988, Crisis Text Line, 911.
-- **Pakistan:** Umang (24/7), Taskeen, Rozan, Rescue 1122 — nationally-recognised, corroborated
-  across Umang / Taskeen / Rozan / MHIN / UNFPA (July 2026). **Owner should re-confirm the numbers
-  and hours before wide distribution.** Hours shown so a closed line reads honestly.
-- **UK / elsewhere:** IASP directory + local emergency. Samaritans/Shout/999 and "Find a Helpline"
-  were both **removed at the owner's instruction**; the IASP floor keeps the screen non-empty.
+### Reaching out (no crisis directory)
+All crisis phone numbers and country selection were **removed at the owner's instruction** — we can't promise any specific line is reachable. The help screen gives gentle, number-free guidance (reach out to someone you trust; contact local emergency services if in danger) and a one-tap "Message someone I trust" that opens the user's own messages. Onboarding no longer asks the user's country.
 
 ### Backend / mobile
 `backend/` (NestJS) builds clean (0 TS errors) but is **not deployed** and the PWA does not call

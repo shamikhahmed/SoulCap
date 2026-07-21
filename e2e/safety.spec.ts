@@ -27,12 +27,11 @@ async function toAgeGate(page: Page) {
   await page.getByRole('button', { name: 'Begin' }).click();
 }
 
-/** Full fresh onboarding into the app: age → name → region → consent → concerns. */
-async function freshThrough(page: Page, region = /United Kingdom/) {
+/** Full fresh onboarding into the app: age → name → consent → concerns (no country). */
+async function freshThrough(page: Page) {
   await toAgeGate(page);
   await page.getByRole('button', { name: '18 or older' }).click();
   await page.getByRole('button', { name: 'Skip', exact: true }).click(); // name step
-  await page.getByRole('button', { name: region }).click();
   await page.getByRole('button', { name: 'I understand' }).click();
   await page.getByRole('button', { name: /Skip — just let me in/ }).click();
 }
@@ -110,19 +109,18 @@ test.describe('Help is always reachable', () => {
     await expect(page.locator('#view-onboarding .help-btn')).toBeVisible();
   });
 
-  test('panic screen shows real crisis routes and exits in one tap', async ({ page }) => {
+  test('panic screen gives gentle reach-out guidance and exits in one tap', async ({ page }) => {
     await seedDemo(page);
     await page.locator('.view.on .help-btn').click();
     await expect(page.locator('#panic')).toBeVisible();
 
-    const links = page.locator('#panicLinks a');
-    expect(await links.count()).toBeGreaterThan(0);
-
-    // Demo region is Pakistan → the PK directory. Umang is the 24/7 headline line
-    // and must be a working tel: link.
-    const first = links.first();
-    await expect(first).toContainText('Umang');
-    expect(await first.getAttribute('href')).toBe('tel:03117786264');
+    // No phone numbers anywhere on the panic screen (owner decision).
+    const text = await page.locator('#panic').innerText();
+    expect(text).not.toMatch(/\b\d{3,}\b/); // no long digit strings (numbers/lines)
+    expect(text.toLowerCase()).toContain('trust');
+    // The one action opens the user's own messages, not a specific line.
+    const msg = page.locator('#panicLinks a');
+    expect(await msg.getAttribute('href')).toBe('sms:');
 
     await page.locator('#panicExit').click();
     await expect(page.locator('#panic')).toBeHidden();
@@ -140,24 +138,51 @@ test.describe('Help is always reachable', () => {
     await expect(page.locator('#panic')).toBeVisible();
   });
 
-  test('the removed UK lines appear for no one', async ({ page }) => {
-    await freshThrough(page, /United Kingdom/);
-    await page.locator('.view.on .help-btn').click();
-    const text = await page.locator('#panicLinks').innerText();
-    expect(text).not.toContain('Samaritans');
-    expect(text).not.toContain('85258');
-    expect(text).not.toContain('116 123');
-    expect(text).not.toContain('Find a Helpline'); // removed at owner instruction
-    expect(text).toContain('IASP'); // international floor, never empty
-  });
-
-  test('no placeholder or unverified crisis text ships', async ({ page }) => {
+  test('no crisis numbers or country lines anywhere on the panic screen', async ({ page }) => {
     await seedDemo(page);
     await page.locator('.view.on .help-btn').click();
-    const text = (await page.locator('#panicLinks').innerText()).toLowerCase();
-    for (const bad of ['pending', 'placeholder', 'tbd', 'todo', 'xxx', 'verify']) {
-      expect(text, `crisis panel must not contain "${bad}"`).not.toContain(bad);
+    const text = await page.locator('#panic').innerText();
+    // No named lines, no country services, no phone numbers.
+    for (const bad of ['Samaritans', 'Umang', 'Taskeen', '988', '741741', '116', '911', '999', '1122', 'IASP', 'Find a Helpline']) {
+      expect(text, `panic screen must not contain "${bad}"`).not.toContain(bad);
     }
+    expect(text).not.toContain('tel:');
+  });
+
+  test('voice starts silent on the panic screen (safe around people)', async ({ page }) => {
+    await seedDemo(page);
+    // Turn spoken guidance on globally first.
+    await page.evaluate(() => { const s = (window as any).__soulcap.getState(); s.voice.on = true; });
+    await page.locator('.view.on .help-btn').click();
+    const toggle = page.locator('#panicVoice .voice-toggle');
+    await expect(toggle).toBeVisible();
+    await expect(toggle).toHaveAttribute('aria-pressed', 'false'); // muted by default
+    await toggle.click();
+    await expect(toggle).toHaveAttribute('aria-pressed', 'true'); // one tap to enable if alone
+  });
+
+  test('choosing "around people" in Calm starts an exercise silent', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => { const s = (window as any).__soulcap.getState(); s.voice.on = true; });
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="calm"]') as HTMLElement).click());
+    await page.getByRole('button', { name: /Settle down/ }).click();
+    await page.getByRole('button', { name: 'Around people' }).click();
+    // Start any listed technique, then the runner's voice should be off.
+    await page.locator('#view-calm .card.tap').first().click();
+    // detail sheet → Begin
+    await page.locator('#sheetPanel').getByRole('button', { name: 'Begin' }).click();
+    await expect(page.locator('#runVoice .voice-toggle')).toHaveAttribute('aria-pressed', 'false');
+  });
+
+  test('onboarding never asks for a country', async ({ page }) => {
+    await page.goto('/');
+    await dismissSplash(page);
+    await page.getByRole('button', { name: 'Begin' }).click();
+    await page.getByRole('button', { name: '18 or older' }).click();
+    await page.getByRole('button', { name: 'Skip', exact: true }).click();
+    // Next is the plain-language consent, not a region picker.
+    await expect(page.getByText('What this is, plainly.')).toBeVisible();
+    await expect(page.getByText('Where are you?')).toHaveCount(0);
   });
 });
 
@@ -165,10 +190,10 @@ test.describe('Age gate', () => {
   test('under 18 does not enter the app', async ({ page }) => {
     await toAgeGate(page);
     await page.getByRole('button', { name: /Under 18/ }).click();
-    // Still on onboarding, and offered an external route instead.
+    // Stays on onboarding (never enters the app) and points elsewhere for support.
     await expect(page.locator('#view-onboarding')).toBeVisible();
     await expect(page.locator('#tabs')).toBeHidden();
-    await expect(page.getByRole('link', { name: /Find support/ })).toBeVisible();
+    await expect(page.locator('#view-onboarding')).toContainText(/trusted adult|young people/i);
   });
 
   test('18+ proceeds into onboarding', async ({ page }) => {
