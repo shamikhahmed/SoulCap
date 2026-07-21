@@ -1,4 +1,4 @@
-**Version:** 0.6.0 · SW `soulcap-v060`
+**Version:** 0.6.1 · SW `soulcap-v061`
 
 # SoulCap — Project Handover
 
@@ -6,7 +6,7 @@
 > first — it is the current truth as of 2026-07-21. The sections further down describe an
 > earlier architecture and are kept for reference only.
 
-## Current state (v0.6.0 — 2026-07-21)
+## Current state (v0.6.1 — 2026-07-21)
 
 **The product is the PWA in `docs/`.** Fully rewritten. Offline-first, local-only, **no network
 calls at all** after load — no account, no server, no LLM, no analytics. Everything is
@@ -31,7 +31,12 @@ calls at all** after load — no account, no server, no LLM, no analytics. Every
 - **Journal** — private paper-feeling diary (serif, ruled lines): title, free writing, mood,
   and photos down-scaled on device to protect local storage. Optional prompts.
 - **Profile** — name / age / pronouns (optional, local). Home greeting uses the name.
-- **Constellation** — relationship map. Orbiting (frozen under reduced-motion), 3–5 rings,
+- **History / "Your story"** — optional, never in onboarding (in You): relationship status,
+  household, family, relatives, work/study, habits, hobbies, past relationships, and (marked
+  sensitive) past trauma. The suggestion engine adapts to it — single / breakup / trauma reshape
+  weighting, and trauma keeps `traumaCaution` techniques out of auto-suggestions. Never diagnoses.
+- **Constellation** — relationship map. **JS-driven slow rotation** (rebuilt: the old CSS spin
+  flung labels off-origin), labels kept upright, 3–**7** rings that are **user-nameable**,
   drag people in/out to change closeness, optional person-to-person links and contact history
   (both off by default; contact history never nags). `hard right now` suppresses all suggestions
   for that person, permanently, silently.
@@ -46,10 +51,11 @@ crisis forms are covered (`ending my life`, not just `end my life`). Crisis flow
 
 ### Crisis directory (`docs/data.js`)
 - **US:** 988, Crisis Text Line, 911.
-- **UK:** the named lines (Samaritans / Shout / 999) were **removed at the owner's instruction**;
-  UK now routes to the international directory rather than an empty screen.
-- **Pakistan / elsewhere:** international directory (findahelpline resolves to the user's country,
-  IASP, local emergency). **No PK-specific line ships** — none verified as live and staffed.
+- **Pakistan:** Umang (24/7), Taskeen, Rozan, Rescue 1122 — nationally-recognised, corroborated
+  across Umang / Taskeen / Rozan / MHIN / UNFPA (July 2026). **Owner should re-confirm the numbers
+  and hours before wide distribution.** Hours shown so a closed line reads honestly.
+- **UK / elsewhere:** IASP directory + local emergency. Samaritans/Shout/999 and "Find a Helpline"
+  were both **removed at the owner's instruction**; the IASP floor keeps the screen non-empty.
 
 ### Backend / mobile
 `backend/` (NestJS) builds clean (0 TS errors) but is **not deployed** and the PWA does not call

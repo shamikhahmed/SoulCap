@@ -1,3 +1,29 @@
+## [0.6.1] — 2026-07-21
+
+### Fixed
+- **Constellation rewritten.** The old CSS group-spin flung the name labels off their
+  transform origin — "names flying away, not rotating." It now rotates in JS (one slow
+  revolution every 2.5 min, frozen under reduced-motion), repositioning each person per frame
+  with labels kept upright. Premium finish: soft node shadows, readable label halos, a glowing
+  centre. Drag-to-reposition works cleanly again.
+- Close-ring nodes no longer graze the centre.
+
+### Added
+- **Rings up to 7**, and **you can name each ring** (default names kept if you don't).
+- **History / "Your story"** — an optional section in You (never in onboarding): relationship
+  status, who you live with, family, wider relatives, work/study, habits, hobbies, past
+  relationships, and — clearly marked sensitive — hard things from your past. All local.
+- **The engine adapts to what you share.** Single / a recent breakup / trauma gently reshape
+  suggestions (more connection, more self-compassion, more grounding). Noting past trauma keeps
+  potentially-activating exercises (e.g. body scan) out of auto-suggestions and shows a gentle
+  caution — never a diagnosis.
+
+### Changed
+- **Crisis directory:** removed "Find a Helpline" (owner instruction). Added a **real Pakistan
+  directory** — Umang (24/7), Taskeen, Rozan, Rescue 1122 — with hours shown. PK region now
+  routes there instead of the international list. UK still routes to IASP + local emergency.
+- SW `soulcap-v061`. Tests now 80 across mobile + desktop.
+
 ## [0.6.0] — 2026-07-21
 
 Personalisation, a real journal, guided breathing, and a proper tab structure.

@@ -118,11 +118,11 @@ test.describe('Help is always reachable', () => {
     const links = page.locator('#panicLinks a');
     expect(await links.count()).toBeGreaterThan(0);
 
-    // Demo region is Pakistan → international directory. Find a Helpline resolves
-    // to the user's real country and must be a working https link.
+    // Demo region is Pakistan → the PK directory. Umang is the 24/7 headline line
+    // and must be a working tel: link.
     const first = links.first();
-    await expect(first).toContainText('Find a Helpline');
-    expect(await first.getAttribute('href')).toContain('findahelpline.com');
+    await expect(first).toContainText('Umang');
+    expect(await first.getAttribute('href')).toBe('tel:03117786264');
 
     await page.locator('#panicExit').click();
     await expect(page.locator('#panic')).toBeHidden();
@@ -147,7 +147,8 @@ test.describe('Help is always reachable', () => {
     expect(text).not.toContain('Samaritans');
     expect(text).not.toContain('85258');
     expect(text).not.toContain('116 123');
-    expect(text).toContain('Find a Helpline'); // international floor, never empty
+    expect(text).not.toContain('Find a Helpline'); // removed at owner instruction
+    expect(text).toContain('IASP'); // international floor, never empty
   });
 
   test('no placeholder or unverified crisis text ships', async ({ page }) => {

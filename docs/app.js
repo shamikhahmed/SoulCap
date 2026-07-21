@@ -41,11 +41,12 @@
   /* ── State ─────────────────────────────────────────────────────────────── */
   var KEY = 'soulcap_v1';
   var DEFAULT = {
-    v: 3, onboarded: false, welcomed: false, ageOk: null, region: null, consent: false,
+    v: 4, onboarded: false, welcomed: false, ageOk: null, region: null, consent: false,
     profile: { name: '', age: '', pronouns: '' },
+    history: {},
     concerns: [], checkins: [], skillRuns: [], people: [], links: [], inferences: [],
     safetyPlan: {}, episodes: [], favourites: [], journal: [],
-    theme: null, rings: 3, pace: 1,
+    theme: null, rings: 3, ringNames: {}, pace: 1,
     voice: { on: false, name: null, rate: 0.85, pitch: 1 },
     haptics: true, showLinks: false, trackContact: false
   };
@@ -58,6 +59,8 @@
       var p = Object.assign(clone(DEFAULT), JSON.parse(raw));
       p.profile = Object.assign(clone(DEFAULT.profile), p.profile || {});
       p.voice = Object.assign(clone(DEFAULT.voice), p.voice || {});
+      p.history = p.history || {};
+      p.ringNames = p.ringNames || {};
       return p;
     } catch (e) { return clone(DEFAULT); }
   }
@@ -204,12 +207,28 @@
     return runs.length ? (runs.filter(function (r) { return r.helpful === true; }).length / runs.length) * 2 : 0;
   }
 
+  // History the user chose to share becomes declared context the engine can act on.
+  // Trauma is handled with care, not diagnosis: it gently steers toward grounding and
+  // self-soothing and keeps potentially-activating techniques out of auto-suggestions.
+  function traumaAware() { return !!((state.history.trauma || '').trim()); }
+  function historyTags() {
+    var tags = [];
+    var st = (state.history.status || '');
+    if (/single|separated|divorced|widow/i.test(st)) tags.push('alone');
+    if ((state.history.breakups || '').trim()) tags.push('breakup');
+    if (traumaAware()) tags.push('trauma');
+    return tags;
+  }
+
   function suggestSkill() {
-    var cap = currentCapacity(), last = currentCheckin();
+    var cap = currentCapacity(), last = currentCheckin(), tags = historyTags();
     var recent = state.skillRuns.slice(-3).map(function (r) { return r.id; });
     var pool = SKILLS.filter(function (s) {
       if (cap === 'low' && capRank(s.capacity) > 0) return false;
       if (cap === 'medium' && capRank(s.capacity) > 1) return false;
+      // Trauma-informed: don't auto-surface potentially-activating techniques.
+      // They stay fully browsable in the library, with a caution note.
+      if (traumaAware() && s.traumaCaution) return false;
       return true;
     });
     if (!pool.length) pool = SKILLS.slice();
@@ -233,6 +252,10 @@
         if (k.indexOf('panic') !== -1 && s.family === 'autonomic') { score += 1; why.push('you mentioned panic'); }
         if (k.indexOf('low mood') !== -1 && s.domain === 'move') { score += 1; why.push('you mentioned low mood'); }
       });
+      // History-driven adaptation.
+      if (tags.indexOf('alone') !== -1 && s.domain === 'connect') { score += 1; why.push('you’re on your own right now'); }
+      if (tags.indexOf('breakup') !== -1 && (s.domain === 'warmth' || s.family === 'soothing')) { score += 1; why.push('you’re working through a breakup'); }
+      if (tags.indexOf('trauma') !== -1 && (s.family === 'orienting' || s.family === 'sensory' || s.family === 'soothing')) { score += 1.4; why.push('gentle grounding suits what you shared'); }
       var hour = new Date().getHours();
       if (hour >= 22 || hour <= 5) {
         if (s.domain === 'rest') { score += 3; why.push('it’s late'); }
@@ -502,6 +525,10 @@
           '<b>Not for everyone.</b> Skip this one if: ' + s.contraindication.join(', ') +
           '. If you are unsure, ask a professional rather than this app.' }));
       }
+      if (s.traumaCaution && traumaAware()) {
+        p.appendChild(el('div', { class: 'notice', html:
+          '<b>Gentle note.</b> Exercises that turn attention inward can stir things up if your past has been hard. Stop any time, and keep something grounding nearby.' }));
+      }
       p.appendChild(el('p', { class: 'p-sm', text: 'Source: ' + s.source }));
       p.appendChild(el('button', { class: 'btn', text: 'Begin', onclick: function () { closeSheet(); startSkill(s.id); } }));
       var fav = state.favourites.indexOf(s.id) !== -1;
@@ -731,82 +758,138 @@
   }
 
   /* ── Constellation ─────────────────────────────────────────────────────── */
+  var RING_DEFAULTS = ['Close', 'Present', 'Distant', 'Further', 'Outer', 'Circle', 'Far'];
   function ringDefs() {
-    var names = ['CLOSE', 'PRESENT', 'DISTANT', 'FURTHER', 'EDGE'], out = [], INNER = 54, OUTER = 140;
-    for (var i = 0; i < state.rings; i++) {
-      out.push({ key: 'r' + i, label: names[i] || 'RING ' + (i + 1), r: INNER + i * ((OUTER - INNER) / Math.max(state.rings - 1, 1)) });
+    var n = state.rings, out = [];
+    var INNER = 52, OUTER = n <= 4 ? 144 : n <= 5 ? 152 : 160; // clears the sun; fits nodes + labels in the 400 box
+    for (var i = 0; i < n; i++) {
+      var key = 'r' + i;
+      out.push({ key: key, label: (state.ringNames[key] || RING_DEFAULTS[i] || ('Ring ' + (i + 1))),
+                 r: INNER + i * ((OUTER - INNER) / Math.max(n - 1, 1)) });
     }
     return out;
   }
+  function nodeR() { var n = state.rings; return n <= 4 ? 15 : n <= 5 ? 13 : n <= 6 ? 12 : 11; }
   function typeMeta(code) { return RELATIONSHIP_TYPES.filter(function (t) { return t.code === code; })[0] || RELATIONSHIP_TYPES[5]; }
-  function pos(p, rings) {
-    var ring = rings.filter(function (r) { return r.key === p.ring; })[0] || rings[rings.length - 1];
-    var peers = state.people.filter(function (x) { return x.ring === p.ring; });
-    var i = peers.indexOf(p), ringIndex = rings.indexOf(ring);
-    var phase = -Math.PI / 2 + 0.4 + ringIndex * 1.1;
-    var angle = phase + (i / Math.max(peers.length, 1)) * Math.PI * 2;
-    return { x: 200 + ring.r * Math.cos(angle), y: 200 + ring.r * Math.sin(angle) };
-  }
+
+  // Rotation is driven in JS so labels can be kept upright. The previous CSS
+  // group-spin + counter-spin flung labels off their transform origin — that was
+  // the "names flying away, not rotating" bug.
+  var mapState = null;
+  function stopMap() { if (mapState && mapState.raf) cancelAnimationFrame(mapState.raf); mapState = null; }
+
   function drawMap() {
+    stopMap();
     var svg = $('#map'); if (!svg) return;
     clear(svg);
     var NS = 'http://www.w3.org/2000/svg';
     function s(tag, a) { var n = document.createElementNS(NS, tag); Object.keys(a).forEach(function (k) { n.setAttribute(k, a[k]); }); return n; }
-    var rings = ringDefs();
+    var rings = ringDefs(), nr = nodeR();
+    var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     rings.forEach(function (ring) {
       svg.appendChild(s('circle', { class: 'orbit', 'data-key': ring.key, cx: 200, cy: 200, r: ring.r }));
-      var lab = s('text', { class: 'orbit-lab', x: 146, y: 200 - ring.r + 14, 'text-anchor': 'middle' }); lab.textContent = ring.label;
-      svg.appendChild(lab);
+      var lab = s('text', { class: 'orbit-lab', x: 200, y: 200 - ring.r + 13, 'text-anchor': 'middle' });
+      lab.textContent = ring.label.toUpperCase(); svg.appendChild(lab);
     });
-    var g = s('g', { id: 'orbitGroup' });
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) g.style.animation = 'none';
+
+    var edgeGroup = s('g', {}); svg.appendChild(edgeGroup);
+    var nodes = [], edges = [];
+
+    state.people.forEach(function (p) {
+      var peers = state.people.filter(function (x) { return x.ring === p.ring; });
+      var idx = peers.indexOf(p);
+      var ring = rings.filter(function (r) { return r.key === p.ring; })[0] || rings[rings.length - 1];
+      var ri = rings.indexOf(ring);
+      var ang = -Math.PI / 2 + 0.4 + ri * 0.85 + (idx / Math.max(peers.length, 1)) * Math.PI * 2;
+      var node = s('g', { class: 'node' + (p.hard ? ' hard' : ''), tabindex: '0', role: 'button',
+        'aria-label': p.name + ', ' + typeMeta(p.type).label + (p.hard ? ', hard right now' : '') });
+      var c = s('circle', { r: nr, fill: 'var(' + typeMeta(p.type).cssVar + ')',
+        stroke: p.hard ? 'var(--ink-3)' : 'var(--surface)', 'stroke-width': p.hard ? 1.5 : 2 });
+      if (p.hard) c.setAttribute('stroke-dasharray', '3 3');
+      var t = s('text', { class: 'node-lab' }); t.textContent = p.name;
+      node.appendChild(c); node.appendChild(t);
+      var rec = { p: p, el: node, circle: c, label: t, ang: ang, r: ring.r, x: 200, y: 200 };
+      nodes.push(rec);
+      node.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); personSheet(p.id); } });
+      svg.appendChild(node);
+    });
+
     if (state.showLinks) {
       state.links.forEach(function (lk) {
-        var a = state.people.filter(function (p) { return p.id === lk.a; })[0], b = state.people.filter(function (p) { return p.id === lk.b; })[0];
-        if (!a || !b) return; var pa = pos(a, rings), pb = pos(b, rings);
-        g.appendChild(s('line', { class: 'edge', x1: pa.x, y1: pa.y, x2: pb.x, y2: pb.y }));
+        var a = nodes.filter(function (n) { return n.p.id === lk.a; })[0], b = nodes.filter(function (n) { return n.p.id === lk.b; })[0];
+        if (!a || !b) return;
+        var line = s('line', { class: 'edge' }); edgeGroup.appendChild(line);
+        edges.push({ a: a, b: b, line: line });
       });
     }
-    state.people.forEach(function (p) {
-      var pt = pos(p, rings);
-      var node = s('g', { class: 'node' + (p.hard ? ' hard' : ''), tabindex: '0', role: 'button',
-                          'aria-label': p.name + ', ' + typeMeta(p.type).label + (p.hard ? ', hard right now' : '') });
-      var c = s('circle', { cx: pt.x, cy: pt.y, r: 15, fill: 'var(' + typeMeta(p.type).cssVar + ')',
-                            stroke: p.hard ? 'var(--ink-3)' : 'var(--surface)', 'stroke-width': p.hard ? 1.5 : 2 });
-      if (p.hard) c.setAttribute('stroke-dasharray', '3 3');
-      var t = s('text', { class: 'node-lab', x: pt.x, y: pt.y + (pt.y >= 200 ? 32 : -22) }); t.textContent = p.name;
-      node.appendChild(c); node.appendChild(t);
-      attachNodeDrag(node, c, t, p, svg);
-      node.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); personSheet(p.id); } });
-      g.appendChild(node);
-    });
-    svg.appendChild(g);
+
+    // Sun on top so it never sits behind a passing node.
     svg.appendChild(s('circle', { class: 'sun', cx: 200, cy: 200, r: 31, fill: 'var(--accent)' }));
     var you = s('text', { class: 'sun-lab', x: 200, y: 205 }); you.textContent = 'You'; svg.appendChild(you);
+
+    mapState = { svg: svg, nodes: nodes, edges: edges, raf: null, last: 0, dragging: false, reduced: reduced, nr: nr };
+    nodes.forEach(function (rec) { attachNodeDrag(rec); });
+    positionAll();
+    mapState.raf = requestAnimationFrame(frame);
   }
-  function attachNodeDrag(node, circle, label, p, svg) {
-    var drag = null;
-    function localPoint(cx, cy) { var gEl = document.getElementById('orbitGroup') || svg; var pt = svg.createSVGPoint(); pt.x = cx; pt.y = cy; var ctm = gEl.getScreenCTM(); return ctm ? pt.matrixTransform(ctm.inverse()) : null; }
-    function nearestRing(x, y) { var d = Math.hypot(x - 200, y - 200), rings = ringDefs(), best = rings[0], bd = Infinity; rings.forEach(function (r) { var dd = Math.abs(r.r - d); if (dd < bd) { bd = dd; best = r; } }); return best; }
+
+  function positionAll() {
+    if (!mapState) return;
+    var nr = mapState.nr;
+    mapState.nodes.forEach(function (n) {
+      n.x = 200 + n.r * Math.cos(n.ang); n.y = 200 + n.r * Math.sin(n.ang);
+      n.circle.setAttribute('cx', n.x); n.circle.setAttribute('cy', n.y);
+      n.label.setAttribute('x', n.x);
+      n.label.setAttribute('y', n.y + (n.y >= 200 ? nr + 15 : -(nr + 7)));
+    });
+    mapState.edges.forEach(function (e) {
+      e.line.setAttribute('x1', e.a.x); e.line.setAttribute('y1', e.a.y);
+      e.line.setAttribute('x2', e.b.x); e.line.setAttribute('y2', e.b.y);
+    });
+  }
+  function frame(ts) {
+    if (!mapState) return;
+    if (!mapState.last) mapState.last = ts;
+    var dt = (ts - mapState.last) / 1000; mapState.last = ts;
+    if (!mapState.dragging && !mapState.reduced) {
+      var d = dt * (2 * Math.PI / 150); // one revolution every 2.5 minutes
+      mapState.nodes.forEach(function (n) { n.ang += d; });
+    }
+    positionAll();
+    mapState.raf = requestAnimationFrame(frame);
+  }
+
+  function attachNodeDrag(rec) {
+    var svg = mapState.svg, node = rec.el, p = rec.p, drag = null;
+    function toVB(cx, cy) { var r = svg.getBoundingClientRect(); return { x: (cx - r.left) / r.width * 400, y: (cy - r.top) / r.height * 400 }; }
+    function nearest(vx, vy) { var d = Math.hypot(vx - 200, vy - 200), rings = ringDefs(), best = rings[0], bd = Infinity; rings.forEach(function (r) { var dd = Math.abs(r.r - d); if (dd < bd) { bd = dd; best = r; } }); return best; }
     function highlight(key) { Array.prototype.forEach.call(svg.querySelectorAll('.orbit'), function (o) { o.classList.toggle('drop', o.getAttribute('data-key') === key); }); }
-    node.addEventListener('pointerdown', function (e) { e.preventDefault(); drag = { moved: false, x: e.clientX, y: e.clientY }; node.classList.add('dragging'); svg.classList.add('frozen'); try { node.setPointerCapture(e.pointerId); } catch (_) {} });
+    node.addEventListener('pointerdown', function (e) {
+      e.preventDefault(); drag = { moved: false, x: e.clientX, y: e.clientY };
+      node.classList.add('dragging'); mapState.dragging = true;
+      try { node.setPointerCapture(e.pointerId); } catch (_) {}
+    });
     node.addEventListener('pointermove', function (e) {
       if (!drag) return;
       if (Math.abs(e.clientX - drag.x) + Math.abs(e.clientY - drag.y) > 5) drag.moved = true;
-      var lp = localPoint(e.clientX, e.clientY); if (!lp) return;
-      circle.setAttribute('cx', lp.x); circle.setAttribute('cy', lp.y);
-      label.setAttribute('x', lp.x); label.setAttribute('y', lp.y + (lp.y >= 200 ? 32 : -22));
-      highlight(nearestRing(lp.x, lp.y).key);
+      var v = toVB(e.clientX, e.clientY);
+      // Steer the node's polar position toward the finger; positionAll paints it.
+      rec.r = Math.max(30, Math.min(180, Math.hypot(v.x - 200, v.y - 200)));
+      rec.ang = Math.atan2(v.y - 200, v.x - 200);
+      positionAll(); highlight(nearest(v.x, v.y).key);
     });
     function end(e) {
       if (!drag) return; var wasDrag = drag.moved;
-      node.classList.remove('dragging'); svg.classList.remove('frozen'); highlight(null);
-      if (wasDrag) { var lp = localPoint(e.clientX, e.clientY); if (lp) { p.ring = nearestRing(lp.x, lp.y).key; save(); buzz(12); } render(); }
-      else personSheet(p.id);
+      node.classList.remove('dragging'); mapState.dragging = false; highlight(null);
+      if (wasDrag) {
+        var v = toVB(e.clientX, e.clientY), ring = nearest(v.x, v.y);
+        p.ring = ring.key; rec.r = ring.r; save(); buzz(12); positionAll();
+      } else personSheet(p.id);
       drag = null;
     }
     node.addEventListener('pointerup', end);
-    node.addEventListener('pointercancel', function () { if (drag) { node.classList.remove('dragging'); svg.classList.remove('frozen'); highlight(null); drag = null; render(); } });
+    node.addEventListener('pointercancel', function () { if (drag) { node.classList.remove('dragging'); mapState.dragging = false; highlight(null); drag = null; } });
   }
   function suggestPerson() {
     var pool = state.people.filter(function (p) { return !p.hard && p.suggestible !== false && p.supportive >= 0.5 && p.drain <= 0.6; });
@@ -881,12 +964,51 @@
       if (state.people.some(function (p) { return p.hard; })) legend.appendChild(el('span', { html: '<i style="border:1.5px dashed var(--ink-3)"></i>Hard right now' }));
       wrap.appendChild(legend); v.appendChild(wrap);
       v.appendChild(el('button', { class: 'btn ghost', text: 'Add someone', onclick: addPersonSheet }));
-      v.appendChild(el('div', {}, [el('p', { class: 'eyebrow', text: 'Rings' }), el('div', { class: 'chips' }, [3, 4, 5].map(function (n) {
-        return el('button', { class: 'chip', 'aria-pressed': state.rings === n ? 'true' : 'false', text: n + ' rings', onclick: function () { state.rings = n; save(); render(); } });
+      v.appendChild(el('div', {}, [el('p', { class: 'eyebrow', text: 'Rings' }), el('div', { class: 'chips' }, [3, 4, 5, 6, 7].map(function (n) {
+        return el('button', { class: 'chip', 'aria-pressed': state.rings === n ? 'true' : 'false', text: '' + n, onclick: function () { state.rings = n; save(); render(); } });
       }))]));
-      v.appendChild(el('p', { class: 'p-sm', text: 'Drag anyone in or out to change how close they feel. Tap to open them.' }));
+      v.appendChild(el('button', { class: 'btn ghost', text: 'Name the rings', onclick: ringNameSheet }));
+      v.appendChild(el('p', { class: 'p-sm', text: 'Drag anyone in or out to change how close they feel. Tap to open them. The map turns slowly on its own.' }));
     }
     v.appendChild(el('button', { class: 'help-btn', text: 'I need help now', onclick: openPanic }));
+  }
+  function ringNameSheet() {
+    openSheet(function (p) {
+      p.appendChild(el('h2', { class: 'h-sec', text: 'Name your rings' }));
+      p.appendChild(el('p', { class: 'p-sm', text: 'Call them whatever fits — closeness, or your own idea. Leave blank for the default.' }));
+      ringDefs().forEach(function (r, i) {
+        var inp = el('input', { type: 'text', placeholder: RING_DEFAULTS[i] || ('Ring ' + (i + 1)), 'aria-label': 'Ring ' + (i + 1), value: state.ringNames[r.key] || '' });
+        inp.addEventListener('change', function () { var val = inp.value.trim().slice(0, 20); if (val) state.ringNames[r.key] = val; else delete state.ringNames[r.key]; save(); });
+        p.appendChild(el('div', {}, [el('p', { class: 'eyebrow', style: 'margin-top:8px', text: 'Ring ' + (i + 1) + ' (from centre)' }), inp]));
+      });
+      p.appendChild(el('button', { class: 'btn', text: 'Done', onclick: function () { save(); closeSheet(); render(); } }));
+    });
+  }
+
+  /* ── History taking (optional, never in onboarding) ────────────────────── */
+  function historyFilled() { return HISTORY_SECTIONS.filter(function (s) { return (state.history[s.key] || '').trim().length > 0; }).length; }
+  function historySheet() {
+    openSheet(function (p) {
+      p.appendChild(el('h2', { class: 'h-sec', text: 'Your story' }));
+      p.appendChild(el('p', { class: 'p-sm', text: 'All optional. The more you tell SoulCap, the more it can shape itself around you. Nothing here leaves your device, and none of it is ever shown as a diagnosis.' }));
+      HISTORY_SECTIONS.forEach(function (sec) {
+        p.appendChild(el('p', { class: 'eyebrow', style: 'margin-top:12px', text: sec.title + (sec.sensitive ? ' · sensitive' : '') }));
+        p.appendChild(el('p', { class: 'p-sm', style: 'margin-bottom:8px', text: sec.hint }));
+        if (sec.kind === 'choice') {
+          var wrap = el('div', { class: 'chips' }, sec.options.map(function (o) {
+            return el('button', { class: 'chip', 'aria-pressed': state.history[sec.key] === o ? 'true' : 'false', text: o,
+              onclick: function () { state.history[sec.key] = state.history[sec.key] === o ? '' : o; save(); Array.prototype.forEach.call(wrap.children, function (b) { b.setAttribute('aria-pressed', b.textContent === state.history[sec.key] ? 'true' : 'false'); }); } });
+          }));
+          p.appendChild(wrap);
+        } else {
+          var ta = el('textarea', { placeholder: sec.placeholder, 'aria-label': sec.title }); ta.value = state.history[sec.key] || '';
+          ta.addEventListener('change', function () { state.history[sec.key] = ta.value; save(); });
+          p.appendChild(ta);
+        }
+      });
+      p.appendChild(el('div', { class: 'notice', html: '<b>How this changes things.</b> If you note that things are hard from your past, SoulCap keeps potentially-activating exercises out of its suggestions and leans toward gentle grounding. It never labels or diagnoses you.' }));
+      p.appendChild(el('button', { class: 'btn', text: 'Done', onclick: function () { save(); closeSheet(); render(); } }));
+    });
   }
 
   /* ── Now ───────────────────────────────────────────────────────────────── */
@@ -988,6 +1110,15 @@
       el('p', { class: 'p-sm', text: name
         ? [name, state.profile.age && state.profile.age + ' years', state.profile.pronouns].filter(Boolean).join(' · ')
         : 'Add your name so this feels like yours. Age and pronouns optional.' })
+    ]));
+
+    // History / your story
+    var hf = historyFilled();
+    v.appendChild(el('button', { class: 'card tap', onclick: historySheet }, [
+      el('div', { class: 'card-head' }, [el('h2', { class: 'card-title', text: 'Your story' }), el('span', { class: 'pill', text: hf ? hf + ' / ' + HISTORY_SECTIONS.length : 'Optional' })]),
+      el('p', { class: 'p-sm', text: hf
+        ? 'Family, relationships, habits, hobbies, and the harder things — SoulCap adapts to what you’ve shared.'
+        : 'Tell SoulCap about your life — family, relationships, habits, hobbies, anything from your past. All optional. The more it knows, the more it fits you.' })
     ]));
 
     // Safety plan
@@ -1163,6 +1294,7 @@
   var VIEWS = ['welcome', 'onboarding', 'now', 'calm', 'journal', 'map', 'me'];
   function render() {
     applyTheme();
+    stopMap(); // cancel any running orbit rAF; drawMap restarts it if we're on the map
     VIEWS.forEach(function (v) { $('#view-' + v).classList.remove('on'); });
     if (!state.welcomed) { $('#tabs').style.display = 'none'; $('#fab').classList.remove('on'); renderWelcome(); $('#view-welcome').classList.add('on'); return; }
     if (!state.onboarded) { $('#tabs').style.display = 'none'; $('#fab').classList.remove('on'); renderOnboarding(); $('#view-onboarding').classList.add('on'); return; }
@@ -1183,6 +1315,7 @@
     state.welcomed = true; state.onboarded = true; state.ageOk = true;
     state.region = 'PK'; state.consent = true;
     state.profile = { name: 'Shamikh', age: '', pronouns: '' };
+    state.history = { status: 'Single', household: 'with my family', hobbies: 'cricket, cooking, long drives' };
     state.concerns = ['Hard to switch off', 'Low mood'];
     var day = 86400000, now = Date.now();
     ['Wired', 'Flat', 'Steady', 'Heavy', 'Wired', 'Steady'].forEach(function (s, i) { state.checkins.push({ t: now - (6 - i) * day, state: s }); });

@@ -233,7 +233,7 @@ const SKILLS = [
     source:'Containment imagery — trauma stabilisation practice' },
 
   { id:'body-scan', name:'Body scan', domain:'reflect', family:'imagery',
-    mins:8, capacity:'medium', needs:'quiet', discreet:true,
+    mins:8, capacity:'medium', needs:'quiet', discreet:true, traumaCaution:true,
     indication:['wired','sleep','disconnected'], contraindication:['acute','dissociation'],
     mechanism:'Moving attention deliberately through the body rebuilds the connection to physical sensation that stress and rumination tend to sever.',
     blurb:'Attention through the whole body, slowly.',
@@ -386,12 +386,20 @@ const CRISIS = {
     { name:'Crisis Text Line', detail:'Text HOME to 741741', href:'sms:741741&body=HOME' },
     { name:'Emergency services', detail:'911', href:'tel:911' }
   ],
-  // No region-specific UK list — removed at the owner's instruction. UK routes to
-  // the international directory (below) rather than an empty screen. findahelpline
-  // resolves to the user's real country, so it remains a working help path.
+  // Pakistan — nationally-recognised services, corroborated across Umang, Taskeen,
+  // Rozan, MHIN and UNFPA (July 2026). Owner should re-confirm numbers and hours
+  // before wide distribution; hours are shown so a closed line reads honestly.
+  PK: [
+    { name:'Umang', detail:'Call 0311-7786264 — 24/7, free, Urdu & regional languages', href:'tel:03117786264' },
+    { name:'Taskeen', detail:'Call 0316-8275336 — Mon–Sat, 11am–11pm', href:'tel:03168275336' },
+    { name:'Rozan Counselling', detail:'Call 0800-22444 — Mon–Sat, 10am–6pm', href:'tel:080022444' },
+    { name:'Emergency services', detail:'Rescue 1122', href:'tel:1122' }
+  ],
+  // UK routes here (named UK lines removed at owner instruction). "Find a Helpline"
+  // removed at owner instruction. IASP + local emergency remain as a floor so the
+  // screen is never empty.
   INTL: [
-    { name:'Find a Helpline', detail:'Verified crisis lines by country', href:'https://findahelpline.com' },
-    { name:'IASP crisis centres', detail:'International directory', href:'https://www.iasp.info/resources/Crisis_Centres/' },
+    { name:'IASP crisis centres', detail:'International directory of crisis centres', href:'https://www.iasp.info/resources/Crisis_Centres/' },
     { name:'Local emergency services', detail:'Your country’s emergency number', href:null }
   ]
 };
@@ -399,7 +407,7 @@ const CRISIS = {
 const REGIONS = [
   { code:'US',   label:'United States',  crisis:'US'   },
   { code:'UK',   label:'United Kingdom', crisis:'INTL' },
-  { code:'PK',   label:'Pakistan',       crisis:'INTL' },
+  { code:'PK',   label:'Pakistan',       crisis:'PK'   },
   { code:'INTL', label:'Somewhere else', crisis:'INTL' }
 ];
 
@@ -438,6 +446,34 @@ const JOURNAL_PROMPTS = [
   'One small thing you’re grateful for.',
   'What do you need that you haven’t asked for?',
   'What did your body feel like today?'
+];
+
+/* History-taking — entirely optional, never in the opening questionnaire.
+ * The more the user shares, the more specifically SoulCap can adapt. Sensitive
+ * fields (trauma, breakups) are last and clearly marked optional. All local. */
+const HISTORY_SECTIONS = [
+  { key:'status', title:'Relationship status', kind:'choice',
+    hint:'However you’d describe it.',
+    options:['Single','In a relationship','Married','It’s complicated','Separated / divorced','Widowed','Prefer not to say'] },
+  { key:'household', title:'Who you live with', kind:'text',
+    hint:'Alone, family, partner, flatmates…', placeholder:'e.g. with my parents and younger sister' },
+  { key:'family', title:'Your family', kind:'text',
+    hint:'Who’s in it, and how things are with them.', placeholder:'e.g. close to Mum, distant from Dad, one brother abroad' },
+  { key:'relatives', title:'Wider relatives & people who matter', kind:'text',
+    hint:'Anyone who plays a real part in your life.', placeholder:'e.g. my grandmother, two cousins I grew up with' },
+  { key:'work', title:'Work or study', kind:'text',
+    hint:'What takes up your days.', placeholder:'e.g. final year of university, part-time job' },
+  { key:'habits', title:'Habits & routines', kind:'text',
+    hint:'Sleep, exercise, screen time, anything you’re working on.', placeholder:'e.g. late nights, trying to walk daily, too much scrolling' },
+  { key:'hobbies', title:'Hobbies & what lifts you', kind:'text',
+    hint:'Things that help even a little.', placeholder:'e.g. cricket, cooking, drawing, long drives' },
+  { key:'breakups', title:'Past relationships', kind:'text', sensitive:true,
+    hint:'Only if it helps to note it. Optional.', placeholder:'e.g. a breakup last year I’m still processing' },
+  { key:'trauma', title:'Hard things from your past', kind:'text', sensitive:true,
+    hint:'Only what you want to. SoulCap will be gentler with certain exercises if you tell it. It never diagnoses, and this never leaves your phone.',
+    placeholder:'Write as much or as little as you like' },
+  { key:'notes', title:'Anything else', kind:'text',
+    hint:'Whatever you’d want it to know.', placeholder:'' }
 ];
 
 /* Stanley-Brown safety planning steps. Written when steady, surfaced when not. */

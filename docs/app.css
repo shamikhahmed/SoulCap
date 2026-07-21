@@ -284,33 +284,22 @@ input[type="range"]{width:100%;accent-color:var(--accent)}
 .orbit{fill:none;stroke:var(--line-strong);stroke-width:1}
 .orbit.drop{stroke:var(--accent);stroke-width:2;opacity:.7}
 .orbit-lab{font-family:var(--ui);font-size:9px;font-weight:700;letter-spacing:.13em;fill:var(--ink-3)}
-.node-lab{font-family:var(--ui);font-size:11.5px;font-weight:600;fill:var(--ink-2);text-anchor:middle;pointer-events:none}
-.sun{filter:drop-shadow(0 0 10px var(--accent-glow));animation:sunPulse 7s var(--ease-soft) infinite}
-@keyframes sunPulse{0%,100%{opacity:.94}50%{opacity:1}}
+.node-lab{font-family:var(--ui);font-size:11px;font-weight:600;fill:var(--ink);text-anchor:middle;pointer-events:none;paint-order:stroke;stroke:var(--surface);stroke-width:3px;stroke-linejoin:round}
+.sun{filter:drop-shadow(0 0 12px var(--accent-glow));animation:sunPulse 7s var(--ease-soft) infinite}
+@keyframes sunPulse{0%,100%{opacity:.94;transform:scale(1)}50%{opacity:1;transform:scale(1.02)}}
+.sun{transform-box:fill-box;transform-origin:center}
 .sun-lab{font-family:var(--voice);font-size:15px;font-weight:500;fill:var(--accent-ink);text-anchor:middle;pointer-events:none}
+/* Rotation is JS-driven (see drawMap): each node is repositioned per frame with
+   its label kept upright. The old CSS group-spin flung the labels off their
+   origin — that was the "names going far away" bug. */
 .node{cursor:grab}
 .node.dragging{cursor:grabbing}
-.node circle{transition:stroke-width var(--dur-fast) var(--ease),r var(--dur-fast) var(--ease)}
+.node circle{filter:drop-shadow(0 2px 5px rgba(0,0,0,.18));transition:stroke-width var(--dur-fast) var(--ease)}
 .node:hover circle,.node:focus-visible circle{stroke-width:3.5}
-.node.dragging circle{stroke-width:3.5;filter:drop-shadow(0 3px 8px rgba(0,0,0,.3))}
+.node.dragging circle{stroke-width:3.5;filter:drop-shadow(0 4px 12px rgba(0,0,0,.34))}
 .node.hard circle{opacity:.42}
 .node.hard text{opacity:.55}
-.edge{stroke:var(--accent);stroke-width:1;opacity:.28}
-/* The map turns slowly — one revolution every two and a half minutes. Slow
-   enough to read as drift rather than motion, and frozen under reduced-motion. */
-#orbitGroup{transform-origin:200px 200px;animation:spin 150s linear infinite}
-@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-
-/* Names must stay upright while the group rotates, so each label counter-rotates
-   about its own centre at the same rate. Without this the text tilts and, half a
-   revolution in, reads upside down. */
-#orbitGroup .node-lab{
-  transform-box:fill-box;transform-origin:center;
-  animation:spinBack 150s linear infinite;
-}
-@keyframes spinBack{from{transform:rotate(0deg)}to{transform:rotate(-360deg)}}
-/* While a person is being dragged, hold the whole map still so coordinates map cleanly. */
-#map.frozen #orbitGroup,#map.frozen #orbitGroup .node-lab{animation-play-state:paused}
+.edge{stroke:var(--accent);stroke-width:1.2;opacity:.3;stroke-linecap:round}
 .legend{display:flex;flex-wrap:wrap;gap:8px 16px;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
 .legend span{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink-2)}
 .legend i{width:9px;height:9px;border-radius:50%;display:block;flex:none}

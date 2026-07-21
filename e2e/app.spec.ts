@@ -204,6 +204,74 @@ test.describe('Constellation', () => {
     });
     expect(overlapping).toBe(0);
   });
+
+  test('the map rotates on its own, and labels stay upright', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="map"]') as HTMLElement).click());
+    const sample = () => page.evaluate(() => {
+      const c = document.querySelector('#map .node circle')!;
+      return parseFloat(c.getAttribute('cx')!);
+    });
+    const a = await sample();
+    await expect(async () => { expect(Math.abs((await sample()) - a)).toBeGreaterThan(0.5); }).toPass({ timeout: 4000 });
+    // Node labels are plain text with no rotate transform (the old bug rotated them off-screen).
+    const anyRotated = await page.evaluate(() =>
+      Array.from(document.querySelectorAll('#map .node-lab')).some((t) => /rotate/i.test((t.getAttribute('transform') || ''))));
+    expect(anyRotated).toBe(false);
+  });
+
+  test('rings go up to 7 and stay inside the box', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="map"]') as HTMLElement).click());
+    await page.locator('#view-map .chips .chip', { hasText: '7' }).click();
+    const rings = await page.evaluate(() => document.querySelectorAll('#map .orbit').length);
+    expect(rings).toBe(7);
+    const maxR = await page.evaluate(() =>
+      Math.max(...Array.from(document.querySelectorAll('#map .orbit')).map((o) => parseFloat(o.getAttribute('r')!))));
+    expect(maxR).toBeLessThanOrEqual(175); // node (11) + label fits within 200
+  });
+
+  test('rings can be renamed', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="map"]') as HTMLElement).click());
+    await page.getByRole('button', { name: 'Name the rings' }).click();
+    const first = page.locator('#sheetPanel input').first();
+    await first.fill('Inner circle');
+    await first.blur();
+    await page.locator('#sheetPanel').getByRole('button', { name: 'Done' }).click();
+    const labels = await page.evaluate(() =>
+      Array.from(document.querySelectorAll('#map .orbit-lab')).map((t) => t.textContent));
+    expect(labels.join(' ')).toContain('INNER CIRCLE');
+  });
+});
+
+test.describe('History & adaptation', () => {
+  test('history section saves and is optional (never in onboarding)', async ({ page }) => {
+    // Fresh onboarding must not ask history questions.
+    await freshThrough(page);
+    // Now fill some history from the You tab.
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="me"]') as HTMLElement).click());
+    await page.getByRole('button', { name: /Your story/ }).click();
+    await page.locator('#sheetPanel textarea').first().fill('with my family');
+    await page.locator('#sheetPanel textarea').first().blur();
+    await page.locator('#sheetPanel').getByRole('button', { name: 'Done' }).click();
+    const saved = await page.evaluate(() => (window as any).__soulcap.getState().history);
+    expect(Object.values(saved).join(' ')).toContain('with my family');
+  });
+
+  test('noting past trauma keeps activating techniques out of auto-suggestions', async ({ page }) => {
+    await seedDemo(page);
+    const withoutTrauma = await page.evaluate(() => (window as any).__soulcap.suggestSkill().skill.id);
+    // Record trauma, then the body scan (traumaCaution) must never be the top pick.
+    const topIsCaution = await page.evaluate(() => {
+      const s = (window as any).__soulcap.getState();
+      s.history.trauma = 'some hard things a while ago';
+      const pick = (window as any).__soulcap.suggestSkill();
+      return pick.skill.traumaCaution === true;
+    });
+    expect(topIsCaution).toBe(false);
+    expect(typeof withoutTrauma).toBe('string');
+  });
 });
 
 test.describe('Accessibility', () => {

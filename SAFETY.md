@@ -1,6 +1,6 @@
 # SoulCap — Safety & Truth Inventory
 
-**Version:** 0.6.0 · **Updated:** 2026-07-21
+**Version:** 0.6.1 · **Updated:** 2026-07-21
 **Status:** **Clinical path** — self-guided wellness companion.
 **Not** a cleared SaMD / medical device. **Not** a substitute for licensed care.
 See also `CLINICAL.md` and `Capricorn-Brain/AI/Claude-Code/SoulCap-Eval-Harness.md`.
@@ -44,7 +44,7 @@ Previous release preserved at `docs/legacy-v032.html`.
 - Constellation `hard right now` suppresses all suggestions for that person, permanently
   and silently. No reconciliation nudges.
 - The app never contacts anyone. "Open messages" hands off to the OS with an empty draft.
-- 70 Playwright tests across mobile + desktop; safety tests gate the deploy in CI.
+- 80 Playwright tests across mobile + desktop; safety tests gate the deploy in CI.
 
 ### Known gap fixed this release
 
@@ -63,8 +63,8 @@ certainly more of them still in there.
 |---|---|---|
 | US | 988, Crisis Text Line 741741, 911 | Long-established, publicly documented |
 | UK | **Removed at owner request — routed to international** | Named lines deleted 2026-07-21; floor kept so the screen is never empty |
-| **Pakistan** | **None — routed to international directory** | **No local service independently verified as live and staffed** |
-| Elsewhere | findahelpline.com, IASP directory | International aggregators |
+| **Pakistan** | Umang (24/7), Taskeen, Rozan, Rescue 1122 | Nationally-recognised, corroborated across Umang/Taskeen/Rozan/MHIN/UNFPA; owner to re-confirm before wide launch |
+| UK / elsewhere | IASP directory + local emergency | "Find a Helpline" removed at owner instruction |
 
 **Do not add a Pakistan-specific number without independent verification that it is live,
 staffed, and its hours recorded.** A crisis number that rings out is worse than no number,
@@ -74,7 +74,7 @@ because the person has already reached the point of asking for help. Absent beat
 
 ## Blockers remaining
 
-1. **No licensed clinician has reviewed any skill card.** The Skills screen says so in-product.
+1. **No licensed clinician has reviewed any skill card.** The Techniques screen says so in-product.
 2. No Urdu clinical copy reviewer; no Urdu localisation shipped.
 3. Safety kernel is still keyword-based. It cannot detect oblique risk
    ("I've been sorting out my things", "I finally feel calm about it all").
