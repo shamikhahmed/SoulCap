@@ -19,9 +19,12 @@ calls at all** after load — no account, no server, no LLM, no analytics. Every
 - **37 techniques** organised by mechanism (nervous system, senses, orienting, crowding out,
   self-soothing, imagery, sleep, thinking, doing, people). Each documents *why it works*, its
   contraindications, what it needs to hand, and whether it's discreet enough for public.
-- **Guided runner** — the app moves through each exercise *with* you, walking every step:
-  paced auto-advance (on by default), spoken steps (device speech synthesis, local), breathing
-  haptics, a breathing orb. Step pace / voice speed adjustable.
+- **Guided runner** — the app moves through each exercise *with* you, walking every step: paced
+  auto-advance with a **visible countdown** in the orb (min ~9s/step, kind to second-language
+  readers), spoken steps (device speech synthesis, local), breathing haptics. **Exercise pace**
+  setting (Slow/Steady/Brisk) + per-run "Pause the timer". Spoken guidance **auto-quiets around
+  people** (silent on panic, and on exercises started after "around people" in Calm); one-tap
+  speaker toggle. Voice picker filters out novelty system voices and labels the rest by accent.
 - **Apple-Watch-style breathing** — paced techniques (box, 4-7-8, physiological sigh) open a
   setup screen: choose breaths + pace, see the estimated time, then a synced orb + voice +
   haptics runs the full cycle with in-nose / out-mouth cues, breath count and time remaining.
@@ -71,7 +74,10 @@ GitHub Pages deploy on `npm run verify`. `?demo=1` seeds a Pakistan-region demo.
 3. Kernel is keyword-based — blind to oblique risk. Needs the classifier in the eval-harness spec.
 4. Prisma schema has uncommitted enum additions needing a migration before any real DB use.
 
-Planning docs (incl. the living **roadmap**) live in `~/Capricorn-Brain/AI/Claude-Code/SoulCap-*.md` — see SoulCap-Roadmap.md.
+### For the next developer / AI agent
+Start with **`AGENTS.md`** (architecture, hard rules, code conventions, recipes, ship workflow) and
+**`ROADMAP.md`** (build-ready specs for what's next). `.cursorrules` is the short version for Cursor.
+Deeper planning lives in `~/Capricorn-Brain/AI/Claude-Code/SoulCap-*.md`.
 
 ---
 

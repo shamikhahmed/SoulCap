@@ -1,0 +1,45 @@
+# Cursor rules for SoulCap
+
+Read `AGENTS.md` (repo root) before writing any code — it has the full architecture, conventions,
+recipes, and ship workflow. `ROADMAP.md` has build-ready specs for what to do next. These rules
+are the short, non-negotiable version.
+
+## The product
+SoulCap is a calm, private, **offline-first** PWA. A personalised emotional operating system —
+NOT an AI therapist, mood tracker, or crisis service. Success = the user needs the app less.
+
+## Never
+- Never add a network call: no `fetch`, `XMLHttpRequest`, CDN `<script>`, web-font link, or
+  analytics. The shipped app in `docs/` makes ZERO network requests after load. No dependencies.
+- Never claim it is therapy / treats / diagnoses / replaces care. Never mark a technique as
+  clinically reviewed (none are).
+- Never add crisis phone numbers or a country/region picker (removed by owner). Help is
+  gentle, number-free, country-agnostic guidance only.
+- Never add streaks, points, badges, guilt notifications, red counts, infinite scroll, fake
+  typing indicators, or "I care about you" copy.
+- Never contact anyone on the user's behalf — "Message someone" opens the user's own `sms:`.
+- Never write ES6+ in `docs/` (no arrow fns, `let/const`, classes, template literals, optional
+  chaining). Plain `var`/`function`, ES5-safe, no transpile.
+
+## Always
+- Product code = `docs/` only (`index.html`, `app.css`, `data.js`, `app.js`, `sw.js`).
+  `backend/` and `mobile/` are un-deployed labs — don't wire them into the PWA.
+- Build DOM with the `el()` helper; put user-visible content in `data.js`; style via CSS tokens
+  in `app.css` (theme-aware: light default, dark, night). Never hardcode colours.
+- After a state change call `save()` then `render()` (or `reRender()` to keep scroll position).
+- Keep the safety keyword lists in `docs/app.js` (`CRISIS_HARD` etc) in sync with
+  `backend/src/ai/safety/safety-gate.service.ts`.
+- Honour `prefers-reduced-motion`; ≥15px text; ≥48px touch targets; contrast in both themes;
+  one filled accent button per screen.
+- Safety-critical behaviour MUST get a Playwright test in `e2e/` (it gates the deploy).
+
+## Ship workflow (every change that touches `docs/`)
+1. Bump `CACHE` in `docs/sw.js`, `swCache`+`version` in `VERSION.json`, `APP_VERSION`+`version`
+   in `docs/app.js` — all matching (e.g. `soulcap-v072` / `0.7.2`).
+2. Update `CHANGELOG.md`; bump version in `SAFETY.md` + `HANDOVER.md`.
+3. `npx playwright test` — all green (mobile + desktop, Chromium).
+4. Commit + push to `main`. CI (`.github/workflows/deploy.yml`) gates the Pages deploy on the tests.
+
+## Done-gate
+Reduces stress? Calming? Simple? Private? Honest about limits? Accessible? Won't overwhelm someone
+mid-panic? Has a test if safety-critical? Would Apple ship it? If not — not done.

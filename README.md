@@ -1,8 +1,11 @@
 # SoulCap
 
-**v0.3.0 — Clinical-path PWA.** On-device clinician-supported wellness companion. **Not** a medical device · not therapy · not crisis counseling. See [`CLINICAL.md`](CLINICAL.md) + [`SAFETY.md`](SAFETY.md).
+**v0.7.1 — offline-first wellness PWA.** A calm, private, personalised space for self-regulation
+skills, a journal, and a map of the people around you. **Not** therapy · not a diagnosis tool ·
+not a crisis service · not an AI therapist. See [`SAFETY.md`](SAFETY.md).
 
-> Crisis: call/text **988** (US) · text **HOME** to **741741** · [IASP](https://www.iasp.info/resources/Crisis_Centres/).
+> **New here? Read [`AGENTS.md`](AGENTS.md)** (build guide + rules) and [`ROADMAP.md`](ROADMAP.md)
+> (what's next, in detail). [`.cursorrules`](.cursorrules) is the short version for Cursor.
 
 ---
 
@@ -10,11 +13,15 @@
 
 | Surface | URL / path | Reality |
 |---|---|---|
-| **PWA** | [shamikhahmed.github.io/SoulCap](https://shamikhahmed.github.io/SoulCap/) · `docs/` | Installable clinical-path shell. Journal, habits, check-in, companion chat (rules-based reflections), keyword safety tier, Panic/988, clinician notes + local audit. **localStorage only.** |
-| Nest API | `backend/` | Full module **source** (LMM, safety gate, clinical stubs). **Not deployed.** |
-| Expo | `mobile/` | Thin client source. **Not store-ready.** |
+| **PWA** | [shamikhahmed.github.io/SoulCap](https://shamikhahmed.github.io/SoulCap/) · `docs/` | The product. Five tabs (Now · Calm · Journal · People · You), 37 techniques with a guided timed runner + Apple-Watch-style breathing, a book-style journal, the orbiting Constellation, optional history, purple (logo) theme, light/dark/night, voice + haptics. **Zero network calls — localStorage only.** |
+| Nest API | `backend/` | Full module **source** (LMM, safety gate). Builds clean, **not deployed**; PWA does not call it. |
+| Expo | `mobile/` | Thin client source. Lab only. |
 
-Cap Store **Try Demo** → `?demo=1` (consent + sample name prefilled for walkthrough).
+Demo walkthrough → `?demo=1`.
+
+**No crisis phone numbers or country selection ship** (owner decision — we can't promise any line
+is reachable). Help is gentle, number-free guidance: reach out to someone you trust; contact local
+emergency services if in danger.
 
 ---
 
