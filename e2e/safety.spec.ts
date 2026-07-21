@@ -27,6 +27,16 @@ async function toAgeGate(page: Page) {
   await page.getByRole('button', { name: 'Begin' }).click();
 }
 
+/** Full fresh onboarding into the app: age → name → region → consent → concerns. */
+async function freshThrough(page: Page, region = /United Kingdom/) {
+  await toAgeGate(page);
+  await page.getByRole('button', { name: '18 or older' }).click();
+  await page.getByRole('button', { name: 'Skip', exact: true }).click(); // name step
+  await page.getByRole('button', { name: region }).click();
+  await page.getByRole('button', { name: 'I understand' }).click();
+  await page.getByRole('button', { name: /Skip — just let me in/ }).click();
+}
+
 test.describe('Safety kernel — risk tiers', () => {
   test('explicit crisis phrasing is tier 3', async ({ page }) => {
     await seedDemo(page);
@@ -81,7 +91,7 @@ test.describe('Safety kernel — risk tiers', () => {
 test.describe('Help is always reachable', () => {
   test('every main screen exposes a help affordance', async ({ page }) => {
     await seedDemo(page);
-    for (const tab of ['now', 'calm', 'skills', 'map', 'me']) {
+    for (const tab of ['now', 'calm', 'journal', 'map', 'me']) {
       await page.evaluate((t) => {
         (document.querySelector(`#tabs button[data-tab="${t}"]`) as HTMLElement).click();
       }, tab);
@@ -120,7 +130,7 @@ test.describe('Help is always reachable', () => {
 
   test('persistent help button sits on every tab and opens help', async ({ page }) => {
     await seedDemo(page);
-    for (const tab of ['now', 'calm', 'skills', 'map', 'me']) {
+    for (const tab of ['now', 'calm', 'journal', 'map', 'me']) {
       await page.evaluate((t) => {
         (document.querySelector(`#tabs button[data-tab="${t}"]`) as HTMLElement).click();
       }, tab);
@@ -131,13 +141,7 @@ test.describe('Help is always reachable', () => {
   });
 
   test('the removed UK lines appear for no one', async ({ page }) => {
-    await page.goto('/');
-    await dismissSplash(page);
-    await page.getByRole('button', { name: 'Begin' }).click();
-    await page.getByRole('button', { name: '18 or older' }).click();
-    await page.getByRole('button', { name: /United Kingdom/ }).click();
-    await page.getByRole('button', { name: 'I understand' }).click();
-    await page.getByRole('button', { name: /Skip — just let me in/ }).click();
+    await freshThrough(page, /United Kingdom/);
     await page.locator('.view.on .help-btn').click();
     const text = await page.locator('#panicLinks').innerText();
     expect(text).not.toContain('Samaritans');
@@ -166,10 +170,10 @@ test.describe('Age gate', () => {
     await expect(page.getByRole('link', { name: /Find support/ })).toBeVisible();
   });
 
-  test('18+ proceeds to region', async ({ page }) => {
+  test('18+ proceeds into onboarding', async ({ page }) => {
     await toAgeGate(page);
     await page.getByRole('button', { name: '18 or older' }).click();
-    await expect(page.getByText('Where are you?')).toBeVisible();
+    await expect(page.getByText('What should we call you?')).toBeVisible();
   });
 });
 

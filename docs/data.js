@@ -21,6 +21,12 @@ const SKILLS = [
     mechanism:'A second short inhale reopens collapsed air sacs, and the long exhale slows the heart through the vagus nerve. It is the fastest voluntary way down from peak arousal.',
     blurb:'Two inhales, one long exhale. The quickest way down.',
     steps:['Breathe in through your nose.','Now a second, shorter sniff on top. Fill the last bit.','Long, slow breath out through your mouth. Let it all go.','Again — twice in, once long out.','Three more. Then just breathe normally.'],
+    // Paced breathing: the runner drives a synced orb + voice through these phases.
+    pattern:{ defaultBreaths:6, phases:[
+      { label:'Breathe in through your nose', secs:3, scale:0.9 },
+      { label:'One more sip of air on top', secs:1, scale:1 },
+      { label:'Long breath out through your mouth', secs:6, scale:0.55 }
+    ]},
     source:'Cyclic sighing — respiratory physiology literature' },
 
   { id:'box-breathing', name:'Box breathing', domain:'breath', family:'autonomic',
@@ -29,6 +35,12 @@ const SKILLS = [
     mechanism:'Equal counts lengthen the exhale relative to a panicking breath rate, which shifts the balance from fight-or-flight toward rest.',
     blurb:'Even, counted breathing. Steady and portable.',
     steps:['Sit or lie however you are. Nothing to fix.','In through your nose while I count four.','Hold for four. Loose, not clenched.','Out through your mouth for four. Slow.','Hold empty for four.','Again. Four more rounds, then we stop.'],
+    pattern:{ defaultBreaths:8, phases:[
+      { label:'Breathe in through your nose', secs:4, scale:1 },
+      { label:'Hold', secs:4, scale:1 },
+      { label:'Breathe out through your mouth', secs:4, scale:0.55 },
+      { label:'Hold, empty', secs:4, scale:0.55 }
+    ]},
     source:'Paced breathing — WHO mhGAP self-help materials' },
 
   { id:'four-seven-eight', name:'4-7-8 breathing', domain:'breath', family:'autonomic',
@@ -37,6 +49,11 @@ const SKILLS = [
     mechanism:'A much longer exhale than inhale maximises the vagal braking effect on heart rate. Good for winding down rather than for peak panic.',
     blurb:'Long exhales. Best for settling toward sleep.',
     steps:['In through your nose for four.','Hold for seven. If seven is too long, shorten everything but keep the ratio.','Out through your mouth for eight, slowly.','That is one round. Do four.','Stop if you feel lightheaded — that is normal and it passes.'],
+    pattern:{ defaultBreaths:6, phases:[
+      { label:'Breathe in through your nose', secs:4, scale:1 },
+      { label:'Hold', secs:7, scale:1 },
+      { label:'Breathe out through your mouth', secs:8, scale:0.5 }
+    ]},
     source:'Extended-exhale breathing — relaxation training literature' },
 
   { id:'cold-water', name:'Cold water on your face', domain:'breath', family:'autonomic',
@@ -398,6 +415,29 @@ const RELATIONSHIP_TYPES = [
   { code:'CARE',      label:'Care team', cssVar:'--breath'  },
   { code:'COLLEAGUE', label:'Work',      cssVar:'--reflect' },
   { code:'OTHER',     label:'Other',     cssVar:'--connect' }
+];
+
+/* Calm front-door — "what do you need right now?" maps intent to families,
+ * so Calm asks a real question instead of mirroring the Techniques library. */
+const CALM_NEEDS = [
+  { key:'settle', label:'Settle down',        sub:'Racing, wired, panicky', families:['autonomic','sensory','orienting'] },
+  { key:'lift',   label:'Lift a low mood',    sub:'Flat, heavy, stuck',      families:['activation','connection','cognitive'] },
+  { key:'sleep',  label:'Get to sleep',       sub:'Can’t switch off',        families:['sleep','autonomic','imagery'] },
+  { key:'head',   label:'Get out of my head', sub:'Looping, overthinking',   families:['load','cognitive','imagery'] },
+  { key:'kind',   label:'Be kinder to myself',sub:'Self-critical, ashamed',  families:['soothing','cognitive'] },
+  { key:'less',   label:'Feel less alone',    sub:'Lonely, withdrawn',       families:['connection','soothing'] }
+];
+
+/* Optional journal prompts, offered but never required. */
+const JOURNAL_PROMPTS = [
+  'What’s taking up the most room in your head right now?',
+  'What went better than you expected today?',
+  'What are you carrying that isn’t yours to carry?',
+  'If today had a colour, what would it be, and why?',
+  'What would you say to a friend who’d had your day?',
+  'One small thing you’re grateful for.',
+  'What do you need that you haven’t asked for?',
+  'What did your body feel like today?'
 ];
 
 /* Stanley-Brown safety planning steps. Written when steady, surfaced when not. */

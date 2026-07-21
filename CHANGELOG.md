@@ -1,3 +1,40 @@
+## [0.6.0] — 2026-07-21
+
+Personalisation, a real journal, guided breathing, and a proper tab structure.
+
+### Added
+- **Five clean tabs: Now · Calm · Journal · People · You.** Short labels fix the footer
+  alignment. The old Techniques tab is gone — the full library now lives *inside* Calm, which
+  became a guided front door.
+- **Calm is now a guided flow.** "What do you need right now?" (settle / lift / sleep / get out
+  of my head / be kinder / feel less alone) → then where you are and what's to hand → a shortlist
+  of techniques that actually fit. "Browse all" opens the whole library. No longer a near-copy of
+  the Techniques list.
+- **Profile.** Name, age and pronouns (all optional, local). The home greeting uses your name,
+  and there's a dedicated onboarding step for it. First real personalisation.
+- **Journal.** A private, paper-feeling diary — serif throughout, ruled lines, warm stock.
+  Title, free writing, mood, and **photos** (down-scaled on device so local storage survives).
+  Optional writing prompts. Entries are yours, local, deletable.
+- **Apple-Watch-style breathing.** Paced techniques (box, 4-7-8, physiological sigh) open a setup
+  screen: pick your **breaths** and **pace**, see the **estimated time**, then a synced orb + voice
+  + haptics runs the *whole* cycle with detailed "in through the nose / out through the mouth" cues,
+  breath count and time remaining.
+- **Guided step walk-through, on by default** — every non-breathing technique now moves through
+  *all* its steps, spoken and paced, not just the first. Manual Next still there.
+- **Night theme** joins light and dark in the appearance picker.
+- Settings reorganised into clear groups (Appearance · Guided exercises · Constellation extras ·
+  Your data), with the profile and safety plan surfaced as cards in You.
+
+### Fixed
+- **Check-ins no longer stack.** Tapping a mood several times in one day updates that day's entry
+  instead of piling up new ones; a new calendar day starts a fresh entry. It now tracks by date.
+- Footer tab alignment — even widths, consistent icon sizing, labels never wrap.
+- Runner scrolls on short screens so the breathing setup's controls are always reachable.
+
+### Changed
+- SW `soulcap-v060`. Onboarding is five steps (adds the name step). Tests now 70 across mobile +
+  desktop, covering breathing setup, journal save, the paper editor's serif face, and check-in dedup.
+
 ## [0.5.1] — 2026-07-21
 
 ### Added

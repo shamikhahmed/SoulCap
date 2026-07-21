@@ -223,17 +223,21 @@ input[type="range"]{width:100%;accent-color:var(--accent)}
   border-top:1px solid var(--line);padding-bottom:var(--sab);z-index:20;
 }
 #tabs button{
-  flex:1;background:none;border:none;padding:9px 2px;min-height:var(--tab-h);
+  flex:1 1 0;min-width:0;background:none;border:none;padding:8px 2px;min-height:var(--tab-h);
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;
-  color:var(--ink-3);font-size:10.5px;font-weight:600;letter-spacing:.02em;
-  transition:color var(--dur-fast) var(--ease);position:relative;
+  color:var(--ink-3);transition:color var(--dur-fast) var(--ease);position:relative;
+}
+#tabs button span{
+  font-size:10.5px;font-weight:600;letter-spacing:.01em;line-height:1;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;
 }
 #tabs button[aria-selected="true"]{color:var(--accent)}
 #tabs button[aria-selected="true"]::before{
   content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);
-  width:24px;height:2px;border-radius:0 0 2px 2px;background:var(--accent);
+  width:22px;height:2px;border-radius:0 0 2px 2px;background:var(--accent);
 }
-#tabs svg{display:block}
+#tabs svg{display:block;width:22px;height:22px;flex:none}
+@media (max-width:360px){#tabs button span{font-size:9.5px}#tabs svg{width:20px;height:20px}}
 
 /* ── Help / panic ──────────────────────────────────────── */
 .help-btn{
@@ -312,7 +316,8 @@ input[type="range"]{width:100%;accent-color:var(--accent)}
 .legend i{width:9px;height:9px;border-radius:50%;display:block;flex:none}
 
 /* ── Sheet ─────────────────────────────────────────────── */
-#sheet{position:fixed;inset:0;z-index:80;display:none;align-items:flex-end;justify-content:center}
+/* Above the journal editor (95) and runner (90) so confirms sit on top. */
+#sheet{position:fixed;inset:0;z-index:120;display:none;align-items:flex-end;justify-content:center}
 #sheet.on{display:flex}
 #sheet .scrim{position:absolute;inset:0;background:rgba(0,0,0,.45);animation:fadeIn 240ms var(--ease-soft) both;backdrop-filter:blur(2px)}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
@@ -328,7 +333,7 @@ input[type="range"]{width:100%;accent-color:var(--accent)}
 /* ── Runner — the app exercises *with* you ─────────────────
    Every technique gets a living companion: a slow breathing orb, paced
    auto-advance, and spoken steps. It should feel guided, not read. */
-#runner{position:fixed;inset:0;background:var(--ground);z-index:90;display:none;flex-direction:column;padding:calc(var(--sat) + 26px) 24px calc(var(--sab) + 20px);gap:16px}
+#runner{position:fixed;inset:0;background:var(--ground);z-index:90;display:none;flex-direction:column;padding:calc(var(--sat) + 26px) 24px calc(var(--sab) + 20px);gap:16px;overflow-y:auto}
 #runner.on{display:flex;animation:viewIn 320ms var(--ease-soft) both}
 .run-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .run-step{font-size:12px;letter-spacing:.13em;text-transform:uppercase;font-weight:700;color:var(--ink-3);margin:0}
@@ -353,10 +358,25 @@ input[type="range"]{width:100%;accent-color:var(--accent)}
 .run-orb-count{font-size:44px;font-weight:200;color:var(--accent);font-variant-numeric:tabular-nums;letter-spacing:-.03em}
 
 .run-text{font-size:26px;line-height:1.36;letter-spacing:-.015em;font-weight:500;margin:0;max-width:16em;text-wrap:balance}
+.run-meta{font-size:14px;font-weight:600;color:var(--ink-3);font-variant-numeric:tabular-nums;margin:0;letter-spacing:.01em}
 .run-why{
   font-family:var(--voice);font-style:italic;font-size:15px;line-height:1.5;color:var(--ink-3);
   margin:0;max-width:26em;
 }
+/* Breath-session setup (Apple-Watch style) reuses the runner shell. */
+.bs-title{font-family:var(--voice);font-size:26px;letter-spacing:-.016em;font-weight:500;margin:0;text-align:center}
+.bs-sub{font-size:15px;color:var(--ink-2);margin:0;text-align:center;max-width:22em}
+.bs-group{width:100%;max-width:340px}
+.bs-group .eyebrow{text-align:center}
+.bs-opts{display:flex;gap:9px;justify-content:center}
+.bs-opt{
+  flex:1;background:var(--surface);border:1px solid var(--line-strong);border-radius:var(--r-md);
+  padding:14px 8px;min-height:58px;display:flex;flex-direction:column;align-items:center;gap:2px;
+  font-weight:600;font-size:17px;color:var(--ink);transition:border-color var(--dur-fast) var(--ease),background var(--dur-fast) var(--ease);
+}
+.bs-opt small{font-size:11.5px;font-weight:500;color:var(--ink-3);letter-spacing:.02em}
+.bs-opt[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.bs-est{font-size:14px;color:var(--ink-3);text-align:center;font-variant-numeric:tabular-nums;margin:0}
 .run-guide{
   display:inline-flex;align-items:center;gap:8px;font-size:13.5px;font-weight:600;color:var(--ink-3);
   background:var(--sunken);border:1px solid var(--line);border-radius:999px;padding:8px 15px;min-height:40px;
@@ -366,6 +386,61 @@ input[type="range"]{width:100%;accent-color:var(--accent)}
 .run-guide svg{display:block}
 
 /* ── Misc ──────────────────────────────────────────────── */
+/* ── Journal ──────────────────────────────────────────────
+   Meant to feel like paper, not a form. Serif throughout, warm stock,
+   faint ruled lines, generous measure. */
+.j-entry{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:18px 19px;box-shadow:var(--shadow-1);width:100%;text-align:left;display:block;
+  transition:box-shadow var(--dur-fast) var(--ease),transform var(--dur-fast) var(--ease);
+}
+.j-entry:hover{box-shadow:var(--shadow-2)}
+.j-entry:active{transform:scale(.995)}
+.j-entry .jd{font-size:12px;letter-spacing:.06em;text-transform:uppercase;font-weight:600;color:var(--ink-3);margin:0 0 6px;font-variant-numeric:tabular-nums}
+.j-entry .jt{font-family:var(--voice);font-size:20px;line-height:1.25;letter-spacing:-.012em;font-weight:500;margin:0 0 5px}
+.j-entry .jx{font-family:var(--voice);font-size:16px;line-height:1.55;color:var(--ink-2);margin:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.j-entry .jphotos{display:flex;gap:6px;margin-top:10px}
+.j-entry .jphotos img{width:46px;height:46px;object-fit:cover;border-radius:8px;border:1px solid var(--line)}
+.j-entry .jmood{display:inline-block;margin-top:9px;font-size:16px}
+
+#journalEditor{
+  position:fixed;inset:0;z-index:95;background:var(--ground);display:none;flex-direction:column;
+  padding:calc(var(--sat) + 12px) 0 0;
+}
+#journalEditor.on{display:flex;animation:viewIn 320ms var(--ease-soft) both}
+.je-top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 16px 12px;border-bottom:1px solid var(--line)}
+.je-date{font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;font-weight:600;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.je-paper{
+  flex:1;overflow-y:auto;padding:22px 22px 40px;display:flex;flex-direction:column;gap:14px;
+  background:repeating-linear-gradient(var(--surface) 0 33px, var(--line) 33px 34px);
+  background-attachment:local;
+}
+.je-title{
+  font-family:var(--voice);font-size:26px;letter-spacing:-.018em;font-weight:500;color:var(--ink);
+  background:transparent;border:none;padding:0;min-height:auto;line-height:1.3;
+}
+.je-title:focus{outline:none;border:none}
+.je-title::placeholder{color:var(--ink-3);font-style:italic}
+.je-prompt{font-family:var(--voice);font-style:italic;font-size:17px;line-height:1.5;color:var(--accent);margin:0;display:none}
+.je-prompt.on{display:block}
+.je-body{
+  font-family:var(--voice);font-size:18px;line-height:34px;letter-spacing:-.003em;color:var(--ink);
+  background:transparent;border:none;padding:0;min-height:44vh;resize:none;
+}
+.je-body:focus{outline:none;border:none}
+.je-body::placeholder{color:var(--ink-3);font-style:italic}
+.je-photos{display:flex;flex-wrap:wrap;gap:9px}
+.je-photos .ph{position:relative}
+.je-photos img{width:88px;height:88px;object-fit:cover;border-radius:10px;border:1px solid var(--line-strong)}
+.je-photos .rm{position:absolute;top:-7px;right:-7px;width:24px;height:24px;border-radius:50%;background:var(--ink);color:var(--ground);border:none;font-size:15px;line-height:1;display:flex;align-items:center;justify-content:center}
+.je-tools{display:flex;align-items:center;gap:10px;padding:11px 16px calc(var(--sab) + 12px);border-top:1px solid var(--line);background:var(--ground)}
+.je-tool{width:46px;height:46px;border-radius:12px;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink-2);display:flex;align-items:center;justify-content:center;flex:none}
+.je-tool:active{transform:scale(.94)}
+.je-tool svg{width:21px;height:21px}
+.je-mood{display:flex;gap:6px;overflow-x:auto;flex:1}
+.je-mood button{font-size:19px;width:42px;height:42px;border-radius:10px;border:1px solid var(--line-strong);background:var(--surface);flex:none;transition:border-color var(--dur-fast) var(--ease)}
+.je-mood button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+
 /* Persistent floating help — reachable from any tab in one tap, always. */
 #fab{
   position:fixed;right:16px;z-index:60;

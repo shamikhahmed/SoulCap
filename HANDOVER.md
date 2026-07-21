@@ -1,4 +1,4 @@
-**Version:** 0.5.1 · SW `soulcap-v051`
+**Version:** 0.6.0 · SW `soulcap-v060`
 
 # SoulCap — Project Handover
 
@@ -6,7 +6,7 @@
 > first — it is the current truth as of 2026-07-21. The sections further down describe an
 > earlier architecture and are kept for reference only.
 
-## Current state (v0.5.1 — 2026-07-21)
+## Current state (v0.6.0 — 2026-07-21)
 
 **The product is the PWA in `docs/`.** Fully rewritten. Offline-first, local-only, **no network
 calls at all** after load — no account, no server, no LLM, no analytics. Everything is
@@ -15,20 +15,27 @@ calls at all** after load — no account, no server, no LLM, no analytics. Every
 ### What the PWA is now
 - **Design System v2 "plum & sand"** — palette anchored to the brand mark (violet), chroma held
   low so it reads calm. Three themes: light, dark, and **night** (dimmer than dark, for 3am).
-- **Five tabs:** Now · Calm · Techniques · Constellation · You. Splash + welcome screens.
+- **Five tabs:** Now · Calm · Journal · People · You (Techniques folded into Calm as a guided front door). Splash + welcome screens.
 - **37 techniques** organised by mechanism (nervous system, senses, orienting, crowding out,
   self-soothing, imagery, sleep, thinking, doing, people). Each documents *why it works*, its
   contraindications, what it needs to hand, and whether it's discreet enough for public.
-- **Guided runner** — the app moves through each exercise *with* you: a breathing orb, spoken
-  steps (device speech synthesis, local), breathing haptics, and a "Guide me" auto-advance that
-  paces you like a therapist. Manual Next always available.
-- **Calm tab** with context filtering — "where are you" / "what have you got" narrows the library
-  to techniques you can actually perform right now.
+- **Guided runner** — the app moves through each exercise *with* you, walking every step:
+  paced auto-advance (on by default), spoken steps (device speech synthesis, local), breathing
+  haptics, a breathing orb. Step pace / voice speed adjustable.
+- **Apple-Watch-style breathing** — paced techniques (box, 4-7-8, physiological sigh) open a
+  setup screen: choose breaths + pace, see the estimated time, then a synced orb + voice +
+  haptics runs the full cycle with in-nose / out-mouth cues, breath count and time remaining.
+  Driven by a `pattern` field on those skills in `data.js`.
+- **Calm tab** — a *guided front door*, not a library mirror: "what do you need right now?"
+  → where you are / what's to hand → a fitted shortlist, with "browse all" behind it.
+- **Journal** — private paper-feeling diary (serif, ruled lines): title, free writing, mood,
+  and photos down-scaled on device to protect local storage. Optional prompts.
+- **Profile** — name / age / pronouns (optional, local). Home greeting uses the name.
 - **Constellation** — relationship map. Orbiting (frozen under reduced-motion), 3–5 rings,
   drag people in/out to change closeness, optional person-to-person links and contact history
   (both off by default; contact history never nags). `hard right now` suppresses all suggestions
   for that person, permanently, silently.
-- **Safety plan** (Stanley-Brown), post-episode capture, Journey view (no score).
+- **Safety plan** (Stanley-Brown) and Journey view (no score), both in the You tab.
 - **Persistent floating Help** on every tab, plus a Help button on every screen and full-screen
   panic pacer. Crisis routing is hard-coded, never generated.
 

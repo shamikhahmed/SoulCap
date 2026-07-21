@@ -7,7 +7,7 @@
  *
  * Bump CACHE on every asset change or users get a stale build.
  */
-const CACHE = 'soulcap-v051';
+const CACHE = 'soulcap-v060';
 
 const ASSETS = [
   './',

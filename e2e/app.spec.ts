@@ -20,9 +20,16 @@ async function freshThrough(page: Page) {
   await dismissSplash(page);
   await page.getByRole('button', { name: 'Begin' }).click();
   await page.getByRole('button', { name: '18 or older' }).click();
+  await page.getByRole('button', { name: 'Skip', exact: true }).click(); // name step
   await page.getByRole('button', { name: /United Kingdom/ }).click();
   await page.getByRole('button', { name: 'I understand' }).click();
   await page.getByRole('button', { name: /Skip — just let me in/ }).click();
+}
+
+/** Start a specific technique by id (test hook), waiting for the runner. */
+async function runSkill(page: Page, id: string) {
+  await page.evaluate((sid) => (window as any).__soulcap.startSkill(sid), id);
+  await expect(page.locator('#runner')).toBeVisible();
 }
 
 test.describe('Smoke', () => {
@@ -38,10 +45,10 @@ test.describe('Smoke', () => {
     await seedDemo(page);
     for (const [tab, heading] of [
       ['now', /Good |It’s late/],
-      ['calm', /Something for right now/],
-      ['skills', /Things that help/],
+      ['calm', /What do you need/],
+      ['journal', /Your pages/],
       ['map', /The people around you/],
-      ['me', /What SoulCap knows/]
+      ['me', /Shamikh|Your space/]
     ] as const) {
       await page.evaluate((t) => {
         (document.querySelector(`#tabs button[data-tab="${t}"]`) as HTMLElement).click();
@@ -52,12 +59,10 @@ test.describe('Smoke', () => {
 });
 
 test.describe('Skills', () => {
-  test('a skill runs end to end and records feedback', async ({ page }) => {
+  test('a step technique runs end to end and records feedback', async ({ page }) => {
     await seedDemo(page);
-    await page.locator('#view-now .card .btn', { hasText: 'Begin' }).first().click();
-    await expect(page.locator('#runner')).toBeVisible();
+    await runSkill(page, 'thought-record'); // step-based, not paced breathing
 
-    // Walk to the end.
     for (let i = 0; i < 12; i++) {
       const next = page.locator('#runActions button', { hasText: /^(Next|Finish)$/ });
       if (await next.count() === 0) break;
@@ -72,29 +77,74 @@ test.describe('Skills', () => {
     await expect(page.locator('#runner')).toBeHidden();
   });
 
-  test('guided mode advances through steps on its own', async ({ page }) => {
+  test('a step technique auto-advances (guided by default)', async ({ page }) => {
     await seedDemo(page);
-    await page.locator('#view-now .card .btn', { hasText: 'Begin' }).first().click();
-    await expect(page.locator('#runner')).toBeVisible();
-    const first = await page.locator('#runText').innerText();
-
-    await page.locator('#runGuide').click();
+    await runSkill(page, 'thought-record');
     await expect(page.locator('#runGuide')).toHaveAttribute('aria-pressed', 'true');
-
-    // With no further taps, the step should change on the pacing timer.
+    const first = await page.locator('#runText').innerText();
+    // With no further taps, the step changes on the pacing timer.
     await expect(async () => {
       expect(await page.locator('#runText').innerText()).not.toBe(first);
     }).toPass({ timeout: 12000 });
   });
 
+  test('a breathing technique opens the Apple-Watch style setup and runs', async ({ page }) => {
+    await seedDemo(page);
+    await runSkill(page, 'box-breathing'); // has a paced pattern
+    await expect(page.locator('#runner')).toContainText('Set your breaths');
+    await expect(page.locator('#runner')).toContainText(/About .* min/);
+    const begin = page.locator('#runActions').getByRole('button', { name: 'Begin' });
+    await begin.scrollIntoViewIfNeeded();
+    await begin.click();
+    await expect(page.locator('#runMeta')).toContainText(/Breath 1 of/);
+    await expect(page.locator('#runText')).toContainText(/Breathe in through your nose/);
+  });
+
   test('an exercise can be abandoned without penalty', async ({ page }) => {
     await seedDemo(page);
-    await page.locator('#view-now .card .btn', { hasText: 'Begin' }).first().click();
+    await runSkill(page, 'thought-record');
     await page.getByRole('button', { name: /Stop — no problem/ }).click();
     await expect(page.locator('#runner')).toBeHidden();
-    // Nothing recorded for an abandoned run.
     const runs = await page.evaluate(() => (window as any).__soulcap.getState().skillRuns.length);
     expect(runs).toBe(3); // the three seeded by demo
+  });
+});
+
+test.describe('Journal', () => {
+  test('a journal entry can be written and saved', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="journal"]') as HTMLElement).click());
+    const before = await page.evaluate(() => (window as any).__soulcap.getState().journal.length);
+    await page.getByRole('button', { name: /New entry/ }).click();
+    await expect(page.locator('#journalEditor')).toBeVisible();
+    await page.locator('#jeBody').fill('A quiet test entry.');
+    await page.locator('#jeSave').click();
+    await expect(page.locator('#journalEditor')).toBeHidden();
+    const after = await page.evaluate(() => (window as any).__soulcap.getState().journal.length);
+    expect(after).toBe(before + 1);
+    await expect(page.locator('#view-journal')).toContainText('A quiet test entry.');
+  });
+
+  test('the paper editor uses the serif reading face', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="journal"]') as HTMLElement).click());
+    await page.getByRole('button', { name: /New entry/ }).click();
+    const font = await page.locator('#jeBody').evaluate((n) => getComputedStyle(n).fontFamily);
+    expect(font.toLowerCase()).toMatch(/serif|new york|georgia/);
+  });
+});
+
+test.describe('Check-ins', () => {
+  test('tapping a mood twice in one day does not stack entries', async ({ page }) => {
+    await seedDemo(page);
+    const chip = page.locator('#view-now .chips .chip').filter({ hasText: 'Wired' });
+    await chip.click();
+    const afterFirst = await page.evaluate(() => (window as any).__soulcap.getState().checkins.length);
+    await page.locator('#view-now .chips .chip').filter({ hasText: 'Flat' }).click();
+    await page.locator('#view-now .chips .chip').filter({ hasText: 'Steady' }).click();
+    const afterMore = await page.evaluate(() => (window as any).__soulcap.getState().checkins.length);
+    // Same calendar day → the latest entry is updated, not appended.
+    expect(afterMore).toBe(afterFirst);
   });
 });
 
