@@ -3,6 +3,8 @@
 ### Added
 - **Safety pass:** tier-3 `assessRisk` now opens Help on journal save, history/safety-plan textareas (change/blur), parked thought save, person notes, manual line edits, and principles inputs — content still saves when storage allows (mirrors check-in intent).
 - Playwright: journal crisis phrase, Your story blur, export button smoke tests in `e2e/safety.spec.ts`.
+- Reflection note save also routes tier-3 to Help (save kept).
+- Backend safety-gate `kms` keyword aligned with PWA kernel.
 - Roman Urdu chrome for welcome/onboarding, check-in arrival, Calm context chips, Me card titles, toggle On/Off, FAB label, panic exit.
 - `--crisis-ink` token; journal editor `:focus-visible` ring; calm copy when journal entry has many photos (>20).
 
