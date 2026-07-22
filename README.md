@@ -1,6 +1,6 @@
 # SoulCap
 
-**v0.8.1 — offline-first wellness PWA.** A calm, private, personalised space for self-regulation
+**v1.2.1 release candidate — offline-first wellness PWA.** A calm, private, personalised space for self-regulation
 skills, a journal, and a map of the people around you. **Not** therapy · not a diagnosis tool ·
 not a crisis service · not an AI therapist. See [`SAFETY.md`](SAFETY.md).
 
@@ -9,11 +9,11 @@ not a crisis service · not an AI therapist. See [`SAFETY.md`](SAFETY.md).
 
 ---
 
-## What ships (live)
+## What ships in this working tree
 
 | Surface | URL / path | Reality |
 |---|---|---|
-| **PWA** | [shamikhahmed.github.io/SoulCap](https://shamikhahmed.github.io/SoulCap/) · `docs/` | The product. Five tabs (Now · Calm · Journal · People · You), 37 techniques with a guided timed runner + Apple-Watch-style breathing, a book-style journal with templates, verified local transcription, photo cover, search and month contents, the orbiting Constellation, optional history, purple (logo) theme, light/dark/night, voice + haptics. **Zero network calls — localStorage only.** |
+| **PWA** | [shamikhahmed.github.io/SoulCap](https://shamikhahmed.github.io/SoulCap/) · `docs/` | The product. Five tabs (Now · Calm · Journal · People · You), optional detailed check-ins, inspectable local patterns, 37 techniques, six searchable offline articles, no-streak daily supports, a book-style journal with verified local transcription, the Constellation, presentation controls, light/dark/night, voice + haptics. **Zero network calls — localStorage only.** |
 | Nest API | `backend/` | Full module **source** (LMM, safety gate). Builds clean, **not deployed**; PWA does not call it. |
 | Expo | `mobile/` | Thin client source. Lab only. |
 
@@ -27,9 +27,10 @@ emergency services if in danger.
 
 ## Personalisation honesty
 
-The PWA uses deterministic check-ins, Calm context filters, and local history to fit suggestions.
-It has no chat surface and no live LLM. Nest + model providers exist only in undeployed
-`backend/` source.
+The PWA uses deterministic check-ins, explicit direct needs, Calm context filters, and local
+history to fit suggestions. Pattern cards require repeated evidence across distinct days, show
+the evidence, and can be corrected or hidden. It has no chat surface and no live LLM. Nest +
+model providers exist only in undeployed `backend/` source.
 
 ---
 
@@ -41,7 +42,9 @@ SoulCap/
 ├── backend/          # NestJS source lab (not production)
 ├── mobile/           # Expo source lab
 ├── icons/
-├── CLINICAL.md · SAFETY.md · FEATURES.md
+├── ARCHITECTURE.md · DATA_MODEL.md · PRIVACY.md
+├── ACCESSIBILITY.md · EVALUATION.md · SAFETY.md
+├── CLINICAL.md · FEATURES.md
 └── VERSION.json
 ```
 

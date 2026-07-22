@@ -1,6 +1,6 @@
 # SoulCap — Features (S/W/L/R)
 
-**Updated:** 2026-07-22 · Self-guided wellness companion · **v0.8.1**
+**Updated:** 2026-07-22 · Self-guided wellness companion · **v1.2.1**
 **Codes:** S = shipped · W = next wave · L = later · R = rejected
 
 ## S
@@ -13,17 +13,28 @@
   plus blank, verified on-device transcription where supported, local photo cover, month contents,
   search, and optional page decoration
 - Constellation relationship map, optional history, safety plan, and correction-friendly Journey
-- Light, dark, and night themes; reduced-motion support; local export and delete
-- 132 Playwright checks across mobile + desktop; CI gates GitHub Pages deploy
+- One-tap check-ins with optional dimensions, direct need and trigger tags; evidence-backed local
+  patterns with inspect, confirm, reject, hide, and off controls; factual seven-day summaries
+- Six searchable offline emotional articles with source notes, support guidance, review-status
+  honesty, and stable links to related exercises
+- Six optional daily supports with local-day completion only; no streaks, scores, reminders, or
+  missed-day pressure
+- Adaptive drip questionnaire (≤4 questions/day) with inspectable, correctable local estimates and
+  confidence — never diagnoses
+- Constellation polish: pinch rings, long-press rename, opt-in frequency sizing (not importance),
+  safety-plan pull from supportive people
+- Auto/Light/Dark/Night plus Ocean/Forest/Rain/Space/Sunrise/Minimal/AMOLED themes; purple-family
+  accents; text, density, contrast, transparency, and reduced-motion controls; Urdu RTL layout
+  preview (English remains default safety language); local export and delete
+- Playwright coverage across mobile + desktop; CI gates GitHub Pages deploy
 - Nest backend and Expo mobile **source labs only**; neither is wired to the PWA
 
 ## W
-- v0.9 multi-dimensional check-ins, optional trigger tags, explainable pattern observations,
-  emotional summaries, evidence-informed library, and no-streak micro-habits
+- Native-reviewed Urdu clinical copy (replace English safety strings only after review)
 - Licensed clinician review of every technique before any reviewed/clinical claim
+- Manual screen-reader pass notes beyond the automated dialog/zoom gates
 
 ## L
-- Urdu localisation after native clinical-copy review
 - On-device journal analysis only if it remains private, transparent, and correctable
 - Native app, optional encrypted backup, and shared safety/skills engine
 - Any clinician panel remains separate from the offline PWA and requires its own privacy,

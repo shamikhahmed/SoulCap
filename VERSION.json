@@ -1,8 +1,8 @@
 {
   "app": "SoulCap",
-  "version": "0.8.1",
-  "swCache": "soulcap-v081",
+  "version": "1.2.1",
+  "swCache": "soulcap-v121",
   "updated": "2026-07-22",
   "status": "self-guided-wellness",
-  "note": "iPhone visual-density hotfix restores compact labels and footer proportions while retaining large tap areas. Journal book, verified on-device transcription where supported, 37 techniques, Calm context filtering, Constellation, safety plan, voice guidance, haptics, and night mode. No LLM. Skill content NOT clinician-reviewed. No crisis directory."
+  "note": "Hotfix: same-day check-in keeps original t (updates updatedAt only); migration guards non-array inferences; library search aria-live status; preference toggles roll back on save failure. Prior v1.2 Constellation polish retained."
 }

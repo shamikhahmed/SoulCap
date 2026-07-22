@@ -1,4 +1,4 @@
-**Version:** 0.8.1 · SW `soulcap-v081`
+**Version:** 1.2.1 · SW `soulcap-v121`
 
 # SoulCap — Project Handover
 
@@ -6,16 +6,20 @@
 > first — it is the current truth as of 2026-07-22. The sections further down describe an
 > earlier architecture and are kept for reference only.
 
-## Current state (v0.8.1 — 2026-07-22)
+## Current state (v1.2.1 — 2026-07-22)
 
 **The product is the PWA in `docs/`.** Fully rewritten. Offline-first, local-only, **no network
 calls at all** after load — no account, no server, no LLM, no analytics. Everything is
-`localStorage`.
+`localStorage`. Live Pages deploy still needs a push to `main` (CI). Local hub mirror:
+`Cap-Apps/shamikhahmed.github.io/SoulCap/` (rsync from `docs/`). Marketing shots live in
+`shamikhahmed.github.io/assets/screenshots/soulcap*.png`. In-repo gallery:
+`npm run gallery` then open `screen-gallery.html`.
 
 ### What the PWA is now
 - **Design System v2 "plum & sand"** — palette anchored to the brand mark (violet), chroma held
   low so it reads calm. Compact iPhone chrome uses a small label scale over 48px tap areas.
-  Three themes: light, dark, and **night** (dimmer than dark, for 3am).
+  Themes: Auto, light, dark, **night**, plus mood themes Ocean / Forest / Rain / Space / Sunrise /
+  Minimal / AMOLED.
 - **Five tabs:** Now · Calm · Journal · People · You (Techniques folded into Calm as a guided front door). Splash + welcome screens.
 - **37 techniques** organised by mechanism (nervous system, senses, orienting, crowding out,
   self-soothing, imagery, sleep, thinking, doing, people). Each documents *why it works*, its
@@ -32,13 +36,29 @@ calls at all** after load — no account, no server, no LLM, no analytics. Every
   Driven by a `pattern` field on those skills in `data.js`.
 - **Calm tab** — a *guided front door*, not a library mirror: "what do you need right now?"
   → where you are / what's to hand → a fitted shortlist, with "browse all" behind it.
+- **Offline emotional library + daily supports** — six searchable, evidence-informed articles
+  include support guidance, source notes, review-status honesty, and stable exercise links. Six
+  optional daily supports record only selected IDs and current local-day completion. No streaks,
+  scores, reminders, missed-day pressure, or network.
+- **Adaptive drip + local estimates** — optional tiny questions (cap 4/day) feed gradual
+  estimates with confidence. Viewable/correctable under “What SoulCap knows”; never diagnoses.
+  Schema v8. Urdu is an RTL layout preview only; clinical/safety English remains until review.
+- **Constellation polish** — pinch to add/remove rings (3–7), long-press rename, opt-in node size
+  from logged speak frequency (never importance), and safety-plan pull of supportive people.
+- **Detailed check-ins + local patterns** — the five one-tap arrival words remain the default.
+  Optional detail adds energy, tension, mental noise, social capacity, sleep quality, a direct
+  need, and trigger tags. The You tab derives only thresholded, evidence-backed correlations
+  across distinct days; users can inspect, confirm, reject, hide, or disable them. No journal
+  text mining, score, streak, diagnosis, or server.
+- **Presentation controls** — four purple-family accents, text size, density, higher contrast,
+  and reduced transparency are independent from theme mode and persist before first paint.
 - **Journal** — private paper-feeling book (serif, ruled lines that the text actually sits on):
   title, free writing, mood, stickers, optional page decoration, and photos down-scaled on device.
   New entries can start blank or from seven gentle templates. **Voice transcription runs only
   when the browser verifies an already-installed on-device language pack** — no cloud/webkit
   fallback and no stored audio blobs. The customisable cover supports a local photo; contents are
   grouped by month and searchable by title/body.
-- **Theme** — purple, matched to the logo mark (`#6C5CE7` light, `#A78BFA` dark, dimmer at night).
+- **Theme** — plum remains matched to the logo mark, with optional lilac, mulberry, and indigo.
   Toggling theme/settings no longer scrolls the page to the top (in-place re-render).
 - **Profile** — name / age / pronouns (optional, local). Home greeting uses the name.
 - **History / "Your story"** — optional, never in onboarding (in You): relationship status,
@@ -68,11 +88,11 @@ it. An earlier duplicate AI stack and a dead JWT auth path are quarantined in `b
 `mobile/` (Expo) is lab source only.
 
 ### Tests & CI
-132 Playwright checks across mobile + desktop (`e2e/`). `.github/workflows/deploy.yml` gates the
+164 Playwright checks across mobile + desktop (`e2e/`). `.github/workflows/deploy.yml` gates the
 GitHub Pages deploy on `npm run verify`. `?demo=1` seeds a Pakistan-region demo.
 
 ### Open blockers (not code)
-1. **No clinician has reviewed any technique.** Stated in-product on the Techniques screen.
+1. **No clinician has reviewed any technique or library article.** Stated in-product in Calm.
 2. No Urdu clinical reviewer; no Urdu localisation.
 3. Kernel is keyword-based — blind to oblique risk. Needs the classifier in the eval-harness spec.
 4. Prisma schema has uncommitted enum additions needing a migration before any real DB use.

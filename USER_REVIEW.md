@@ -1,8 +1,9 @@
-# SoulCap v0.8.1 — Synthetic User Review
+# SoulCap v1.2.0 — Synthetic User Review
 
-**Reviewed:** 2026-07-21  
-**Scope:** onboarding, Help, Now, Calm, journal, Constellation, persistence, privacy, mobile,
-desktop, reduced motion, marketing page, and screenshot gallery.
+**Reviewed:** 2026-07-22
+**Scope:** onboarding, Help, Now, optional check-in detail, local patterns, presentation controls,
+Calm, offline emotional library, daily supports, journal, Constellation, persistence, privacy,
+mobile, desktop, reduced motion, marketing page, and screenshot gallery.
 
 ## Method and limits
 
@@ -55,6 +56,24 @@ keyboard, then opened Help from the installed-app query shortcut.
 Likely perception: calm and operable. Editor controls meet the 48px target, reduced-motion timing
 is effectively immediate, Escape closes the editor, and Help remains directly reachable.
 
+### Noor — tired reader looking for context
+
+Journey: opened Calm on a 390px viewport, searched the bundled library for sleep, opened the
+article, reviewed support guidance and sources, then followed a stable link to a related exercise.
+
+Likely perception: informed without being labelled. Search is immediate and offline, clinical
+limits are explicit, and the article offers choices rather than declaring a diagnosis. Long-form
+copy still needs human comprehension testing across literacy levels.
+
+### Imani — avoiding habit pressure
+
+Journey: selected water and daylight as daily supports, marked water for today, reloaded, then
+confirmed the state remained a simple current-day choice with no score or streak.
+
+Likely perception: optional rather than monitored. Nothing punishes a missed day, and completion
+can be toggled off. The user must scroll selected cards above the fixed tab bar on a short screen;
+normal page scrolling keeps every action reachable.
+
 ## Findings
 
 ### Resolved — capacity `any` was excluded for low-energy users
@@ -94,20 +113,39 @@ is effectively immediate, Escape closes the editor, and Help remains directly re
 - **Recommended solution:** Keep the safe unsupported state. Do not add a remote-capable fallback.
   Reassess only when browsers expose reliable local processing.
 
+### Resolved — long articles initially focused their last action
+
+- **Severity:** Medium
+- **Business impact:** Educational content could appear to open halfway down, reducing trust.
+- **User impact:** Focus moved to the first related-exercise button near the end of an article.
+- **Fix complexity:** Low
+- **Resolution:** Added a quiet Close control beside the article heading so modal focus begins at
+  the top. Automated focus coverage now protects the reading start.
+
+### Accepted — educational content has no clinician sign-off
+
+- **Severity:** Medium
+- **Business impact:** Any clinical or reviewed claim would be misleading.
+- **User impact:** Guidance may be useful but has not received licensed content review.
+- **Fix complexity:** High
+- **Recommended solution:** Keep the in-product review-status notice. Record named, item-level
+  sign-off before changing any claim.
+
 ## Cross-functional review
 
-- **Security:** No account, analytics, remote model, CDN, or app-level external request. Journal
-  voice test verifies local-only behaviour. Save failures preserve retryable drafts. Main known
-  boundary is unencrypted browser storage.
+- **Security:** No account, analytics, remote model, CDN, or app-level external request. Library
+  search stays in memory; daily-support writes roll back on storage failure. Main known boundary
+  remains unencrypted browser storage.
 - **UX:** Warm hierarchy, one dominant action, no engagement pressure, and reversible exits.
-  Journal is now a coherent book workflow. Calm still benefits from future real-user testing under
-  acute stress.
-- **Mobile:** 390px gallery has no horizontal overflow. App screenshots cover mobile, iPad, and
-  Mac. Journal tools scroll safely and core targets are at least 48px.
-- **Accessibility:** Minimum app text is 15px, dialogs are named, live transcription status is
-  announced, reduced motion is honoured, and keyboard Escape works in the editor. Screen-reader
-  testing on VoiceOver remains a human-device follow-up.
-- **Product:** v0.8 strengthens the private emotional operating-system position without adding a
+  Library and daily supports sit behind two compact Calm cards and disappear once guided filtering
+  starts, preserving the original urgent path.
+- **Mobile:** Manual 390×844 review found no horizontal overflow and a 54px smallest Calm control.
+  Library and daily-support content scrolls above the fixed navigation.
+- **Accessibility:** Body and input text remain readable, compact iPhone labels sit over 48px
+  targets, large text and higher contrast are user-selectable, dialogs are named, live
+  transcription status is announced, reduced motion is honoured, and keyboard Escape works in the
+  editor. Screen-reader testing on VoiceOver remains a human-device follow-up.
+- **Product:** v1.0 strengthens the private emotional operating-system position without adding a
   chatbot or dependency loop. Success still points toward leaving the app, not increasing usage.
 - **Investor readiness:** Gallery, copy, version, privacy promise, and shipped feature set now
   match. Clinical efficacy, PMF, retention, and willingness-to-pay remain unvalidated and must not
@@ -115,9 +153,8 @@ is effectively immediate, Escape closes the editor, and Help remains directly re
 
 ## Release evidence
 
-- 132 Playwright checks across mobile and desktop.
-- Five synthetic personas, each executed in both projects.
-- Ten deduplicated SoulCap gallery captures: eight phone screens, one iPad, one Mac.
-- Static website product page reviewed for content, gallery wiring, launch link, version, and
-  mobile overflow.
+- 164 Playwright checks across mobile and desktop.
+- Five existing synthetic persona journeys plus library and no-streak support scenarios.
+- Manual 390×844 library and daily-support review: no overflow; all measured Calm targets ≥54px.
+- Article contract audit: six complete records and all 18 related exercise links resolve.
 

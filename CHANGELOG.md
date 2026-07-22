@@ -1,3 +1,113 @@
+## [1.2.1] — 2026-07-22
+
+### Fixed
+- Same-day check-in edits keep the original creation timestamp `t` and only bump `updatedAt`,
+  so late-day pattern evidence stays honest.
+- Migration ignores a corrupt non-array `inferences` value instead of wiping recoverable state.
+- Library search exposes a polite live status with result count or no-match copy.
+- Voice, haptics, pace, and Constellation preference toggles roll back when local save fails.
+
+### Changed
+- SW `soulcap-v121`. Architecture note clarified: accepted writes save-then-render with rollback.
+  Playwright now at 186 mobile + desktop checks.
+- Hub product page data bumped to **1.2.1** (library, drip, constellation polish). Local hub
+  `SoulCap/` mirror synced to `docs/`. Marketing screenshots regenerated. In-repo screen gallery
+  via `npm run gallery` → `screen-gallery.html`.
+
+## [1.2.0] — 2026-07-22
+
+### Added
+- Constellation pinch: add or remove a ring (3–7). Outer people remapped when rings shrink.
+- Long-press a ring label to rename that ring inline.
+- Opt-in node sizing from logged “spoke today” frequency over the last 30 days. Copy states
+  clearly this is frequency, never importance.
+- Safety plan “People I can tell” can pull supportive names from the Constellation; free text
+  still works.
+
+### Changed
+- SW `soulcap-v120`. Playwright covers ring remap, long-press rename, frequency sizing, and
+  Constellation → safety-plan pull (182 mobile + desktop checks).
+
+## [1.1.0] — 2026-07-22
+
+### Added
+- Adaptive drip questionnaire: up to four optional questions per local day, with branching from
+  prior answers only. Builds gentle local estimates (stress, sleep, energy, resilience) with
+  confidence labels. Estimates are viewable and correctable in “What SoulCap knows” and are never
+  presented as diagnoses or clinical scores.
+- Mood themes: Ocean, Forest, Rain, Space, Sunrise, Minimal, and AMOLED, alongside Auto / Light /
+  Dark / Night. All use token blocks; contrast and reduced-motion stay intact.
+- Language scaffold: English default plus Urdu layout preview (`dir=rtl`, tab/help aria strings).
+  Clinical and safety copy remains English until a native clinical-copy review is complete.
+- Accessibility gates for Help and Exercise dialogs (named modal semantics) and a 200% zoom smoke
+  check on those surfaces.
+
+### Changed
+- Local state is now schema v8. Sequential migration adds `drip`, `userModel`, and `locale`
+  defaults while preserving all v7 data.
+- SW `soulcap-v110`. Playwright covers v7→v8 migration, drip day-cap, estimate correction, theme
+  and locale persistence, and panic/runner a11y at enlarged text (174 mobile + desktop checks).
+
+## [1.0.0] — 2026-07-22
+
+### Added
+- Searchable offline emotional library with six short articles covering anxiety and panic,
+  overthinking, sleep, low mood, grief, and boundaries.
+- Every article includes practical options, reflection questions, a when-to-seek-professional-
+  support section, source notes, an explicit not-yet-clinician-reviewed notice, and links to
+  stable exercise IDs.
+- Optional daily supports for water, daylight, movement, journalling, connection, and quiet.
+  Completion is per local day only, with no streaks, scores, badges, reminders, or missed-day
+  pressure.
+
+### Changed
+- Local state is now schema v7. Sequential migration adds only daily-support choices and local-day
+  completion records while preserving all v6 data.
+- Daily-support choice and completion writes roll back visibly if browser storage is unavailable.
+- SW `soulcap-v100`. Playwright now runs 164 mobile + desktop checks covering v6 migration,
+  offline article search and focus, all article/skill-link contracts, daily-support persistence,
+  and storage-failure rollback.
+
+## [0.9.0] — 2026-07-22
+
+### Added
+- Optional detailed check-ins keep the existing one-tap arrival words, then offer five skippable
+  dimensions, a direct need, and optional trigger tags. The same-day entry is edited in place.
+- Deterministic local pattern cards appear only after repeated evidence across distinct days.
+  Every card exposes its evidence, uses non-causal language, and can be confirmed, rejected, or
+  hidden. Pattern observations can be switched off without deleting check-ins.
+- The You tab now includes a factual seven-day summary with no score, streak, or diagnosis.
+- Independent controls for four purple-family accents, standard/large text, compact/comfortable
+  density, higher contrast, and reduced transparency.
+
+### Changed
+- Local state is now schema v6. Sequential migration enriches legacy check-ins with stable IDs,
+  dimensions, triggers, direct need, and optional short feeling text while preserving old data.
+- A direct need can influence the explainable recommendation, while the user’s arrival word
+  remains stronger than ambient time context.
+- Short free text entered specifically in check-in detail is assessed by the offline safety
+  kernel. The full 160-character field is assessed, and explicit tier-3 wording opens the same
+  hard-coded, number-free Help flow even when local storage is unavailable.
+- New pattern and presentation controls roll back visibly when their local save fails.
+- Removed the last stale crisis-number example from the safety-plan placeholder.
+- SW `soulcap-v090`. Playwright now runs 152 checks across mobile + desktop, including migration
+  rollback, check-in save rollback, pattern evidence/decisions, presentation persistence, and the
+  check-in safety route.
+
+## [0.8.2] — 2026-07-22
+
+### Fixed
+- Check-in intent now outranks time-of-day context. Steady, Wired, Flat, Heavy, and Not sure each
+  produce a distinct recommendation instead of mostly collapsing to the late-night sleep card.
+- “Not sure” now starts with gentle, low-demand grounding without pretending to know how the user
+  feels. Recommendation reasons remain explicit.
+- “Got anything to hand?” now accepts multiple resources. “Nothing” remains exclusive and clears
+  the resource choices, so filtering stays understandable.
+
+### Changed
+- SW `soulcap-v082`. Playwright now runs 136 checks across mobile + desktop, including five-state
+  recommendation differentiation and Calm multi-select filtering.
+
 ## [0.8.1] — 2026-07-22
 
 ### Fixed

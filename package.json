@@ -1,13 +1,15 @@
 {
   "name": "soulcap",
   "private": true,
-  "version": "0.8.1",
+  "version": "1.2.1",
   "description": "SoulCap PWA — private, offline-first self-guided wellness tools",
   "scripts": {
     "dev": "python3 -m http.server 8788 --directory docs",
     "test:e2e": "playwright test",
     "test:safety": "playwright test e2e/safety.spec.ts",
-    "verify": "npm run test:e2e"
+    "verify": "npm run test:e2e",
+    "gallery": "CAPTURE_GALLERY=1 playwright test e2e/gallery.spec.ts --project=mobile --project=desktop",
+    "gallery:view": "python3 -m http.server 8790"
   },
   "devDependencies": {
     "@playwright/test": "^1.48.0"

@@ -85,6 +85,37 @@ test.describe('Safety kernel — risk tiers', () => {
       expect(tier, `"${p}" must not escalate`).toBeLessThan(2);
     }
   });
+
+  test('explicit crisis words in optional check-in detail open hard-coded Help', async ({ page }) => {
+    await seedDemo(page);
+    await page.getByRole('button', { name: 'Heavy', exact: true }).click();
+    await page.getByRole('button', { name: 'Add optional detail' }).click();
+    const phrase = 'I have been trying to explain this for a while and now I want to kill myself';
+    expect(phrase.indexOf('kill myself')).toBeGreaterThan(40);
+    await page.getByRole('textbox', { name: 'Your own words (optional)' }).fill(phrase);
+    await page.getByRole('button', { name: 'Save detail' }).click();
+    await expect(page.locator('#panic')).toBeVisible();
+    await expect(page.locator('#panic')).toContainText('You don’t have to get through this alone');
+    expect(await page.evaluate(() => {
+      const checkins = (window as any).__soulcap.getState().checkins;
+      return checkins[checkins.length - 1].feeling;
+    })).toBe(phrase);
+  });
+
+  test('tier-3 Help still opens when the check-in cannot be stored', async ({ page }) => {
+    await seedDemo(page);
+    await page.getByRole('button', { name: 'Heavy', exact: true }).click();
+    await page.getByRole('button', { name: 'Add optional detail' }).click();
+    const before = await page.evaluate(() => JSON.stringify((window as any).__soulcap.getState().checkins));
+    await page.evaluate(() => {
+      Storage.prototype.setItem = function () { throw new Error('quota'); };
+    });
+    await page.getByRole('textbox', { name: 'Your own words (optional)' }).fill('I want to kill myself');
+    await page.getByRole('button', { name: 'Save detail' }).click();
+    await expect(page.locator('#panic')).toBeVisible();
+    await expect(page.locator('#panic')).toContainText('This check-in did not save');
+    expect(await page.evaluate(() => JSON.stringify((window as any).__soulcap.getState().checkins))).toBe(before);
+  });
 });
 
 test.describe('Local-only spoken guidance', () => {

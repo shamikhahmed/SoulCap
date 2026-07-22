@@ -1,6 +1,6 @@
 # SoulCap — Investor Deck
 
-> **Product honesty (read first):** Live v0.8.1 GitHub Pages product is an offline
+> **Product honesty (read first):** The v1.2.0 release candidate is an offline
 > **self-guided wellness PWA** — deterministic suggestions, keyword safety, and a private
 > on-device journal. NestJS + model orchestration in `backend/` is **lab source only (not
 > deployed)**. Do not pitch the Pages demo as AI, therapy, clinical care, or a crisis service.
@@ -51,8 +51,8 @@ PWA uses deterministic check-ins and context-fitted skills without pretending an
 
 ## The Solution: SoulCap
 
-SoulCap ships a private, self-guided wellness PWA with guided skills, a local journal, a
-relationship map, and on-device memory. Nest lab explores a **persistent psychological profile**
+SoulCap ships a private, self-guided wellness PWA with guided skills, a searchable offline
+emotional library, no-streak daily supports, a local journal, a relationship map, and on-device memory. Nest lab explores a **persistent psychological profile**
 plus optional LLM orchestration — not marketed as live therapy AI on Pages.
 
 > Think: deterministic, offline tools today; deeper personalisation only after models, evaluation,
@@ -62,7 +62,7 @@ plus optional LLM orchestration — not marketed as live therapy AI on Pages.
 
 1. **Know You** — Local check-ins / journals on device; LMM design in Nest lab
 2. **Support You** — Context-fitted skills, check-ins, journaling, and grounding exercises
-3. **Help You Grow** — Habits + local history; lab pattern/report engines not claimed as shipped AI
+3. **Help You Grow** — Optional daily supports + local history; no streak or engagement pressure
 
 ---
 

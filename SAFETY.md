@@ -1,6 +1,6 @@
 # SoulCap — Safety & Truth Inventory
 
-**Version:** 0.8.1 · **Updated:** 2026-07-22
+**Version:** 1.2.1 · **Updated:** 2026-07-22
 **Status:** **Clinical path** — self-guided wellness companion.
 **Not** a cleared SaMD / medical device. **Not** a substitute for licensed care.
 See also `CLINICAL.md` and `Capricorn-Brain/AI/Claude-Code/SoulCap-Eval-Harness.md`.
@@ -36,6 +36,16 @@ a local explanation and keep ordinary writing available.
 Spoken exercise guidance uses only `speechSynthesis` voices marked `localService: true`. If the
 browser exposes only remote-capable voices, SoulCap stays silent.
 
+The optional short phrase in detailed check-ins is assessed by the existing keyword safety kernel
+on-device. Tier-3 wording opens the same hard-coded Help flow even if the entry cannot save. Journal text
+is not mined or assessed. Detailed dimensions, direct needs, trigger tags, summaries, and pattern
+evidence all remain local.
+
+Six bundled library articles are evidence-informed educational content, not diagnosis or treatment.
+Every article shows that it is not yet reviewed by a licensed clinician, includes a bounded
+professional-support section, and links only to existing hard-coded exercises. Daily supports
+record optional per-day IDs only and create no streak, adherence score, reminder, or safety claim.
+
 Historical releases remain available through Git history, not as publicly served legacy pages.
 
 ---
@@ -48,11 +58,12 @@ Historical releases remain available through Git history, not as publicly served
   engine package exists.**
 - Crisis flow is hard-coded and never generated.
 - Help affordance present on every screen, including during onboarding **before consent**.
-- Age gate: 18+. Under-18 is redirected to external youth services, not merely refused.
+- Age gate: 18+. Under-18 is declined gently and pointed to a trusted adult or an appropriate
+  local support service.
 - Constellation `hard right now` suppresses all suggestions for that person, permanently
   and silently. No reconciliation nudges.
 - The app never contacts anyone. "Open messages" hands off to the OS with an empty draft.
-- 132 Playwright checks across mobile + desktop; safety tests gate the deploy in CI.
+- 164 Playwright checks across mobile + desktop; safety tests gate the deploy in CI.
 - Installed-app `?panic=1` now opens Help immediately and has a deploy-gating regression test.
 
 ### Known safety fixes
@@ -66,7 +77,7 @@ certainly more of them still in there.
 
 ---
 
-## Reaching out — no crisis directory (v0.8.1)
+## Reaching out — no crisis directory (v1.1.0)
 
 **All crisis phone numbers and the country/region selection were removed at the owner's
 instruction** (v0.7.1). Rationale: we cannot promise any specific line is reachable, and a number
@@ -85,7 +96,7 @@ re-introduce them per region behind the region-pack model and verify each is liv
 
 ## Blockers remaining
 
-1. **No licensed clinician has reviewed any skill card.** The Techniques screen says so in-product.
+1. **No licensed clinician has reviewed any skill card or library article.** Calm says so in-product.
 2. No Urdu clinical copy reviewer; no Urdu localisation shipped.
 3. Safety kernel is still keyword-based. It cannot detect oblique risk
    ("I've been sorting out my things", "I finally feel calm about it all").
