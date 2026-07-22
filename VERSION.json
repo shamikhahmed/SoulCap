@@ -1,8 +1,8 @@
 {
-  "app": "SoulCap",
-  "version": "1.6.0",
-  "swCache": "soulcap-v160",
-  "updated": "2026-07-22",
-  "status": "self-guided-wellness",
-  "note": "v1.6.0 bundles v1.5 Personal Manual (templates from confirmed patterns, principles, resets) and v1.6 quiet refinement (empty states, library bookmarks, journal search, constellation depth, a11y polish)."
+  "name": "SoulCap",
+  "version": "1.7.0",
+  "swCache": "soulcap-v170",
+  "schema": 10,
+  "deploy": "docs/",
+  "note": "v1.7.0 premium polish (motion tokens, softer cards/sheets, deep dark/AMOLED) and Roman Urdu chrome i18n for tabs, settings, empty states, reset/park, pattern labels."
 }

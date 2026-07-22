@@ -449,9 +449,11 @@ test.describe('v1.1 adaptive drip, themes, locale', () => {
     }));
     expect(locale).toMatchObject({ lang: 'rui', dir: 'ltr', stored: 'rui', mirror: 'rui', theme: 'ocean' });
     expect(locale.fab).toContain('madad');
-    await page.locator('#sheetPanel').getByRole('button', { name: 'Close' }).click();
+    await expect(page.locator('#sheetTitle')).toHaveText('Tanzimaat');
+    await expect(page.locator('#tabs button[data-tab="calm"] span')).toHaveText('Sakoon');
+    await page.locator('#sheetPanel').getByRole('button', { name: 'Band karein' }).click();
     await openSettings(page);
-    await expect(page.getByText(/Roman Urdu clinical review is not complete/)).toBeVisible();
+    await expect(page.getByText(/clinical review abhi mukammal nahi|Roman Urdu clinical review is not complete/)).toBeVisible();
     await page.evaluate(() => history.replaceState({}, '', '/'));
     await page.reload();
     await page.waitForFunction(() => Boolean((window as any).__soulcap));
@@ -1376,6 +1378,49 @@ test.describe('v1.6 bundled features', () => {
     await seedDemo(page);
     await openSettings(page);
     await expect(page.locator('#sheetPanel').getByRole('heading', { name: 'Settings' })).toBeVisible();
+  });
+});
+
+test.describe('v1.7 polish and locale', () => {
+  test('reduced-motion sheet stays usable with focus', async ({ page }) => {
+    await seedDemo(page);
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await openSettings(page);
+    await expect(page.locator('#sheet.on')).toBeVisible();
+    const sheetFocus = await page.evaluate(() => {
+      const active = document.activeElement;
+      return Boolean(active && active.closest('#sheetPanel'));
+    });
+    expect(sheetFocus).toBe(true);
+  });
+
+  test('Roman Urdu localizes chrome but library article body stays English', async ({ page }) => {
+    await seedDemo(page);
+    await openSettings(page);
+    await page.getByRole('button', { name: 'Roman Urdu (preview)' }).click();
+    await expect(page.locator('#sheetTitle')).toHaveText('Tanzimaat');
+    await page.locator('#sheetPanel').getByRole('button', { name: 'Saakin' }).scrollIntoViewIfNeeded();
+    await expect(page.getByRole('button', { name: 'Saakin' })).toBeVisible();
+    await page.locator('#sheetPanel').getByRole('button', { name: 'Band karein' }).click();
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="calm"]') as HTMLElement).click());
+    await page.getByRole('button', { name: /Understand what/i }).click();
+    await page.locator('.article-card').first().click();
+    await expect(page.locator('#sheet.on')).toBeVisible();
+    await expect(page.locator('#sheetPanel')).toContainText(/Anxiety and panic/i);
+    await expect(page.locator('#sheetPanel')).toContainText(/Not yet reviewed by a licensed clinician/i);
+  });
+
+  test('dark and AMOLED themes persist from settings', async ({ page }) => {
+    await seedDemo(page);
+    await openSettings(page);
+    await page.getByRole('button', { name: 'Dark', exact: true }).click();
+    expect(await page.evaluate(() => document.documentElement.getAttribute('data-theme'))).toBe('dark');
+    await page.getByRole('button', { name: 'AMOLED', exact: true }).click();
+    expect(await page.evaluate(() => document.documentElement.getAttribute('data-theme'))).toBe('amoled');
+    await page.evaluate(() => history.replaceState({}, '', '/'));
+    await page.reload();
+    await page.waitForFunction(() => Boolean((window as any).__soulcap));
+    expect(await page.evaluate(() => document.documentElement.getAttribute('data-theme'))).toBe('amoled');
   });
 });
 

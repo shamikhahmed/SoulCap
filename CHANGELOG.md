@@ -1,3 +1,16 @@
+## [1.7.0] — 2026-07-22
+
+### Added
+- **Premium motion tokens** (`--dur-instant` through `--dur-sheet`, `--ease-standard/out/soft`) wired through views, sheets, cards, and chips; reduced-motion uses opacity-only ≤90ms.
+- **Roman Urdu chrome i18n**: expanded `STRINGS.rui` for tabs, FAB, Settings, theme/accent chips, empty states, reset/park, pattern short labels, map pace, common buttons; `t()` nested paths with en fallback; `tUi()` helper.
+- Clinical English notice (once) when locale is Roman Urdu — dismissible via state + `localStorage`.
+- Sheet open optional 8ms haptic (respects haptics + reduced-motion).
+
+### Changed
+- Softer cards (shadow-first, ~22px radius), lighter tab bar, spacing tokens (`--space-1`–`8`), deepened dark (`#0B0B0D` / `#141419`) and AMOLED surfaces.
+- Sheet scrim/panel polish: 24px rise, 28px radius, 36×4 grabber, blur when motion allowed.
+- SW `soulcap-v170`.
+
 ## [1.6.0] — 2026-07-22
 
 ### Added

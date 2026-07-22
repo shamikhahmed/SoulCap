@@ -114,8 +114,11 @@ test.describe('Synthetic user journeys', () => {
       })
     );
     expect(targets.every((target) => target.width >= 48 && target.height >= 48)).toBe(true);
-    const animation = await page.locator('#journalEditor').evaluate((node) => getComputedStyle(node).animationDuration);
-    expect(parseFloat(animation)).toBeLessThanOrEqual(0.001);
+    const duration = await page.locator('#journalEditor').evaluate((node) =>
+      parseFloat(getComputedStyle(node).animationDuration)
+    );
+    // Reduced-motion: short fade only (≤80–90ms token), not the full travel animation.
+    expect(duration).toBeLessThanOrEqual(0.09);
     await page.keyboard.press('Escape');
     await expect(page.locator('#journalEditor')).toBeHidden();
 
