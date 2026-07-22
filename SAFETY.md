@@ -1,6 +1,6 @@
 # SoulCap — Safety & Truth Inventory
 
-**Version:** 1.7.0 · **Updated:** 2026-07-22
+**Version:** 1.8.0 · **Updated:** 2026-07-22
 **Status:** **Clinical path** — self-guided wellness companion.
 **Not** a cleared SaMD / medical device. **Not** a substitute for licensed care.
 See also `CLINICAL.md` and `Capricorn-Brain/AI/Claude-Code/SoulCap-Eval-Harness.md`.
@@ -36,10 +36,11 @@ a local explanation and keep ordinary writing available.
 Spoken exercise guidance uses only `speechSynthesis` voices marked `localService: true`. If the
 browser exposes only remote-capable voices, SoulCap stays silent.
 
-The optional short phrase in detailed check-ins is assessed by the existing keyword safety kernel
-on-device. Tier-3 wording opens the same hard-coded Help flow even if the entry cannot save. Journal text
-is not mined or assessed. Detailed dimensions, direct needs, trigger tags, summaries, and pattern
-evidence all remain local.
+The optional short phrase in detailed check-ins — and free text in journal entries, Your story,
+safety plan, parked thoughts, constellation notes, manual lines, and principles — is assessed by
+the existing keyword safety kernel on-device. Tier-3 wording opens the same hard-coded Help flow;
+content still saves when storage allows (even if Help opens). Detailed dimensions, direct needs,
+trigger tags, summaries, and pattern evidence all remain local.
 
 Six bundled library articles are evidence-informed educational content, not diagnosis or treatment.
 Every article shows that it is not yet reviewed by a licensed clinician, includes a bounded

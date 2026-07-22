@@ -108,6 +108,31 @@ test.describe('Safety kernel — risk tiers', () => {
     })).toBe(phrase);
   });
 
+  test('tier-3 crisis phrase in journal opens Help and still saves', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="journal"]') as HTMLElement).click());
+    await page.getByRole('button', { name: /New entry/ }).click();
+    await page.getByRole('button', { name: /Blank page/ }).click();
+    const phrase = 'I want to kill myself tonight';
+    await page.locator('#jeBody').fill(phrase);
+    await page.locator('#jeSave').click();
+    await expect(page.locator('#panic')).toBeVisible();
+    expect(await page.evaluate(() => {
+      const journal = (window as any).__soulcap.getState().journal;
+      return journal[journal.length - 1].body;
+    })).toBe(phrase);
+  });
+
+  test('tier-3 phrase in Your story opens Help on blur', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="me"]') as HTMLElement).click());
+    await page.getByRole('button', { name: /Your story/ }).click();
+    const field = page.getByLabel('Hard things from your past');
+    await field.fill('I want to end my life');
+    await field.blur();
+    await expect(page.locator('#panic')).toBeVisible();
+  });
+
   test('tier-3 Help still opens when the check-in cannot be stored', async ({ page }) => {
     await seedDemo(page);
     await page.getByRole('button', { name: 'Heavy', exact: true }).click();
@@ -308,6 +333,13 @@ test.describe('Constellation safety', () => {
 });
 
 test.describe('Data control', () => {
+  test('export button exists and click does not throw', async ({ page }) => {
+    await seedDemo(page);
+    await openSettings(page);
+    await expect(page.locator('#sheetPanel').getByRole('button', { name: /Export everything/ })).toBeVisible();
+    await page.locator('#sheetPanel').getByRole('button', { name: /Export everything/ }).click();
+  });
+
   test('delete removes everything', async ({ page }) => {
     await seedDemo(page);
     await openSettings(page);

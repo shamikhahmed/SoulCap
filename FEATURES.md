@@ -1,6 +1,6 @@
 # SoulCap — Features (S/W/L/R)
 
-**Updated:** 2026-07-22 · Self-guided wellness companion · **v1.7.0**
+**Updated:** 2026-07-22 · Self-guided wellness companion · **v1.8.0**
 **Codes:** S = shipped · W = next wave · L = later · R = rejected
 
 ## S
@@ -8,7 +8,9 @@
 - Five tabs: Now · Calm · Journal · People · You; Settings sheet off You
 - 37 techniques with mechanisms, contraindications, context filtering, timed guidance, breathing
   sessions, device speech synthesis, optional haptics, and public-safe auto-quieting
-- Hard-coded keyword safety kernel, number-free Help flow, persistent Help access, and 18+ age gate
+- Hard-coded keyword safety kernel on all user free-text surfaces (check-in detail, journal,
+  story, plan, park, notes, manual, principles), number-free Help flow, persistent Help access,
+  and 18+ age gate
 - Private journal book: free writing, moods, emotion vocabulary chips, prompts, stickers,
   down-scaled photos, seven templates plus blank, verified on-device transcription where supported,
   local photo cover, month contents, search, optional page decoration, Thought Parking
@@ -28,7 +30,8 @@
   safety-plan pull from supportive people
 - Auto/Light/Dark/Night plus Ocean/Forest/Rain/Space/Sunrise/Minimal/AMOLED themes; purple-family
   accents; text, density, contrast, transparency, and reduced-motion controls; Roman Urdu LTR
-  preview (English remains default safety language); local export and delete
+  preview (English remains default safety language); welcome/onboarding/Calm/Me chrome in rui;
+  local export and delete
 - Playwright coverage across mobile + desktop; CI gates GitHub Pages deploy
 - Nest backend and Expo mobile **source labs only**; neither is wired to the PWA
 

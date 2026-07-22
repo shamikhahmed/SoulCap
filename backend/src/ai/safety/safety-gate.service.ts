@@ -20,7 +20,7 @@ const CRISIS_HARD = [
   'overdose', 'overdosing',
   'not worth living', 'no reason to live', 'nothing to live for',
   "don't want to be here", 'dont want to be here',
-  'everyone would be better without me', 'better off without me',
+  'everyone would be better without me', 'better off without me', 'kms',
 ];
 
 // Contextual — require co-occurrence with distress language

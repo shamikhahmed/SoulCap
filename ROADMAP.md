@@ -5,7 +5,7 @@ item and ship it **the same way the rest of the app was built** — read `AGENTS
 rules, conventions, and ship workflow. Every item below lists **what**, **why**, **files to
 touch**, **acceptance criteria (incl. a test)**, and **guardrails**.
 
-**Current release: v1.7.0** · Published app: https://shamikhahmed.github.io/SoulCap/
+**Current release: v1.8.0** · Published app: https://shamikhahmed.github.io/SoulCap/
 
 Philosophy (never drifts): a personalised emotional operating system, **not** an AI therapist.
 Help people understand and regulate; never "fix" them; never diagnose; success = needing the app
@@ -119,7 +119,13 @@ less. See `AGENTS.md §2` for the hard rules — every item inherits them.
 - [x] Roman Urdu chrome for tabs, settings, empty states, reset/park, pattern labels, map pace; clinical English notice once.
 - SW `soulcap-v170`.
 
-### Next (v1.8+)
+## v1.8 — Safety pass + Roman Urdu expansion — shipped 2026-07-22
+
+- [x] Tier-3 Help on all free-text surfaces (journal, history, safety plan, park, person notes, manual, principles).
+- [x] ES5 `data.js`, dead code cleanup, a11y tokens, expanded Roman Urdu chrome, Playwright safety tests.
+- SW `soulcap-v180`.
+
+### Next (v1.9+)
 - Quiet Wins deferred (manipulative risk).
 
 ---

@@ -1,3 +1,17 @@
+## [1.8.0] — 2026-07-22
+
+### Added
+- **Safety pass:** tier-3 `assessRisk` now opens Help on journal save, history/safety-plan textareas (change/blur), parked thought save, person notes, manual line edits, and principles inputs — content still saves when storage allows (mirrors check-in intent).
+- Playwright: journal crisis phrase, Your story blur, export button smoke tests in `e2e/safety.spec.ts`.
+- Roman Urdu chrome for welcome/onboarding, check-in arrival, Calm context chips, Me card titles, toggle On/Off, FAB label, panic exit.
+- `--crisis-ink` token; journal editor `:focus-visible` ring; calm copy when journal entry has many photos (>20).
+
+### Changed
+- `data.js` top-level packs use `var` (ES5); removed dead `setInference`, unused `region`/`inferences` from persisted state (migration read kept).
+- Collapsed setting chip helpers; localized `toggleBtn` and `#fab`/`#panicExit` via `STRINGS`.
+- Removed unused `.panic-call` / `.crisis-alt` CSS.
+- SW `soulcap-v180`.
+
 ## [1.7.0] — 2026-07-22
 
 ### Added

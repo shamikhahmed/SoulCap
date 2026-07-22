@@ -1,8 +1,8 @@
 {
   "name": "SoulCap",
-  "version": "1.7.0",
-  "swCache": "soulcap-v170",
+  "version": "1.8.0",
+  "swCache": "soulcap-v180",
   "schema": 10,
   "deploy": "docs/",
-  "note": "v1.7.0 premium polish (motion tokens, softer cards/sheets, deep dark/AMOLED) and Roman Urdu chrome i18n for tabs, settings, empty states, reset/park, pattern labels."
+  "note": "v1.8.0 safety pass (tier-3 Help on all free-text saves), Roman Urdu chrome expansion, a11y/tokens cleanup, ES5 data.js."
 }
