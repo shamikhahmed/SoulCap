@@ -1,3 +1,17 @@
+## [1.6.0] — 2026-07-22
+
+### Added
+- **Personal Manual** on You: sectioned lines (Rest, People, Work, Thinking, Recovery) grown from confirmed patterns, principles, and reset usage; edit, add, remove, refresh suggestions without overwriting user lines.
+- **Library bookmarks**: save articles locally; Saved filter on the emotional library list.
+- **Constellation depth**: private notes, life events, and closer/further ring history (cap 20) per person.
+- **First-week empty states** on Now, Calm, Journal, Map, and You — calm copy, no guilt.
+- Panic **Open my plan** one-tap link; manual refresh `aria-live` status.
+
+### Changed
+- Journal search matches mood, feeling tags, and parked thought titles; clear control with accessible label.
+- State schema **v10** (`manual`, `libraryBookmarks`, person `notes`/`events`/`ringHistory`).
+- SW `soulcap-v160`.
+
 ## [1.4.0] — 2026-07-22
 
 ### Added

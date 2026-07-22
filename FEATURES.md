@@ -1,6 +1,6 @@
 # SoulCap — Features (S/W/L/R)
 
-**Updated:** 2026-07-22 · Self-guided wellness companion · **v1.4.0**
+**Updated:** 2026-07-22 · Self-guided wellness companion · **v1.6.0**
 **Codes:** S = shipped · W = next wave · L = later · R = rejected
 
 ## S
@@ -16,7 +16,8 @@
 - One-tap check-ins with optional dimensions, direct need and trigger tags; evidence-backed local
   patterns with Low/Medium/High confidence, inspect, confirm, reject, hide; factual seven-day
   summaries; Emotional Timeline week view; Gentle Reflection Cards
-- Personal Reset Menu on Calm; user Principles on You
+- Personal Reset Menu on Calm; user Principles and **Personal Manual** on You
+- Library article bookmarks (Saved filter); constellation person notes, events, ring history
 - Six searchable offline emotional articles with source notes, support guidance, review-status
   honesty, and stable links to related exercises
 - Six optional daily supports with local-day completion only; no streaks, scores, reminders, or
@@ -33,9 +34,9 @@
 
 ## W
 - Native-reviewed Roman Urdu clinical copy (replace English safety strings only after review)
-- Personal Manual v1 (local templates from principles + confirmed patterns)
 - Licensed clinician review of every technique before any reviewed/clinical claim
 - Manual screen-reader pass notes beyond the automated dialog/zoom gates
+- Encrypted optional local backup (passphrase)
 
 ## L
 - On-device journal analysis only if it remains private, transparent, and correctable

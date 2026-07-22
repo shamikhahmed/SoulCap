@@ -94,7 +94,7 @@ test.describe('v0.9 local model', () => {
       const stored = JSON.parse(localStorage.getItem('soulcap_v1')!);
       return { state, stored };
     });
-    expect(result.state.v).toBe(9);
+    expect(result.state.v).toBe(10);
     expect(result.state.checkins[0]).toMatchObject({
       id: 'checkin-1700000000000-0',
       state: 'Wired',
@@ -105,7 +105,7 @@ test.describe('v0.9 local model', () => {
     expect(result.state.drip.answers).toEqual({});
     expect(result.state.drip.skipped).toEqual({});
     expect(result.state.drip.askedToday).toEqual([]);
-    expect(result.stored.v).toBe(9);
+    expect(result.stored.v).toBe(10);
     expect(result.stored.profile.name).toBe('Migration test');
   });
 
@@ -124,7 +124,7 @@ test.describe('v0.9 local model', () => {
       memory: (window as any).__soulcap.getState(),
       stored: JSON.parse(localStorage.getItem('soulcap_v1')!)
     }));
-    expect(result.memory.v).toBe(9);
+    expect(result.memory.v).toBe(10);
     expect(result.memory.checkins[0]).toMatchObject({ state: 'Flat', dims: {}, triggers: [] });
     expect(result.stored.v).toBe(5);
     expect(result.stored.checkins[0]).toEqual({ t: 1700000000000, state: 'Flat' });
@@ -245,7 +245,7 @@ test.describe('v1.0 offline library and daily supports', () => {
       state: (window as any).__soulcap.getState(),
       stored: JSON.parse(localStorage.getItem('soulcap_v1')!)
     }));
-    expect(result.state.v).toBe(9);
+    expect(result.state.v).toBe(10);
     expect(result.state.profile.name).toBe('Version six');
     expect(result.state.checkins[0].id).toBe('kept');
     expect(result.state.dailySupports).toEqual({ selected: [], days: {} });
@@ -254,7 +254,7 @@ test.describe('v1.0 offline library and daily supports', () => {
     expect(result.state.drip.askedToday).toEqual([]);
     expect(result.state.userModel).toEqual({});
     expect(result.state.locale).toBe('en');
-    expect(result.stored.v).toBe(9);
+    expect(result.stored.v).toBe(10);
   });
 
   test('library search announces result count for assistive tech', async ({ page }) => {
@@ -378,7 +378,7 @@ test.describe('v1.1 adaptive drip, themes, locale', () => {
       state: (window as any).__soulcap.getState(),
       stored: JSON.parse(localStorage.getItem('soulcap_v1')!)
     }));
-    expect(result.state.v).toBe(9);
+    expect(result.state.v).toBe(10);
     expect(result.state.profile.name).toBe('Version seven');
     expect(result.state.dailySupports.selected).toEqual(['water']);
     expect(result.state.drip.answers).toEqual({});
@@ -386,7 +386,7 @@ test.describe('v1.1 adaptive drip, themes, locale', () => {
     expect(result.state.drip.askedToday).toEqual([]);
     expect(result.state.userModel).toEqual({});
     expect(result.state.locale).toBe('en');
-    expect(result.stored.v).toBe(9);
+    expect(result.stored.v).toBe(10);
   });
 
   test('drip answers update estimates and stop after four asks today', async ({ page }) => {
@@ -1260,11 +1260,122 @@ test.describe('v1.4 bundled features', () => {
       state: (window as any).__soulcap.getState(),
       stored: JSON.parse(localStorage.getItem('soulcap_v1')!)
     }));
-    expect(result.state.v).toBe(9);
+    expect(result.state.v).toBe(10);
     expect(result.state.locale).toBe('rui');
     expect(result.stored.locale).toBe('rui');
     expect(result.state.mapPace).toBe('drift');
     expect(result.state.resetItems).toEqual([]);
+    expect(result.state.manual).toEqual({ lines: [], dismissedAuto: {} });
+    expect(result.state.libraryBookmarks).toEqual([]);
+  });
+});
+
+test.describe('v1.6 bundled features', () => {
+  test('v9 state migrates to v10 with manual and bookmarks', async ({ page }) => {
+    await page.addInitScript(() => {
+      localStorage.setItem('soulcap_v1', JSON.stringify({
+        v: 9, welcomed: true, onboarded: true, ageOk: true, consent: true,
+        profile: { name: 'V10 test' },
+        people: [{ id: 'p1', name: 'Sam', type: 'FRIEND', ring: 'r0', supportive: 0.5, drain: 0.5 }]
+      }));
+    });
+    await page.goto('/');
+    await page.waitForFunction(() => Boolean((window as any).__soulcap));
+    const result = await page.evaluate(() => ({
+      state: (window as any).__soulcap.getState(),
+      stored: JSON.parse(localStorage.getItem('soulcap_v1')!)
+    }));
+    expect(result.state.v).toBe(10);
+    expect(result.state.manual.lines).toEqual([]);
+    expect(result.state.libraryBookmarks).toEqual([]);
+    expect(result.state.people[0].notes).toBe('');
+    expect(result.state.people[0].events).toEqual([]);
+    expect(result.state.people[0].ringHistory).toEqual([]);
+    expect(result.stored.v).toBe(10);
+  });
+
+  test('manual refresh adds from principle and preserves edited user line', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => {
+      const state = (window as any).__soulcap.getState();
+      state.principles = ['Breathe before replying'];
+      state.manual.lines = [{ id: 'user-1', section: 'thinking', text: 'My own line', source: 'user', edited: false }];
+      localStorage.setItem('soulcap_v1', JSON.stringify(state));
+    });
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="me"]') as HTMLElement).click());
+    await page.locator('.manual-card').click();
+    await page.getByRole('button', { name: 'Refresh suggestions' }).click();
+    const manual = await page.evaluate(() => (window as any).__soulcap.getState().manual.lines);
+    expect(manual.some((l: any) => l.text === 'My own line')).toBe(true);
+    expect(manual.some((l: any) => l.text === 'Breathe before replying')).toBe(true);
+    await page.locator('input[value="My own line"]').fill('My own line edited');
+    await page.locator('input[value="My own line"]').blur();
+    await page.getByRole('button', { name: 'Refresh suggestions' }).click();
+    const after = await page.evaluate(() => (window as any).__soulcap.getState().manual.lines);
+    const edited = after.find((l: any) => l.id === 'user-1');
+    expect(edited.text).toBe('My own line edited');
+    expect(edited.edited).toBe(true);
+  });
+
+  test('confirmed pattern produces manual line on refresh', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => {
+      const state = (window as any).__soulcap.getState();
+      state.patternPrefs.decisions['late-nights'] = 'confirmed';
+      for (let i = 0; i < 3; i++) {
+        const d = new Date();
+        d.setDate(d.getDate() - i);
+        d.setHours(23, 0, 0, 0);
+        state.checkins.push({
+          id: 'late-' + i, t: d.getTime(), updatedAt: d.getTime(), state: 'Wired',
+          dims: {}, triggers: [], need: '', feeling: ''
+        });
+      }
+      localStorage.setItem('soulcap_v1', JSON.stringify(state));
+    });
+    const added = await page.evaluate(() => (window as any).__soulcap.refreshManual());
+    const lines = await page.evaluate(() => (window as any).__soulcap.getState().manual.lines);
+    expect(added).toBeGreaterThan(0);
+    expect(lines.some((l: any) => l.section === 'rest' && l.text.indexOf('you noticed') !== -1)).toBe(true);
+  });
+
+  test('library bookmark persists', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="calm"]') as HTMLElement).click());
+    await page.getByRole('button', { name: /Understand what/ }).click();
+    await page.getByRole('button', { name: /Anxiety and panic/ }).first().click();
+    await page.getByRole('button', { name: 'Save article' }).click();
+    const bookmarks = await page.evaluate(() => (window as any).__soulcap.getState().libraryBookmarks);
+    expect(bookmarks).toContain('anxiety-panic');
+    const stored = await page.evaluate(() => JSON.parse(localStorage.getItem('soulcap_v1')!).libraryBookmarks);
+    expect(stored).toContain('anxiety-panic');
+  });
+
+  test('person notes save locally', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => {
+      (window as any).__soulcap.setMapPace('still');
+      const people = (window as any).__soulcap.getState().people;
+      const p = people.find((x: { name: string }) => x.name === 'Amina');
+      p.notes = 'Calls on Sundays help.';
+      localStorage.setItem('soulcap_v1', JSON.stringify((window as any).__soulcap.getState()));
+    });
+    const notes = await page.evaluate(() => {
+      const people = (window as any).__soulcap.getState().people;
+      return people.find((p: { name: string }) => p.name === 'Amina').notes;
+    });
+    expect(notes).toBe('Calls on Sundays help.');
+    const stored = await page.evaluate(() => {
+      const people = JSON.parse(localStorage.getItem('soulcap_v1')!).people;
+      return people.find((p: { name: string }) => p.name === 'Amina').notes;
+    });
+    expect(stored).toBe('Calls on Sundays help.');
+  });
+
+  test('Settings still opens from You', async ({ page }) => {
+    await seedDemo(page);
+    await openSettings(page);
+    await expect(page.locator('#sheetPanel').getByRole('heading', { name: 'Settings' })).toBeVisible();
   });
 });
 
