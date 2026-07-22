@@ -37,6 +37,12 @@ async function openBlankJournalEntry(page: Page) {
   await expect(page.locator('#journalEditor')).toBeVisible();
 }
 
+async function openSettings(page: Page) {
+  await page.evaluate(() => (document.querySelector('#tabs button[data-tab="me"]') as HTMLElement).click());
+  await page.locator('.settings-card').click();
+  await expect(page.locator('#sheet.on')).toBeVisible();
+}
+
 test.describe('Smoke', () => {
   test('loads with no console errors', async ({ page }) => {
     const errors: string[] = [];
@@ -88,7 +94,7 @@ test.describe('v0.9 local model', () => {
       const stored = JSON.parse(localStorage.getItem('soulcap_v1')!);
       return { state, stored };
     });
-    expect(result.state.v).toBe(8);
+    expect(result.state.v).toBe(9);
     expect(result.state.checkins[0]).toMatchObject({
       id: 'checkin-1700000000000-0',
       state: 'Wired',
@@ -99,7 +105,7 @@ test.describe('v0.9 local model', () => {
     expect(result.state.drip.answers).toEqual({});
     expect(result.state.drip.skipped).toEqual({});
     expect(result.state.drip.askedToday).toEqual([]);
-    expect(result.stored.v).toBe(8);
+    expect(result.stored.v).toBe(9);
     expect(result.stored.profile.name).toBe('Migration test');
   });
 
@@ -118,7 +124,7 @@ test.describe('v0.9 local model', () => {
       memory: (window as any).__soulcap.getState(),
       stored: JSON.parse(localStorage.getItem('soulcap_v1')!)
     }));
-    expect(result.memory.v).toBe(8);
+    expect(result.memory.v).toBe(9);
     expect(result.memory.checkins[0]).toMatchObject({ state: 'Flat', dims: {}, triggers: [] });
     expect(result.stored.v).toBe(5);
     expect(result.stored.checkins[0]).toEqual({ t: 1700000000000, state: 'Flat' });
@@ -167,6 +173,7 @@ test.describe('v0.9 local model', () => {
     await page.evaluate(() => (document.querySelector('#tabs button[data-tab="me"]') as HTMLElement).click());
     const row = page.locator('.pattern-row').filter({ hasText: 'Work or study may be showing up often' });
     await expect(row).toContainText('3 distinct days');
+    await expect(row).toContainText('Low confidence');
     await row.getByRole('button', { name: 'See evidence' }).click();
     await expect(page.getByText('This is a repeated correlation')).toBeVisible();
     await page.getByRole('button', { name: 'Done' }).click();
@@ -183,7 +190,7 @@ test.describe('v0.9 local model', () => {
 
   test('presentation controls apply and persist independently', async ({ page }) => {
     await seedDemo(page);
-    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="me"]') as HTMLElement).click());
+    await openSettings(page);
     await page.getByRole('button', { name: 'Mulberry' }).click();
     await page.getByRole('button', { name: 'Large', exact: true }).click();
     await page.getByRole('button', { name: 'Comfortable' }).click();
@@ -210,7 +217,7 @@ test.describe('v0.9 local model', () => {
     await page.waitForFunction(() => Boolean((window as any).__soulcap));
     expect(await page.evaluate(() => document.documentElement.getAttribute('data-accent'))).toBe('mulberry');
     await dismissSplash(page);
-    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="me"]') as HTMLElement).click());
+    await openSettings(page);
     const before = await page.evaluate(() => (window as any).__soulcap.getState().patternPrefs.enabled);
     await page.evaluate(() => {
       Storage.prototype.setItem = function () { throw new Error('quota'); };
@@ -238,7 +245,7 @@ test.describe('v1.0 offline library and daily supports', () => {
       state: (window as any).__soulcap.getState(),
       stored: JSON.parse(localStorage.getItem('soulcap_v1')!)
     }));
-    expect(result.state.v).toBe(8);
+    expect(result.state.v).toBe(9);
     expect(result.state.profile.name).toBe('Version six');
     expect(result.state.checkins[0].id).toBe('kept');
     expect(result.state.dailySupports).toEqual({ selected: [], days: {} });
@@ -247,7 +254,7 @@ test.describe('v1.0 offline library and daily supports', () => {
     expect(result.state.drip.askedToday).toEqual([]);
     expect(result.state.userModel).toEqual({});
     expect(result.state.locale).toBe('en');
-    expect(result.stored.v).toBe(8);
+    expect(result.stored.v).toBe(9);
   });
 
   test('library search announces result count for assistive tech', async ({ page }) => {
@@ -371,7 +378,7 @@ test.describe('v1.1 adaptive drip, themes, locale', () => {
       state: (window as any).__soulcap.getState(),
       stored: JSON.parse(localStorage.getItem('soulcap_v1')!)
     }));
-    expect(result.state.v).toBe(8);
+    expect(result.state.v).toBe(9);
     expect(result.state.profile.name).toBe('Version seven');
     expect(result.state.dailySupports.selected).toEqual(['water']);
     expect(result.state.drip.answers).toEqual({});
@@ -379,7 +386,7 @@ test.describe('v1.1 adaptive drip, themes, locale', () => {
     expect(result.state.drip.askedToday).toEqual([]);
     expect(result.state.userModel).toEqual({});
     expect(result.state.locale).toBe('en');
-    expect(result.stored.v).toBe(8);
+    expect(result.stored.v).toBe(9);
   });
 
   test('drip answers update estimates and stop after four asks today', async ({ page }) => {
@@ -426,12 +433,12 @@ test.describe('v1.1 adaptive drip, themes, locale', () => {
     expect(await page.evaluate(() => (window as any).__soulcap.getState().userModel.stress)).toBeUndefined();
   });
 
-  test('mood themes persist and Urdu preview flips RTL without replacing safety English', async ({ page }) => {
+  test('mood themes persist and Roman Urdu preview stays LTR without replacing safety English', async ({ page }) => {
     await seedDemo(page);
-    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="me"]') as HTMLElement).click());
+    await openSettings(page);
     await page.getByRole('button', { name: 'Ocean', exact: true }).click();
     expect(await page.evaluate(() => document.documentElement.getAttribute('data-theme'))).toBe('ocean');
-    await page.getByRole('button', { name: 'اردو (preview)' }).click();
+    await page.getByRole('button', { name: 'Roman Urdu (preview)' }).click();
     const locale = await page.evaluate(() => ({
       lang: document.documentElement.getAttribute('lang'),
       dir: document.documentElement.getAttribute('dir'),
@@ -440,16 +447,18 @@ test.describe('v1.1 adaptive drip, themes, locale', () => {
       mirror: localStorage.getItem('soulcap_locale'),
       theme: localStorage.getItem('soulcap_theme')
     }));
-    expect(locale).toMatchObject({ lang: 'ur', dir: 'rtl', stored: 'ur', mirror: 'ur', theme: 'ocean' });
-    expect(locale.fab).toContain('مدد');
-    await expect(page.getByText(/Urdu clinical review is not complete/)).toBeVisible();
+    expect(locale).toMatchObject({ lang: 'rui', dir: 'ltr', stored: 'rui', mirror: 'rui', theme: 'ocean' });
+    expect(locale.fab).toContain('madad');
+    await page.locator('#sheetPanel').getByRole('button', { name: 'Close' }).click();
+    await openSettings(page);
+    await expect(page.getByText(/Roman Urdu clinical review is not complete/)).toBeVisible();
     await page.evaluate(() => history.replaceState({}, '', '/'));
     await page.reload();
     await page.waitForFunction(() => Boolean((window as any).__soulcap));
     expect(await page.evaluate(() => ({
       theme: document.documentElement.getAttribute('data-theme'),
       dir: document.documentElement.getAttribute('dir')
-    }))).toEqual({ theme: 'ocean', dir: 'rtl' });
+    }))).toEqual({ theme: 'ocean', dir: 'ltr' });
   });
 
   test('panic and runner expose dialog semantics and survive 200% page zoom', async ({ page }) => {
@@ -636,7 +645,9 @@ test.describe('Journal', () => {
     await seedDemo(page);
     await page.evaluate(() => (document.querySelector('#tabs button[data-tab="me"]') as HTMLElement).click());
     await page.evaluate(() => window.scrollTo(0, 700));
-    await page.locator('#view-me .chips .chip', { hasText: 'Dark' }).first().click();
+    await page.locator('.settings-card').click();
+    await page.locator('#sheetPanel .chip', { hasText: 'Dark' }).first().click();
+    await page.locator('#sheetPanel').getByRole('button', { name: 'Close' }).click();
     const y = await page.evaluate(() => window.scrollY);
     expect(y).toBeGreaterThan(300); // stayed roughly where it was, no jump to 0
   });
@@ -1023,8 +1034,8 @@ test.describe('Constellation', () => {
 
   test('contact frequency changes node size without importance language', async ({ page }) => {
     await seedDemo(page);
-    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="me"]') as HTMLElement).click());
-    await page.getByRole('button', { name: /Track when we last spoke/ }).click();
+    await openSettings(page);
+    await page.locator('#sheetPanel').getByRole('button', { name: /Track when we last spoke/ }).click();
     await page.evaluate(() => {
       const state = (window as any).__soulcap.getState();
       const a = state.people[0];
@@ -1178,6 +1189,82 @@ test.describe('Accessibility', () => {
     await expect(blank).toBeFocused();
     await page.keyboard.press('Escape');
     await expect(opener).toBeFocused();
+  });
+});
+
+test.describe('v1.4 bundled features', () => {
+  test('greeting at 5am reads as late', async ({ page }) => {
+    await seedDemo(page);
+    const text = await page.evaluate(() => (window as any).__soulcap.greetingForHour(5));
+    expect(text).toMatch(/It’s late/);
+  });
+
+  test('Settings card opens the settings sheet', async ({ page }) => {
+    await seedDemo(page);
+    await openSettings(page);
+    await expect(page.locator('#sheetPanel').getByRole('heading', { name: 'Settings' })).toBeVisible();
+    await expect(page.getByText(/Map pace/)).toBeVisible();
+  });
+
+  test('map pace Live moves faster than Still', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="map"]') as HTMLElement).click());
+    await page.evaluate(async () => {
+      const api = (window as any).__soulcap;
+      api.setMapPace('still');
+      await new Promise((r) => setTimeout(r, 600));
+    });
+    const still = await page.evaluate(async () => {
+      const api = (window as any).__soulcap;
+      api.setMapPace('still');
+      return api.mapAngleSample(800);
+    });
+    const live = await page.evaluate(async () => {
+      const api = (window as any).__soulcap;
+      api.setMapPace('live');
+      return api.mapAngleSample(800);
+    });
+    expect(Math.abs(live)).toBeGreaterThan(Math.abs(still) + 0.01);
+  });
+
+  test('reset menu can add an item', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="calm"]') as HTMLElement).click());
+    await page.getByRole('button', { name: /Personal reset menu/ }).click();
+    await page.getByRole('button', { name: /Edit reset menu/ }).click();
+    await page.getByRole('button', { name: /Add a reset step/ }).click();
+    const count = await page.evaluate(() => (window as any).__soulcap.getState().resetItems.length);
+    expect(count).toBeGreaterThan(0);
+  });
+
+  test('a thought can be parked and stored locally', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="journal"]') as HTMLElement).click());
+    await page.getByRole('button', { name: 'Park a thought' }).click();
+    await page.getByLabel('What is it about?').fill('Tomorrow worry');
+    await page.getByRole('button', { name: 'Park it' }).click();
+    const parked = await page.evaluate(() => (window as any).__soulcap.getState().parkedThoughts);
+    expect(parked.some((p: any) => p.title === 'Tomorrow worry')).toBe(true);
+  });
+
+  test('v8 ur locale migrates to rui on v9', async ({ page }) => {
+    await page.addInitScript(() => {
+      localStorage.setItem('soulcap_v1', JSON.stringify({
+        v: 8, welcomed: true, onboarded: true, ageOk: true, consent: true,
+        profile: { name: 'Urdu user' }, locale: 'ur'
+      }));
+    });
+    await page.goto('/');
+    await page.waitForFunction(() => Boolean((window as any).__soulcap));
+    const result = await page.evaluate(() => ({
+      state: (window as any).__soulcap.getState(),
+      stored: JSON.parse(localStorage.getItem('soulcap_v1')!)
+    }));
+    expect(result.state.v).toBe(9);
+    expect(result.state.locale).toBe('rui');
+    expect(result.stored.locale).toBe('rui');
+    expect(result.state.mapPace).toBe('drift');
+    expect(result.state.resetItems).toEqual([]);
   });
 });
 

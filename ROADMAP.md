@@ -5,7 +5,7 @@ item and ship it **the same way the rest of the app was built** — read `AGENTS
 rules, conventions, and ship workflow. Every item below lists **what**, **why**, **files to
 touch**, **acceptance criteria (incl. a test)**, and **guardrails**.
 
-**Current release candidate: v1.2.1** · Published app: https://shamikhahmed.github.io/SoulCap/
+**Current release: v1.4.0** · Published app: https://shamikhahmed.github.io/SoulCap/
 
 Philosophy (never drifts): a personalised emotional operating system, **not** an AI therapist.
 Help people understand and regulate; never "fix" them; never diagnose; success = needing the app
@@ -20,7 +20,7 @@ less. See `AGENTS.md §2` for the hard rules — every item inherits them.
 
 ## The three non-code blockers (gate any "it helps" claim)
 1. Licensed clinician reviews the techniques → then remove the "not yet reviewed" banner.
-2. Urdu clinical-copy reviewer + localisation.
+2. Roman Urdu clinical-copy reviewer + localisation (LTR preview ships; clinical English until review).
 3. (No crisis lines ship, per owner — so no re-verification needed unless that reverses.)
 
 ---
@@ -81,9 +81,9 @@ less. See `AGENTS.md §2` for the hard rules — every item inherits them.
 - Panic + runner dialog semantics and 200% zoom smoke tests. Reduced-motion and token contrast
   remain. Manual SR pass still welcome before store claims.
 
-### 1.1.4 — Urdu localisation · **SHIPPED (scaffold only)**
-- String extract + RTL layout preview. Clinical/safety English stays until native clinical-copy
-  review.
+### 1.1.4 — Locale scaffold · **SHIPPED (Roman Urdu LTR preview in v1.4)**
+- English + Roman Urdu (`rui`) LTR preview. Clinical/safety English stays until native
+  clinical-copy review. Arabic-script/RTL Urdu removed.
 
 ### 1.1.5 — Clinician-reviewed technique set · **(non-code, gates the banner)**
 - Record sign-off per technique; only then remove the "not yet clinically reviewed" banner in
@@ -97,6 +97,19 @@ less. See `AGENTS.md §2` for the hard rules — every item inherits them.
 - [x] **Long-press rename** on ring labels (sheet still available).
 - [x] **Opt-in node size** from logged speak frequency — never importance.
 - [x] **Safety-plan pull** of supportive Constellation people into “People I can tell”.
+
+---
+
+## v1.4 — Reflection foundations — shipped 2026-07-22 (bundles 1.2.2 + 1.3 + 1.4)
+
+- [x] Greeting late until 06:00; Settings sheet off You; map pace Still/Drift/Live + inertia/glow.
+- [x] Personal Reset Menu, Thought Parking, Pattern Confidence labels.
+- [x] Emotional Timeline, Gentle Reflection Cards, richer emotion vocabulary, Principles list.
+- Schema **v9** · SW `soulcap-v140`.
+
+### Next (v1.5+)
+- Personal Manual v1 (templates from confirmed patterns + principles + reset usage).
+- Quiet refinement: library/a11y/empty states. Quiet Wins deferred (manipulative risk).
 
 ---
 

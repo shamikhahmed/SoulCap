@@ -1,4 +1,4 @@
-**Version:** 1.2.1 · SW `soulcap-v121`
+**Version:** 1.4.0 · SW `soulcap-v140`
 
 # SoulCap — Project Handover
 
@@ -6,7 +6,7 @@
 > first — it is the current truth as of 2026-07-22. The sections further down describe an
 > earlier architecture and are kept for reference only.
 
-## Current state (v1.2.1 — 2026-07-22)
+## Current state (v1.4.0 — 2026-07-22)
 
 **The product is the PWA in `docs/`.** Fully rewritten. Offline-first, local-only, **no network
 calls at all** after load — no account, no server, no LLM, no analytics. Everything is

@@ -1,3 +1,22 @@
+## [1.4.0] — 2026-07-22
+
+### Added
+- **Personal reset menu** on Calm: user-editable reset steps with local-day completion toggles (no streaks).
+- **Thought parking** on Journal: park thoughts with Tomorrow / Weekend / One week reopen; due list only (no notifications).
+- **Pattern confidence** labels (Low / Medium / High) on pattern rows and evidence sheet.
+- **Emotional timeline** week view from check-ins and journal titles.
+- **Gentle reflection cards** on Now after journal save, pattern confirm, or thought archive (skip / note / dismiss forever).
+- **Emotion vocabulary** searchable chips in check-in detail and journal editor (~16 words + favorites).
+- Optional **Principles** card on You for user-defined reminders.
+- Constellation **map pace** (Still / Drift / Live) in Settings with drag inertia and focus glow on person sheet.
+
+### Changed
+- Greeting: late hours now `h < 6` (was `< 5`); morning 6–11, afternoon 12–17, evening 18+.
+- **Roman Urdu (preview)** replaces Arabic-script Urdu — LTR layout (`lang=rui`), Latin tab/help strings; `ur` migrates to `rui`.
+- You tab settings consolidated into a **Settings sheet** (Appearance, Language, Accessibility, Personalisation, Guided exercises, Constellation, Your data, About).
+- PATTERN_UI summaries softened to may/might language.
+- SW `soulcap-v140`. State schema **v9** (`mapPace`, `resetItems`, `resetDone`, `parkedThoughts`, `reflectionPrefs`, `pendingReflection`, `emotionFavorites`, `principles`).
+
 ## [1.2.1] — 2026-07-22
 
 ### Fixed

@@ -1,6 +1,6 @@
 # SoulCap
 
-**v1.2.1 release candidate — offline-first wellness PWA.** A calm, private, personalised space for self-regulation
+**v1.4.0 — offline-first wellness PWA.** A calm, private, personalised space for self-regulation
 skills, a journal, and a map of the people around you. **Not** therapy · not a diagnosis tool ·
 not a crisis service · not an AI therapist. See [`SAFETY.md`](SAFETY.md).
 

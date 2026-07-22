@@ -1,8 +1,8 @@
 {
   "app": "SoulCap",
-  "version": "1.2.1",
-  "swCache": "soulcap-v121",
+  "version": "1.4.0",
+  "swCache": "soulcap-v140",
   "updated": "2026-07-22",
   "status": "self-guided-wellness",
-  "note": "Hotfix: same-day check-in keeps original t (updates updatedAt only); migration guards non-array inferences; library search aria-live status; preference toggles roll back on save failure. Prior v1.2 Constellation polish retained."
+  "note": "v1.4.0 bundles v1.2.2 polish (Roman Urdu LTR, settings sheet, map pace), v1.3 (reset menu, thought parking, pattern confidence), and v1.4 (emotional timeline, gentle reflections, emotion vocabulary)."
 }

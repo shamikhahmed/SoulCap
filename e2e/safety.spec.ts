@@ -20,6 +20,12 @@ async function dismissSplash(page: Page) {
   }, null, { timeout: 4000 });
 }
 
+async function openSettings(page: Page) {
+  await page.evaluate(() => (document.querySelector('#tabs button[data-tab="me"]') as HTMLElement).click());
+  await page.locator('.settings-card').click();
+  await expect(page.locator('#sheet.on')).toBeVisible();
+}
+
 /** Fresh install through the welcome screen to the age gate. */
 async function toAgeGate(page: Page) {
   await page.goto('/');
@@ -304,10 +310,8 @@ test.describe('Constellation safety', () => {
 test.describe('Data control', () => {
   test('delete removes everything', async ({ page }) => {
     await seedDemo(page);
-    await page.evaluate(() => {
-      (document.querySelector('#tabs button[data-tab="me"]') as HTMLElement).click();
-    });
-    await page.getByRole('button', { name: /Delete everything/ }).click();
+    await openSettings(page);
+    await page.locator('#sheetPanel').getByRole('button', { name: /Delete everything/ }).click();
     await page.getByRole('button', { name: /Yes, delete it all/ }).click();
 
     const stored = await page.evaluate(() => localStorage.getItem('soulcap_v1'));
