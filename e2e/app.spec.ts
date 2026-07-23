@@ -817,7 +817,7 @@ test.describe('v1.1 adaptive drip, themes, locale', () => {
     await expect(page.locator('#runner.on')).toBeVisible();
     await expect(page.locator('#runner')).toHaveAttribute('role', 'dialog');
     await expect(page.locator('#runner')).toHaveAttribute('aria-modal', 'true');
-    await expect(page.locator('#runner')).toHaveAttribute('aria-label', 'Exercise');
+    await expect(page.locator('#runner')).toHaveAttribute('aria-label', 'Technique');
     await expect(page.locator('#runner')).toHaveAttribute('aria-hidden', 'false');
     await page.evaluate(() => {
       document.documentElement.setAttribute('data-text', 'large');

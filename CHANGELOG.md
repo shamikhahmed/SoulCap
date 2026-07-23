@@ -1,5 +1,12 @@
 ## [Unreleased]
 
+## [4.0.8] — 2026-07-24
+
+### Changed
+- **Master design PR-9 Copy pass:** one word = **technique** (was skill/exercise in UI).
+  Strings centralized via `*_UI` / STRINGS; Runner aria-label “Technique”. Safety copy untouched.
+- SW `soulcap-v408`. App **4.0.8**. Schema still **v12**.
+
 ## [4.0.7] — 2026-07-24
 
 ### Changed

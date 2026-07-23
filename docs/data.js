@@ -251,12 +251,12 @@ var EMPTY_UI = {
   meAction:'Set up profile'
 };
 
-/* Guided Path v2.1 — rule-based feeling → chips → family why → exercise.
+/* Guided Path v2.1 — rule-based feeling → chips → family why → technique.
  * Never diagnose. Never prescribe CBT/DBT/ACT as treatment. */
 var PATH_UI = {
   cardTitle:'A short path',
   cardHint:'A few taps → something that may fit. Optional. Not a diagnosis.',
-  calmHint:'Feeling → what you notice → one exercise.',
+  calmHint:'Feeling → what you notice → one technique.',
   arrivalTitle:'How are you arriving?',
   chipsTitle:'What are you noticing?',
   chipsHint:'Pick up to four. Skip any that do not fit.',
@@ -285,7 +285,7 @@ var PATH_UI = {
   pickChip:'Pick at least one thing you notice, or go back.',
   familyLabel:'Starting place',
   approachLabel:'An approach you could try',
-  approachMore:'Other exercises in this approach',
+  approachMore:'Other techniques in this approach',
   tryExercise:'Try'
 };
 
@@ -379,18 +379,18 @@ var PROGRESS_UI = {
   title:'Your progress',
   weekLabel:'This week',
   weekEmpty:'This week is still open — no pressure.',
-  weekDays:'{n} day{s} with a check-in or exercise · not a streak.',
-  exercises:'Exercises completed',
+  weekDays:'{n} day{s} with a check-in or technique · not a streak.',
+  exercises:'Techniques completed',
   checkins:'Check-ins',
   journals:'Journal entries',
   paths:'Short paths tried',
   gentle:'Gentle glance only — no scores, no streaks, no targets.',
-  empty:'As you check in and try exercises, a quiet picture of the weeks builds here.'
+  empty:'As you check in and try techniques, a quiet picture of the weeks builds here.'
 };
 
 var ABOUT_UI = {
   title:'About SoulCap',
-  purpose:'A calm, private place for self-regulation skills, a journal, and the people around you.',
+  purpose:'A calm, private place for self-regulation techniques, a journal, and the people around you.',
   honesty:'Not therapy. Not a diagnosis tool. Not a crisis service. Nothing leaves this device.',
   credits:'Built by Capricorn Systems. Techniques are evidence-informed and not yet clinically reviewed.',
   open:'About SoulCap',
@@ -405,15 +405,15 @@ var WHATS_NEW_UI = {
 
 var SETTINGS_UI = {
   personalisation:'Personalisation',
-  guided:'Guided exercises',
+  guided:'Guided techniques',
   constellation:'Constellation',
   yourData:'Your data',
   about:'About',
   spoken:'Spoken guidance',
   voiceAccent:'Voice & accent',
   vibration:'Vibration',
-  exercisePace:'Exercise pace',
-  paceHint:'How long each step of a guided exercise stays on screen. Slow gives more time to read.',
+  exercisePace:'Technique pace',
+  paceHint:'How long each step of a guided technique stays on screen. Slow gives more time to read.',
   mapPace:'Map pace',
   mapPaceHint:'Still keeps the map fixed. Drift is gentle. Live moves faster. Reduced-motion always uses Still.',
   showLinks:'Show links between people',
@@ -740,7 +740,7 @@ var STRINGS = {
     },
     mapPace:{ still:'Still', drift:'Drift', live:'Live' },
     panic:{ exit:'I’m okay — go back', plan:'Open my plan' },
-    settingsCard:{ title:'Settings', hint:'Appearance, language, accessibility, and your data.', open:'Open' }
+    settingsCard:{ title:'Settings', hint:'Appearance, language, accessibility, constellation pace, guided techniques, and your data.', open:'Open' }
   },
   rui: {
     helpNow:'Mujhe ab madad chahiye',
@@ -933,7 +933,7 @@ var LIBRARY_UI = {
   practical:'Things that may help',
   support:'When professional support may help',
   references:'Sources and further reading',
-  related:'Related exercises',
+  related:'Related techniques',
   reviewNote:'Not yet reviewed by a licensed clinician. Not a diagnosis.',
   close:'Close'
 };
@@ -947,7 +947,7 @@ var EXPERIENCE_PICKER_UI = {
   searchPlaceholder:'heart, fog, rumination…',
   back:'Close'
 };
-var CALM_REVIEW_NOTE = 'Skills, articles, and experiences are evidence-informed but not yet reviewed by a licensed clinician.';
+var CALM_REVIEW_NOTE = 'Techniques, articles, and experiences are evidence-informed but not yet reviewed by a licensed clinician.';
 
 var EXPERIENCE_GROUPS = [
   { id:'physical', label:'Body / somatic', blurb:'Sensations people often notice when the alarm system is on.' },
@@ -1170,7 +1170,7 @@ var EXPERIENCES = [
     why:'Brains misfile and generate odd content under stress. Fighting the thought hard can make it stickier. Distressing does not mean dangerous or intended.',
     commonWith:['anxiety','OCD-like worry'],
     helps:['defusion','container','self-compassion-break'],
-    selfCare:['Label: “an intrusive thought showed up.”','Do not treat it as a command.','Return attention to the room with a grounding skill.'],
+    selfCare:['Label: “an intrusive thought showed up.”','Do not treat it as a command.','Return attention to the room with a grounding technique.'],
     reflection:['Did the thought feel more sticky when you tried to push it away?'],
     redFlag:null,
     source:'Intrusive cognition — standard OCD/anxiety psychoeducation; not a diagnosis' },
@@ -1457,7 +1457,7 @@ var SKILLS = [
     indication:['dissociation','anxiety','panic'], contraindication:[],
     mechanism:'Deliberately cataloguing sensory input occupies the attention that panic is using, and re-anchors you in the room rather than the thought.',
     blurb:'Five senses, counted down. The classic.',
-    steps:['Five things you can see. Say them, or just notice them.','Four things you can feel. Chair, floor, fabric, air.','Three things you can hear.','Two things you can smell.','One thing you can taste.','You are here. That is the whole point of the exercise.'],
+    steps:['Five things you can see. Say them, or just notice them.','Four things you can feel. Chair, floor, fabric, air.','Three things you can hear.','Two things you can smell.','One thing you can taste.','You are here. That is the whole point of the technique.'],
     source:'Sensory grounding — standard technique, no single owner' },
 
   { id:'sour-anchor', name:'Something sharply sour', domain:'ground', family:'sensory',
@@ -1843,7 +1843,7 @@ var HISTORY_SECTIONS = [
   { key:'breakups', title:'Past relationships', kind:'text', sensitive:true,
     hint:'Only if it helps to note it. Optional.', placeholder:'e.g. a breakup last year I’m still processing' },
   { key:'trauma', title:'Hard things from your past', kind:'text', sensitive:true,
-    hint:'Only what you want to. SoulCap will be gentler with certain exercises if you tell it. It never diagnoses, and this never leaves your phone.',
+    hint:'Only what you want to. SoulCap will be gentler with certain techniques if you tell it. It never diagnoses, and this never leaves your phone.',
     placeholder:'Write as much or as little as you like' },
   { key:'notes', title:'Anything else', kind:'text',
     hint:'Whatever you’d want it to know.', placeholder:'' }

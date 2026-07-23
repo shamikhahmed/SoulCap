@@ -1591,7 +1591,7 @@
   /* ══ RUNNER ═══════════════════════════════════════════════════════════════
    * Branches: paced breathing session (Apple-Watch style) for skills with a
    * `pattern`, or a guided step walk-through for everything else. Either way
-   * it moves through the WHOLE exercise, spoken and paced. */
+   * it moves through the WHOLE technique, spoken and paced. */
   var runState = null;
 
   function openRunnerShell() {
@@ -1990,7 +1990,7 @@
         }
         if (s.traumaCaution && traumaAware()) {
           p.appendChild(el('div', { class: 'notice', html:
-            '<b>Gentle note.</b> Exercises that turn attention inward can stir things up if your past has been hard. Stop any time, and keep something grounding nearby.' }));
+            '<b>Gentle note.</b> Techniques that turn attention inward can stir things up if your past has been hard. Stop any time, and keep something grounding nearby.' }));
         }
         p.appendChild(el('p', { class: 'p-sm', text: 'Source: ' + s.source }));
         p.appendChild(el('div', { class: 'notice', text: 'Not yet clinically reviewed.' }));
@@ -2326,7 +2326,7 @@
             }, [
               el('h2', { class: 'card-title', text: exp.name }),
               el('p', { class: 'p-sm', text: exp.whatItis }),
-              el('p', { class: 'meta', text: (exp.helps || []).length + ' related exercise' + ((exp.helps || []).length === 1 ? '' : 's') })
+              el('p', { class: 'meta', text: (exp.helps || []).length + ' related technique' + ((exp.helps || []).length === 1 ? '' : 's') })
             ]));
           });
         });
@@ -2338,7 +2338,7 @@
           results.appendChild(el('button', { class:'card tap article-card', onclick:function () { articleSheet(article.id); } }, [
             el('h2', { class:'card-title', text:article.title + (saved ? ' · Saved' : '') }),
             el('p', { class:'p-sm', text:article.summary }),
-            el('p', { class:'meta', text:article.skillIds.length + ' related exercise' + (article.skillIds.length === 1 ? '' : 's') })
+            el('p', { class:'meta', text:article.skillIds.length + ' related technique' + (article.skillIds.length === 1 ? '' : 's') })
           ]));
         });
       }
@@ -3795,7 +3795,7 @@
             setTimeout(grow, 0);
           }
         });
-        p.appendChild(el('div', { class: 'notice', html: '<b>How this changes things.</b> If you note that things are hard from your past, SoulCap keeps potentially-activating exercises out of its suggestions and leans toward gentle grounding. It never labels or diagnoses you.' }));
+        p.appendChild(el('div', { class: 'notice', html: '<b>How this changes things.</b> If you note that things are hard from your past, SoulCap keeps potentially-activating techniques out of its suggestions and leans toward gentle grounding. It never labels or diagnoses you.' }));
         p.appendChild(el('button', { class: 'btn', text: 'Done', onclick: function () { save(); closeSubview(); render(); } }));
       }
     });
@@ -4145,7 +4145,7 @@
       listRow({
         className: 'settings-card',
         title: tUi('settingsCard', 'title', { title: 'Settings' }),
-        meta: tUi('settingsCard', 'hint', { hint: 'Appearance, language, accessibility, constellation pace, guided exercises, and your data.' }),
+        meta: tUi('settingsCard', 'hint', { hint: 'Appearance, language, accessibility, constellation pace, guided techniques, and your data.' }),
         onclick: settingsSheet
       })
     ]));
@@ -4328,7 +4328,7 @@
       }
     });
   }
-  var APP_VERSION = '4.0.7';
+  var APP_VERSION = '4.0.8';
   function settingsGroup(v, title, kids) { v.appendChild(el('p', { class: 'eyebrow', style: 'margin-top:var(--space-3)', text: title })); kids.forEach(function (k) { if (k) v.appendChild(k); }); }
   function toggleBtn(label, on, fn) {
     return el('button', { class: 'btn ghost', style: 'display:flex;justify-content:space-between', onclick: fn,
@@ -4367,8 +4367,8 @@
   }
   function weekActivityLabel(dots) {
     var n = dots.filter(function (x) { return x.on; }).length;
-    if (!n) return 'This week is still open — no pressure.';
-    return n + ' day' + (n === 1 ? '' : 's') + ' with a check-in or exercise · not a streak.';
+    if (!n) return PROGRESS_UI.weekEmpty;
+    return PROGRESS_UI.weekDays.replace('{n}', '' + n).replace('{s}', n === 1 ? '' : 's');
   }
   function approachForFamily(family, chipIds) {
     if (typeof APPROACH_PACKS === 'undefined' || !APPROACH_PACKS) return null;
@@ -4462,7 +4462,7 @@
   function confirmDelete() {
     openSheet(function (p) {
       p.appendChild(el('h2', { class: 'h-sec', text: 'Delete everything?' }));
-      p.appendChild(el('p', { class: 'p', text: 'Check-ins, exercises, your Constellation, your journal, your plan. This cannot be undone, and there is no backup anywhere.' }));
+      p.appendChild(el('p', { class: 'p', text: 'Check-ins, techniques, your Constellation, your journal, your plan. This cannot be undone, and there is no backup anywhere.' }));
       p.appendChild(el('button', { class: 'btn danger', text: 'Yes, delete it all', onclick: function () {
         try { localStorage.removeItem(KEY); localStorage.removeItem('soulcap_theme'); localStorage.removeItem('soulcap_appearance'); localStorage.removeItem('soulcap_locale'); } catch (e) {}
         state = clone(DEFAULT); closeSheet(); applyTheme(); render();
@@ -4520,7 +4520,7 @@
       body.appendChild(el('button', { class: 'btn quiet', text: t('common.skip', 'Skip'), onclick: function () { obStep = 2; render(); } }));
     } else if (obStep === 2) {
       body.appendChild(el('h1', { class: 'h-voice', text: tUi('onboarding', 'consentTitle', { consentTitle: 'What this is, plainly.' }) }));
-      body.appendChild(el('div', { class: 'notice', html: '<b>SoulCap is not therapy</b>, not a doctor, and not a crisis service. It teaches skills and helps you notice patterns.<ul style="margin:9px 0 0;padding-left:17px"><li>Everything stays on your phone. No account, no server.</li><li>We never sell your data or train on it.</li><li>You can export or delete all of it, any time.</li><li>If you ever feel unsafe, please reach out to someone you trust or your local emergency services.</li></ul>' }));
+      body.appendChild(el('div', { class: 'notice', html: '<b>SoulCap is not therapy</b>, not a doctor, and not a crisis service. It teaches techniques and helps you notice patterns.<ul style="margin:9px 0 0;padding-left:17px"><li>Everything stays on your phone. No account, no server.</li><li>We never sell your data or train on it.</li><li>You can export or delete all of it, any time.</li><li>If you ever feel unsafe, please reach out to someone you trust or your local emergency services.</li></ul>' }));
       body.appendChild(el('button', { class: 'btn', text: tUi('onboarding', 'understand', { understand: 'I understand' }), onclick: function () { state.consent = true; save(); obStep = 3; render(); } }));
     } else {
       body.appendChild(el('h1', { class: 'h-voice', text: tUi('onboarding', 'concernsTitle', { concernsTitle: 'What’s been hard lately?' }) }));
@@ -4682,7 +4682,7 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '4.0.7',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '4.0.8',
     experienceIds: EXPERIENCES.map(function (item) { return item.id; }),
     experienceHelpsOk: function () {
       return EXPERIENCES.every(function (exp) {
