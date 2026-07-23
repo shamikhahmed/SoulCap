@@ -208,8 +208,8 @@ test.describe('v0.9 local model', () => {
     await page.getByRole('button', { name: 'Mulberry' }).click();
     await page.getByRole('button', { name: 'Large', exact: true }).click();
     await page.getByRole('button', { name: 'Comfortable' }).click();
-    await page.getByRole('button', { name: /Higher contrast/ }).click();
-    await page.getByRole('button', { name: /Reduce transparency/ }).click();
+    await page.getByRole('switch', { name: /Higher contrast/ }).click();
+    await page.getByRole('switch', { name: /Reduce transparency/ }).click();
     const attrs = await page.evaluate(() => ({
       accent: document.documentElement.getAttribute('data-accent'),
       text: document.documentElement.getAttribute('data-text'),
@@ -236,7 +236,7 @@ test.describe('v0.9 local model', () => {
     await page.evaluate(() => {
       Storage.prototype.setItem = function () { throw new Error('quota'); };
     });
-    await page.getByRole('button', { name: /Local pattern observations/ }).click();
+    await page.getByRole('switch', { name: /Local pattern observations/ }).click();
     await expect(page.getByRole('heading', { name: 'That setting did not save' })).toBeVisible();
     expect(await page.evaluate(() => (window as any).__soulcap.getState().patternPrefs.enabled)).toBe(before);
   });
@@ -612,7 +612,7 @@ test.describe('v2.1 Guided Path', () => {
   test('settings can hide short path on Now', async ({ page }) => {
     await seedDemo(page);
     await openSettings(page);
-    await page.getByRole('button', { name: /Hide short path on Now/ }).click();
+    await page.getByRole('switch', { name: /Hide short path on Now/ }).click();
     await page.locator('#sheetPanel').getByRole('button', { name: 'Close' }).click();
     await page.evaluate(() => (document.querySelector('#tabs button[data-tab="now"]') as HTMLElement).click());
     await expect(page.locator('#view-now .path-card')).toHaveCount(0);
@@ -1053,7 +1053,7 @@ test.describe('Journal', () => {
     await page.evaluate(() => (document.querySelector('#tabs button[data-tab="me"]') as HTMLElement).click());
     await page.evaluate(() => window.scrollTo(0, 700));
     await page.locator('.settings-card').click();
-    await page.locator('#sheetPanel .chip', { hasText: 'Dark' }).first().click();
+    await page.locator('#sheetPanel .theme-swatch', { hasText: 'Dark' }).first().click();
     await page.locator('#sheetPanel').getByRole('button', { name: 'Close' }).click();
     const y = await page.evaluate(() => window.scrollY);
     expect(y).toBeGreaterThan(300); // stayed roughly where it was, no jump to 0
@@ -1442,7 +1442,7 @@ test.describe('Constellation', () => {
   test('contact frequency changes node size without importance language', async ({ page }) => {
     await seedDemo(page);
     await openSettings(page);
-    await page.locator('#sheetPanel').getByRole('button', { name: /Track when we last spoke/ }).click();
+    await page.locator('#sheetPanel').getByRole('switch', { name: /Track when we last spoke/ }).click();
     await page.evaluate(() => {
       const state = (window as any).__soulcap.getState();
       const a = state.people[0];
@@ -1712,6 +1712,45 @@ test.describe('v1.4 bundled features', () => {
     await openSettings(page);
     await expect(page.locator('#sheetPanel').getByRole('heading', { name: 'Settings' })).toBeVisible();
     await expect(page.getByText(/Map pace/)).toBeVisible();
+  });
+
+  test('Settings uses one control language — switches, segs, no mixed radii', async ({ page }) => {
+    await seedDemo(page);
+    await openSettings(page);
+    const panel = page.locator('#sheetPanel');
+
+    const switches = panel.getByRole('switch');
+    expect(await switches.count()).toBeGreaterThanOrEqual(5);
+    for (let i = 0; i < await switches.count(); i++) {
+      const sw = switches.nth(i);
+      await expect(sw).toHaveAttribute('aria-checked', /true|false/);
+      const box = await sw.boundingBox();
+      expect(box && box.height >= 48).toBeTruthy();
+    }
+
+    // Binary labels must not concatenate On/Off into the accessible name.
+    await expect(panel.getByRole('switch', { name: /^Higher contrast$/ })).toBeVisible();
+    await expect(panel.getByRole('switch', { name: /Higher contrastOn|Higher contrastOff/ })).toHaveCount(0);
+
+    const mixed = await page.evaluate(() => {
+      const blocks = Array.from(document.querySelectorAll('#sheetPanel .settings-block'));
+      return blocks.some((block) => {
+        const pills = block.querySelectorAll('.chip, .seg-opt, .theme-swatch, .btn.ghost, .list-row, .toggle-row');
+        const radii = new Set<string>();
+        pills.forEach((node) => {
+          const r = getComputedStyle(node).borderRadius;
+          // Collapse near-pill vs rect: 999px-ish vs <= 20px
+          const first = parseFloat(r) || 0;
+          radii.add(first >= 40 ? 'pill' : 'rect');
+        });
+        return radii.size > 1 && block.querySelector('.chip, .seg-opt') && block.querySelector('.btn.ghost');
+      });
+    });
+    expect(mixed).toBe(false);
+
+    // Exclusive choices use pressed segs / theme swatches (rect radius).
+    await expect(panel.locator('.theme-swatches .theme-swatch').first()).toBeVisible();
+    await expect(panel.locator('.settings-seg .seg-opt').first()).toBeVisible();
   });
 
   test('map pace Live moves faster than Still', async ({ page }) => {

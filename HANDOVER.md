@@ -1,4 +1,4 @@
-**Version:** 5.1.1 · SW `soulcap-v511`
+**Version:** 5.1.2 · SW `soulcap-v512`
 
 # SoulCap — Project Handover
 
@@ -6,15 +6,15 @@
 > first — it is the current truth as of 2026-07-24. The sections further down describe an
 > earlier architecture and are kept for reference only.
 
-## Current state (v5.1.1 — 2026-07-24)
+## Current state (v5.1.2 — 2026-07-24)
 
 **The product is the PWA in `docs/`.** Offline-first, local-only, **no network calls after load**.
 Schema **v12**. Building `SPEC-v5.1-fixes.md`.
 Live: https://shamikhahmed.github.io/SoulCap/
 
 ### Schema & ship
-- State `DEFAULT.v = 12` · SW `soulcap-v511` · app **5.1.1**
-- **v5.1 PR-1–2** shipped (breathing visibility + rhythm/pace).
+- State `DEFAULT.v = 12` · SW `soulcap-v512` · app **5.1.2**
+- **v5.1 PR-1–3** shipped (breathing, rhythm, Settings controls).
 - Ship workflow: bump CACHE + VERSION.json + APP_VERSION; CHANGELOG; SAFETY/HANDOVER; gallery;
   `npm run verify`; push `main`.
 

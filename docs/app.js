@@ -2961,7 +2961,7 @@
     openSheet(function (p) {
       p.appendChild(el('h2', { class: 'h-sec', text: tUi('common', 'settings', { settings: 'Settings' }) }));
       settingsGroup(p, tUi('common', 'appearance', { appearance: 'Appearance' }), [
-        labeledSettingChips(THEME_OPTIONS,
+        themeSwatchGrid(THEME_OPTIONS,
           function (o) { return state.theme === o.k; }, function (o) { setTheme(o.k); }, function (o) { return themeChipLabel(o.k, o.l); }),
         el('p', { class: 'p-sm', text: tUi('presentation', 'themeNote', { themeNote: 'Night is dimmer than dark. AMOLED is near-black. Mood themes keep contrast and reduced-motion intact.' }) }),
         el('p', { class: 'eyebrow mt-2', text: tUi('locale', 'language', LOCALE_UI) }),
@@ -2979,34 +2979,34 @@
           function (o) { return presentationChipLabel(o.k, o.l); }),
         el('p', { class: 'p-sm', text: tUi('presentation', 'motionHint', PRESENTATION_UI) }),
         el('p', { class: 'eyebrow mt-2', text: tUi('presentation', 'accent', PRESENTATION_UI) }),
-        labeledSettingChips(ACCENT_OPTIONS,
+        settingChips(ACCENT_OPTIONS,
           function (o) { return state.appearance.accent === o.k; }, function (o) { setAppearance('accent', o.k); }, function (o) { return presentationChipLabel(o.k, o.l); }),
         el('p', { class: 'eyebrow mt-2', text: tUi('presentation', 'text', PRESENTATION_UI) }),
-        labeledSettingChips(TEXT_OPTIONS,
+        settingChips(TEXT_OPTIONS,
           function (o) { return state.appearance.text === o.k; }, function (o) { setAppearance('text', o.k); }, function (o) { return presentationChipLabel(o.k, o.l); }),
         el('p', { class: 'eyebrow mt-2', text: tUi('presentation', 'density', PRESENTATION_UI) }),
-        labeledSettingChips(DENSITY_OPTIONS,
+        settingChips(DENSITY_OPTIONS,
           function (o) { return state.appearance.density === o.k; }, function (o) { setAppearance('density', o.k); }, function (o) { return presentationChipLabel(o.k, o.l); }),
-        el('div', { class: 'stack' }, [
-          toggleBtn(tUi('presentation', 'contrast', PRESENTATION_UI), state.appearance.contrast === 'high', function () { setAppearance('contrast', state.appearance.contrast === 'high' ? 'standard' : 'high'); }),
-          toggleBtn(tUi('presentation', 'transparency', PRESENTATION_UI), state.appearance.reduceTransparency, function () { setAppearance('reduceTransparency', !state.appearance.reduceTransparency); })
-        ])
+        toggleRow(tUi('presentation', 'contrast', PRESENTATION_UI), state.appearance.contrast === 'high', function () { setAppearance('contrast', state.appearance.contrast === 'high' ? 'standard' : 'high'); }),
+        toggleRow(tUi('presentation', 'transparency', PRESENTATION_UI), state.appearance.reduceTransparency, function () { setAppearance('reduceTransparency', !state.appearance.reduceTransparency); })
       ]);
       settingsGroup(p, SETTINGS_UI.personalisation, [
-        toggleBtn(tUi('presentation', 'patternLearning', PRESENTATION_UI), state.patternPrefs.enabled, function () {
+        toggleRow(tUi('presentation', 'patternLearning', PRESENTATION_UI), state.patternPrefs.enabled, function () {
           var before = state.patternPrefs.enabled;
           state.patternPrefs.enabled = !state.patternPrefs.enabled;
           if (!save()) { state.patternPrefs.enabled = before; showPreferenceSaveFailed(); return; }
           reRender();
-        }),
-        el('p', { class: 'p-sm', text: state.patternPrefs.enabled ? tUi('presentation', 'patternHint', PRESENTATION_UI) : tUi('pattern', 'disabled', PATTERN_UI) }),
-        Object.keys(state.patternPrefs.decisions).length ? el('button', { class: 'btn ghost', text: tUi('pattern', 'reset', PATTERN_UI), onclick: function () {
-          var before = clone(state.patternPrefs.decisions);
-          state.patternPrefs.decisions = {};
-          if (!save()) { state.patternPrefs.decisions = before; showPreferenceSaveFailed(); return; }
-          reRender();
-        } }) : null,
-        toggleBtn(state.pathPrefs.hide ? PATH_UI.showCard : PATH_UI.hideCard, !state.pathPrefs.hide, function () {
+        }, state.patternPrefs.enabled ? tUi('presentation', 'patternHint', PRESENTATION_UI) : tUi('pattern', 'disabled', PATTERN_UI)),
+        Object.keys(state.patternPrefs.decisions).length ? listRow({
+          title: tUi('pattern', 'reset', PATTERN_UI),
+          onclick: function () {
+            var before = clone(state.patternPrefs.decisions);
+            state.patternPrefs.decisions = {};
+            if (!save()) { state.patternPrefs.decisions = before; showPreferenceSaveFailed(); return; }
+            reRender();
+          }
+        }) : null,
+        toggleRow(state.pathPrefs.hide ? PATH_UI.showCard : PATH_UI.hideCard, !state.pathPrefs.hide, function () {
           var before = state.pathPrefs.hide;
           state.pathPrefs.hide = !state.pathPrefs.hide;
           if (!save()) { state.pathPrefs.hide = before; showPreferenceSaveFailed(); return; }
@@ -3014,20 +3014,18 @@
         })
       ]);
       settingsGroup(p, SETTINGS_UI.guided, [
-        el('div', { class: 'stack' }, [
-          toggleBtn(SETTINGS_UI.spoken, state.voice.on, function () {
-            var before = state.voice.on; state.voice.on = !state.voice.on;
-            if (!save()) { state.voice.on = before; showPreferenceSaveFailed(); return; }
-            reRender();
-          }),
-          state.voice.on ? el('button', { class: 'btn ghost', text: SETTINGS_UI.voiceAccent, onclick: voiceSheet }) : null,
-          toggleBtn(SETTINGS_UI.vibration, state.haptics, function () {
-            var before = state.haptics; state.haptics = !state.haptics;
-            if (!save()) { state.haptics = before; showPreferenceSaveFailed(); return; }
-            haptic('done'); reRender();
-          })
-        ]),
-        el('p', { class: 'eyebrow mt-3', text: SETTINGS_UI.exercisePace }),
+        toggleRow(SETTINGS_UI.spoken, state.voice.on, function () {
+          var before = state.voice.on; state.voice.on = !state.voice.on;
+          if (!save()) { state.voice.on = before; showPreferenceSaveFailed(); return; }
+          reRender();
+        }),
+        state.voice.on ? listRow({ title: SETTINGS_UI.voiceAccent, onclick: voiceSheet }) : null,
+        toggleRow(SETTINGS_UI.vibration, state.haptics, function () {
+          var before = state.haptics; state.haptics = !state.haptics;
+          if (!save()) { state.haptics = before; showPreferenceSaveFailed(); return; }
+          haptic('done'); reRender();
+        }),
+        el('p', { class: 'eyebrow mt-2', text: SETTINGS_UI.exercisePace }),
         settingChips([{ v: 1.35, l: SETTINGS_UI.slow }, { v: 1, l: SETTINGS_UI.steady }, { v: 0.8, l: SETTINGS_UI.brisk }],
           function (o) { return paceMult() === o.v; }, function (o) {
             var before = state.pace; state.pace = o.v;
@@ -3035,7 +3033,7 @@
             haptic('tick'); reRender();
           }),
         el('p', { class: 'p-sm', text: SETTINGS_UI.paceHint }),
-        el('p', { class: 'eyebrow mt-3', text: WIND_DOWN_UI.settingsTitle }),
+        el('p', { class: 'eyebrow mt-2', text: WIND_DOWN_UI.settingsTitle }),
         el('p', { class: 'p-sm', text: WIND_DOWN_UI.settingsHint }),
         settingChips(
           [{ v: null, l: WIND_DOWN_UI.off }].concat([17, 18, 19, 20, 21, 22, 23].map(function (h) {
@@ -3052,35 +3050,30 @@
       ]);
       settingsGroup(p, SETTINGS_UI.constellation, [
         el('p', { class: 'eyebrow', text: SETTINGS_UI.mapPace }),
-        labeledSettingChips(MAP_PACE_OPTIONS,
+        settingChips(MAP_PACE_OPTIONS,
           function (o) { return state.mapPace === o.k; }, function (o) {
             var before = state.mapPace; state.mapPace = o.k;
             if (!save()) { state.mapPace = before; showPreferenceSaveFailed(); return; }
             reRender();
           }, function (o) { return mapPaceLabel(o.k, o.l); }),
         el('p', { class: 'p-sm', text: SETTINGS_UI.mapPaceHint }),
-        el('div', { class: 'stack' }, [
-          toggleBtn(SETTINGS_UI.showLinks, state.showLinks, function () {
-            var before = state.showLinks; state.showLinks = !state.showLinks;
-            if (!save()) { state.showLinks = before; showPreferenceSaveFailed(); return; }
-            reRender();
-          }),
-          toggleBtn(SETTINGS_UI.trackContact, state.trackContact, function () {
-            var before = state.trackContact; state.trackContact = !state.trackContact;
-            if (!save()) { state.trackContact = before; showPreferenceSaveFailed(); return; }
-            reRender();
-          })
-        ]),
-        el('p', { class: 'p-sm', text: SETTINGS_UI.trackHint })
+        toggleRow(SETTINGS_UI.showLinks, state.showLinks, function () {
+          var before = state.showLinks; state.showLinks = !state.showLinks;
+          if (!save()) { state.showLinks = before; showPreferenceSaveFailed(); return; }
+          reRender();
+        }),
+        toggleRow(SETTINGS_UI.trackContact, state.trackContact, function () {
+          var before = state.trackContact; state.trackContact = !state.trackContact;
+          if (!save()) { state.trackContact = before; showPreferenceSaveFailed(); return; }
+          reRender();
+        }, SETTINGS_UI.trackHint)
       ]);
       settingsGroup(p, SETTINGS_UI.yourData, [
-        el('div', { class: 'stack' }, [
-          el('button', { class: 'btn ghost', text: SETTINGS_UI.export, onclick: exportData }),
-          el('button', { class: 'btn danger', text: SETTINGS_UI.delete, onclick: confirmDelete })
-        ])
+        listRow({ title: SETTINGS_UI.export, onclick: exportData }),
+        el('button', { class: 'btn danger', type: 'button', text: SETTINGS_UI.delete, onclick: confirmDelete })
       ]);
       settingsGroup(p, SETTINGS_UI.about, [
-        el('button', { class: 'btn ghost', text: ABOUT_UI.open, onclick: function () { closeSheet(); aboutSheet(); } }),
+        listRow({ title: ABOUT_UI.open, onclick: function () { closeSheet(); aboutSheet(); } }),
         el('p', { class: 'p-sm', text: 'SoulCap · v' + APP_VERSION })
       ]);
       p.appendChild(el('button', { class: 'btn quiet', text: tUi('common', 'close', { close: 'Close' }), onclick: closeSheet }));
@@ -4751,16 +4744,56 @@
       }
     });
   }
-  var APP_VERSION = '5.1.1';
-  function settingsGroup(v, title, kids) { v.appendChild(el('p', { class: 'eyebrow', style: 'margin-top:var(--space-3)', text: title })); kids.forEach(function (k) { if (k) v.appendChild(k); }); }
+  var APP_VERSION = '5.1.2';
+  function settingsGroup(v, title, kids) {
+    v.appendChild(el('p', { class: 'eyebrow settings-eyebrow', text: title }));
+    var block = el('div', { class: 'settings-block' });
+    kids.forEach(function (k) { if (k) block.appendChild(k); });
+    v.appendChild(block);
+  }
+  function toggleRow(label, on, fn, hint) {
+    return el('button', {
+      class: 'toggle-row',
+      type: 'button',
+      role: 'switch',
+      'aria-checked': on ? 'true' : 'false',
+      onclick: fn
+    }, [
+      el('span', { class: 'tr-copy' }, [
+        el('p', { class: 'tr-label', text: label }),
+        hint ? el('p', { class: 'tr-hint', text: hint }) : null
+      ]),
+      el('span', { class: 'switch', 'aria-hidden': 'true' }, [el('span', { class: 'switch-knob' })])
+    ]);
+  }
   function toggleBtn(label, on, fn) {
-    return el('button', { class: 'btn ghost', style: 'display:flex;justify-content:space-between', onclick: fn,
-      html: '<span>' + label + '</span><span style="color:var(--accent);font-weight:600">' + (on ? t('common.on', 'On') : t('common.off', 'Off')) + '</span>' });
+    // Back-compat alias — Settings uses toggleRow (real switch).
+    return toggleRow(label, on, fn);
   }
   function settingChips(opts, isOn, fn, labelFn) {
-    return el('div', { class: 'chips' }, opts.map(function (o) {
+    return el('div', { class: 'settings-seg', role: 'group' }, opts.map(function (o) {
       var label = labelFn ? labelFn(o) : o.l;
-      return el('button', { class: 'chip', 'aria-pressed': isOn(o) ? 'true' : 'false', text: label, onclick: function () { fn(o); } });
+      return el('button', {
+        class: 'seg-opt',
+        type: 'button',
+        'aria-pressed': isOn(o) ? 'true' : 'false',
+        text: label,
+        onclick: function () { fn(o); }
+      });
+    }));
+  }
+  function themeSwatchGrid(opts, isOn, fn, labelFn) {
+    return el('div', { class: 'theme-swatches', role: 'group', 'aria-label': 'Theme' }, opts.map(function (o) {
+      var label = labelFn ? labelFn(o) : o.l;
+      return el('button', {
+        class: 'theme-swatch',
+        type: 'button',
+        'aria-pressed': isOn(o) ? 'true' : 'false',
+        onclick: function () { fn(o); }
+      }, [
+        el('span', { class: 'theme-swatch-chip theme-preview-' + (o.k || 'auto'), 'aria-hidden': 'true' }),
+        el('span', { class: 'theme-swatch-label', text: label })
+      ]);
     }));
   }
   function labeledSettingChips(opts, isOn, fn, labelFn) {
@@ -5132,7 +5165,7 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '5.1.1',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '5.1.2',
     effectiveMotion: effectiveMotion,
     motionCap: function () { return motionCap; },
     loadGsap: loadGsap,

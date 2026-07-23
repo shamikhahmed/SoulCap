@@ -1,8 +1,8 @@
 {
   "name": "SoulCap",
-  "version": "5.1.1",
-  "swCache": "soulcap-v511",
+  "version": "5.1.2",
+  "swCache": "soulcap-v512",
   "schema": 12,
   "deploy": "docs/",
-  "note": "v5.1.1 fixes PR-2 — rhythm legibility + pace default/in-runner."
+  "note": "v5.1.2 fixes PR-3 — Settings control system (switches, segs, theme swatches)."
 }

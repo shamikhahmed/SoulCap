@@ -1,5 +1,13 @@
 ## [Unreleased]
 
+## [5.1.2] — 2026-07-24
+
+### Changed
+- **v5.1 PR-3 Settings controls:** real `role="switch"` toggle rows (no On/Off in label);
+  theme 2-column swatch grid; exclusive choices use rect `seg-opt` (not pill+rect mix);
+  export/About as list rows; destructive Delete stays a danger button.
+- SW `soulcap-v512`. App **5.1.2**. Schema still **v12**.
+
 ## [5.1.1] — 2026-07-24
 
 ### Changed
