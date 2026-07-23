@@ -19,6 +19,10 @@ banners, or the "not an AI therapist / never diagnose" identity. Reskin the surf
 
 ---
 
+**Owner-confirmed 2026-07-23:** (1) **Reskin + reorganise, keep the engines** — this is NOT a
+ground-up rewrite. (2) Design direction = **"Amethyst" refined deep violet, dark-first** (§1). Build
+to these; don't re-litigate them.
+
 ## 0. Non-negotiable framing (read first)
 - **Preserve engines, redesign the shell.** If a change would delete/rewrite working engine logic,
   stop — that's out of scope. Refactor presentation, not the safety/recommendation logic.
