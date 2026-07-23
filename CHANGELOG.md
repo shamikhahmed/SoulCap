@@ -1,5 +1,12 @@
 ## [Unreleased]
 
+## [5.0.5] — 2026-07-24
+
+### Added
+- **Native motion PR-6 Depth:** hero-band parallax + vivid glow drift; constellation edge
+  vignette; rail `content-visibility`. Still / reduced-transparency mute blur & drift.
+- SW `soulcap-v505`. App **5.0.5**. Schema still **v12**.
+
 ## [5.0.4] — 2026-07-24
 
 ### Added

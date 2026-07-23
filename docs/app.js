@@ -506,6 +506,23 @@
       });
     });
   }
+  function bindHeroParallax() {
+    if (motionIsQuiet()) return;
+    var bands = document.querySelectorAll('.hero-band');
+    Array.prototype.forEach.call(bands, function (band) {
+      band.classList.add('parallax-ready');
+    });
+    if (bindHeroParallax._bound) return;
+    bindHeroParallax._bound = true;
+    window.addEventListener('scroll', function () {
+      if (motionIsQuiet()) return;
+      var y = window.scrollY || 0;
+      var factor = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--motion-parallax')) || 0;
+      Array.prototype.forEach.call(document.querySelectorAll('.hero-band.parallax-ready'), function (band) {
+        band.style.setProperty('--parallax-y', String(Math.round(y * 0.08 * factor)));
+      });
+    }, { passive: true });
+  }
   function signatureJournalOpen() {
     if (motionIsQuiet()) return;
     var ed = $('#journalEditor');
@@ -4648,7 +4665,7 @@
       }
     });
   }
-  var APP_VERSION = '5.0.4';
+  var APP_VERSION = '5.0.5';
   function settingsGroup(v, title, kids) { v.appendChild(el('p', { class: 'eyebrow', style: 'margin-top:var(--space-3)', text: title })); kids.forEach(function (k) { if (k) v.appendChild(k); }); }
   function toggleBtn(label, on, fn) {
     return el('button', { class: 'btn ghost', style: 'display:flex;justify-content:space-between', onclick: fn,
@@ -4882,6 +4899,7 @@
     $('#view-' + tab).classList.add('on');
     Array.prototype.forEach.call($('#tabs').children, function (b) { b.setAttribute('aria-selected', b.dataset.tab === tab ? 'true' : 'false'); });
     if (tab === 'map' && state.people.length) drawMap();
+    bindHeroParallax();
   }
 
   /* ── Demo ──────────────────────────────────────────────────────────────── */
@@ -5005,7 +5023,7 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '5.0.4',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '5.0.5',
     effectiveMotion: effectiveMotion,
     motionCap: function () { return motionCap; },
     loadGsap: loadGsap,
