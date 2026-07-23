@@ -288,13 +288,13 @@ test.describe('v1.0 offline library and daily supports', () => {
     await page.getByRole('searchbox', { name: 'Search the emotional library' }).fill('grief');
     await expect(page.locator('.article-card')).toHaveCount(1);
     await page.getByRole('button', { name: /Grief/ }).click();
-    await expect(page.locator('#sheet').getByRole('heading', { name: 'Grief', exact: true })).toBeVisible();
-    expect(await page.evaluate(() => document.activeElement && document.activeElement.textContent)).toBe('Close');
-    await expect(page.locator('#sheet')).toContainText('When professional support may help');
-    await expect(page.locator('#sheet')).toContainText('Not yet reviewed by a licensed clinician');
-    await expect(page.locator('#sheet')).toContainText('NHS');
+    await expect(page.locator('#subview.on')).toBeVisible();
+    await expect(page.locator('#subviewTitle')).toHaveText('Grief');
+    await expect(page.locator('#subview')).toContainText('When professional support may help');
+    await expect(page.locator('#subview')).toContainText('Not yet reviewed by a licensed clinician');
+    await expect(page.locator('#subview')).toContainText('NHS');
     await page.getByRole('button', { name: 'Hand on your heart' }).click();
-    await expect(page.getByRole('heading', { name: 'Hand on your heart' })).toBeVisible();
+    await expect(page.locator('#subviewTitle')).toHaveText('Hand on your heart');
     await expect(page.getByRole('button', { name: 'Begin' })).toBeVisible();
     expect(requests).toEqual([]);
   });
@@ -388,18 +388,18 @@ test.describe('v1.9 clinical experiences library', () => {
     await page.getByRole('button', { name: /Understand what’s happening/ }).click();
     await page.getByRole('button', { name: 'Experiences', exact: true }).click();
     await page.locator('.experience-card[data-experience-id="racing-heart"]').click();
-    await expect(page.locator('#sheet')).toContainText('What it can feel like');
-    await expect(page.locator('#sheet')).toContainText('Why this can happen');
-    await expect(page.locator('#sheet')).toContainText('What may help');
-    await expect(page.locator('#sheet')).toContainText('Not a diagnosis');
-    await page.locator('#sheetPanel .experience-help').filter({ hasText: 'Physiological sigh' }).click();
+    await expect(page.locator('#subview')).toContainText('What it can feel like');
+    await expect(page.locator('#subview')).toContainText('Why this can happen');
+    await expect(page.locator('#subview')).toContainText('What may help');
+    await expect(page.locator('#subview')).toContainText('Not a diagnosis');
+    await page.locator('#subview .experience-help').filter({ hasText: 'Physiological sigh' }).click();
     await expect(page.locator('#runner')).toBeVisible();
   });
 
   test('emergency red-flag panel is number-free and country-agnostic', async ({ page }) => {
     await seedDemo(page);
     await page.evaluate(() => (window as any).__soulcap.openExperience('racing-heart'));
-    const panel = page.locator('#sheetPanel .redflag-emergency');
+    const panel = page.locator('#subview .redflag-emergency');
     await expect(panel).toBeVisible();
     await expect(panel).toContainText('Please get urgent help');
     const text = await panel.innerText();
@@ -424,8 +424,8 @@ test.describe('v1.9 clinical experiences library', () => {
     await expect(page.locator('#sheet')).toContainText('What’s happening?');
     await expect(page.locator('#sheet')).toContainText('Not a diagnosis');
     await page.locator('#sheetPanel .experience-card[data-experience-id="racing-heart"]').click();
-    await expect(page.locator('#sheet')).toContainText('What may help');
-    await page.locator('#sheetPanel .experience-help').filter({ hasText: 'Physiological sigh' }).click();
+    await expect(page.locator('#subview')).toContainText('What may help');
+    await page.locator('#subview .experience-help').filter({ hasText: 'Physiological sigh' }).click();
     await expect(page.locator('#runner')).toBeVisible();
   });
 });
@@ -438,14 +438,15 @@ test.describe('v1.9.2 articles and wind-down', () => {
     await page.getByRole('button', { name: 'Articles', exact: true }).click();
     await page.getByRole('searchbox', { name: 'Search the emotional library' }).fill('fight flight');
     await page.getByRole('button', { name: /Your body’s alarm/ }).click();
-    await expect(page.locator('#sheet')).toContainText('Not yet reviewed');
-    await expect(page.locator('#sheet')).toContainText('When professional support may help');
-    await expect(page.locator('#sheet')).toContainText('parasympathetic');
-    await page.locator('#sheetPanel').getByRole('button', { name: 'Close' }).first().click();
+    await expect(page.locator('#subview')).toContainText('Not yet reviewed');
+    await expect(page.locator('#subview')).toContainText('When professional support may help');
+    await expect(page.locator('#subview')).toContainText('parasympathetic');
+    await page.locator('#subview .nav-back').click();
+    await expect(page.locator('#subview.on')).toHaveCount(0);
     await page.getByRole('searchbox', { name: 'Search the emotional library' }).fill('winding');
     await page.getByRole('button', { name: /Slowing down/ }).click();
-    await expect(page.locator('#sheet')).toContainText('wind-down');
-    await expect(page.locator('#sheet')).toContainText('Not a diagnosis');
+    await expect(page.locator('#subview')).toContainText('wind-down');
+    await expect(page.locator('#subview')).toContainText('Not a diagnosis');
   });
 
   test('optional wind-down hour shows Now card without guilt', async ({ page }) => {
@@ -1732,9 +1733,9 @@ test.describe('v1.7 polish and locale', () => {
     await page.evaluate(() => (document.querySelector('#tabs button[data-tab="calm"]') as HTMLElement).click());
     await page.getByRole('button', { name: /Understand what/i }).click();
     await page.locator('.article-card').first().click();
-    await expect(page.locator('#sheet.on')).toBeVisible();
-    await expect(page.locator('#sheetPanel')).toContainText(/Anxiety and panic/i);
-    await expect(page.locator('#sheetPanel')).toContainText(/Not yet reviewed by a licensed clinician/i);
+    await expect(page.locator('#subview.on')).toBeVisible();
+    await expect(page.locator('#subview')).toContainText(/Anxiety and panic/i);
+    await expect(page.locator('#subview')).toContainText(/Not yet reviewed by a licensed clinician/i);
   });
 
   test('dark and AMOLED themes persist from settings', async ({ page }) => {

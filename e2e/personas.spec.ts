@@ -85,7 +85,7 @@ test.describe('Synthetic user journeys', () => {
     await page.getByRole('button', { name: 'On my own' }).click();
     await page.getByRole('button', { name: 'Nothing', exact: true }).click();
     await page.locator('#view-calm .card.tap').first().click();
-    await page.locator('#sheetPanel').getByRole('button', { name: 'Begin' }).click();
+    await page.locator('#subview').getByRole('button', { name: 'Begin' }).click();
     await expect(page.locator('#runner')).toBeVisible();
     const before = await page.evaluate(() => (window as any).__soulcap.getState().skillRuns.length);
     await page.getByRole('button', { name: /Stop — no problem/ }).click();

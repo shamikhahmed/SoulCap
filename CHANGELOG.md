@@ -1,5 +1,14 @@
 ## [Unreleased]
 
+## [4.0.1] — 2026-07-24
+
+### Added
+- **Master design PR-2 Router:** `pushView` / `popView` / `closeSubview` stack with back,
+  Escape, scroll restore; technique / experience / article details are pushed subviews (not sheets).
+
+### Changed
+- SW `soulcap-v401`. App **4.0.1**. Schema still **v12**.
+
 ## [4.0.0] — 2026-07-24
 
 ### Added

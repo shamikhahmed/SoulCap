@@ -268,7 +268,7 @@ test.describe('Help is always reachable', () => {
     // Start any listed technique, then the runner's voice should be off.
     await page.locator('#view-calm .card.tap').first().click();
     // detail sheet → Begin
-    await page.locator('#sheetPanel').getByRole('button', { name: 'Begin' }).click();
+    await page.locator('#subview').getByRole('button', { name: 'Begin' }).click();
     await expect(page.locator('#runVoice .voice-toggle')).toHaveAttribute('aria-pressed', 'false');
   });
 

@@ -1,4 +1,4 @@
-**Version:** 4.0.0 · SW `soulcap-v400`
+**Version:** 4.0.1 · SW `soulcap-v401`
 
 # SoulCap — Project Handover
 
@@ -14,7 +14,7 @@ Amethyst palette from v3. Building `SPEC-v4.0-master-design.md` PR-by-PR, then
 `SPEC-v5.0-native-motion.md`. Live: https://shamikhahmed.github.io/SoulCap/
 
 ### Schema & ship
-- State `DEFAULT.v = 12` · SW `soulcap-v400` · app **4.0.0**
+- State `DEFAULT.v = 12` · SW `soulcap-v401` · app **4.0.1**
 - Ship workflow: bump CACHE + VERSION.json + APP_VERSION; CHANGELOG; SAFETY/HANDOVER; gallery;
   `npm run verify`; push `main`.
 
