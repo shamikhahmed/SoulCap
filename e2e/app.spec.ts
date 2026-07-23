@@ -656,7 +656,7 @@ test.describe('v2.0 IA restructure', () => {
     await openSettings(page);
     await page.getByRole('button', { name: 'About SoulCap' }).click();
     await expect(page.locator('#sheetPanel')).toContainText('Not therapy');
-    await expect(page.locator('#sheetPanel')).toContainText(/Version 2\.1/);
+    await expect(page.locator('#sheetPanel')).toContainText(/Version 3\.0/);
     await page.locator('#sheetPanel').getByRole('button', { name: 'Close' }).click();
     await page.evaluate(() => (window as any).__soulcap.setSeenVersion('1.9.3'));
     await expect(page.locator('#view-now .whats-new')).toContainText(/What.s new/);

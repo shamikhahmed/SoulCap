@@ -3967,7 +3967,7 @@
       p.appendChild(el('button', { class: 'btn quiet', text: tUi('principles', 'close', PRINCIPLES_UI), onclick: closeSheet }));
     });
   }
-  var APP_VERSION = '2.1.0';
+  var APP_VERSION = '3.0.0';
   function settingsGroup(v, title, kids) { v.appendChild(el('p', { class: 'eyebrow', style: 'margin-top:var(--space-3)', text: title })); kids.forEach(function (k) { if (k) v.appendChild(k); }); }
   function toggleBtn(label, on, fn) {
     return el('button', { class: 'btn ghost', style: 'display:flex;justify-content:space-between', onclick: fn,
@@ -4254,7 +4254,7 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '2.1.0',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '3.0.0',
     experienceIds: EXPERIENCES.map(function (item) { return item.id; }),
     experienceHelpsOk: function () {
       return EXPERIENCES.every(function (exp) {

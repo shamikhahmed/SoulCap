@@ -4,6 +4,16 @@
 - Flaky Playwright: wait for CSS animations idle + `reducedMotion` before theme contrast and journal
   control size assertions (`e2e/app.spec.ts`, `e2e/personas.spec.ts`).
 
+## [3.0.0] — 2026-07-23
+
+### Changed
+- **Amethyst design system (SPEC v3.0 PR-1):** dark-first refined violet tokens; cards elevate with
+  lighter `--surface` + hairline + `--shadow-1` (dark no longer drops shadows); `--accent-grad`
+  primary buttons (not neon glow); grain overlay; `--glow` / `.hero-glow`; sheet uses `--surface-2`;
+  Help FAB clearance via `--fab-clearance` + view padding (never covers tab bar / last cards).
+  Mood themes re-derived to same elevation story. Engines untouched.
+- SW `soulcap-v300`. App **3.0.0**. Schema still **v12**.
+
 ## [2.1.0] — 2026-07-23
 
 ### Added

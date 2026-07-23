@@ -1,4 +1,4 @@
-**Version:** 2.1.0 · SW `soulcap-v210`
+**Version:** 3.0.0 · SW `soulcap-v300`
 
 # SoulCap — Project Handover
 
@@ -6,13 +6,12 @@
 > first — it is the current truth as of 2026-07-23. The sections further down describe an
 > earlier architecture and are kept for reference only.
 
-## Current state (v2.1.0 — 2026-07-23)
+## Current state (v3.0.0 — 2026-07-23)
 
 **The product is the PWA in `docs/`.** Offline-first, local-only, **no network calls after load** —
 no account, no server, no LLM, no analytics. State lives in `localStorage` (schema **v12**).
-Live: https://shamikhahmed.github.io/SoulCap/ · CI gates Pages on Playwright. Hub mirror:
-`Cap-Apps/shamikhahmed.github.io/SoulCap/` · marketing shots `assets/screenshots/soulcap*.png` ·
-in-repo gallery: `npm run gallery` → `screen-gallery.html` (includes Guided Path shot).
+**Design System v3 Amethyst** (dark-first elevation, grain, FAB clearance) — engines unchanged from
+2.1. Live: https://shamikhahmed.github.io/SoulCap/
 
 ### What the PWA is now
 - **Design System v2 “plum & sand”** — logo-anchored violet, low chroma. Themes: Auto / light /
@@ -49,7 +48,7 @@ in-repo gallery: `npm run gallery` → `screen-gallery.html` (includes Guided Pa
   Path core uses chips only (no free text). No crisis phone numbers; `sms:` only for “Message someone.”
 
 ### Schema & ship
-- State `DEFAULT.v = 12` · SW `soulcap-v210` · app **2.1.0** · mirrors: theme, appearance, locale,
+- State `DEFAULT.v = 12` · SW `soulcap-v300` · app **3.0.0** · mirrors: theme, appearance, locale,
   clinical-notice dismiss / `seenVersion`. Optional `windDownHour`. `screenerResults` (PHQ/GAD).
   `pathSessions` + `pathPrefs`.
 - Ship workflow: bump CACHE + VERSION.json + APP_VERSION together; CHANGELOG; SAFETY/HANDOVER;

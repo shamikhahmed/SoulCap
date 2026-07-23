@@ -5,7 +5,7 @@ item and ship it **the same way the rest of the app was built** — read `AGENTS
 rules, conventions, and ship workflow. Every item below lists **what**, **why**, **files to
 touch**, **acceptance criteria (incl. a test)**, and **guardrails**.
 
-**Current release: v2.1.0** · Published app: https://shamikhahmed.github.io/SoulCap/
+**Current release: v3.0.0** · Published app: https://shamikhahmed.github.io/SoulCap/
 
 Philosophy (never drifts): a personalised emotional operating system, **not** an AI therapist.
 Help people understand and regulate; never "fix" them; never diagnose; success = needing the app
@@ -142,6 +142,10 @@ Spec: [`SPEC-v1.9-clinical-library.md`](SPEC-v1.9-clinical-library.md). Delivere
   App **2.0.1** · SW `soulcap-v201`.
 
 Craft only — **not more features**. Rubric + checklist in the spec.
+
+### NEXT — v3.0 Amethyst redesign · **[`SPEC-v3.0-redesign.md`](SPEC-v3.0-redesign.md)**
+- [x] **PR-1 tokens** — Amethyst palette, elevation, grain, FAB clearance · **3.0.0** / `soulcap-v300`
+- [ ] PR-2 component kit · PR-3 Now hero · PR-4 splash/welcome · PR-5 tabs + Progress · PR-6 Path approaches · PR-7 gallery
 
 ### Shipped — v2.1 Guided Path · **[`SPEC-v2.1-guided-path.md`](SPEC-v2.1-guided-path.md)**
 - [x] Feeling → chips → family why → exercise (rule-based, offline). Sister reply + review kit.

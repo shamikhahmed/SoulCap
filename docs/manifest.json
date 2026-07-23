@@ -6,8 +6,8 @@
   "scope": "/SoulCap/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#F6F2EC",
-  "theme_color": "#F6F2EC",
+  "background_color": "#14121A",
+  "theme_color": "#14121A",
   "icons": [
     {
       "src": "icons/icon-192.png",

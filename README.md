@@ -1,9 +1,8 @@
 # SoulCap
 
-**v2.1.0 — offline-first wellness PWA.** A calm, private, personalised space for self-regulation
-skills, clinical experiences (screen + reflect, never diagnose), a guided short path, a journal,
-and a map of the people around you. **Not** therapy · not a diagnosis tool · not a crisis service ·
-not an AI therapist. See [`SAFETY.md`](SAFETY.md).
+**v3.0.0 — offline-first wellness PWA.** Amethyst dark-first shell; Guided Path; 37 exercises;
+clinical experiences; journal; Constellation. **Not** therapy · not diagnosis · not crisis service.
+See [`SAFETY.md`](SAFETY.md).
 
 > **New here? Read [`AGENTS.md`](AGENTS.md)** (build guide + rules) and [`ROADMAP.md`](ROADMAP.md)
 > (what's next, in detail). [`.cursorrules`](.cursorrules) is the short version for Cursor.
@@ -14,7 +13,7 @@ not an AI therapist. See [`SAFETY.md`](SAFETY.md).
 
 | Surface | URL / path | Reality |
 |---|---|---|
-| **PWA** | [shamikhahmed.github.io/SoulCap](https://shamikhahmed.github.io/SoulCap/) · `docs/` | The product (**2.1.0** / schema v12). Five tabs, Guided Path, Settings + About, Personal Manual, Thought Parking, optional detailed check-ins, inspectable local patterns, 37 exercises, offline library (articles + 24 experiences), no-streak daily supports, book-style journal, Constellation, Roman Urdu chrome preview, Help on free-text, themes, voice + haptics. **Zero network calls — localStorage only.** |
+| **PWA** | [shamikhahmed.github.io/SoulCap](https://shamikhahmed.github.io/SoulCap/) · `docs/` | The product (**3.0.0** / schema v12). Amethyst UI, five tabs, Guided Path, Settings + About, Personal Manual, Thought Parking, optional detailed check-ins, inspectable local patterns, 37 exercises, offline library (articles + 24 experiences), no-streak daily supports, book-style journal, Constellation, Roman Urdu chrome preview, Help on free-text, themes, voice + haptics. **Zero network calls — localStorage only.** |
 | Nest API | `backend/` | Full module **source** (LMM, safety gate). Builds clean, **not deployed**; PWA does not call it. |
 | Expo | `mobile/` | Thin client source. Lab only. |
 

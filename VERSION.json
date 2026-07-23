@@ -1,8 +1,8 @@
 {
   "name": "SoulCap",
-  "version": "2.1.0",
-  "swCache": "soulcap-v210",
+  "version": "3.0.0",
+  "swCache": "soulcap-v300",
   "schema": 12,
   "deploy": "docs/",
-  "note": "v2.1.0 Guided Path — feeling → chips → family why → exercise. Schema 12 pathSessions."
+  "note": "v3.0.0 Amethyst design tokens \u2014 dark-first elevation, grain, FAB clearance. Engines unchanged."
 }
