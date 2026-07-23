@@ -2220,29 +2220,10 @@
       return;
     }
 
+    // Guided path first — one question, then quieter tools below.
     if (!calm.need) {
-      v.appendChild(el('div', { class:'calm-tools' }, [
-        el('button', { class:'card tap calm-tool reset-card', onclick: resetMenuSheet }, [
-          el('h2', { class:'card-title', text: tUi('reset', 'title', RESET_UI) }),
-          el('p', { class:'p-sm', text: tUi('reset', 'homeHint', RESET_UI) })
-        ]),
-        el('button', { class:'card tap calm-tool', onclick:function () { calm.section = 'library'; calm.browse = false; render(); } }, [
-          el('h2', { class:'card-title', text:LIBRARY_UI.title }),
-          el('p', { class:'p-sm', text:LIBRARY_UI.homeHint })
-        ]),
-        el('button', { class:'card tap calm-tool', onclick: experiencePickerSheet }, [
-          el('h2', { class:'card-title', text: EXPERIENCE_PICKER_UI.cardTitle }),
-          el('p', { class:'p-sm', text: EXPERIENCE_PICKER_UI.calmHint })
-        ]),
-        el('button', { class:'card tap calm-tool', onclick:function () { calm.section = 'supports'; calm.browse = false; render(); } }, [
-          el('h2', { class:'card-title', text:SUPPORT_UI.title }),
-          el('p', { class:'p-sm', text:SUPPORT_UI.homeHint })
-        ])
-      ]));
       v.appendChild(el('p', { class: 'p-sm calm-empty', text: tUi('empty', 'calm', EMPTY_UI) }));
     }
-
-    // Q1 — what do you need
     v.appendChild(el('div', { class: 'stack' }, CALM_NEEDS.map(function (n) {
       return el('button', { class: 'opt', 'aria-pressed': calm.need === n.key ? 'true' : 'false',
         html: n.label + '<span class="os">' + n.sub + '</span>',
@@ -2251,6 +2232,27 @@
 
     if (!calm.need) {
       v.appendChild(el('button', { class: 'btn quiet', text: tUi('calm', 'showEverything', { showEverything: 'Just show me everything' }), onclick: function () { calm.browse = true; render(); } }));
+      v.appendChild(el('div', { class: 'calm-more section-block' }, [
+        el('p', { class: 'eyebrow', text: tUi('me', 'calmMore', { calmMore: 'Also here' }) }),
+        el('div', { class:'calm-tools' }, [
+          el('button', { class:'card tap calm-tool', onclick:function () { calm.section = 'library'; calm.browse = false; render(); } }, [
+            el('h2', { class:'card-title', text:LIBRARY_UI.title }),
+            el('p', { class:'p-sm', text:LIBRARY_UI.homeHint })
+          ]),
+          el('button', { class:'card tap calm-tool', onclick: experiencePickerSheet }, [
+            el('h2', { class:'card-title', text: EXPERIENCE_PICKER_UI.cardTitle }),
+            el('p', { class:'p-sm', text: EXPERIENCE_PICKER_UI.calmHint })
+          ]),
+          el('button', { class:'card tap calm-tool', onclick:function () { calm.section = 'supports'; calm.browse = false; render(); } }, [
+            el('h2', { class:'card-title', text:SUPPORT_UI.title }),
+            el('p', { class:'p-sm', text:SUPPORT_UI.homeHint })
+          ]),
+          el('button', { class:'card tap calm-tool reset-card', onclick: resetMenuSheet }, [
+            el('h2', { class:'card-title', text: tUi('reset', 'title', RESET_UI) }),
+            el('p', { class:'p-sm', text: tUi('reset', 'homeHint', RESET_UI) })
+          ])
+        ])
+      ]));
       return;
     }
 
@@ -3271,16 +3273,15 @@
         ])
       ]));
     }
-    v.appendChild(el('button', { class: 'card tap', onclick: timelineSheet }, [
-      el('h2', { class: 'card-title', text: TIMELINE_UI.title }),
-      el('p', { class: 'p-sm', text: TIMELINE_UI.cardHint })
-    ]));
+
+    // Primary: check-in → one suggestion. Everything else quieter.
+    var primary = el('div', { class: 'now-primary' });
     var states = ['Steady', 'Wired', 'Flat', 'Heavy', 'Not sure'];
     var rc = todayCheckin(), today = rc ? rc.state : null;
     if (!state.checkins.length) {
-      v.appendChild(el('p', { class: 'p-sm now-empty', text: tUi('empty', 'now', EMPTY_UI) }));
+      primary.appendChild(el('p', { class: 'p-sm now-empty', text: tUi('empty', 'now', EMPTY_UI) }));
     }
-    v.appendChild(el('div', {}, [
+    primary.appendChild(el('div', {}, [
       el('p', { class: 'p-voice', text: tUi('checkin', 'arrival', { arrival: 'How are you arriving right now?' }) }),
       el('div', { style: 'height:11px' }),
       el('div', { class: 'chips' }, states.map(function (s) {
@@ -3293,14 +3294,25 @@
     ]));
     if (rc) {
       var hasDetail = Object.keys(rc.dims || {}).length || (rc.triggers || []).length || rc.need || rc.feeling;
-      v.appendChild(el('button', { class: 'btn ghost', text: hasDetail ? tUi('checkin', 'editDetail', CHECKIN_UI) : tUi('checkin', 'addDetail', CHECKIN_UI), onclick: checkinDetailSheet }));
+      primary.appendChild(el('button', { class: 'btn ghost', text: hasDetail ? tUi('checkin', 'editDetail', CHECKIN_UI) : tUi('checkin', 'addDetail', CHECKIN_UI), onclick: checkinDetailSheet }));
     }
-    v.appendChild(el('button', { class: 'card tap experience-picker-card', onclick: experiencePickerSheet }, [
+    var pick = suggestSkill(), dm = DOMAIN_META[pick.skill.domain];
+    primary.appendChild(el('div', { class: 'card now-suggest' }, [
+      el('div', { class: 'card-head' }, [el('h2', { class: 'card-title', text: pick.skill.name }), el('span', { class: 'domain', style: 'color:var(' + dm.cssVar + ')', text: dm.label })]),
+      el('p', { class: 'meta', text: pick.skill.mins + ' min · works offline' }),
+      el('p', { class: 'reason', text: reasonText(pick) }),
+      el('button', { class: 'btn', text: 'Begin', onclick: function () { startSkill(pick.skill.id); } }),
+      el('button', { class: 'btn quiet', text: 'Something else', onclick: function () { calm.browse = false; selectTab('calm'); } })
+    ]));
+    v.appendChild(primary);
+
+    var quiet = el('div', { class: 'now-quiet' });
+    quiet.appendChild(el('button', { class: 'card tap experience-picker-card', onclick: experiencePickerSheet }, [
       el('h2', { class: 'card-title', text: EXPERIENCE_PICKER_UI.cardTitle }),
       el('p', { class: 'p-sm', text: EXPERIENCE_PICKER_UI.cardHint })
     ]));
     if (typeof state.windDownHour === 'number' && new Date().getHours() >= state.windDownHour) {
-      v.appendChild(el('div', { class: 'card wind-down-card' }, [
+      quiet.appendChild(el('div', { class: 'card wind-down-card' }, [
         el('h2', { class: 'card-title', text: WIND_DOWN_UI.nowTitle }),
         el('p', { class: 'p-sm', text: WIND_DOWN_UI.nowHint }),
         el('button', { class: 'btn ghost', text: WIND_DOWN_UI.openArticle, onclick: function () {
@@ -3311,22 +3323,13 @@
       ]));
     }
     var dripQ = nextDripQuestion();
-    v.appendChild(el('button', { class: 'card tap', onclick: dripSheet }, [
+    quiet.appendChild(el('button', { class: 'card tap', onclick: dripSheet }, [
       el('h2', { class: 'card-title', text: DRIP_UI.cardTitle }),
       el('p', { class: 'p-sm', text: dripQ ? DRIP_UI.cardHint : DRIP_UI.doneToday })
     ]));
-    // note: screener card is on You, not Now — keep Now calm
-    var pick = suggestSkill(), dm = DOMAIN_META[pick.skill.domain];
-    v.appendChild(el('div', { class: 'card' }, [
-      el('div', { class: 'card-head' }, [el('h2', { class: 'card-title', text: pick.skill.name }), el('span', { class: 'domain', style: 'color:var(' + dm.cssVar + ')', text: dm.label })]),
-      el('p', { class: 'meta', text: pick.skill.mins + ' min · works offline' }),
-      el('p', { class: 'reason', text: reasonText(pick) }),
-      el('button', { class: 'btn', text: 'Begin', onclick: function () { startSkill(pick.skill.id); } }),
-      el('button', { class: 'btn quiet', text: 'Something else', onclick: function () { calm.browse = false; selectTab('calm'); } })
-    ]));
     var person = suggestPerson();
     if (person) {
-      v.appendChild(el('div', { class: 'card' }, [
+      quiet.appendChild(el('div', { class: 'card' }, [
         el('div', { class: 'card-head' }, [el('h2', { class: 'card-title', text: 'Message ' + person.name + '?' }), el('span', { class: 'domain', style: 'color:var(--connect)', text: 'Connect' })]),
         el('p', { class: 'reason', text: 'You said ' + person.name + ' usually helps when things are hard.' }),
         el('p', { class: 'p-sm', text: 'SoulCap never sends anything. This just opens your own messages.' }),
@@ -3337,11 +3340,12 @@
     if (recent.length > 1) {
       var order = { Steady: 8, 'Not sure': 18, Flat: 26, Wired: 31, Heavy: 37 };
       var pts = recent.map(function (c, i) { return (6 + i * (268 / Math.max(recent.length - 1, 1))).toFixed(0) + ',' + (order[c.state] || 20); }).join(' ');
-      v.appendChild(el('div', {}, [
+      quiet.appendChild(el('div', {}, [
         el('p', { class: 'eyebrow', text: 'Recent days · ' + recent.length }),
         el('div', { class: 'spark', html: '<svg viewBox="0 0 280 46" preserveAspectRatio="none" width="100%" height="46" aria-hidden="true"><polyline points="' + pts + '" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/></svg>' })
       ]));
     }
+    v.appendChild(quiet);
     v.appendChild(el('button', { class: 'help-btn', text: t('helpNow'), onclick: openPanic }));
   }
 
@@ -3407,64 +3411,29 @@
       v.appendChild(el('p', { class: 'p-sm me-empty', text: tUi('empty', 'me', EMPTY_UI) }));
     }
 
-    // Profile card
-    v.appendChild(el('button', { class: 'card tap', onclick: profileSheet }, [
+    // About you — profile · story · what SoulCap knows
+    var about = el('div', { class: 'section-block me-about' }, [
+      el('p', { class: 'eyebrow', text: tUi('me', 'sectionAbout', { sectionAbout: 'About you' }) })
+    ]);
+    about.appendChild(el('button', { class: 'card tap', onclick: profileSheet }, [
       el('div', { class: 'card-head' }, [el('h2', { class: 'card-title', text: name ? tUi('me', 'profile', { profile: 'Profile' }) : tUi('me', 'setupProfile', { setupProfile: 'Set up your profile' }) }), el('span', { class: 'pill', text: name ? tUi('me', 'edit', { edit: 'Edit' }) : tUi('me', 'add', { add: 'Add' }) })]),
       el('p', { class: 'p-sm', text: name
         ? [name, state.profile.age && state.profile.age + ' years', state.profile.pronouns].filter(Boolean).join(' · ')
         : 'Add your name so this feels like yours. Age and pronouns optional.' })
     ]));
-
-    // History / your story
     var hf = historyFilled();
-    v.appendChild(el('button', { class: 'card tap', onclick: historySheet }, [
+    about.appendChild(el('button', { class: 'card tap', onclick: historySheet }, [
       el('div', { class: 'card-head' }, [el('h2', { class: 'card-title', text: tUi('me', 'yourStory', { yourStory: 'Your story' }) }), el('span', { class: 'pill', text: hf ? hf + ' / ' + HISTORY_SECTIONS.length : tUi('me', 'optional', { optional: 'Optional' }) })]),
       el('p', { class: 'p-sm', text: hf
         ? 'Family, relationships, habits, hobbies, and the harder things — SoulCap adapts to what you’ve shared.'
         : 'Tell SoulCap about your life — family, relationships, habits, hobbies, anything from your past. All optional. The more it knows, the more it fits you.' })
     ]));
-
-    // Safety plan
-    var filled = planFilled();
-    v.appendChild(el('button', { class: 'card tap', onclick: safetyPlanSheet }, [
-      el('div', { class: 'card-head' }, [el('h2', { class: 'card-title', text: tUi('me', 'myPlan', { myPlan: 'My plan' }) }), el('span', { class: 'pill', text: filled + '/' + SAFETY_PLAN_STEPS.length })]),
-      el('p', { class: 'p-sm', text: filled ? 'Your warning signs, what helps, and who to tell. Tap to update.' : 'Write it while you’re steady, so it’s ready when you’re not.' })
-    ]));
-    v.appendChild(el('button', { class: 'card tap screener-card', onclick: screenerPickSheet }, [
-      el('h2', { class: 'card-title', text: SCREENER_UI.cardTitle }),
-      el('p', { class: 'p-sm', text: SCREENER_UI.cardHint })
-    ]));
-
-    // Journey
-    var runs = state.skillRuns.length, helped = state.skillRuns.filter(function (r) { return r.helpful; }).length;
-    if (runs || state.checkins.length) {
-      var top = {}; state.skillRuns.forEach(function (r) { if (r.helpful) top[r.id] = (top[r.id] || 0) + 1; });
-      var best = Object.keys(top).sort(function (a, b) { return top[b] - top[a]; })[0];
-      var bestSkill = best ? SKILLS.filter(function (s) { return s.id === best; })[0] : null;
-      v.appendChild(el('div', { class: 'card' }, [
-        el('h2', { class: 'card-title', text: 'Your journey' }),
-        el('p', { class: 'p', text: runs + ' exercise' + (runs === 1 ? '' : 's') + ' · ' + helped + ' helped · ' + state.checkins.length + ' day' + (state.checkins.length === 1 ? '' : 's') + ' checked in · ' + state.journal.length + ' journal' }),
-        bestSkill ? el('p', { class: 'reason', text: bestSkill.name + ' seems to work best for you.' }) : null,
-        el('p', { class: 'p-sm', text: 'No score, no rating. Just what’s happened.' })
-      ]));
-    }
-    var week = weeklySummary();
-    if (week) {
-      v.appendChild(el('div', { class: 'card' }, [
-        el('h2', { class: 'card-title', text: PATTERN_UI.weeklyTitle }),
-        el('p', { class: 'p', text: week.days + ' ' + PATTERN_UI.weeklySummary + ' · ' + week.common + ' ' + PATTERN_UI.weeklyCommon + '.' }),
-        week.detail.length ? el('p', { class: 'p-sm', text: week.detail.join(' · ') }) : null,
-        el('p', { class: 'reason', text: PATTERN_UI.weeklyNote })
-      ]));
-    }
-
-    // Trust tiers
-    var rows = el('div', {}); var any = false;
+    var knowRows = el('div', {}); var anyKnow = false;
     USER_MODEL_KEYS.forEach(function (meta) {
       var item = state.userModel[meta.key];
       if (!item || typeof item.value !== 'number') return;
-      any = true;
-      rows.appendChild(el('div', { class: 'row pattern-row' }, [
+      anyKnow = true;
+      knowRows.appendChild(el('div', { class: 'row pattern-row' }, [
         el('div', {}, [
           el('div', { class: 'lab', text: meta.label + ' · ' + item.value.toFixed(1) + '/5' }),
           el('div', { class: 'sub', text: confidenceLabel(item.confidence) + ' ' + DRIP_UI.confidence + ' · ' + DRIP_UI.notDiagnosis }),
@@ -3478,8 +3447,8 @@
     SCREENERS.forEach(function (screener) {
       var res = state.screenerResults[screener.id];
       if (!res) return;
-      any = true;
-      rows.appendChild(el('div', { class: 'row pattern-row screener-signal' }, [
+      anyKnow = true;
+      knowRows.appendChild(el('div', { class: 'row pattern-row screener-signal' }, [
         el('div', {}, [
           el('div', { class: 'lab', text: SCREENER_UI.knowsLabel + ' · ' + screener.name }),
           el('div', { class: 'sub', text: SCREENER_UI.historyLine.replace('{score}', '' + res.score).replace('{band}', res.bandLabel) + ' · ' + SCREENER_UI.knowsSub }),
@@ -3494,11 +3463,43 @@
         el('span', { class: 'tier guess', text: 'Low confidence' })
       ]));
     });
-    state.concerns.forEach(function (c) { any = true; rows.appendChild(el('div', { class: 'row' }, [el('div', {}, [el('div', { class: 'lab', text: c }), el('div', { class: 'sub', text: 'You picked this when you started' })]), el('span', { class: 'tier declared', text: 'You said' })])); });
+    state.concerns.forEach(function (c) { anyKnow = true; knowRows.appendChild(el('div', { class: 'row' }, [el('div', {}, [el('div', { class: 'lab', text: c }), el('div', { class: 'sub', text: 'You picked this when you started' })]), el('span', { class: 'tier declared', text: 'You said' })])); });
     var helpful = {}; state.skillRuns.forEach(function (r) { if (r.helpful === true) helpful[r.id] = (helpful[r.id] || 0) + 1; });
-    Object.keys(helpful).forEach(function (id) { var s = SKILLS.filter(function (x) { return x.id === id; })[0]; if (!s) return; any = true; rows.appendChild(el('div', { class: 'row' }, [el('div', {}, [el('div', { class: 'lab', text: s.name + ' seems to help' }), el('div', { class: 'sub', text: 'You said it helped ' + helpful[id] + ' time' + (helpful[id] > 1 ? 's' : '') })]), el('span', { class: 'tier observed', text: 'Observed' })])); });
+    Object.keys(helpful).forEach(function (id) { var s = SKILLS.filter(function (x) { return x.id === id; })[0]; if (!s) return; anyKnow = true; knowRows.appendChild(el('div', { class: 'row' }, [el('div', {}, [el('div', { class: 'lab', text: s.name + ' seems to help' }), el('div', { class: 'sub', text: 'You said it helped ' + helpful[id] + ' time' + (helpful[id] > 1 ? 's' : '') })]), el('span', { class: 'tier observed', text: 'Observed' })])); });
+    if (anyKnow) {
+      about.appendChild(el('p', { class: 'eyebrow', text: tUi('me', 'knowsHeading', { knowsHeading: 'What SoulCap knows' }) }));
+      about.appendChild(knowRows);
+    }
+    v.appendChild(about);
+
+    // Your insights — journey · seven-day · patterns · timeline (off Now)
+    var insights = el('div', { class: 'section-block me-insights' }, [
+      el('p', { class: 'eyebrow', text: tUi('me', 'sectionInsights', { sectionInsights: 'Your insights' }) })
+    ]);
+    var runs = state.skillRuns.length, helped = state.skillRuns.filter(function (r) { return r.helpful; }).length;
+    if (runs || state.checkins.length) {
+      var top = {}; state.skillRuns.forEach(function (r) { if (r.helpful) top[r.id] = (top[r.id] || 0) + 1; });
+      var best = Object.keys(top).sort(function (a, b) { return top[b] - top[a]; })[0];
+      var bestSkill = best ? SKILLS.filter(function (s) { return s.id === best; })[0] : null;
+      insights.appendChild(el('div', { class: 'card' }, [
+        el('h2', { class: 'card-title', text: 'Your journey' }),
+        el('p', { class: 'p', text: runs + ' exercise' + (runs === 1 ? '' : 's') + ' · ' + helped + ' helped · ' + state.checkins.length + ' day' + (state.checkins.length === 1 ? '' : 's') + ' checked in · ' + state.journal.length + ' journal' }),
+        bestSkill ? el('p', { class: 'reason', text: bestSkill.name + ' seems to work best for you.' }) : null,
+        el('p', { class: 'p-sm', text: 'No score, no rating. Just what’s happened.' })
+      ]));
+    }
+    var week = weeklySummary();
+    if (week) {
+      insights.appendChild(el('div', { class: 'card' }, [
+        el('h2', { class: 'card-title', text: PATTERN_UI.weeklyTitle }),
+        el('p', { class: 'p', text: week.days + ' ' + PATTERN_UI.weeklySummary + ' · ' + week.common + ' ' + PATTERN_UI.weeklyCommon + '.' }),
+        week.detail.length ? el('p', { class: 'p-sm', text: week.detail.join(' · ') }) : null,
+        el('p', { class: 'reason', text: PATTERN_UI.weeklyNote })
+      ]));
+    }
+    var patternRows = el('div', {}); var anyPattern = false;
     derivePatterns().forEach(function (pattern) {
-      any = true;
+      anyPattern = true;
       var decision = state.patternPrefs.decisions[pattern.id];
       var actions = [
         el('button', { class: 'chip', text: tUi('pattern', 'evidence', PATTERN_UI), onclick: function () { patternSheet(pattern); } })
@@ -3508,7 +3509,7 @@
         actions.push(el('button', { class: 'chip', text: tUi('pattern', 'reject', PATTERN_UI), onclick: function () { setPatternDecision(pattern.id, 'rejected'); } }));
       }
       actions.push(el('button', { class: 'chip', text: tUi('pattern', 'hide', PATTERN_UI), onclick: function () { setPatternDecision(pattern.id, 'hidden'); } }));
-      rows.appendChild(el('div', { class: 'row pattern-row' }, [
+      patternRows.appendChild(el('div', { class: 'row pattern-row' }, [
         el('div', {}, [
           el('div', { class: 'lab', text: pattern.title }),
           el('div', { class: 'sub', text: pattern.summary + ' Based on ' + pattern.count + ' ' + PATTERN_UI.dayBasis + '.' + (patternConfidenceLabel(pattern.count) ? ' ' + patternConfidenceLabel(pattern.count) + '.' : '') }),
@@ -3517,7 +3518,35 @@
         el('span', { class: decision === 'confirmed' ? 'tier declared' : 'tier guess', text: decision === 'confirmed' ? tUi('pattern', 'confirmed', PATTERN_UI) : tUi('pattern', 'guess', PATTERN_UI) })
       ]));
     });
-    if (any) { v.appendChild(el('p', { class: 'eyebrow', style: 'margin-top:6px', text: 'What SoulCap knows' })); v.appendChild(rows); }
+    if (anyPattern) insights.appendChild(patternRows);
+    insights.appendChild(el('button', { class: 'card tap timeline-card', onclick: timelineSheet }, [
+      el('h2', { class: 'card-title', text: TIMELINE_UI.title }),
+      el('p', { class: 'p-sm', text: TIMELINE_UI.cardHint })
+    ]));
+    v.appendChild(insights);
+
+    // Your tools — plan · screener · principles · manual
+    var tools = el('div', { class: 'section-block me-tools' }, [
+      el('p', { class: 'eyebrow', text: tUi('me', 'sectionTools', { sectionTools: 'Your tools' }) })
+    ]);
+    var filled = planFilled();
+    tools.appendChild(el('button', { class: 'card tap', onclick: safetyPlanSheet }, [
+      el('div', { class: 'card-head' }, [el('h2', { class: 'card-title', text: tUi('me', 'myPlan', { myPlan: 'My plan' }) }), el('span', { class: 'pill', text: filled + '/' + SAFETY_PLAN_STEPS.length })]),
+      el('p', { class: 'p-sm', text: filled ? 'Your warning signs, what helps, and who to tell. Tap to update.' : 'Write it while you’re steady, so it’s ready when you’re not.' })
+    ]));
+    tools.appendChild(el('button', { class: 'card tap screener-card', onclick: screenerPickSheet }, [
+      el('h2', { class: 'card-title', text: SCREENER_UI.cardTitle }),
+      el('p', { class: 'p-sm', text: SCREENER_UI.cardHint })
+    ]));
+    tools.appendChild(el('button', { class: 'card tap', onclick: principlesSheet }, [
+      el('h2', { class: 'card-title', text: PRINCIPLES_UI.title }),
+      el('p', { class: 'p-sm', text: state.principles.length ? state.principles.slice(0, 2).join(' · ') : PRINCIPLES_UI.cardHint })
+    ]));
+    tools.appendChild(el('button', { class: 'card tap manual-card', onclick: manualSheet }, [
+      el('h2', { class: 'card-title', text: MANUAL_UI.title }),
+      el('p', { class: 'p-sm', text: state.manual.lines.length ? (state.manual.lines.length + ' line' + (state.manual.lines.length === 1 ? '' : 's')) : MANUAL_UI.cardHint })
+    ]));
+    v.appendChild(tools);
 
     if (state.locale === 'rui' && !clinicalNoticeDismissed()) {
       v.appendChild(el('div', { class: 'notice' }, [
@@ -3532,21 +3561,6 @@
         el('span', { class: 'pill', text: tUi('settingsCard', 'open', { open: 'Open' }) })
       ]),
       el('p', { class: 'p-sm', text: tUi('settingsCard', 'hint', { hint: 'Appearance, language, accessibility, constellation pace, guided exercises, and your data.' }) })
-    ]));
-
-    v.appendChild(el('button', { class: 'card tap', onclick: timelineSheet }, [
-      el('h2', { class: 'card-title', text: TIMELINE_UI.title }),
-      el('p', { class: 'p-sm', text: TIMELINE_UI.cardHint })
-    ]));
-
-    v.appendChild(el('button', { class: 'card tap', onclick: principlesSheet }, [
-      el('h2', { class: 'card-title', text: PRINCIPLES_UI.title }),
-      el('p', { class: 'p-sm', text: state.principles.length ? state.principles.slice(0, 2).join(' · ') : PRINCIPLES_UI.cardHint })
-    ]));
-
-    v.appendChild(el('button', { class: 'card tap manual-card', onclick: manualSheet }, [
-      el('h2', { class: 'card-title', text: MANUAL_UI.title }),
-      el('p', { class: 'p-sm', text: state.manual.lines.length ? (state.manual.lines.length + ' line' + (state.manual.lines.length === 1 ? '' : 's')) : MANUAL_UI.cardHint })
     ]));
 
     v.appendChild(el('button', { class: 'help-btn', text: t('helpNow'), onclick: openPanic }));
@@ -3649,7 +3663,7 @@
       p.appendChild(el('button', { class: 'btn quiet', text: tUi('principles', 'close', PRINCIPLES_UI), onclick: closeSheet }));
     });
   }
-  var APP_VERSION = '1.9.3';
+  var APP_VERSION = '2.0.0';
   function settingsGroup(v, title, kids) { v.appendChild(el('p', { class: 'eyebrow', style: 'margin-top:var(--space-3)', text: title })); kids.forEach(function (k) { if (k) v.appendChild(k); }); }
   function toggleBtn(label, on, fn) {
     return el('button', { class: 'btn ghost', style: 'display:flex;justify-content:space-between', onclick: fn,
@@ -3929,7 +3943,7 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '1.9.3',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '2.0.0',
     experienceIds: EXPERIENCES.map(function (item) { return item.id; }),
     experienceHelpsOk: function () {
       return EXPERIENCES.every(function (exp) {

@@ -5,7 +5,7 @@ item and ship it **the same way the rest of the app was built** — read `AGENTS
 rules, conventions, and ship workflow. Every item below lists **what**, **why**, **files to
 touch**, **acceptance criteria (incl. a test)**, and **guardrails**.
 
-**Current release: v1.9.3** · Published app: https://shamikhahmed.github.io/SoulCap/
+**Current release: v2.0.0** · Published app: https://shamikhahmed.github.io/SoulCap/
 
 Philosophy (never drifts): a personalised emotional operating system, **not** an AI therapist.
 Help people understand and regulate; never "fix" them; never diagnose; success = needing the app
@@ -135,13 +135,16 @@ Spec: [`SPEC-v1.9-clinical-library.md`](SPEC-v1.9-clinical-library.md). Delivere
 - [x] PHQ-9 + GAD-7 reflection screeners, "not a diagnosis" framing, PHQ item-9 → Help routing.
 - Schema **v11** · SW `soulcap-v193`.
 
-### NEXT — v2.0 Premium polish pass · **build guide: [`SPEC-v2.0-premium-polish.md`](SPEC-v2.0-premium-polish.md)**
-Make it feel flagship (Apple/Calm/Linear-grade craft) — **not more features, craft**. Information
-architecture consolidation (the You tab is a wall of ~11 cards → group into 3–4 sections),
-component/token/spacing/icon consistency, a full microcopy pass (one voice), motion + haptics
-choreography, designed empty/first-run states, an accessibility (VoiceOver/Dynamic Type) pass, an
-About screen + install polish, and holding the new clinical content to the same warm bar. Rubric,
-per-screen checklist, and PR sequence are in the spec.
+### v2.0 Premium polish · **build guide: [`SPEC-v2.0-premium-polish.md`](SPEC-v2.0-premium-polish.md)**
+- [x] **PR-1 IA** — You: About / Insights / Tools; Now primary+quiet; Calm guided-first + “Also here”.
+  App **2.0.0** · SW `soulcap-v200`.
+- [ ] PR-2 component + token consistency
+- [ ] PR-3 microcopy pass
+- [ ] PR-4 motion/haptics + empty/first-run
+- [ ] PR-5 a11y + About + install polish
+- [ ] PR-6 clinical polish + gallery
+
+Craft only — **not more features**. Rubric + checklist in the spec.
 
 ### Later (post-2.0)
 - Encrypted optional local backup (passphrase) — lost phone ≠ lost journal.

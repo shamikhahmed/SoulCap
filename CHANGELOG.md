@@ -4,6 +4,15 @@
 - Flaky Playwright: wait for CSS animations idle + `reducedMotion` before theme contrast and journal
   control size assertions (`e2e/app.spec.ts`, `e2e/personas.spec.ts`).
 
+## [2.0.0] — 2026-07-23
+
+### Changed
+- **IA polish (craft only):** You tab grouped into About you · Your insights · Your tools (+ Settings).
+  Timeline moved off Now onto Your insights. Now: greeting → check-in → one suggestion (primary),
+  quieter secondary cards below. Calm: guided needs first; library / experiences / supports / reset
+  under “Also here”.
+- SW `soulcap-v200`. App **2.0.0**. Schema still **v11**.
+
 ## [1.9.3] — 2026-07-23
 
 ### Added

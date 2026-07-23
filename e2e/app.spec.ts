@@ -511,6 +511,35 @@ test.describe('v1.9.3 reflection screeners', () => {
   });
 });
 
+test.describe('v2.0 IA restructure', () => {
+  test('You has About / Insights / Tools sections; timeline on You not Now', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="me"]') as HTMLElement).click());
+    const me = page.locator('#view-me');
+    await expect(me.locator('.me-about')).toContainText('About you');
+    await expect(me.locator('.me-insights')).toContainText('Your insights');
+    await expect(me.locator('.me-tools')).toContainText('Your tools');
+    await expect(me.locator('.timeline-card')).toContainText('Your week');
+    await expect(me.locator('.settings-card')).toBeVisible();
+    await expect(me.locator('.screener-card')).toBeVisible();
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="now"]') as HTMLElement).click());
+    await expect(page.locator('#view-now .now-primary .now-suggest')).toBeVisible();
+    await expect(page.locator('#view-now .now-quiet')).toBeVisible();
+    await expect(page.locator('#view-now')).not.toContainText('Your week');
+  });
+
+  test('Calm keeps guided first with Also here tools', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="calm"]') as HTMLElement).click());
+    const calm = page.locator('#view-calm');
+    await expect(calm.locator('.opt').first()).toBeVisible();
+    await expect(calm.locator('.calm-more')).toContainText('Also here');
+    await expect(calm.getByRole('button', { name: /Understand what/i })).toBeVisible();
+    await expect(calm.getByRole('button', { name: /Notice what’s happening/ })).toBeVisible();
+    await expect(calm.getByRole('button', { name: /Small daily supports/i })).toBeVisible();
+  });
+});
+
 test.describe('v1.1 adaptive drip, themes, locale', () => {
   test('v7 state migrates to v8 with drip and locale defaults', async ({ page }) => {
     await page.addInitScript(() => {

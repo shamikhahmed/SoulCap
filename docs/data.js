@@ -480,7 +480,12 @@ var STRINGS = {
       myPlan:'My plan',
       edit:'Edit',
       add:'Add',
-      optional:'Optional'
+      optional:'Optional',
+      sectionAbout:'About you',
+      sectionInsights:'Your insights',
+      sectionTools:'Your tools',
+      knowsHeading:'What SoulCap knows',
+      calmMore:'Also here'
     },
     concerns:{
       hard_to_switch_off:'Hard to switch off',
@@ -630,7 +635,12 @@ var STRINGS = {
       myPlan:'Mera plan',
       edit:'Tabdeel',
       add:'Shamil',
-      optional:'Optional'
+      optional:'Optional',
+      sectionAbout:'Aap ke baare mein',
+      sectionInsights:'Aap ki samajh',
+      sectionTools:'Aap ke tools',
+      knowsHeading:'SoulCap kya jaanta hai',
+      calmMore:'Aur yahan'
     },
     concerns:{
       hard_to_switch_off:'Band hona mushkil',
