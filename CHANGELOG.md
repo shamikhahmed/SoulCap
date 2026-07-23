@@ -4,6 +4,11 @@
 - Flaky Playwright: wait for CSS animations idle + `reducedMotion` before theme contrast and journal
   control size assertions (`e2e/app.spec.ts`, `e2e/personas.spec.ts`).
 
+### Changed
+- Companion docs version headers aligned to **3.0.1** / `soulcap-v301` (ARCHITECTURE, DATA_MODEL,
+  FEATURES, CLINICAL, PRIVACY, ACCESSIBILITY, EVALUATION, INVESTOR_DECK, PRESENTATION, AGENTS,
+  package.json, assets gallery manifest).
+
 ## [3.0.1] — 2026-07-23
 
 ### Added
