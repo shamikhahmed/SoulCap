@@ -1,13 +1,14 @@
 # SoulCap Data Model
 
-**Schema:** 11 · **Storage key:** `localStorage['soulcap_v1']` · **App:** 1.9.3
+**Schema:** 12 · **Storage key:** `localStorage['soulcap_v1']` · **App:** 2.1.0
 
 ## State contract
 
 Canonical shape starts in `DEFAULT` in `docs/app.js`. Top-level collections include check-ins,
 skill runs, people, relationship links, journal entries, safety-plan answers, drip answers,
 local user-model estimates, reset menu, parked thoughts, manual, principles, library bookmarks,
-and user-controlled settings. Nested defaults must be merged explicitly in `load()`.
+screener results, path sessions, and user-controlled settings. Nested defaults must be merged
+explicitly in `load()`.
 
 ### Check-in
 
@@ -88,8 +89,29 @@ manual: {
   dismissedAuto: { [id]: true }
 }
 libraryBookmarks: string[]   // article ids
-notices: { clinicalEnglishDismissed: boolean }
+windDownHour: null | 0..23
+screenerResults: { [id]: { score, band, bandLabel, t, answers? } }
+notices: { clinicalEnglishDismissed: boolean, seenVersion: null | string }
 ```
+
+### Guided Path (v2.1 / schema v12)
+
+```text
+pathSessions: [{
+  id: string,
+  t: number,
+  arrival: string,       // Wired | Heavy | Flat | Overwhelmed | Not sure
+  chips: string[],       // PATH_CHIPS / PATH_ADVANCED ids
+  family: string,        // FAMILY_META key
+  skillId: string,
+  helped?: boolean       // reserved; not required in v2.1
+}]                       // capped (~40)
+
+pathPrefs: { hide: boolean }   // hide Now quiet card
+```
+
+Path content tables live in `data.js`: `PATH_UI`, `PATH_ARRIVALS`, `PATH_CHIPS`, `PATH_ADVANCED`,
+`PATH_REASONS`. Never store diagnoses or severity scores.
 
 ### Constellation person
 
@@ -112,6 +134,8 @@ notices: { clinicalEnglishDismissed: boolean }
 - v7 → v8: drip, userModel, locale
 - v8 → v9: mapPace, resetItems, resetDone, parkedThoughts, reflectionPrefs, emotionFavorites, principles; `ur`→`rui`
 - v9 → v10: manual, libraryBookmarks; person notes/events/ringHistory normalization
+- v10 → v11: screenerResults; windDownHour default null
+- v11 → v12: pathSessions []; pathPrefs { hide: false }
 
 Additive and sequential. Playwright fixtures cover prior schema and forced storage failure.
 Unknown future fields must not be discarded on downgrade.

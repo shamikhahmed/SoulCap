@@ -12,9 +12,13 @@
   never prescribes CBT/DBT/ACT as treatment. Educational footnote only. Panic-like clusters offer
   Help + grounding. Sessions under What SoulCap knows (clearable). Hide card in Settings.
 - Docs: `SPEC-v2.1-guided-path.md`, sister reply + review kit; later SPECs v2.2 / v2.3 parked.
+- Playwright: Guided Path suite (complete path → runner, panic Help offer, knows clear, hide card,
+  forbidden-lexicon scrub, schema migrate to v12).
+- Gallery: `*-06-guided-path.png`; hub catalog + marketing shots refreshed.
 
 ### Changed
 - Schema **v12** (`pathSessions`, `pathPrefs`). SW `soulcap-v210`. App **2.1.0**.
+- Architecture / data-model / features / clinical / safety / handover / agents docs aligned to 2.1.0.
 
 ## [2.0.1] — 2026-07-23
 

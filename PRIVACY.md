@@ -1,6 +1,6 @@
 # SoulCap Privacy Contract
 
-**Version:** 1.8.0 · **Updated:** 2026-07-23
+**Version:** 2.1.0 · **Updated:** 2026-07-23
 
 ## Promise
 
@@ -21,6 +21,8 @@ the browser's local storage unless the user explicitly exports a file.
 - Reset menu items and same-day completion IDs
 - Principles, Personal Manual lines, library bookmarks, reflection prefs
 - Local drip answers and user-model estimates (never diagnoses)
+- Optional PHQ-9 / GAD-7 reflection results (local score/band lines only — never a diagnosis)
+- Guided Path sessions (arrival, chip ids, family, skill id) and pathPrefs (hide card)
 
 No location, contacts, message contents, microphone audio blobs, advertising identifiers, or
 account credentials are collected.

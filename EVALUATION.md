@@ -1,6 +1,6 @@
 # SoulCap Evaluation Contract
 
-**Version:** 1.8.0 · **Updated:** 2026-07-23
+**Version:** 2.1.0 · **Updated:** 2026-07-23
 
 ## Purpose
 
@@ -11,10 +11,11 @@ status.
 ## Release gates
 
 1. JavaScript syntax check for every shipped script.
-2. Playwright mobile and desktop suite (`npm run verify`) — currently **226** listed tests.
+2. Playwright mobile and desktop suite (`npm run verify`) — currently **~260** listed tests.
 3. Safety suite for risk tiers, Help reachability, age gate, number-free routing, local-only voice,
-   check-in tier-3 routing, and free-text tier-3 Help (journal / Your story at minimum).
-4. Migration fixtures for prior state versions and forced persistence failure.
+   check-in tier-3 routing, free-text tier-3 Help (journal / Your story at minimum), and Guided Path
+   Help offer / no-diagnosis lexicon.
+4. Migration fixtures for prior state versions (through **v12**) and forced persistence failure.
 5. Zero unexpected external requests during representative journeys.
 6. Version/cache/documentation consistency (`APP_VERSION`, `CACHE`, `VERSION.json`).
 7. Human mobile, accessibility, copy, and visual checks listed in `ACCESSIBILITY.md`.
@@ -50,7 +51,7 @@ reviewed together.
 
 - Article search works after the initial load with no external request.
 - Every article carries review-status honesty, support guidance, source notes, and valid skill IDs.
-- Sequential schema migration preserves prior data through v10.
+- Sequential schema migration preserves prior data through **v12**.
 - Current-day completion survives reload and no streak, score, badge, or reminder state exists.
 - Failed choice or completion persistence restores the previous in-memory state visibly.
 - Drip asks at most four questions per local day; estimates show confidence and are correctable;

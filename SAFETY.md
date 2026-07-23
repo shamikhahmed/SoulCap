@@ -47,6 +47,12 @@ Every article shows that it is not yet reviewed by a licensed clinician, include
 professional-support section, and links only to existing hard-coded exercises. Daily supports
 record optional per-day IDs only and create no streak, adherence score, reminder, or safety claim.
 
+**Guided Path (v2.1)** is rule-based chip routing to exercise *families* with educational footnotes.
+It never diagnoses, never says “start CBT/DBT/ACT,” never shows severity scores, and never adds
+crisis phone numbers. Panic-like chip clusters offer the same hard-coded Help screen. Path free-text
+is not collected in the v2.1 core (chips only). Path copy carries an in-sheet “not yet clinically
+reviewed” notice until sister / licensed sign-off.
+
 Historical releases remain available through Git history, not as publicly served legacy pages.
 
 ---
@@ -64,7 +70,8 @@ Historical releases remain available through Git history, not as publicly served
 - Constellation `hard right now` suppresses all suggestions for that person, permanently
   and silently. No reconciliation nudges.
 - The app never contacts anyone. "Open messages" hands off to the OS with an empty draft.
-- ~226 Playwright checks across mobile + desktop; safety tests (including free-text tier-3 Help) gate the deploy in CI.
+- ~260 Playwright checks across mobile + desktop; safety tests (including free-text tier-3 Help and
+  Guided Path Help / no-diagnosis lexicon) gate the deploy in CI.
 - Installed-app `?panic=1` now opens Help immediately and has a deploy-gating regression test.
 
 ### Known safety fixes
@@ -97,7 +104,7 @@ re-introduce them per region behind the region-pack model and verify each is liv
 
 ## Blockers remaining
 
-1. **No licensed clinician has reviewed any skill card or library article.** Calm says so in-product.
+1. **No licensed clinician has reviewed any skill card, library article, or Guided Path copy.** Calm / path say so in-product.
 2. No Urdu clinical copy reviewer; no Urdu localisation shipped.
 3. Safety kernel is still keyword-based. It cannot detect oblique risk
    ("I've been sorting out my things", "I finally feel calm about it all").

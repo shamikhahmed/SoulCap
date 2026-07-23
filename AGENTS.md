@@ -4,12 +4,13 @@ Read this first. It tells you what SoulCap is, the rules you must never break, h
 laid out, the exact conventions to write in, and the workflow to ship a change. If you follow it,
 your changes will look like they were written by the same hand as the rest of the app.
 
-Companion docs: `ROADMAP.md` (what to build next) · **`SPEC-v2.0-premium-polish.md`** (the CURRENT
-build assignment — flagship-grade polish + IA consolidation; build this next) ·
-`SPEC-v1.9-clinical-library.md` (shipped v1.9.3, kept for reference) · `ARCHITECTURE.md` ·
-`DATA_MODEL.md` · `PRIVACY.md` · `ACCESSIBILITY.md` · `EVALUATION.md` · `SAFETY.md` (truth
-inventory) · `CHANGELOG.md` · `HANDOVER.md` (history). Planning notes live outside the repo in the
-owner's vault (`~/Capricorn-Brain/AI/Claude-Code/SoulCap-*.md`).
+Companion docs: `ROADMAP.md` (what to build next) · **`SPEC-v2.2-approach-packs.md`** (NEXT after
+Guided Path) · `SPEC-v2.1-guided-path.md` (shipped v2.1.0) · `SPEC-v2.3-regulation-depth.md` ·
+`SPEC-v2.0-premium-polish.md` / `SPEC-v1.9-clinical-library.md` (shipped, reference) ·
+`ARCHITECTURE.md` · `DATA_MODEL.md` · `PRIVACY.md` · `ACCESSIBILITY.md` · `EVALUATION.md` ·
+`SAFETY.md` (truth inventory) · `CHANGELOG.md` · `HANDOVER.md` (history). Planning notes live
+outside the repo in the owner's vault (`~/Capricorn-Brain/AI/Claude-Code/SoulCap-*.md`,
+`~/Capricorn-Brain/AI/Cursor/SoulCap-Guided-Path.md`).
 
 ---
 
@@ -93,7 +94,7 @@ Other top-level dirs are **not** the shipped product:
 
 ### State
 Single object persisted to `localStorage['soulcap_v1']`. Shape lives in `DEFAULT` in `app.js`
-(currently `v: 5`). `load()` merges saved state over `DEFAULT` and back-fills nested objects, so
+(currently `v: 12`). `load()` merges saved state over `DEFAULT` and back-fills nested objects, so
 **adding a new top-level field is safe** — add it to `DEFAULT`, old users get the default. If you
 change the *meaning* of existing data, bump `DEFAULT.v` and migrate in `load()`.
 Theme is mirrored to `localStorage['soulcap_theme']` for the pre-paint script in `index.html`.

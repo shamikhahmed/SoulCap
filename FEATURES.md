@@ -1,13 +1,16 @@
 # SoulCap — Features (S/W/L/R)
 
-**Updated:** 2026-07-23 · Self-guided wellness companion · **v1.9.3**
+**Updated:** 2026-07-23 · Self-guided wellness companion · **v2.1.0**
 **Codes:** S = shipped · W = next wave · L = later · R = rejected
 
 ## S
 - Offline-first PWA in `docs/`: no account, server, analytics, CDN, LLM, or post-load network calls
-- Five tabs: Now · Calm · Journal · People · You; Settings sheet off You
+- Five tabs: Now · Calm · Journal · People · You; Settings sheet off You; About + What’s new
 - 37 techniques with mechanisms, contraindications, context filtering, timed guidance, breathing
   sessions, device speech synthesis, optional haptics, and public-safe auto-quieting
+- **Guided Path:** arrival → symptom chips → exercise-family why → Begin (rule-based; educational
+  CBT/DBT/ACT footnote only; never diagnoses or modality prescriptions). Panic-like clusters offer
+  Help. Sessions clearable in What SoulCap knows; hide card in Settings
 - Hard-coded keyword safety kernel on all user free-text surfaces (check-in detail, journal,
   story, plan, park, notes, manual, principles), number-free Help flow, persistent Help access,
   and 18+ age gate
@@ -35,10 +38,13 @@
   accents; text, density, contrast, transparency, and reduced-motion controls; Roman Urdu LTR
   preview (English remains default safety language); welcome/onboarding/Calm/Me chrome in rui;
   local export and delete
-- Playwright coverage across mobile + desktop; CI gates GitHub Pages deploy
+- Playwright coverage across mobile + desktop (~260); CI gates GitHub Pages deploy
 - Nest backend and Expo mobile **source labs only**; neither is wired to the PWA
 
 ## W
+- **Approach packs** + distortion lens + thought-record wizard (`SPEC-v2.2-approach-packs.md`)
+- Values / opposite-action / body-scan depth (`SPEC-v2.3-regulation-depth.md`)
+- Sister / licensed review of path + technique copy (narrow path banner only after path sign-off)
 - Native-reviewed Roman Urdu clinical copy (replace English safety strings only after review)
 - Licensed clinician review of every technique before any reviewed/clinical claim
 - Manual screen-reader pass notes beyond the automated dialog/zoom gates
@@ -56,3 +62,4 @@
 - Wiring Nest, cloud speech, remote AI, analytics, or CDN assets into the offline PWA
 - Streaks, scores, badges, guilt notifications, fake typing, or engagement pressure
 - Treating localStorage journal data as an EHR
+- AI therapy recommender / severity dashboards / modality prescriptions as treatment titles

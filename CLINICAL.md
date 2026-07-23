@@ -1,4 +1,4 @@
-# SoulCap — Clinical Readiness Gaps (v1.8.0)
+# SoulCap — Clinical Readiness Gaps (v2.1.0)
 
 **Updated:** 2026-07-23
 **Status:** Self-guided wellness companion; clinical work is undeployed lab source only.
@@ -100,4 +100,4 @@ Use a normal revert and a new service-worker cache version. Never roll back by d
 
 ## Version
 
-Tracks `VERSION.json` → **1.9.3** · SW `soulcap-v193`.
+Tracks `VERSION.json` → **2.1.0** · SW `soulcap-v210` · schema **v12**.

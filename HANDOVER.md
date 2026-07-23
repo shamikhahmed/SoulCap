@@ -9,26 +9,31 @@
 ## Current state (v2.1.0 — 2026-07-23)
 
 **The product is the PWA in `docs/`.** Offline-first, local-only, **no network calls after load** —
-no account, no server, no LLM, no analytics. State lives in `localStorage` (schema **v11**).
+no account, no server, no LLM, no analytics. State lives in `localStorage` (schema **v12**).
 Live: https://shamikhahmed.github.io/SoulCap/ · CI gates Pages on Playwright. Hub mirror:
 `Cap-Apps/shamikhahmed.github.io/SoulCap/` · marketing shots `assets/screenshots/soulcap*.png` ·
-in-repo gallery: `npm run gallery` → `screen-gallery.html`.
+in-repo gallery: `npm run gallery` → `screen-gallery.html` (includes Guided Path shot).
 
 ### What the PWA is now
 - **Design System v2 “plum & sand”** — logo-anchored violet, low chroma. Themes: Auto / light /
   dark / **night** + Ocean / Forest / Rain / Space / Sunrise / Minimal / **AMOLED**. Accents:
-  plum / lilac / mulberry / indigo. Text size, density, contrast, transparency. **v1.7 polish:**
-  motion tokens, softer sheets/cards, deep dark surfaces, reduced-motion ≤80–90ms opacity-only.
+  plum / lilac / mulberry / indigo. Text size, density, contrast, transparency. **v2.0 craft:**
+  spacing tokens, empties, What’s new, About sheet, motion/haptics polish.
 - **Five tabs:** Now · Calm · Journal · People · You. **Settings sheet** off You (appearance,
-  language, guided exercises, Constellation pace, data). Splash + welcome + 18+ onboarding.
+  language, guided exercises, Constellation pace, personalisation, data). Splash + welcome + 18+
+  onboarding. About SoulCap + What’s new (version-gated).
 - **37 techniques** with mechanisms, contraindications, capacity/needs, discreet flag,
   traumaCaution. Guided runner + paced breathing sessions. Spoken guidance local-only voices;
   auto-silent around people / panic; speaker toggle; exercise pace Slow/Steady/Brisk.
-- **Calm** — guided “what do you need?” first; library / experiences / supports / reset under
+- **Guided Path (v2.1)** — optional “A short path” on Now (quiet) + Calm Also here: arrival →
+  symptom chips (cap 4) → family why + educational footnote → Begin. Rule-based family scoring;
+  panic-like clusters offer Help; never diagnoses / never “start CBT”. `pathSessions` clearable
+  under What SoulCap knows; Settings can hide the Now card. Path copy not clinically reviewed.
+- **Calm** — guided “what do you need?” first; library / experiences / supports / reset / path under
   “Also here”; browse-all; offline library (articles + **24 clinical experiences**); bookmarks;
   daily supports (no streaks).
-- **Now** — greeting → check-in → one skill suggestion (primary); quieter: experience picker,
-  wind-down, drip, optional message, spark. Timeline lives on You.
+- **Now** — greeting → check-in → one skill suggestion (primary); quieter: short path, experience
+  picker, wind-down, drip, optional message, spark. Timeline lives on You.
 - **Journal** — book UI, templates, photos (down-scaled; warn >20), search (mood/feeling/parked),
   Thought Parking, on-device speech only when verified local. Emotion vocabulary chips.
 - **People (Constellation)** — SVG map, Still/Drift/Live pace, pinch rings 3–7, long-press rename,
@@ -41,11 +46,12 @@ in-repo gallery: `npm run gallery` → `screen-gallery.html`.
 - **Safety kernel** — keyword tiers 0–3 in `docs/app.js`, mirrored in Nest lab. Tier 3 opens
   hard-coded Help on check-in feeling **and** journal, Your story, safety plan, parked thoughts,
   person notes, manual lines, principles, reflection notes (content still saves when storage allows).
-  No crisis phone numbers; `sms:` only for “Message someone.”
+  Path core uses chips only (no free text). No crisis phone numbers; `sms:` only for “Message someone.”
 
 ### Schema & ship
 - State `DEFAULT.v = 12` · SW `soulcap-v210` · app **2.1.0** · mirrors: theme, appearance, locale,
-  clinical-notice dismiss. Optional `windDownHour`. `screenerResults` for PHQ-9/GAD-7 signals.
+  clinical-notice dismiss / `seenVersion`. Optional `windDownHour`. `screenerResults` (PHQ/GAD).
+  `pathSessions` + `pathPrefs`.
 - Ship workflow: bump CACHE + VERSION.json + APP_VERSION together; CHANGELOG; SAFETY/HANDOVER;
   `npm run verify`; push `main`.
 
@@ -54,18 +60,19 @@ in-repo gallery: `npm run gallery` → `screen-gallery.html`.
 revive. `mobile/` Expo lab only.
 
 ### Tests & CI
-~**226** Playwright checks (mobile + desktop Chromium; gallery gated by `CAPTURE_GALLERY=1`).
+~**260** Playwright checks (mobile + desktop Chromium; gallery gated by `CAPTURE_GALLERY=1`).
 `.github/workflows/deploy.yml` runs `npm run verify` then deploys `docs/`.
 
 ### Open blockers (not code)
-1. No clinician has signed off techniques/articles — banner stays.
+1. No clinician has signed off techniques/articles/path copy — banners stay.
 2. Roman Urdu clinical-copy review not done — safety/clinical English stays.
 3. Keyword kernel misses oblique risk — needs Kernel v2 / eval harness before any generative text.
 4. Nest Prisma enums still lab-only; no production DB.
 
 ### For the next developer / AI agent
-Read **`AGENTS.md`** then **`ROADMAP.md`**. `.cursorrules` is the short Cursor version. Vault notes:
-`~/Capricorn-Brain/01 Projects/SoulCap-Therapy-App.md` and `AI/Claude-Code/SoulCap-*.md`.
+Read **`AGENTS.md`** then **`ROADMAP.md`** (NEXT = v2.2 approach packs). Specs:
+`SPEC-v2.1-guided-path.md` (shipped), `SPEC-v2.2-approach-packs.md`, `SPEC-v2.3-regulation-depth.md`.
+Vault: `~/Capricorn-Brain/01 Projects/SoulCap-Therapy-App.md`, `AI/Cursor/SoulCap-Guided-Path.md`.
 
 ---
 
