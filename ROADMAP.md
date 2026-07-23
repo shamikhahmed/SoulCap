@@ -125,7 +125,14 @@ less. See `AGENTS.md §2` for the hard rules — every item inherits them.
 - [x] ES5 `data.js`, dead code cleanup, a11y tokens, expanded Roman Urdu chrome, Playwright safety tests.
 - SW `soulcap-v180`.
 
-### Next (v1.9+)
+### Next — v1.9 Clinical content library · **build guide: [`SPEC-v1.9-clinical-library.md`](SPEC-v1.9-clinical-library.md)**
+The big one. A symptom/experience library (physical + cognitive first: what it is · why · what
+helps · red-flags), validated **reflection** screeners (PHQ-9/GAD-7, never a diagnosis), mandatory
+red-flag routing (emergency + "see a doctor"), fight-or-flight + boundaries articles, and the flaky-
+test stabilisation. Owner decisions + full data shapes, copy, screener items, tests, and PR
+sequencing are in the spec. Clinical background: vault `SoulCap-Clinical-Content.md`.
+
+### Later v1.9+
 - Encrypted optional local backup (passphrase) — lost phone ≠ lost journal.
 - Broader Roman Urdu chrome (editor / person sheets) still preview; clinical English until review.
 - Quiet Wins deferred (manipulative risk).
