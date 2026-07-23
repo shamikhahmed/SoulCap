@@ -1,6 +1,6 @@
 # SoulCap Accessibility Contract
 
-**Version:** 3.0.1 · **Updated:** 2026-07-23
+**Version:** 5.0.7 · **Updated:** 2026-07-24
 
 ## Baseline
 
@@ -11,7 +11,9 @@
 - Dialogs are named, modal, focus-trapped, Escape-dismissable where safe, and restore focus.
 - Colour is never the only carrier of meaning.
 - Light, dark, night, AMOLED, and mood themes use semantic tokens rather than component hard-coding.
-- `prefers-reduced-motion` collapses travel/scale/blur to short opacity fades (≤80–90ms).
+- `prefers-reduced-motion` collapses travel/scale/blur to short opacity fades (≤80–90ms) and
+  **forces the Still motion preset** (overrides Vivid/Balanced).
+- Movement preset (Vivid / Balanced / Still) is user-chosen; gestures and WebGL orb off in Still.
 - Locale `rui` (Roman Urdu) is **LTR only** (Latin script). Clinical/safety strings stay English
   until a native clinical-copy review lands.
 - Journal editor uses `:focus-visible` rings (not outline-less fields).

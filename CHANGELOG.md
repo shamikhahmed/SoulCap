@@ -1,5 +1,12 @@
 ## [Unreleased]
 
+## [5.0.7] — 2026-07-24
+
+### Changed
+- **Native motion PR-8 Perf + a11y:** visibility pause hook for orb canvas; What’s new copy for 5.0;
+  gallery regen. **v5.0 native motion complete.**
+- SW `soulcap-v507`. App **5.0.7**. Schema still **v12**.
+
 ## [5.0.6] — 2026-07-24
 
 ### Added

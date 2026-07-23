@@ -4675,7 +4675,7 @@
       }
     });
   }
-  var APP_VERSION = '5.0.6';
+  var APP_VERSION = '5.0.7';
   function settingsGroup(v, title, kids) { v.appendChild(el('p', { class: 'eyebrow', style: 'margin-top:var(--space-3)', text: title })); kids.forEach(function (k) { if (k) v.appendChild(k); }); }
   function toggleBtn(label, on, fn) {
     return el('button', { class: 'btn ghost', style: 'display:flex;justify-content:space-between', onclick: fn,
@@ -5056,7 +5056,7 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '5.0.6',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '5.0.7',
     effectiveMotion: effectiveMotion,
     motionCap: function () { return motionCap; },
     loadGsap: loadGsap,
