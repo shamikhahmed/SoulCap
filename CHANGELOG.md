@@ -1,5 +1,12 @@
 ## [Unreleased]
 
+## [5.0.6] — 2026-07-24
+
+### Added
+- **Native motion PR-7 Onboarding preset:** “How much movement feels right?” (Vivid /
+  Balanced / Still) after consent; Settings Movement chips already ship. Reduced-motion still wins.
+- SW `soulcap-v506`. App **5.0.6**. Schema still **v12**.
+
 ## [5.0.5] — 2026-07-24
 
 ### Added

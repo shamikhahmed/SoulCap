@@ -636,7 +636,12 @@ var STRINGS = {
       concernsTitle:'What’s been hard lately?',
       concernsBody:'Pick any, or none. You can change this whenever — skipping doesn’t break anything.',
       start:'Start',
-      skipIn:'Skip — just let me in'
+      skipIn:'Skip — just let me in',
+      motionTitle:'How much movement feels right?',
+      motionBody:'You can change this anytime in Settings. If your device asks for less motion, SoulCap stays Still.',
+      motionVividHint:'Full signature moments and depth.',
+      motionBalancedHint:'Gentle transitions. Default.',
+      motionStillHint:'Opacity only. Quietest.'
     },
     checkin:{
       addDetail:'Add optional detail',

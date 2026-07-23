@@ -506,6 +506,16 @@
       });
     });
   }
+  function pauseOrbsForVisibility() {
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) {
+        /* RAF loops in breath-orb already skip when hidden */
+        return;
+      }
+      if (orbInstances.panic && orbInstances.panic.resize) orbInstances.panic.resize();
+      if (orbInstances.run && orbInstances.run.resize) orbInstances.run.resize();
+    });
+  }
   function bindHeroParallax() {
     if (motionIsQuiet()) return;
     var bands = document.querySelectorAll('.hero-band');
@@ -4665,7 +4675,7 @@
       }
     });
   }
-  var APP_VERSION = '5.0.5';
+  var APP_VERSION = '5.0.6';
   function settingsGroup(v, title, kids) { v.appendChild(el('p', { class: 'eyebrow', style: 'margin-top:var(--space-3)', text: title })); kids.forEach(function (k) { if (k) v.appendChild(k); }); }
   function toggleBtn(label, on, fn) {
     return el('button', { class: 'btn ghost', style: 'display:flex;justify-content:space-between', onclick: fn,
@@ -4825,15 +4835,16 @@
   var obStep = 0;
   function renderOnboarding() {
     var v = $('#view-onboarding'); clear(v);
-    var pct = Math.round(((obStep + 1) / 4) * 100);
+    var totalSteps = 5;
+    var pct = Math.round(((obStep + 1) / totalSteps) * 100);
     v.appendChild(el('div', { class: 'onboard-top' }, [
       el('div', {
         class: 'onboard-progress',
         role: 'progressbar',
         'aria-valuemin': '1',
-        'aria-valuemax': '4',
+        'aria-valuemax': String(totalSteps),
         'aria-valuenow': String(obStep + 1),
-        'aria-label': 'Onboarding step ' + (obStep + 1) + ' of 4'
+        'aria-label': 'Onboarding step ' + (obStep + 1) + ' of ' + totalSteps
       }, [
         el('div', { class: 'onboard-progress-fill', style: 'width:' + pct + '%' })
       ]),
@@ -4859,6 +4870,27 @@
       body.appendChild(el('h1', { class: 'h-voice', text: tUi('onboarding', 'consentTitle', { consentTitle: 'What this is, plainly.' }) }));
       body.appendChild(el('div', { class: 'notice', html: '<b>SoulCap is not therapy</b>, not a doctor, and not a crisis service. It teaches techniques and helps you notice patterns.<ul style="margin:9px 0 0;padding-left:17px"><li>Everything stays on your phone. No account, no server.</li><li>We never sell your data or train on it.</li><li>You can export or delete all of it, any time.</li><li>If you ever feel unsafe, please reach out to someone you trust or your local emergency services.</li></ul>' }));
       body.appendChild(el('button', { class: 'btn', text: tUi('onboarding', 'understand', { understand: 'I understand' }), onclick: function () { state.consent = true; save(); obStep = 3; render(); } }));
+    } else if (obStep === 3) {
+      body.appendChild(el('h1', { class: 'h-voice', text: tUi('onboarding', 'motionTitle', { motionTitle: 'How much movement feels right?' }) }));
+      body.appendChild(el('p', { class: 'p', text: tUi('onboarding', 'motionBody', { motionBody: 'You can change this anytime in Settings. If your device asks for less motion, SoulCap stays Still.' }) }));
+      body.appendChild(el('div', { class: 'stack' }, MOTION_OPTIONS.map(function (o) {
+        var hint = o.k === 'vivid' ? tUi('onboarding', 'motionVividHint', { motionVividHint: 'Full signature moments and depth.' })
+          : o.k === 'still' ? tUi('onboarding', 'motionStillHint', { motionStillHint: 'Opacity only. Quietest.' })
+          : tUi('onboarding', 'motionBalancedHint', { motionBalancedHint: 'Gentle transitions. Default.' });
+        return el('button', {
+          class: 'opt',
+          'aria-pressed': state.appearance.motion === o.k ? 'true' : 'false',
+          html: presentationChipLabel(o.k, o.l) + '<span class="os">' + hint + '</span>',
+          onclick: function () {
+            state.appearance.motion = o.k;
+            save();
+            applyTheme();
+            obStep = 4;
+            render();
+          }
+        });
+      })));
+      body.appendChild(el('button', { class: 'btn quiet', text: t('common.skip', 'Skip'), onclick: function () { obStep = 4; render(); } }));
     } else {
       body.appendChild(el('h1', { class: 'h-voice', text: tUi('onboarding', 'concernsTitle', { concernsTitle: 'What’s been hard lately?' }) }));
       body.appendChild(el('p', { class: 'p', text: tUi('onboarding', 'concernsBody', { concernsBody: 'Pick any, or none. You can change this whenever — skipping doesn’t break anything.' }) }));
@@ -4958,6 +4990,7 @@
     $('#sheetScrim').addEventListener('click', closeSheet);
     $('#fab').addEventListener('click', function () { haptic('done'); openPanic(); });
     bindGestures();
+    pauseOrbsForVisibility();
 
     // Journal editor
     $('#jeCancel').addEventListener('click', closeEditor);
@@ -5023,7 +5056,7 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '5.0.5',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '5.0.6',
     effectiveMotion: effectiveMotion,
     motionCap: function () { return motionCap; },
     loadGsap: loadGsap,

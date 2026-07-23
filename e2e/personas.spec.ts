@@ -43,6 +43,7 @@ test.describe('Synthetic user journeys', () => {
     await page.getByRole('textbox', { name: 'Name' }).fill('Aisha');
     await page.getByRole('button', { name: 'Continue' }).click();
     await page.getByRole('button', { name: 'I understand' }).click();
+    await page.getByRole('button', { name: 'Skip', exact: true }).click(); // motion
     await page.getByRole('button', { name: 'Panic' }).click();
     await page.getByRole('button', { name: 'Start' }).click();
 
