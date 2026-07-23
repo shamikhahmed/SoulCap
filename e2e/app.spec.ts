@@ -1640,8 +1640,14 @@ test.describe('v1.6 bundled features', () => {
     expect(manual.some((l: any) => l.text === 'My own line')).toBe(true);
     expect(manual.some((l: any) => l.text === 'Breathe before replying')).toBe(true);
     const lineInput = page.getByRole('textbox', { name: /Manual line/i }).first();
+    await lineInput.click({ clickCount: 3 });
     await lineInput.fill('My own line edited');
-    await lineInput.evaluate((el: HTMLInputElement) => { el.blur(); el.dispatchEvent(new Event('change', { bubbles: true })); });
+    await lineInput.evaluate((el: HTMLInputElement) => {
+      el.value = 'My own line edited';
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+      el.blur();
+    });
     await page.getByRole('button', { name: 'Refresh suggestions' }).click();
     const after = await page.evaluate(() => (window as any).__soulcap.getState().manual.lines);
     const edited = after.find((l: any) => l.id === 'user-1');

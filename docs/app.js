@@ -454,6 +454,68 @@
     var b = typeof scale === 'number' ? (scale - 0.7) / 0.3 : 0.5;
     inst.setBreath(Math.max(0, Math.min(1, b)), 0.55 + b * 0.35);
   }
+
+  /* ── Signature moments (v5 PR-5) ───────────────────────────────────────── */
+  function motionIsQuiet() {
+    return effectiveMotion() === 'still';
+  }
+  function signatureSplash() {
+    if (motionIsQuiet()) return;
+    loadGsap(function (g) {
+      if (!g) return;
+      var mark = $('#splash .mark');
+      var halo = $('#splash .halo');
+      if (mark) g.fromTo(mark, { scale: 0.86, opacity: 0.6 }, { scale: 1, opacity: 1, duration: 1.1, ease: 'power2.out' });
+      if (halo && effectiveMotion() === 'vivid') {
+        g.to(halo, { scale: 1.08, opacity: 0.85, duration: 1.6, yoyo: true, repeat: 1, ease: 'sine.inOut' });
+      }
+    });
+  }
+  function signatureCheckin(chipEl, arrivalKey) {
+    var band = document.querySelector('#view-now .hero-band');
+    if (band) {
+      band.setAttribute('data-arrival', arrivalKey || '');
+      window.setTimeout(function () {
+        if (band.getAttribute('data-arrival') === arrivalKey) band.removeAttribute('data-arrival');
+      }, 1600);
+    }
+    if (motionIsQuiet() || !chipEl) return;
+    loadGsap(function (g) {
+      if (!g) return;
+      g.fromTo(chipEl, { scale: 0.94 }, { scale: 1, duration: 0.32, ease: 'power2.out' });
+    });
+  }
+  function signaturePathReveal(root) {
+    if (motionIsQuiet() || !root) return;
+    loadGsap(function (g) {
+      if (!g) return;
+      g.fromTo(root, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.42, ease: 'power2.out' });
+      var why = root.querySelector('.p, .ht-reason, .reason');
+      if (why) g.fromTo(why, { opacity: 0 }, { opacity: 1, duration: 0.5, delay: 0.12, ease: 'power1.out' });
+    });
+  }
+  function signatureProgressIn(elRoot) {
+    if (motionIsQuiet() || !elRoot || elRoot.getAttribute('data-drew') === '1') return;
+    elRoot.setAttribute('data-drew', '1');
+    loadGsap(function (g) {
+      if (!g) return;
+      var dots = elRoot.querySelectorAll('.progress-dots i');
+      if (!dots.length) return;
+      g.fromTo(dots, { opacity: 0.25, scale: 0.7 }, {
+        opacity: 1, scale: 1, duration: 0.28, stagger: 0.05, ease: 'power2.out'
+      });
+    });
+  }
+  function signatureJournalOpen() {
+    if (motionIsQuiet()) return;
+    var ed = $('#journalEditor');
+    if (!ed) return;
+    loadGsap(function (g) {
+      if (!g) return;
+      var paper = ed.querySelector('.je-paper');
+      if (paper) g.fromTo(paper, { rotateY: -8, opacity: 0.85 }, { rotateY: 0, opacity: 1, duration: 0.4, ease: 'power2.out' });
+    });
+  }
   function applyTheme() {
     if (state.theme && VALID_THEMES[state.theme]) document.documentElement.setAttribute('data-theme', state.theme);
     else document.documentElement.removeAttribute('data-theme');
@@ -1086,13 +1148,14 @@
           var chip = pathChipById(cid);
           if (!expId && chip && chip.experiences && chip.experiences[0]) expId = chip.experiences[0];
         });
-        p.appendChild(el('div', { class: 'path-result hero-glow' }, [
+        p.appendChild(el('div', { class: 'path-result hero-glow path-reveal' }, [
           el('p', { class: 'eyebrow', text: PATH_UI.approachLabel }),
           el('h2', { class: 'card-title', text: approach ? approach.title : famMeta.label }),
           el('p', { class: 'p-voice', text: approach ? approach.why : (PATH_REASONS[family] || famMeta.note) }),
           el('p', { class: 'p-sm', text: PATH_UI.footnote }),
           el('div', { class: 'notice', text: PATH_UI.disclaimer })
         ]));
+        signaturePathReveal(p.querySelector('.path-reveal'));
         if (panic) {
           p.appendChild(el('div', { class: 'card mt-3' }, [
             el('p', { class: 'p-sm', text: PATH_UI.offerHelpHint }),
@@ -3361,6 +3424,7 @@
     }
 
     $('#journalEditor').classList.add('on'); $('#journalEditor').setAttribute('aria-hidden', 'false');
+    signatureJournalOpen();
     document.body.style.overflow = 'hidden';
     setTimeout(function () { $('#jeBody').focus(); }, 60);
 
@@ -4075,7 +4139,9 @@
     hero.appendChild(el('div', { class: 'chips', style: 'margin-top:var(--space-3)' }, states.map(function (s) {
       return el('button', { class: 'chip', 'aria-pressed': today === s ? 'true' : 'false', text: checkinStateLabel(s),
         onclick: function () {
+          var chip = this;
           if (!recordCheckin(s)) { showCheckinSaveFailed(); return; }
+          signatureCheckin(chip, s);
           haptic('select'); render();
         } });
     })));
@@ -4142,6 +4208,7 @@
       ]));
     }
     primary.appendChild(el('div', { class: 'bento-2' }, utilKids));
+    signatureProgressIn(utilKids[0]);
 
     var micro = el('div', { class: 'bento-2 now-micro' });
     if (!state.pathPrefs || !state.pathPrefs.hide) {
@@ -4581,7 +4648,7 @@
       }
     });
   }
-  var APP_VERSION = '5.0.3';
+  var APP_VERSION = '5.0.4';
   function settingsGroup(v, title, kids) { v.appendChild(el('p', { class: 'eyebrow', style: 'margin-top:var(--space-3)', text: title })); kids.forEach(function (k) { if (k) v.appendChild(k); }); }
   function toggleBtn(label, on, fn) {
     return el('button', { class: 'btn ghost', style: 'display:flex;justify-content:space-between', onclick: fn,
@@ -4928,6 +4995,7 @@
     }
 
     var splash = $('#splash'), dismiss = function () { splash.classList.add('gone'); };
+    signatureSplash();
     setTimeout(dismiss, state.onboarded ? 1500 : 2300);
     splash.addEventListener('click', dismiss);
 
@@ -4937,7 +5005,7 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '5.0.3',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '5.0.4',
     effectiveMotion: effectiveMotion,
     motionCap: function () { return motionCap; },
     loadGsap: loadGsap,

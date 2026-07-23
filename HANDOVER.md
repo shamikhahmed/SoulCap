@@ -1,4 +1,4 @@
-**Version:** 5.0.3 · SW `soulcap-v503`
+**Version:** 5.0.4 · SW `soulcap-v504`
 
 # SoulCap — Project Handover
 
@@ -6,7 +6,7 @@
 > first — it is the current truth as of 2026-07-24. The sections further down describe an
 > earlier architecture and are kept for reference only.
 
-## Current state (v5.0.3 — 2026-07-24)
+## Current state (v5.0.4 — 2026-07-24)
 
 **The product is the PWA in `docs/`.** Offline-first, local-only, **no network calls after load**.
 Schema **v12**. **Design System v4** through Journal/People polish.
@@ -14,10 +14,9 @@ Building `SPEC-v4.0-master-design.md` PR-by-PR, then `SPEC-v5.0-native-motion.md
 Live: https://shamikhahmed.github.io/SoulCap/
 
 ### Schema & ship
-- State `DEFAULT.v = 12` · SW `soulcap-v503` · app **5.0.3**
-- **v4.0 master design complete.** Building `SPEC-v5.0-native-motion.md` (PR-1–4 shipped).
-- Vendored GSAP + breath-orb (WebGL) in `docs/vendor/`. Still/weak → CSS orb.
-- View Transitions on push/pop. Gestures: tabs / sheet dismiss / swipe-back.
+- State `DEFAULT.v = 12` · SW `soulcap-v504` · app **5.0.4**
+- **v4.0 complete.** v5 PR-1–5 shipped (foundation → orb → signature moments).
+- Vendored GSAP + breath-orb. Still/weak → CSS orb / no signature motion.
 - Ship workflow: bump CACHE + VERSION.json + APP_VERSION; CHANGELOG; SAFETY/HANDOVER; gallery;
   `npm run verify`; push `main`.
 

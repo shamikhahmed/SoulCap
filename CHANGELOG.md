@@ -1,5 +1,12 @@
 ## [Unreleased]
 
+## [5.0.4] — 2026-07-24
+
+### Added
+- **Native motion PR-5 Signature moments:** splash GSAP breathe; check-in chip spring + hero hue
+  ripple; path result reveal; progress dots draw-in; journal paper open. Still skips all.
+- SW `soulcap-v504`. App **5.0.4**. Schema still **v12**.
+
 ## [5.0.3] — 2026-07-24
 
 ### Added
