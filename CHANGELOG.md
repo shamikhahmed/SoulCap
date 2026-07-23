@@ -1,3 +1,9 @@
+## [Unreleased]
+
+### Fixed
+- Flaky Playwright: wait for CSS animations idle + `reducedMotion` before theme contrast and journal
+  control size assertions (`e2e/app.spec.ts`, `e2e/personas.spec.ts`).
+
 ## [1.8.0] — 2026-07-22
 
 ### Added
