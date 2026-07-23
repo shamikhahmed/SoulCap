@@ -20,9 +20,7 @@
   summaries; Emotional Timeline week view; Gentle Reflection Cards
 - Personal Reset Menu on Calm; user Principles and **Personal Manual** on You
 - Library article bookmarks (Saved filter); constellation person notes, events, ring history
-- Six searchable offline emotional articles **plus 24 clinical experiences** (physical/cognitive)
-  with red-flag routing; source notes, support guidance, review-status honesty, and stable links
-  to related exercises
+- Optional **What’s happening?** picker on Now and Calm → experiences → skills (never forced)
 - Six optional daily supports with local-day completion only; no streaks, scores, reminders, or
   missed-day pressure
 - Adaptive drip questionnaire (≤4 questions/day) with inspectable, correctable local estimates and

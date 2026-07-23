@@ -671,6 +671,16 @@ var LIBRARY_UI = {
   reviewNote:'Not yet reviewed by a licensed clinician. Not a diagnosis.',
   close:'Close'
 };
+var EXPERIENCE_PICKER_UI = {
+  title:'What’s happening?',
+  cardTitle:'Notice what’s happening',
+  cardHint:'Optional. Body or mind sensations → something that may help.',
+  calmHint:'Pick a sensation. Never required.',
+  intro:'Choose anything that fits. This is reflection, not a diagnosis.',
+  searchLabel:'Search experiences',
+  searchPlaceholder:'heart, fog, rumination…',
+  back:'Close'
+};
 var CALM_REVIEW_NOTE = 'Skills, articles, and experiences are evidence-informed but not yet reviewed by a licensed clinician.';
 
 var EXPERIENCE_GROUPS = [

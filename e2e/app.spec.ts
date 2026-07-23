@@ -415,6 +415,17 @@ test.describe('v1.9 clinical experiences library', () => {
     await expect(page.locator('.experience-card[data-experience-id="racing-heart"]')).toBeVisible();
     await expect(page.getByRole('status')).toContainText(/result/);
   });
+
+  test('Now what’s-happening picker opens experience then runner', async ({ page }) => {
+    await seedDemo(page);
+    await page.getByRole('button', { name: /Notice what’s happening/ }).click();
+    await expect(page.locator('#sheet')).toContainText('What’s happening?');
+    await expect(page.locator('#sheet')).toContainText('Not a diagnosis');
+    await page.locator('#sheetPanel .experience-card[data-experience-id="racing-heart"]').click();
+    await expect(page.locator('#sheet')).toContainText('What may help');
+    await page.locator('#sheetPanel').getByRole('button', { name: /Try · Physiological sigh/ }).click();
+    await expect(page.locator('#runner')).toBeVisible();
+  });
 });
 
 test.describe('v1.1 adaptive drip, themes, locale', () => {
