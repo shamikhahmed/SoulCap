@@ -1,5 +1,13 @@
 ## [Unreleased]
 
+## [5.1.3] — 2026-07-24
+
+### Fixed
+- **v5.1 PR-4 FAB / ship hygiene:** mobile `--fab-gutter` so Help never covers cards/tiles;
+  larger `--fab-clearance`; hero→section gap tightened to 48px; `package.json` version synced;
+  ship workflow lists `package.json` in AGENTS.md / `.cursorrules`.
+- SW `soulcap-v513`. App **5.1.3**. Schema still **v12**. **v5.1 complete.**
+
 ## [5.1.2] — 2026-07-24
 
 ### Changed

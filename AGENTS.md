@@ -169,8 +169,9 @@ behaviour **must** have a test — it gates the deploy.
 
 1. Make the change in `docs/` (and mirror any safety-keyword change into the backend service).
 2. If you touched any file in `docs/`, **bump the cache**: `CACHE` in `docs/sw.js`
-   (`soulcap-vNNN`), `swCache` + `version` in `VERSION.json`, and `APP_VERSION`/`version` in
-   `app.js`. All three must match. Stale cache = users stuck on the old build.
+   (`soulcap-vNNN`), `swCache` + `version` in `VERSION.json`, `APP_VERSION`/`version` in
+   `app.js`, and `version` in `package.json`. All must match. Stale cache = users stuck on
+   the old build.
 3. Update `CHANGELOG.md` (keep-a-changelog style) and bump the version in `SAFETY.md` + `HANDOVER.md`.
 4. Run the tests locally: `npm run verify` (or `npx playwright test`). Chromium only, two projects
    (mobile + desktop). **All green before you push.**

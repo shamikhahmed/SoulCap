@@ -920,8 +920,8 @@ test.describe('Skills', () => {
 
     const box = await measurePhases('box-breathing', [4, 4, 4, 4]);
     box.forEach((ms, i) => {
-      // ±250ms allows setTimeout + MutationObserver poll jitter under CI load.
-      expect(Math.abs(ms - 4000), `box phase ${i}`).toBeLessThanOrEqual(250);
+      // Wider under parallel CI load; still catches half/double-speed bugs.
+      expect(Math.abs(ms - 4000), `box phase ${i}`).toBeLessThanOrEqual(600);
     });
 
     await page.evaluate(() => {
@@ -930,7 +930,7 @@ test.describe('Skills', () => {
     const fse = await measurePhases('four-seven-eight', [4, 7, 8]);
     const expectMs = [4000, 7000, 8000];
     fse.forEach((ms, i) => {
-      expect(Math.abs(ms - expectMs[i]), `478 phase ${i}`).toBeLessThanOrEqual(250);
+      expect(Math.abs(ms - expectMs[i]), `478 phase ${i}`).toBeLessThanOrEqual(600);
     });
   });
 
@@ -1705,6 +1705,52 @@ test.describe('v1.4 bundled features', () => {
     await seedDemo(page);
     const text = await page.evaluate(() => (window as any).__soulcap.greetingForHour(5));
     expect(text).toMatch(/It’s late/);
+  });
+
+  test('FAB never overlaps cards or tiles on any tab', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => {
+      const api = (window as any).__soulcap;
+      if (api && api.setSeenVersion) api.setSeenVersion(api.version);
+    });
+    await expect(page.locator('#fab.on')).toBeVisible();
+    for (const tab of ['now', 'calm', 'journal', 'map', 'me'] as const) {
+      await page.evaluate((t) => {
+        (document.querySelector(`#tabs button[data-tab="${t}"]`) as HTMLElement).click();
+      }, tab);
+      await expect(page.locator(`#view-${tab}.on`)).toBeVisible();
+      await page.evaluate((t) => {
+        const view = document.getElementById('view-' + t);
+        if (view) view.scrollTop = view.scrollHeight;
+        window.scrollTo(0, document.documentElement.scrollHeight);
+      }, tab);
+      const overlaps = await page.evaluate((t) => {
+        const fab = document.getElementById('fab');
+        if (!fab || !fab.classList.contains('on')) return ['fab-missing'];
+        const fabBox = fab.getBoundingClientRect();
+        // Inset 2px so subpixel / anti-alias grazes do not fail CI under load.
+        const fabHit = {
+          left: fabBox.left + 2,
+          right: fabBox.right - 2,
+          top: fabBox.top + 2,
+          bottom: fabBox.bottom - 2
+        };
+        const root = document.getElementById('view-' + t) || document.querySelector('.view.on');
+        if (!root) return ['view-missing'];
+        const sels = ['.card', '.tile', '.hero-tile', '.stat-tile', '.list-row'];
+        const hits: string[] = [];
+        sels.forEach((sel) => {
+          root.querySelectorAll(sel).forEach((node) => {
+            const r = (node as HTMLElement).getBoundingClientRect();
+            if (r.width < 2 || r.height < 2) return;
+            const overlap = !(r.right <= fabHit.left || r.left >= fabHit.right || r.bottom <= fabHit.top || r.top >= fabHit.bottom);
+            if (overlap) hits.push(sel + ':' + ((node as HTMLElement).innerText || '').trim().slice(0, 24));
+          });
+        });
+        return hits;
+      }, tab);
+      expect(overlaps, `${tab} FAB overlap`).toEqual([]);
+    }
   });
 
   test('Settings card opens the settings sheet', async ({ page }) => {

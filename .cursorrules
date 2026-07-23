@@ -37,7 +37,7 @@ NOT an AI therapist, mood tracker, or crisis service. Success = the user needs t
 
 ## Ship workflow (every change that touches `docs/`)
 1. Bump `CACHE` in `docs/sw.js`, `swCache`+`version` in `VERSION.json`, `APP_VERSION`+`version`
-   in `docs/app.js` — all matching (e.g. `soulcap-v072` / `0.7.2`).
+   in `docs/app.js`, and `version` in `package.json` — all matching (e.g. `soulcap-v072` / `0.7.2`).
 2. Update `CHANGELOG.md`; bump version in `SAFETY.md` + `HANDOVER.md`.
 3. `npx playwright test` — all green (mobile + desktop, Chromium).
 4. Commit + push to `main`. CI (`.github/workflows/deploy.yml`) gates the Pages deploy on the tests.

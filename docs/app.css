@@ -271,7 +271,11 @@ html[dir="rtl"] .article-list,html[dir="rtl"] .opt .os{text-align:right}
   --sab:env(safe-area-inset-bottom,0px);
   --tab-h:64px;
   --fab-h:48px;
-  --fab-clearance:calc(var(--fab-h) + var(--space-6) + 12px);
+  --fab-clearance:calc(var(--fab-h) + var(--space-7) + 20px);
+  --fab-gutter:120px; /* clear Help FAB over the 580px app column */
+@media (max-width:380px){
+  :root{--fab-gutter:72px} /* icon-only FAB */
+}
   --nav-h:52px;
 }
 :root[data-motion="vivid"]{
@@ -386,7 +390,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 /* ── Shell ─────────────────────────────────────────────── */
 #app{min-height:100vh;display:flex;flex-direction:column;max-width:580px;margin:0 auto;position:relative}
 #views{flex:1;display:flex;flex-direction:column;min-height:0}
-.view{flex:1;padding:calc(var(--sat) + var(--space-5)) var(--space-4) calc(var(--space-4) + var(--fab-clearance, 56px));display:none;flex-direction:column;gap:var(--space-5)}
+.view{flex:1;padding:calc(var(--sat) + var(--space-5)) calc(var(--space-4) + var(--fab-gutter)) calc(var(--space-4) + var(--fab-clearance, 56px)) var(--space-4);display:none;flex-direction:column;gap:var(--space-5)}
 .view.on{display:flex;animation:viewIn var(--dur-normal) var(--ease-out) both}
 @keyframes viewIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
@@ -500,6 +504,10 @@ input[type="range"]{width:100%;min-height:48px;accent-color:var(--accent)}
 .section-block{display:flex;flex-direction:column;gap:var(--space-3);margin-top:var(--space-6)}
 .section-block:first-of-type{margin-top:var(--space-4)}
 .section-block > .eyebrow{margin-bottom:0}
+/* Hero → next block: 48px, not 64–72 dead air under short heroes. */
+.view > .hero-band{margin-bottom:0}
+.view > .hero-band + *{margin-top:var(--space-7)}
+.view > .hero-band + .section-block{margin-top:var(--space-7)}
 .now-primary{display:flex;flex-direction:column;gap:var(--space-4)}
 .now-quiet{display:flex;flex-direction:column;gap:var(--space-3);margin-top:var(--space-5);opacity:.98}
 .now-quiet .card-title{font-size:19px}

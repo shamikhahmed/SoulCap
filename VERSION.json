@@ -1,8 +1,8 @@
 {
   "name": "SoulCap",
-  "version": "5.1.2",
-  "swCache": "soulcap-v512",
+  "version": "5.1.3",
+  "swCache": "soulcap-v513",
   "schema": 12,
   "deploy": "docs/",
-  "note": "v5.1.2 fixes PR-3 — Settings control system (switches, segs, theme swatches)."
+  "note": "v5.1.3 fixes PR-4 — FAB gutter lock, package.json sync, hero gap."
 }
