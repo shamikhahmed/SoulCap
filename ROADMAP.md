@@ -5,7 +5,7 @@ item and ship it **the same way the rest of the app was built** — read `AGENTS
 rules, conventions, and ship workflow. Every item below lists **what**, **why**, **files to
 touch**, **acceptance criteria (incl. a test)**, and **guardrails**.
 
-**Current release: v4.0.4** · Published app: https://shamikhahmed.github.io/SoulCap/
+**Current release: v4.0.5** · Published app: https://shamikhahmed.github.io/SoulCap/
 
 Philosophy (never drifts): a personalised emotional operating system, **not** an AI therapist.
 Help people understand and regulate; never "fix" them; never diagnose; success = needing the app
@@ -149,7 +149,8 @@ Craft only — **not more features**. Rubric + checklist in the spec.
 - [x] **PR-3 Now** — hero band + bento · **4.0.2** / `soulcap-v402`
 - [x] **PR-4 You** — dashboard + list rows + pushViews · **4.0.3** / `soulcap-v403`
 - [x] **PR-5 Calm** — hero + rails · **4.0.4** / `soulcap-v404`
-- [ ] PR-6 Journal+People · PR-7 flows · PR-8 first-run · PR-9 copy · PR-10 a11y/gallery
+- [x] **PR-6 Journal + People** — book depth + edge map · **4.0.5** / `soulcap-v405`
+- [ ] PR-7 flows · PR-8 first-run · PR-9 copy · PR-10 a11y/gallery
 
 ### Then — v5.0 Native motion · **[`SPEC-v5.0-native-motion.md`](SPEC-v5.0-native-motion.md)**
 - [ ] PR-1…8 (GSAP vendored, View Transitions, gestures, breathing orb, signatures…)

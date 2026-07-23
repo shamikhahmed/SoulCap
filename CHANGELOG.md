@@ -1,5 +1,12 @@
 ## [Unreleased]
 
+## [4.0.5] — 2026-07-24
+
+### Changed
+- **Master design PR-6 Journal + People:** full-bleed book cover (spine/edge), paper-slip
+  timeline; edge-to-edge constellation with glass-pill controls.
+- SW `soulcap-v405`. App **4.0.5**. Schema still **v12**.
+
 ## [4.0.4] — 2026-07-24
 
 ### Changed

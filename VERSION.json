@@ -1,8 +1,8 @@
 {
   "name": "SoulCap",
-  "version": "4.0.4",
-  "swCache": "soulcap-v404",
+  "version": "4.0.5",
+  "swCache": "soulcap-v405",
   "schema": 12,
   "deploy": "docs/",
-  "note": "v4.0.4 master design PR-5 — Calm hero + Fitted/Understand/Read rails."
+  "note": "v4.0.5 master design PR-6 — Journal book depth + People edge map + glass pills."
 }

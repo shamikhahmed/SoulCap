@@ -2853,9 +2853,10 @@
     var v = $('#view-journal'); clear(v);
     var cov = state.journalCover, cc = coverColors(), coverPhoto = localImageSource(cov.photo);
 
-    // The book cover — customisable, sets the mood of the whole tab.
-    var cover = el('button', { class: 'book-cover',
+    var cover = el('button', { class: 'book-cover book-cover-bleed',
       style: '--bc-a:' + cc[0] + ';--bc-b:' + cc[1], onclick: coverSheet }, [
+      el('span', { class: 'bc-spine', 'aria-hidden': 'true' }),
+      el('span', { class: 'bc-edge', 'aria-hidden': 'true' }),
       coverPhoto ? el('img', { class: 'bc-photo', src: coverPhoto, alt: '' }) : null,
       coverPhoto ? el('span', { class: 'bc-shade' }) : null,
       el('span', { class: 'bc-edit', text: 'Customise' }),
@@ -2864,7 +2865,7 @@
       el('p', { class: 'bc-sub', text: cov.subtitle || (state.journal.length + (state.journal.length === 1 ? ' entry' : ' entries')) })
     ]);
     v.appendChild(cover);
-    v.appendChild(el('button', { class: 'btn', text: '＋  New entry', onclick: newEntrySheet }));
+    v.appendChild(el('button', { class: 'btn journal-new-row', text: '＋  New entry', onclick: newEntrySheet }));
     v.appendChild(el('button', { class: 'btn ghost', text: tUi('park', 'button', PARK_UI), onclick: function () { parkThoughtSheet(); } }));
 
     var due = dueParkedThoughts();
@@ -2903,7 +2904,7 @@
           type: 'button', 'aria-label': JOURNAL_UI.searchClear, text: 'Clear',
           onclick: function () { journalQuery = ''; render(); } }));
       }
-      var contents = el('div', { class: 'journal-contents' });
+      var contents = el('div', { class: 'journal-contents journal-timeline' });
       search.addEventListener('input', function () {
         journalQuery = search.value;
         renderJournalContents(contents);
@@ -2956,11 +2957,15 @@
         lastMonth = key;
       }
       var d = new Date(e.t);
-      wrap.appendChild(el('button', { class: 'j-entry' + (e.decor ? ' decor-' + e.decor : ''), onclick: function () { openEditor(e.id); } }, [
+      var hasPhotos = e.photos && e.photos.length;
+      wrap.appendChild(el('button', {
+        class: 'j-entry paper-slip' + (hasPhotos ? ' j-entry-tall' : '') + (e.decor ? ' decor-' + e.decor : ''),
+        onclick: function () { openEditor(e.id); }
+      }, [
         el('p', { class: 'jd', text: d.toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' }) + ' · ' + d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) + (e.mood ? '  ' + e.mood : '') }),
         e.title ? el('p', { class: 'jt', text: e.title }) : null,
         el('p', { class: 'jx', text: e.body || '…' }),
-        (e.photos && e.photos.length) ? el('div', { class: 'jphotos' }, e.photos.slice(0, 4).map(function (src) {
+        hasPhotos ? el('div', { class: 'jphotos' }, e.photos.slice(0, 4).map(function (src) {
           src = localImageSource(src);
           if (!src) return null;
           return el('img', { src: src, alt: '', loading: 'lazy' });
@@ -3697,7 +3702,10 @@
   }
   function renderMap() {
     var v = $('#view-map'); clear(v);
-    v.appendChild(el('div', {}, [el('p', { class: 'eyebrow', text: 'Constellation' }), el('h1', { class: 'h-voice', text: 'The people around you.' })]));
+    v.appendChild(el('div', { class: 'hero-band map-hero' }, [
+      el('p', { class: 'eyebrow', text: 'Constellation' }),
+      el('h1', { class: 'h-voice', text: 'The people around you.' })
+    ]));
     if (!state.people.length) {
       v.appendChild(el('div', { class: 'card empty-state' }, [
         el('p', { class: 'p-voice', text: tUi('empty', 'map', EMPTY_UI) }),
@@ -3705,19 +3713,29 @@
         el('button', { class: 'btn', text: 'Add the first person', onclick: addPersonSheet })
       ]));
     } else {
-      var wrap = el('div', { class: 'map-wrap' });
+      var wrap = el('div', { class: 'map-wrap map-edge' });
       wrap.appendChild(el('div', { html: '<svg id="map" viewBox="0 0 400 400" role="img" aria-label="Your constellation"></svg>' }));
+      var pills = el('div', { class: 'map-pills', role: 'toolbar', 'aria-label': 'Map controls' });
+      pills.appendChild(el('button', { class: 'glass-pill', type: 'button', 'aria-label': 'Quick add person', text: '＋', onclick: addPersonSheet }));
+      pills.appendChild(el('button', { class: 'glass-pill', type: 'button', text: 'Rings ' + state.rings, onclick: function () {
+        var next = state.rings >= 7 ? 3 : state.rings + 1;
+        if (!setRingCount(next)) return;
+        buzz(8); render();
+      } }));
+      pills.appendChild(el('button', { class: 'glass-pill', type: 'button', text: 'Name rings', onclick: ringNameSheet }));
+      wrap.appendChild(pills);
       var legend = el('div', { class: 'legend' });
       RELATIONSHIP_TYPES.forEach(function (t) { if (state.people.some(function (p) { return p.type === t.code; })) legend.appendChild(el('span', { html: '<i style="background:var(' + t.cssVar + ')"></i>' + t.label })); });
       if (state.people.some(function (p) { return p.hard; })) legend.appendChild(el('span', { html: '<i style="border:1.5px dashed var(--ink-3)"></i>Hard right now' }));
-      wrap.appendChild(legend); v.appendChild(wrap);
-      v.appendChild(el('button', { class: 'btn ghost', text: 'Add someone', onclick: addPersonSheet }));
-      v.appendChild(el('div', {}, [el('p', { class: 'eyebrow', text: 'Rings' }), el('div', { class: 'chips' }, [3, 4, 5, 6, 7].map(function (n) {
+      wrap.appendChild(legend);
+      v.appendChild(wrap);
+      v.appendChild(el('div', { class: 'chips map-ring-chips', role: 'group', 'aria-label': 'Ring count' }, [3, 4, 5, 6, 7].map(function (n) {
         return el('button', { class: 'chip', 'aria-pressed': state.rings === n ? 'true' : 'false', text: '' + n, onclick: function () {
           if (!setRingCount(n)) return;
           buzz(8); render();
         } });
-      }))]));
+      })));
+      v.appendChild(el('button', { class: 'btn ghost', text: 'Add someone', onclick: addPersonSheet }));
       v.appendChild(el('button', { class: 'btn ghost', text: 'Name the rings', onclick: ringNameSheet }));
       v.appendChild(el('p', { class: 'p-sm', text: 'Pinch the map to add or remove a ring (3–7). Long-press a ring label to rename. Drag anyone in or out. Tap a person to open them. Change map pace in Settings.' }));
       if (state.trackContact) {
@@ -4301,7 +4319,7 @@
       }
     });
   }
-  var APP_VERSION = '4.0.4';
+  var APP_VERSION = '4.0.5';
   function settingsGroup(v, title, kids) { v.appendChild(el('p', { class: 'eyebrow', style: 'margin-top:var(--space-3)', text: title })); kids.forEach(function (k) { if (k) v.appendChild(k); }); }
   function toggleBtn(label, on, fn) {
     return el('button', { class: 'btn ghost', style: 'display:flex;justify-content:space-between', onclick: fn,
@@ -4643,7 +4661,7 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '4.0.4',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '4.0.5',
     experienceIds: EXPERIENCES.map(function (item) { return item.id; }),
     experienceHelpsOk: function () {
       return EXPERIENCES.every(function (exp) {
