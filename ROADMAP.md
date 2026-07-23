@@ -143,21 +143,14 @@ Spec: [`SPEC-v1.9-clinical-library.md`](SPEC-v1.9-clinical-library.md). Delivere
 
 Craft only — **not more features**. Rubric + checklist in the spec.
 
-### NEXT — v3.0 Amethyst redesign · **[`SPEC-v3.0-redesign.md`](SPEC-v3.0-redesign.md)**
+### Shipped — v3.0 Amethyst redesign · **[`SPEC-v3.0-redesign.md`](SPEC-v3.0-redesign.md)**
 - [x] **PR-1 tokens** — Amethyst palette, elevation, grain, FAB clearance · **3.0.0** / `soulcap-v300`
-- [ ] PR-2 component kit · PR-3 Now hero · PR-4 splash/welcome · PR-5 tabs + Progress · PR-6 Path approaches · PR-7 gallery
+- [x] **PR-2–7** — component kit · Now hero + Explore · welcome/onboard · Progress dash · approach
+  packs · gallery · **3.0.1** / `soulcap-v301`
 
 ### Shipped — v2.1 Guided Path · **[`SPEC-v2.1-guided-path.md`](SPEC-v2.1-guided-path.md)**
 - [x] Feeling → chips → family why → exercise (rule-based, offline). Sister reply + review kit.
 - [x] Schema **v12** · SW `soulcap-v210` · app **2.1.0** · e2e path / Help / no-diagnosis lexicon.
-
-### NEXT — v3.0 The redesign · **[`SPEC-v3.0-redesign.md`](SPEC-v3.0-redesign.md)** ← current priority
-Flagship visual + IA redesign (Apple/Calm/Fable-grade), engines **preserved and linked**, not a
-rewrite. New refined-purple "Amethyst" design system (surfaces <30% sat, accent ≤~55%, real card
-elevation, warmth/depth, FAB fix), unified component kit, one adaptive core connecting check-ins /
-screeners / Guided Path / technique feedback, and completion of the **assessment → approach
-recommendation** engine (folds in v2.2 approach packs) + a no-streak **progress dashboard**. 7-PR
-sequence, guardrails, and per-screen briefs in the spec. Owner-driven (2026-07-23).
 
 ### After v3.0
 - [`SPEC-v2.3-regulation-depth.md`](SPEC-v2.3-regulation-depth.md) — deeper regulation tools.
