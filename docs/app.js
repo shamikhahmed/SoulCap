@@ -306,14 +306,36 @@
     ]);
   }
   function railBlock(title, items, seeAllFn) {
-    var headKids = [el('p', { class: 'section-label', text: title, style: 'margin:0' })];
+    var labelId = 'rail-label-' + title.replace(/\s+/g, '-').toLowerCase();
+    var headKids = [el('p', { class: 'section-label', text: title, style: 'margin:0', id: labelId })];
     if (seeAllFn) {
-      headKids.push(el('button', { class: 'see-all', type: 'button', text: 'See all', onclick: seeAllFn }));
+      headKids.push(el('button', {
+        class: 'see-all', type: 'button', text: 'See all',
+        'aria-describedby': labelId,
+        onclick: seeAllFn
+      }));
     }
+    var railKids = (items || []).map(function (item) {
+      if (item && item.setAttribute) item.setAttribute('role', 'listitem');
+      return item;
+    });
     return el('div', { class: 'rail-wrap' }, [
       el('div', { class: 'rail-head' }, headKids),
-      el('div', { class: 'rail', role: 'list' }, items)
+      el('div', {
+        class: 'rail',
+        role: 'list',
+        'aria-labelledby': labelId,
+        tabindex: '0'
+      }, railKids)
     ]);
+  }
+  function emptyState(opts) {
+    var kids = [el('p', { class: 'p-voice', text: opts.body || '' })];
+    if (opts.hint) kids.push(el('p', { class: 'p-sm', text: opts.hint }));
+    if (opts.action && opts.onclick) {
+      kids.push(el('button', { class: opts.primary === false ? 'btn ghost' : 'btn', text: opts.action, onclick: opts.onclick }));
+    }
+    return el('div', { class: 'empty-state', role: 'status' }, kids);
   }
   function heroTile(opts) {
     return el(opts.onclick ? 'button' : 'div', {
@@ -1236,7 +1258,13 @@
             el('span', { class: decision === 'confirmed' ? 'tier declared' : 'tier guess', text: decision === 'confirmed' ? tUi('pattern', 'confirmed', PATTERN_UI) : tUi('pattern', 'guess', PATTERN_UI) })
           ]));
         });
-        if (!any) p.appendChild(el('p', { class: 'p-sm', text: PATTERN_UI.noWeekly }));
+        if (!any) {
+          p.appendChild(emptyState({
+            body: tUi('empty', 'patterns', EMPTY_UI),
+            action: EMPTY_UI.patternsAction,
+            onclick: function () { closeSubview(); selectTab('now'); }
+          }));
+        }
       }
     });
   }
@@ -2898,10 +2926,11 @@
     }
 
     if (!state.journal.length) {
-      v.appendChild(el('div', { class: 'card empty-state' }, [
-        el('p', { class: 'p-voice', text: tUi('empty', 'journal', EMPTY_UI) }),
-        el('button', { class: 'btn', text: EMPTY_UI.journalAction, onclick: newEntrySheet })
-      ]));
+      v.appendChild(emptyState({
+        body: tUi('empty', 'journal', EMPTY_UI),
+        action: EMPTY_UI.journalAction,
+        onclick: newEntrySheet
+      }));
     } else {
       v.appendChild(el('p', { class: 'eyebrow', style: 'margin-top:4px', text: 'Contents' }));
       var search = el('input', { class: 'journal-search', type: 'search', value: journalQuery,
@@ -3716,11 +3745,12 @@
       el('h1', { class: 'h-voice', text: 'The people around you.' })
     ]));
     if (!state.people.length) {
-      v.appendChild(el('div', { class: 'card empty-state' }, [
-        el('p', { class: 'p-voice', text: tUi('empty', 'map', EMPTY_UI) }),
-        el('p', { class: 'p-sm', text: 'Nobody else ever sees this. It stays on your device.' }),
-        el('button', { class: 'btn', text: 'Add the first person', onclick: addPersonSheet })
-      ]));
+      v.appendChild(emptyState({
+        body: tUi('empty', 'map', EMPTY_UI),
+        hint: tUi('empty', 'mapHint', EMPTY_UI),
+        action: EMPTY_UI.mapAction,
+        onclick: addPersonSheet
+      }));
     } else {
       var wrap = el('div', { class: 'map-wrap map-edge' });
       wrap.appendChild(el('div', { html: '<svg id="map" viewBox="0 0 400 400" role="img" aria-label="Your constellation"></svg>' }));
@@ -3854,9 +3884,9 @@
       ]));
     }
     if (!state.checkins.length) {
-      v.appendChild(el('div', { class: 'card empty-state' }, [
-        el('p', { class: 'p-sm', text: tUi('empty', 'now', EMPTY_UI) })
-      ]));
+      v.appendChild(emptyState({
+        body: tUi('empty', 'now', EMPTY_UI)
+      }));
     }
 
     var primary = el('div', { class: 'now-primary' });
@@ -4024,10 +4054,12 @@
     v.appendChild(hero);
 
     if (!name && !historyFilled() && !state.principles.length && !state.manual.lines.length && !planFilled()) {
-      v.appendChild(el('div', { class: 'card empty-state' }, [
-        el('p', { class: 'p-sm', text: tUi('empty', 'me', EMPTY_UI) }),
-        el('button', { class: 'btn ghost', text: EMPTY_UI.meAction, onclick: profileSheet })
-      ]));
+      v.appendChild(emptyState({
+        body: tUi('empty', 'me', EMPTY_UI),
+        action: EMPTY_UI.meAction,
+        primary: false,
+        onclick: profileSheet
+      }));
     }
 
     var insights = el('div', { class: 'section-block me-insights' }, [
@@ -4324,11 +4356,11 @@
             el('span', { class: 'tier observed', text: 'You tried' })
           ]));
         });
-        if (!anyKnow) p.appendChild(el('p', { class: 'p-sm', text: tUi('empty', 'knows', { knows: 'Nothing stored yet — check-ins and answers appear here.' }) }));
+        if (!anyKnow) p.appendChild(emptyState({ body: tUi('empty', 'knows', EMPTY_UI) }));
       }
     });
   }
-  var APP_VERSION = '4.0.8';
+  var APP_VERSION = '4.0.9';
   function settingsGroup(v, title, kids) { v.appendChild(el('p', { class: 'eyebrow', style: 'margin-top:var(--space-3)', text: title })); kids.forEach(function (k) { if (k) v.appendChild(k); }); }
   function toggleBtn(label, on, fn) {
     return el('button', { class: 'btn ghost', style: 'display:flex;justify-content:space-between', onclick: fn,
@@ -4682,7 +4714,7 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '4.0.8',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '4.0.9',
     experienceIds: EXPERIENCES.map(function (item) { return item.id; }),
     experienceHelpsOk: function () {
       return EXPERIENCES.every(function (exp) {

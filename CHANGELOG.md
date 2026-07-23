@@ -1,5 +1,12 @@
 ## [Unreleased]
 
+## [4.0.9] — 2026-07-24
+
+### Changed
+- **Master design PR-10 States + a11y:** shared `emptyState` kit; warmer empties for Journal /
+  People / Patterns / knows; rails keyboard-focusable with labelled See all; hero-band contrast.
+- SW `soulcap-v409`. App **4.0.9**. Schema still **v12**. **v4.0 master design complete.**
+
 ## [4.0.8] — 2026-07-24
 
 ### Changed

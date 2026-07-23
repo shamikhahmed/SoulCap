@@ -1,8 +1,8 @@
 {
   "name": "SoulCap",
-  "version": "4.0.8",
-  "swCache": "soulcap-v408",
+  "version": "4.0.9",
+  "swCache": "soulcap-v409",
   "schema": 12,
   "deploy": "docs/",
-  "note": "v4.0.8 master design PR-9 — copy pass: one word = technique."
+  "note": "v4.0.9 master design PR-10 — empty states, a11y polish, gallery."
 }

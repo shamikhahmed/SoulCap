@@ -245,10 +245,18 @@ var EMPTY_UI = {
   calm:'Pick what you need, or browse everything below. Nothing to get right.',
   journal:'A private place for your words. One line is enough.',
   map:'You at the centre. Add someone when it feels useful — only you see this map.',
+  mapHint:'Nobody else ever sees this. It stays on your device.',
   me:'This space fills in as you go. Profile, story, and plan are all optional.',
+  patterns:'Patterns appear after a few check-ins. Nothing to get right — this stays a quiet glance.',
+  library:'Search experiences and articles when you want to understand something. Optional.',
+  timeline:'Your emotional timeline fills as you check in. No targets.',
+  plan:'Start with one or two supports when you are ready. Rename them anytime.',
+  knows:'Nothing stored yet — check-ins and answers appear here.',
   nowAction:'How are you arriving?',
   journalAction:'Write first entry',
-  meAction:'Set up profile'
+  mapAction:'Add the first person',
+  meAction:'Set up profile',
+  patternsAction:'Go to Now'
 };
 
 /* Guided Path v2.1 — rule-based feeling → chips → family why → technique.
