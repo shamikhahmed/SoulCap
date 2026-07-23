@@ -858,13 +858,14 @@ test.describe('Skills', () => {
 
   test('a step technique auto-advances (guided by default)', async ({ page }) => {
     await seedDemo(page);
+    await page.evaluate(() => { (window as any).__soulcap.getState().pace = 1; });
     await runSkill(page, 'thought-record');
     await expect(page.locator('#runGuide')).toHaveAttribute('aria-pressed', 'true');
     const first = await page.locator('#runText').innerText();
-    // With no further taps, the step changes on the pacing timer.
+    // With no further taps, the step changes on the pacing timer (Steady ≥9s).
     await expect(async () => {
       expect(await page.locator('#runText').innerText()).not.toBe(first);
-    }).toPass({ timeout: 12000 });
+    }).toPass({ timeout: 14000 });
   });
 
   test('a breathing technique opens the Apple-Watch style setup and runs', async ({ page }) => {
