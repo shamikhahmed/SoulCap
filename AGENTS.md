@@ -4,11 +4,12 @@ Read this first. It tells you what SoulCap is, the rules you must never break, h
 laid out, the exact conventions to write in, and the workflow to ship a change. If you follow it,
 your changes will look like they were written by the same hand as the rest of the app.
 
-Companion docs: `ROADMAP.md` (what to build next) · **`SPEC-v1.9-clinical-library.md`** (the
-current build assignment — symptom library + reflection screeners; build this next) ·
-`ARCHITECTURE.md` · `DATA_MODEL.md` · `PRIVACY.md` · `ACCESSIBILITY.md` · `EVALUATION.md` ·
-`SAFETY.md` (truth inventory) · `CHANGELOG.md` · `HANDOVER.md` (history). Planning notes live
-outside the repo in the owner's vault (`~/Capricorn-Brain/AI/Claude-Code/SoulCap-*.md`).
+Companion docs: `ROADMAP.md` (what to build next) · **`SPEC-v2.0-premium-polish.md`** (the CURRENT
+build assignment — flagship-grade polish + IA consolidation; build this next) ·
+`SPEC-v1.9-clinical-library.md` (shipped v1.9.3, kept for reference) · `ARCHITECTURE.md` ·
+`DATA_MODEL.md` · `PRIVACY.md` · `ACCESSIBILITY.md` · `EVALUATION.md` · `SAFETY.md` (truth
+inventory) · `CHANGELOG.md` · `HANDOVER.md` (history). Planning notes live outside the repo in the
+owner's vault (`~/Capricorn-Brain/AI/Claude-Code/SoulCap-*.md`).
 
 ---
 

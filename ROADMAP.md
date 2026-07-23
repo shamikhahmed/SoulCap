@@ -125,14 +125,25 @@ less. See `AGENTS.md §2` for the hard rules — every item inherits them.
 - [x] ES5 `data.js`, dead code cleanup, a11y tokens, expanded Roman Urdu chrome, Playwright safety tests.
 - SW `soulcap-v180`.
 
-### Next — v1.9 Clinical content library · **build guide: [`SPEC-v1.9-clinical-library.md`](SPEC-v1.9-clinical-library.md)**
-The big one. A symptom/experience library (physical + cognitive first: what it is · why · what
-helps · red-flags), validated **reflection** screeners (PHQ-9/GAD-7, never a diagnosis), mandatory
-red-flag routing (emergency + "see a doctor"), fight-or-flight + boundaries articles, and the flaky-
-test stabilisation. Owner decisions + full data shapes, copy, screener items, tests, and PR
-sequencing are in the spec. Clinical background: vault `SoulCap-Clinical-Content.md`.
+## v1.9 — Clinical content library — SHIPPED 2026-07-23 (v1.9.3)
+Spec: [`SPEC-v1.9-clinical-library.md`](SPEC-v1.9-clinical-library.md). Delivered across PR-1…5:
+- [x] Flaky theme/journal e2e stabilised.
+- [x] 24-experience library (physical + cognitive): what it is · why · what helps (0 broken skill
+  links) · self-care · reflection · red-flags. Searchable, with detail sheets.
+- [x] "What's happening?" experience picker on Now + Calm → matched experience → skill.
+- [x] Fight/flight + wind-down ("no work after 7pm") articles with an optional wind-down hour.
+- [x] PHQ-9 + GAD-7 reflection screeners, "not a diagnosis" framing, PHQ item-9 → Help routing.
+- Schema **v11** · SW `soulcap-v193`.
 
-### Later v1.9+
+### NEXT — v2.0 Premium polish pass · **build guide: [`SPEC-v2.0-premium-polish.md`](SPEC-v2.0-premium-polish.md)**
+Make it feel flagship (Apple/Calm/Linear-grade craft) — **not more features, craft**. Information
+architecture consolidation (the You tab is a wall of ~11 cards → group into 3–4 sections),
+component/token/spacing/icon consistency, a full microcopy pass (one voice), motion + haptics
+choreography, designed empty/first-run states, an accessibility (VoiceOver/Dynamic Type) pass, an
+About screen + install polish, and holding the new clinical content to the same warm bar. Rubric,
+per-screen checklist, and PR sequence are in the spec.
+
+### Later (post-2.0)
 - Encrypted optional local backup (passphrase) — lost phone ≠ lost journal.
 - Broader Roman Urdu chrome (editor / person sheets) still preview; clinical English until review.
 - Quiet Wins deferred (manipulative risk).
