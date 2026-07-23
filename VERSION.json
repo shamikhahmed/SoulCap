@@ -1,8 +1,8 @@
 {
   "name": "SoulCap",
-  "version": "1.9.0",
-  "swCache": "soulcap-v190",
+  "version": "1.9.1",
+  "swCache": "soulcap-v191",
   "schema": 10,
   "deploy": "docs/",
-  "note": "v1.9.0 clinical experiences library (physical + cognitive), red-flag panels, searchable aka."
+  "note": "v1.9.1 What's happening experience picker from Now and Calm."
 }

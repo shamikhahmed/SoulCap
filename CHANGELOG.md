@@ -4,6 +4,15 @@
 - Flaky Playwright: wait for CSS animations idle + `reducedMotion` before theme contrast and journal
   control size assertions (`e2e/app.spec.ts`, `e2e/personas.spec.ts`).
 
+## [1.9.1] — 2026-07-23
+
+### Added
+- **What’s happening?** optional picker on Now and Calm → grouped experiences → detail → skill runner.
+  Never forced; not a diagnosis.
+
+### Changed
+- SW `soulcap-v191`. App **1.9.1**.
+
 ## [1.9.0] — 2026-07-23
 
 ### Added

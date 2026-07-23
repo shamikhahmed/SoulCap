@@ -1586,6 +1586,50 @@
       p.appendChild(el('button', { class: 'btn quiet', text: LIBRARY_UI.close, onclick: closeSheet }));
     });
   }
+  function experiencePickerSheet() {
+    var query = '';
+    openSheet(function (p) {
+      p.appendChild(el('h2', { class: 'h-sec', text: EXPERIENCE_PICKER_UI.title }));
+      p.appendChild(el('p', { class: 'p-sm', text: EXPERIENCE_PICKER_UI.intro }));
+      p.appendChild(el('div', { class: 'notice', text: LIBRARY_UI.reviewNote }));
+      var search = el('input', {
+        type: 'search',
+        placeholder: EXPERIENCE_PICKER_UI.searchPlaceholder,
+        'aria-label': EXPERIENCE_PICKER_UI.searchLabel
+      });
+      var list = el('div', { class: 'stack library-results', style: 'margin-top:10px' });
+      function draw() {
+        clear(list);
+        var q = query.trim().toLowerCase();
+        EXPERIENCE_GROUPS.forEach(function (group) {
+          var items = EXPERIENCES.filter(function (exp) {
+            if (exp.group !== group.id) return false;
+            return !q || experienceSearchBlob(exp).indexOf(q) !== -1;
+          });
+          if (!items.length) return;
+          list.appendChild(el('p', { class: 'domain', style: 'color:var(--ink-3);margin:8px 0 2px', text: group.label }));
+          items.forEach(function (exp) {
+            list.appendChild(el('button', {
+              class: 'card tap experience-card',
+              'data-experience-id': exp.id,
+              onclick: function () { closeSheet(); experienceSheet(exp.id); }
+            }, [
+              el('h2', { class: 'card-title', text: exp.name }),
+              el('p', { class: 'p-sm', text: exp.whatItis })
+            ]));
+          });
+        });
+        if (!list.childNodes.length) {
+          list.appendChild(el('div', { class: 'notice', text: LIBRARY_UI.noMatches }));
+        }
+      }
+      search.addEventListener('input', function () { query = search.value; draw(); });
+      p.appendChild(search);
+      p.appendChild(list);
+      p.appendChild(el('button', { class: 'btn quiet', text: EXPERIENCE_PICKER_UI.back, onclick: closeSheet }));
+      draw();
+    });
+  }
   function experienceSearchBlob(exp) {
     return [exp.name, exp.whatItis, exp.why].concat(exp.aka || []).concat(exp.commonWith || []).join(' ').toLowerCase();
   }
@@ -2007,6 +2051,10 @@
         el('button', { class:'card tap calm-tool', onclick:function () { calm.section = 'library'; calm.browse = false; render(); } }, [
           el('h2', { class:'card-title', text:LIBRARY_UI.title }),
           el('p', { class:'p-sm', text:LIBRARY_UI.homeHint })
+        ]),
+        el('button', { class:'card tap calm-tool', onclick: experiencePickerSheet }, [
+          el('h2', { class:'card-title', text: EXPERIENCE_PICKER_UI.cardTitle }),
+          el('p', { class:'p-sm', text: EXPERIENCE_PICKER_UI.calmHint })
         ]),
         el('button', { class:'card tap calm-tool', onclick:function () { calm.section = 'supports'; calm.browse = false; render(); } }, [
           el('h2', { class:'card-title', text:SUPPORT_UI.title }),
@@ -3069,6 +3117,10 @@
       var hasDetail = Object.keys(rc.dims || {}).length || (rc.triggers || []).length || rc.need || rc.feeling;
       v.appendChild(el('button', { class: 'btn ghost', text: hasDetail ? tUi('checkin', 'editDetail', CHECKIN_UI) : tUi('checkin', 'addDetail', CHECKIN_UI), onclick: checkinDetailSheet }));
     }
+    v.appendChild(el('button', { class: 'card tap experience-picker-card', onclick: experiencePickerSheet }, [
+      el('h2', { class: 'card-title', text: EXPERIENCE_PICKER_UI.cardTitle }),
+      el('p', { class: 'p-sm', text: EXPERIENCE_PICKER_UI.cardHint })
+    ]));
     var dripQ = nextDripQuestion();
     v.appendChild(el('button', { class: 'card tap', onclick: dripSheet }, [
       el('h2', { class: 'card-title', text: DRIP_UI.cardTitle }),
@@ -3384,7 +3436,7 @@
       p.appendChild(el('button', { class: 'btn quiet', text: tUi('principles', 'close', PRINCIPLES_UI), onclick: closeSheet }));
     });
   }
-  var APP_VERSION = '1.9.0';
+  var APP_VERSION = '1.9.1';
   function settingsGroup(v, title, kids) { v.appendChild(el('p', { class: 'eyebrow', style: 'margin-top:var(--space-3)', text: title })); kids.forEach(function (k) { if (k) v.appendChild(k); }); }
   function toggleBtn(label, on, fn) {
     return el('button', { class: 'btn ghost', style: 'display:flex;justify-content:space-between', onclick: fn,
@@ -3664,7 +3716,7 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }), version: '1.9.0',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '1.9.1',
     experienceIds: EXPERIENCES.map(function (item) { return item.id; }),
     experienceHelpsOk: function () {
       return EXPERIENCES.every(function (exp) {
@@ -3674,6 +3726,7 @@
       });
     },
     openExperience: experienceSheet,
+    openExperiencePicker: experiencePickerSheet,
     nextDripQuestion: nextDripQuestion, estimateValue: estimateValue,
     answerDrip: answerDrip, skipDrip: skipDrip, correctEstimate: correctEstimate,
     clearEstimate: clearEstimate, setTheme: setTheme, setLocale: setLocale,
