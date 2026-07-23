@@ -76,6 +76,7 @@
     emotionFavorites: [], principles: [],
     manual: { lines: [], dismissedAuto: {} },
     libraryBookmarks: [],
+    windDownHour: null,
     notices: { clinicalEnglishDismissed: false }
   };
   var VALID_THEMES = { light:1, dark:1, night:1, ocean:1, forest:1, rain:1, space:1, sunrise:1, minimal:1, amoled:1 };
@@ -126,6 +127,11 @@
       p.manual.lines = Array.isArray(p.manual.lines) ? p.manual.lines : [];
       p.manual.dismissedAuto = p.manual.dismissedAuto && typeof p.manual.dismissedAuto === 'object' && !Array.isArray(p.manual.dismissedAuto) ? p.manual.dismissedAuto : {};
       p.libraryBookmarks = Array.isArray(p.libraryBookmarks) ? p.libraryBookmarks : [];
+      if (typeof p.windDownHour === 'number' && p.windDownHour >= 0 && p.windDownHour <= 23) {
+        p.windDownHour = Math.floor(p.windDownHour);
+      } else {
+        p.windDownHour = null;
+      }
       p.notices = Object.assign(clone(DEFAULT.notices), p.notices || {});
       try {
         if (localStorage.getItem('soulcap_notice_clinical') === '1') p.notices.clinicalEnglishDismissed = true;
@@ -1978,7 +1984,21 @@
             if (!save()) { state.pace = before; showPreferenceSaveFailed(); return; }
             reRender();
           }),
-        el('p', { class: 'p-sm', text: 'How long each step of a guided exercise stays on screen. Slow gives more time to read.' })
+        el('p', { class: 'p-sm', text: 'How long each step of a guided exercise stays on screen. Slow gives more time to read.' }),
+        el('p', { class: 'eyebrow', style: 'margin-top:12px', text: WIND_DOWN_UI.settingsTitle }),
+        el('p', { class: 'p-sm', text: WIND_DOWN_UI.settingsHint }),
+        settingChips(
+          [{ v: null, l: WIND_DOWN_UI.off }].concat([17, 18, 19, 20, 21, 22, 23].map(function (h) {
+            return { v: h, l: h + ':00' };
+          })),
+          function (o) { return state.windDownHour === o.v || (o.v === null && state.windDownHour == null); },
+          function (o) {
+            var before = state.windDownHour;
+            state.windDownHour = o.v;
+            if (!save()) { state.windDownHour = before; showPreferenceSaveFailed(); return; }
+            reRender();
+          }
+        )
       ]);
       settingsGroup(p, 'Constellation', [
         el('p', { class: 'eyebrow', text: 'Map pace' }),
@@ -3121,6 +3141,17 @@
       el('h2', { class: 'card-title', text: EXPERIENCE_PICKER_UI.cardTitle }),
       el('p', { class: 'p-sm', text: EXPERIENCE_PICKER_UI.cardHint })
     ]));
+    if (typeof state.windDownHour === 'number' && new Date().getHours() >= state.windDownHour) {
+      v.appendChild(el('div', { class: 'card wind-down-card' }, [
+        el('h2', { class: 'card-title', text: WIND_DOWN_UI.nowTitle }),
+        el('p', { class: 'p-sm', text: WIND_DOWN_UI.nowHint }),
+        el('button', { class: 'btn ghost', text: WIND_DOWN_UI.openArticle, onclick: function () {
+          selectTab('calm'); calm.section = 'library'; libraryQuery = 'winding'; libraryFilter = 'articles'; render();
+          setTimeout(function () { articleSheet('wind-down-boundaries'); }, 0);
+        } }),
+        el('button', { class: 'btn quiet', text: WIND_DOWN_UI.journalNight, onclick: function () { selectTab('journal'); } })
+      ]));
+    }
     var dripQ = nextDripQuestion();
     v.appendChild(el('button', { class: 'card tap', onclick: dripSheet }, [
       el('h2', { class: 'card-title', text: DRIP_UI.cardTitle }),
@@ -3436,7 +3467,7 @@
       p.appendChild(el('button', { class: 'btn quiet', text: tUi('principles', 'close', PRINCIPLES_UI), onclick: closeSheet }));
     });
   }
-  var APP_VERSION = '1.9.1';
+  var APP_VERSION = '1.9.2';
   function settingsGroup(v, title, kids) { v.appendChild(el('p', { class: 'eyebrow', style: 'margin-top:var(--space-3)', text: title })); kids.forEach(function (k) { if (k) v.appendChild(k); }); }
   function toggleBtn(label, on, fn) {
     return el('button', { class: 'btn ghost', style: 'display:flex;justify-content:space-between', onclick: fn,
@@ -3716,7 +3747,7 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '1.9.1',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '1.9.2',
     experienceIds: EXPERIENCES.map(function (item) { return item.id; }),
     experienceHelpsOk: function () {
       return EXPERIENCES.every(function (exp) {

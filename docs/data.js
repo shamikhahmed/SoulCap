@@ -1036,8 +1036,44 @@ var ARTICLES = [
     reflection:['What interaction leaves you with less capacity than you can afford?','What is in your control before, during, or after it?'],
     support:'Consider professional support when a relationship involves fear, coercion, threats, violence, or repeated control. Prioritise local, qualified help and immediate safety.',
     references:['NHS — Mental wellbeing and relationships resources','American Psychological Association — Building and maintaining healthy relationships'],
-    skillIds:['values-check','self-compassion-break','orient-room'] }
+    skillIds:['values-check','self-compassion-break','orient-room'] },
+
+  { id:'alarm-system', title:'Your body’s alarm — fight, flight, freeze', tags:['fight','flight','freeze','fawn','adrenaline','alarm','panic','threat'],
+    summary:'Why the threat response is protective — and why it produces so many of the body sensations in the Experiences library.',
+    sections:[
+      { title:'An alarm, not a broken system', body:'When the brain detects possible danger it prepares the body to act. Heart rate rises, breath quickens, muscles brace, digestion pauses, attention narrows. That is the same family of change behind a racing heart, short breath, shaking, gut clench, and scanning the room. The system is doing a job — often at the wrong time.' },
+      { title:'Fight, flight, freeze — and fawn', body:'Fight mobilises energy toward confrontation. Flight mobilises toward escape. Freeze can feel like shutdown, fog, or inability to move or speak. Fawn is a social appease response some people notice under threat. None of these prove you are weak; they are old survival options.' },
+      { title:'The recovery side', body:'The parasympathetic side of the nervous system helps the body come back down. A longer exhale is one lever many people find useful. Co-regulation — being near a calm person, voice, or place — can also help. Recovery is not forced calm; it is giving the alarm a chance to stand down.' }
+    ],
+    practical:['Name the alarm: “my body is preparing for action.”','Lengthen the out-breath without forcing a deep gasp.','Orient: look around and name what is here, now.','If symptoms are new, severe, or medically concerning, seek medical advice rather than assuming anxiety.'],
+    reflection:['Which mode shows up most for you — fight, flight, freeze, or fawn?','What usually helps the wave crest and fall, even a little?'],
+    support:'Consider professional support when the alarm keeps returning, changes what you can do, or you are unsure whether symptoms have a physical cause. Sudden crushing chest pain, one-sided weakness, or severe breathlessness need urgent medical care.',
+    references:['World Health Organization — Doing What Matters in Times of Stress (2020)','NHS — Anxiety and panic self-help guidance'],
+    skillIds:['physiological-sigh','box-breathing','orient-room','grounding-54321'] },
+
+  { id:'wind-down-boundaries', title:'Slowing down — boundaries and winding down', tags:['boundaries','wind-down','evening','screens','rest','work','sleep'],
+    summary:'A protected wind-down window, closing the day, and why chronic arousal needs an off-ramp — without guilt if you miss it.',
+    sections:[
+      { title:'Why evenings bleed', body:'Work, messages, and bright screens keep the threat and reward systems half-awake. Chronic arousal needs a daily off-ramp. A wind-down window is not a rule to fail; it is a protected stretch where fewer demands are allowed in.' },
+      { title:'Close the day', body:'A short ritual can mark the end of effort: write tomorrow’s one next step, put the phone out of arm’s reach, dim lights, or use a night reflection in the journal. Micro-breaks and single-tasking during the day reduce how much evening has to repair.' },
+      { title:'Light, sleep pressure, and morning', body:'Morning light helps set sleep pressure later. An earlier wind-down supports that loop. Missed nights happen. The kind next move is one smaller boundary tomorrow — not a streak to rebuild.' }
+    ],
+    practical:['Choose an optional wind-down hour in Settings (no notifications — only a gentle card in the app after that hour).','Pick one “close the day” action under five minutes.','Protect one screen-dim stretch before bed if you can.','Link a daily support or a journal night template when that feels useful.'],
+    reflection:['What usually steals the last quiet hour of your day?','What is one boundary you can keep even on a hard day?'],
+    support:'Consider professional or medical support when sleep trouble persists, mood keeps worsening, or you cannot protect basic rest and safety. This article is not a diagnosis or a treatment plan.',
+    references:['NHS — Sleep and tiredness guidance','World Health Organization — Doing What Matters in Times of Stress (2020)'],
+    skillIds:['wind-down','stimulus-control','worry-postponement','values-check'] }
 ];
+
+var WIND_DOWN_UI = {
+  settingsTitle:'Evening wind-down (optional)',
+  settingsHint:'No notifications. After this hour, Now may show a gentle card. Off means no card.',
+  off:'Off',
+  nowTitle:'Wind-down window',
+  nowHint:'You chose this hour as a quieter stretch. No guilt if you miss it — one small close-the-day step is enough.',
+  openArticle:'Read about winding down',
+  journalNight:'Open journal'
+};
 
 var SUPPORT_UI = {
   title:'Small daily supports',
