@@ -5,7 +5,7 @@ item and ship it **the same way the rest of the app was built** — read `AGENTS
 rules, conventions, and ship workflow. Every item below lists **what**, **why**, **files to
 touch**, **acceptance criteria (incl. a test)**, and **guardrails**.
 
-**Current release: v2.0.0** · Published app: https://shamikhahmed.github.io/SoulCap/
+**Current release: v2.0.1** · Published app: https://shamikhahmed.github.io/SoulCap/
 
 Philosophy (never drifts): a personalised emotional operating system, **not** an AI therapist.
 Help people understand and regulate; never "fix" them; never diagnose; success = needing the app
@@ -137,12 +137,9 @@ Spec: [`SPEC-v1.9-clinical-library.md`](SPEC-v1.9-clinical-library.md). Delivere
 
 ### v2.0 Premium polish · **build guide: [`SPEC-v2.0-premium-polish.md`](SPEC-v2.0-premium-polish.md)**
 - [x] **PR-1 IA** — You: About / Insights / Tools; Now primary+quiet; Calm guided-first + “Also here”.
-  App **2.0.0** · SW `soulcap-v200`.
-- [ ] PR-2 component + token consistency
-- [ ] PR-3 microcopy pass
-- [ ] PR-4 motion/haptics + empty/first-run
-- [ ] PR-5 a11y + About + install polish
-- [ ] PR-6 clinical polish + gallery
+- [x] **PR-2–6 craft** — tokens/components, microcopy/SETTINGS_UI, empties + What’s new, haptics,
+  About + journal shortcut, clinical sheet polish, gallery refresh.
+  App **2.0.1** · SW `soulcap-v201`.
 
 Craft only — **not more features**. Rubric + checklist in the spec.
 

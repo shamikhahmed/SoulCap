@@ -1,8 +1,8 @@
 {
   "name": "SoulCap",
-  "version": "2.0.0",
-  "swCache": "soulcap-v200",
+  "version": "2.0.1",
+  "swCache": "soulcap-v201",
   "schema": 11,
   "deploy": "docs/",
-  "note": "v2.0.0 IA restructure — You sections, Now primary/quiet, Calm guided-first. Craft only."
+  "note": "v2.0.1 premium polish — tokens, empties, About, install shortcuts, clinical craft, gallery."
 }
