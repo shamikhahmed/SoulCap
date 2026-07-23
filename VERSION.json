@@ -1,8 +1,8 @@
 {
   "name": "SoulCap",
-  "version": "2.0.1",
-  "swCache": "soulcap-v201",
-  "schema": 11,
+  "version": "2.1.0",
+  "swCache": "soulcap-v210",
+  "schema": 12,
   "deploy": "docs/",
-  "note": "v2.0.1 premium polish — tokens, empties, About, install shortcuts, clinical craft, gallery."
+  "note": "v2.1.0 Guided Path — feeling → chips → family why → exercise. Schema 12 pathSessions."
 }

@@ -60,6 +60,22 @@ async function captureAll(page: Page, viewport: keyof typeof VIEWPORTS) {
   }
 
   i += 1;
+  await page.evaluate(() => (document.querySelector('#tabs button[data-tab="now"]') as HTMLElement).click());
+  await page.waitForTimeout(300);
+  await page.locator('#view-now .path-card').click();
+  await page.waitForTimeout(300);
+  await page.locator('#sheetPanel').getByRole('button', { name: 'Wired', exact: true }).click();
+  await page.locator('#sheetPanel').getByRole('button', { name: 'Continue' }).click();
+  await page.locator('#sheetPanel').getByRole('button', { name: /Worry/ }).click();
+  await page.locator('#sheetPanel').getByRole('button', { name: 'Continue' }).click();
+  await page.waitForTimeout(400);
+  const pathFile = `${viewport}-${String(i).padStart(2, '0')}-guided-path.png`;
+  await page.screenshot({ path: join(GALLERY_DIR, pathFile), fullPage: true });
+  shots.push({ file: pathFile, label: 'Guided Path', route: 'now/path', viewport });
+  await page.locator('#sheetPanel').getByRole('button', { name: 'Close' }).click();
+  await page.waitForTimeout(200);
+
+  i += 1;
   await page.evaluate(() => (document.querySelector('#tabs button[data-tab="calm"]') as HTMLElement).click());
   await page.getByRole('button', { name: /Understand what’s happening/ }).click();
   await page.waitForTimeout(400);

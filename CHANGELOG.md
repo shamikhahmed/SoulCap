@@ -4,6 +4,18 @@
 - Flaky Playwright: wait for CSS animations idle + `reducedMotion` before theme contrast and journal
   control size assertions (`e2e/app.spec.ts`, `e2e/personas.spec.ts`).
 
+## [2.1.0] — 2026-07-23
+
+### Added
+- **Guided Path** (sister brief, SoulCap-safe): optional short path on Now + Calm — arrival →
+  symptom chips → plain-language exercise **family** why → Begin. Rule-based; never diagnoses;
+  never prescribes CBT/DBT/ACT as treatment. Educational footnote only. Panic-like clusters offer
+  Help + grounding. Sessions under What SoulCap knows (clearable). Hide card in Settings.
+- Docs: `SPEC-v2.1-guided-path.md`, sister reply + review kit; later SPECs v2.2 / v2.3 parked.
+
+### Changed
+- Schema **v12** (`pathSessions`, `pathPrefs`). SW `soulcap-v210`. App **2.1.0**.
+
 ## [2.0.1] — 2026-07-23
 
 ### Changed

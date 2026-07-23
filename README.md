@@ -1,9 +1,9 @@
 # SoulCap
 
-**v2.0.1 — offline-first wellness PWA.** A calm, private, personalised space for self-regulation
-skills, clinical experiences (screen + reflect, never diagnose), a journal, and a map of the people
-around you. **Not** therapy · not a diagnosis tool · not a crisis service · not an AI therapist.
-See [`SAFETY.md`](SAFETY.md).
+**v2.1.0 — offline-first wellness PWA.** A calm, private, personalised space for self-regulation
+skills, clinical experiences (screen + reflect, never diagnose), a guided short path, a journal,
+and a map of the people around you. **Not** therapy · not a diagnosis tool · not a crisis service ·
+not an AI therapist. See [`SAFETY.md`](SAFETY.md).
 
 > **New here? Read [`AGENTS.md`](AGENTS.md)** (build guide + rules) and [`ROADMAP.md`](ROADMAP.md)
 > (what's next, in detail). [`.cursorrules`](.cursorrules) is the short version for Cursor.
@@ -14,7 +14,7 @@ See [`SAFETY.md`](SAFETY.md).
 
 | Surface | URL / path | Reality |
 |---|---|---|
-| **PWA** | [shamikhahmed.github.io/SoulCap](https://shamikhahmed.github.io/SoulCap/) · `docs/` | The product (**2.0.1** / schema v11). Five tabs (Now · Calm · Journal · People · You), Settings + About sheet, Personal Manual, Thought Parking, optional detailed check-ins, inspectable local patterns, 37 exercises, offline library (articles + 24 experiences), no-streak daily supports, book-style journal (local transcription when verified), Constellation (Still/Drift/Live), Roman Urdu chrome preview (`rui` LTR), keyword Help on free-text surfaces, presentation themes, voice + haptics. **Zero network calls — localStorage only.** |
+| **PWA** | [shamikhahmed.github.io/SoulCap](https://shamikhahmed.github.io/SoulCap/) · `docs/` | The product (**2.1.0** / schema v12). Five tabs, Guided Path, Settings + About, Personal Manual, Thought Parking, optional detailed check-ins, inspectable local patterns, 37 exercises, offline library (articles + 24 experiences), no-streak daily supports, book-style journal, Constellation, Roman Urdu chrome preview, Help on free-text, themes, voice + haptics. **Zero network calls — localStorage only.** |
 | Nest API | `backend/` | Full module **source** (LMM, safety gate). Builds clean, **not deployed**; PWA does not call it. |
 | Expo | `mobile/` | Thin client source. Lab only. |
 

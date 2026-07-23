@@ -104,7 +104,7 @@ test.describe('v0.9 local model', () => {
       const stored = JSON.parse(localStorage.getItem('soulcap_v1')!);
       return { state, stored };
     });
-    expect(result.state.v).toBe(11);
+    expect(result.state.v).toBe(12);
     expect(result.state.checkins[0]).toMatchObject({
       id: 'checkin-1700000000000-0',
       state: 'Wired',
@@ -115,7 +115,7 @@ test.describe('v0.9 local model', () => {
     expect(result.state.drip.answers).toEqual({});
     expect(result.state.drip.skipped).toEqual({});
     expect(result.state.drip.askedToday).toEqual([]);
-    expect(result.stored.v).toBe(11);
+    expect(result.stored.v).toBe(12);
     expect(result.stored.profile.name).toBe('Migration test');
   });
 
@@ -134,7 +134,7 @@ test.describe('v0.9 local model', () => {
       memory: (window as any).__soulcap.getState(),
       stored: JSON.parse(localStorage.getItem('soulcap_v1')!)
     }));
-    expect(result.memory.v).toBe(11);
+    expect(result.memory.v).toBe(12);
     expect(result.memory.checkins[0]).toMatchObject({ state: 'Flat', dims: {}, triggers: [] });
     expect(result.stored.v).toBe(5);
     expect(result.stored.checkins[0]).toEqual({ t: 1700000000000, state: 'Flat' });
@@ -255,7 +255,7 @@ test.describe('v1.0 offline library and daily supports', () => {
       state: (window as any).__soulcap.getState(),
       stored: JSON.parse(localStorage.getItem('soulcap_v1')!)
     }));
-    expect(result.state.v).toBe(11);
+    expect(result.state.v).toBe(12);
     expect(result.state.profile.name).toBe('Version six');
     expect(result.state.checkins[0].id).toBe('kept');
     expect(result.state.dailySupports).toEqual({ selected: [], days: {} });
@@ -264,7 +264,7 @@ test.describe('v1.0 offline library and daily supports', () => {
     expect(result.state.drip.askedToday).toEqual([]);
     expect(result.state.userModel).toEqual({});
     expect(result.state.locale).toBe('en');
-    expect(result.stored.v).toBe(11);
+    expect(result.stored.v).toBe(12);
   });
 
   test('library search announces result count for assistive tech', async ({ page }) => {
@@ -505,9 +505,120 @@ test.describe('v1.9.3 reflection screeners', () => {
     await page.goto('/');
     await page.waitForFunction(() => Boolean((window as any).__soulcap));
     const v = await page.evaluate(() => (window as any).__soulcap.getState().v);
-    expect(v).toBe(11);
+    expect(v).toBe(12);
     const results = await page.evaluate(() => (window as any).__soulcap.getState().screenerResults);
     expect(results).toEqual({});
+  });
+
+  test('schema migrates to v12 with pathSessions', async ({ page }) => {
+    await page.addInitScript(() => {
+      localStorage.setItem('soulcap_v1', JSON.stringify({
+        v: 11, welcomed: true, onboarded: true, ageOk: true, consent: true,
+        profile: { name: 'Eleven' }
+      }));
+    });
+    await page.goto('/');
+    await page.waitForFunction(() => Boolean((window as any).__soulcap));
+    const result = await page.evaluate(() => {
+      const s = (window as any).__soulcap.getState();
+      return { v: s.v, pathSessions: s.pathSessions, pathPrefs: s.pathPrefs };
+    });
+    expect(result.v).toBe(12);
+    expect(result.pathSessions).toEqual([]);
+    expect(result.pathPrefs).toEqual({ hide: false });
+  });
+});
+
+test.describe('v2.1 Guided Path', () => {
+  test('Now and Calm expose short path; complete path opens runner', async ({ page }) => {
+    await seedDemo(page);
+    await expect(page.locator('#view-now .path-card')).toContainText('A short path');
+    await page.locator('#view-now .path-card').click();
+    const sheet = page.locator('#sheetPanel');
+    await expect(sheet).toContainText('How are you arriving?');
+    await expect(sheet).toContainText('not yet clinically reviewed');
+    await sheet.getByRole('button', { name: 'Wired', exact: true }).click();
+    await sheet.getByRole('button', { name: 'Continue' }).click();
+    await expect(sheet).toContainText('What are you noticing?');
+    await sheet.getByRole('button', { name: /Worry/ }).click();
+    await sheet.getByRole('button', { name: 'Continue' }).click();
+    await expect(sheet).toContainText('Educational self-help only');
+    await expect(sheet).toContainText('not those therapies');
+    const body = await sheet.innerText();
+    const scrubbed = body.toLowerCase()
+      .replace(/not (a |yet )?diagnos\w*/g, '')
+      .replace(/never a diagnos\w*/g, '');
+    expect(scrubbed).not.toMatch(/\byou have\b/);
+    expect(scrubbed).not.toMatch(/diagnos/);
+    expect(scrubbed).not.toMatch(/prescribe/);
+    expect(scrubbed).not.toMatch(/severity/);
+    await sheet.getByRole('button', { name: 'Begin' }).click();
+    await expect(page.locator('#runner')).toBeVisible();
+    const sessions = await page.evaluate(() => (window as any).__soulcap.getState().pathSessions);
+    expect(sessions.length).toBeGreaterThan(0);
+    expect(sessions[sessions.length - 1].arrival).toBe('Wired');
+    expect(sessions[sessions.length - 1].chips).toContain('worry');
+  });
+
+  test('panic-like cluster offers Help without crisis numbers', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => (window as any).__soulcap.openPath());
+    const sheet = page.locator('#sheetPanel');
+    await sheet.getByRole('button', { name: 'Wired', exact: true }).click();
+    await sheet.getByRole('button', { name: 'Continue' }).click();
+    await sheet.getByRole('button', { name: /Heart racing/ }).click();
+    await sheet.getByRole('button', { name: /Tight muscles/ }).click();
+    await sheet.getByRole('button', { name: 'Continue' }).click();
+    await expect(sheet.getByRole('button', { name: 'I need help now' })).toBeVisible();
+    const panic = await page.evaluate(() => (window as any).__soulcap.pathPanicCluster('Wired', ['heart', 'tension']));
+    expect(panic).toBe(true);
+    await sheet.getByRole('button', { name: 'I need help now' }).click();
+    await expect(page.locator('#panic')).toBeVisible();
+    const panicText = await page.locator('#panic').innerText();
+    expect(panicText).not.toMatch(/\d{3}/);
+    expect(panicText.toLowerCase()).not.toMatch(/hotline|emergency number|988|999|911/);
+  });
+
+  test('path note appears under What SoulCap knows and clears', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => {
+      const s = (window as any).__soulcap.getState();
+      s.pathSessions = [{
+        id: 'path-test-1', t: Date.now(), arrival: 'Heavy', chips: ['low'],
+        family: 'activation', skillId: 'behavioural-activation'
+      }];
+      localStorage.setItem('soulcap_v1', JSON.stringify(s));
+    });
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="me"]') as HTMLElement).click());
+    const me = page.locator('#view-me');
+    await expect(me).toContainText('Short path');
+    await expect(me).toContainText('You explored a short path');
+    await me.getByRole('button', { name: 'Clear this path note' }).click();
+    await expect(me).not.toContainText('Clear this path note');
+    const left = await page.evaluate(() => (window as any).__soulcap.getState().pathSessions);
+    expect(left).toEqual([]);
+  });
+
+  test('settings can hide short path on Now', async ({ page }) => {
+    await seedDemo(page);
+    await openSettings(page);
+    await page.getByRole('button', { name: /Hide short path on Now/ }).click();
+    await page.locator('#sheetPanel').getByRole('button', { name: 'Close' }).click();
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="now"]') as HTMLElement).click());
+    await expect(page.locator('#view-now .path-card')).toHaveCount(0);
+  });
+
+  test('PATH content has no forbidden diagnosis lexicon', async ({ page }) => {
+    await seedDemo(page);
+    const blob = await page.evaluate(() => {
+      const sc = (window as any).__soulcap;
+      const scores = sc.scorePathFamilies(['worry', 'spin']);
+      const skills = sc.suggestPathSkills(scores.family, ['worry', 'spin']);
+      return JSON.stringify({ scores, skills: skills.map((s: { id: string }) => s.id) });
+    });
+    expect(blob.toLowerCase()).not.toMatch(/diagnos|prescribe|you have |severity/);
+    const score = await page.evaluate(() => (window as any).__soulcap.scorePathFamilies(['worry']));
+    expect(score.family).toBe('cognitive');
   });
 });
 
@@ -537,6 +648,7 @@ test.describe('v2.0 IA restructure', () => {
     await expect(calm.getByRole('button', { name: /Understand what/i })).toBeVisible();
     await expect(calm.getByRole('button', { name: /Notice what’s happening/ })).toBeVisible();
     await expect(calm.getByRole('button', { name: /Small daily supports/i })).toBeVisible();
+    await expect(calm.locator('.path-card')).toContainText('A short path');
   });
 
   test('About sheet opens from Settings; What’s new dismisses once', async ({ page }) => {
@@ -544,7 +656,7 @@ test.describe('v2.0 IA restructure', () => {
     await openSettings(page);
     await page.getByRole('button', { name: 'About SoulCap' }).click();
     await expect(page.locator('#sheetPanel')).toContainText('Not therapy');
-    await expect(page.locator('#sheetPanel')).toContainText(/Version 2\.0/);
+    await expect(page.locator('#sheetPanel')).toContainText(/Version 2\.1/);
     await page.locator('#sheetPanel').getByRole('button', { name: 'Close' }).click();
     await page.evaluate(() => (window as any).__soulcap.setSeenVersion('1.9.3'));
     await expect(page.locator('#view-now .whats-new')).toContainText(/What.s new/);
@@ -568,7 +680,7 @@ test.describe('v1.1 adaptive drip, themes, locale', () => {
       state: (window as any).__soulcap.getState(),
       stored: JSON.parse(localStorage.getItem('soulcap_v1')!)
     }));
-    expect(result.state.v).toBe(11);
+    expect(result.state.v).toBe(12);
     expect(result.state.profile.name).toBe('Version seven');
     expect(result.state.dailySupports.selected).toEqual(['water']);
     expect(result.state.drip.answers).toEqual({});
@@ -576,7 +688,7 @@ test.describe('v1.1 adaptive drip, themes, locale', () => {
     expect(result.state.drip.askedToday).toEqual([]);
     expect(result.state.userModel).toEqual({});
     expect(result.state.locale).toBe('en');
-    expect(result.stored.v).toBe(11);
+    expect(result.stored.v).toBe(12);
   });
 
   test('drip answers update estimates and stop after four asks today', async ({ page }) => {
@@ -1455,7 +1567,7 @@ test.describe('v1.4 bundled features', () => {
       state: (window as any).__soulcap.getState(),
       stored: JSON.parse(localStorage.getItem('soulcap_v1')!)
     }));
-    expect(result.state.v).toBe(11);
+    expect(result.state.v).toBe(12);
     expect(result.state.locale).toBe('rui');
     expect(result.stored.locale).toBe('rui');
     expect(result.state.mapPace).toBe('drift');
@@ -1480,13 +1592,13 @@ test.describe('v1.6 bundled features', () => {
       state: (window as any).__soulcap.getState(),
       stored: JSON.parse(localStorage.getItem('soulcap_v1')!)
     }));
-    expect(result.state.v).toBe(11);
+    expect(result.state.v).toBe(12);
     expect(result.state.manual.lines).toEqual([]);
     expect(result.state.libraryBookmarks).toEqual([]);
     expect(result.state.people[0].notes).toBe('');
     expect(result.state.people[0].events).toEqual([]);
     expect(result.state.people[0].ringHistory).toEqual([]);
-    expect(result.stored.v).toBe(11);
+    expect(result.stored.v).toBe(12);
   });
 
   test('manual refresh adds from principle and preserves edited user line', async ({ page }) => {

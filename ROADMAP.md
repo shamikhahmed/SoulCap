@@ -5,7 +5,7 @@ item and ship it **the same way the rest of the app was built** — read `AGENTS
 rules, conventions, and ship workflow. Every item below lists **what**, **why**, **files to
 touch**, **acceptance criteria (incl. a test)**, and **guardrails**.
 
-**Current release: v2.0.1** · Published app: https://shamikhahmed.github.io/SoulCap/
+**Current release: v2.1.0** · Published app: https://shamikhahmed.github.io/SoulCap/
 
 Philosophy (never drifts): a personalised emotional operating system, **not** an AI therapist.
 Help people understand and regulate; never "fix" them; never diagnose; success = needing the app
@@ -143,7 +143,15 @@ Spec: [`SPEC-v1.9-clinical-library.md`](SPEC-v1.9-clinical-library.md). Delivere
 
 Craft only — **not more features**. Rubric + checklist in the spec.
 
-### Later (post-2.0)
+### Shipped — v2.1 Guided Path · **[`SPEC-v2.1-guided-path.md`](SPEC-v2.1-guided-path.md)**
+- [x] Feeling → chips → family why → exercise (rule-based, offline). Sister reply + review kit.
+- [x] Schema **v12** · SW `soulcap-v210` · app **2.1.0** · e2e path / Help / no-diagnosis lexicon.
+
+### NEXT — v2.2 Approach packs · **[`SPEC-v2.2-approach-packs.md`](SPEC-v2.2-approach-packs.md)**
+- Educational skill collections + distortion lens + thought-record wizard (not therapy brands).
+- Then [`SPEC-v2.3-regulation-depth.md`](SPEC-v2.3-regulation-depth.md).
+
+### Later (post-2.2)
 - Encrypted optional local backup (passphrase) — lost phone ≠ lost journal.
 - Broader Roman Urdu chrome (editor / person sheets) still preview; clinical English until review.
 - Quiet Wins deferred (manipulative risk).
