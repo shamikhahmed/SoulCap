@@ -1,5 +1,14 @@
 ## [Unreleased]
 
+## [4.0.3] — 2026-07-24
+
+### Changed
+- **Master design PR-4 You:** hero-band profile header, progress hero-tile, 3 stat tiles
+  (Patterns · Weekly · Timeline), list-row groups for tools / about / settings.
+- Pushed subviews: My plan, Your story, Profile, Personal manual, Principles, Timeline,
+  Patterns (+ evidence), What SoulCap knows. Settings + About stay sheets.
+- SW `soulcap-v403`. App **4.0.3**. Schema still **v12**.
+
 ## [4.0.2] — 2026-07-24
 
 ### Changed

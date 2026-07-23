@@ -181,20 +181,23 @@ test.describe('v0.9 local model', () => {
   test('pattern evidence is inspectable and a rejection persists', async ({ page }) => {
     await seedDemo(page);
     await page.evaluate(() => (document.querySelector('#tabs button[data-tab="me"]') as HTMLElement).click());
-    const row = page.locator('.pattern-row').filter({ hasText: 'Work or study may be showing up often' });
+    await page.locator('.me-stats .stat-tile').filter({ hasText: 'Patterns' }).click();
+    const row = page.locator('#subview .pattern-row').filter({ hasText: 'Work or study may be showing up often' });
     await expect(row).toContainText('3 distinct days');
-    await expect(row).toContainText('Low confidence');
+    await expect(row).toContainText('A possibility');
     await row.getByRole('button', { name: 'See evidence' }).click();
     await expect(page.getByText('This is a repeated correlation')).toBeVisible();
     await page.getByRole('button', { name: 'Done' }).click();
     await row.getByRole('button', { name: 'Not really' }).click();
-    await expect(row).toHaveCount(0);
+    await expect(page.locator('#subview .pattern-row').filter({ hasText: 'Work or study may be showing up often' })).toHaveCount(0);
+    await page.locator('#subview .nav-back').click();
     await page.evaluate(() => history.replaceState({}, '', '/'));
     await page.reload();
     await page.waitForFunction(() => Boolean((window as any).__soulcap));
     await dismissSplash(page);
     await page.evaluate(() => (document.querySelector('#tabs button[data-tab="me"]') as HTMLElement).click());
-    await expect(page.locator('.pattern-row').filter({ hasText: 'Work or study may be showing up often' })).toHaveCount(0);
+    await page.locator('.me-stats .stat-tile').filter({ hasText: 'Patterns' }).click();
+    await expect(page.locator('#subview .pattern-row').filter({ hasText: 'Work or study may be showing up often' })).toHaveCount(0);
     expect(await page.evaluate(() => (window as any).__soulcap.getState().patternPrefs.decisions['trigger-work'])).toBe('rejected');
   });
 
@@ -478,8 +481,9 @@ test.describe('v1.9.3 reflection screeners', () => {
     expect(JSON.stringify(stored).toLowerCase()).not.toContain('depression');
     await page.locator('#panicExit').click();
     await page.evaluate(() => (document.querySelector('#tabs button[data-tab="me"]') as HTMLElement).click());
-    await expect(page.locator('.screener-signal')).toContainText(/not a diagnosis/i);
-    await page.locator('.screener-signal').getByRole('button', { name: 'Clear this signal' }).click();
+    await page.getByRole('button', { name: /What SoulCap knows/ }).click();
+    await expect(page.locator('#subview .screener-signal')).toContainText(/not a diagnosis/i);
+    await page.locator('#subview .screener-signal').getByRole('button', { name: 'Clear this signal' }).click();
     expect(await page.evaluate(() => (window as any).__soulcap.getState().screenerResults.phq9)).toBeFalsy();
   });
 
@@ -594,11 +598,12 @@ test.describe('v2.1 Guided Path', () => {
       localStorage.setItem('soulcap_v1', JSON.stringify(s));
     });
     await page.evaluate(() => (document.querySelector('#tabs button[data-tab="me"]') as HTMLElement).click());
-    const me = page.locator('#view-me');
-    await expect(me).toContainText('Short path');
-    await expect(me).toContainText('You explored a short path');
-    await me.getByRole('button', { name: 'Clear this path note' }).click();
-    await expect(me).not.toContainText('Clear this path note');
+    await page.getByRole('button', { name: /What SoulCap knows/ }).click();
+    const knows = page.locator('#subview');
+    await expect(knows).toContainText('Short path');
+    await expect(knows).toContainText('You explored a short path');
+    await knows.getByRole('button', { name: 'Clear this path note' }).click();
+    await expect(knows).not.toContainText('Clear this path note');
     const left = await page.evaluate(() => (window as any).__soulcap.getState().pathSessions);
     expect(left).toEqual([]);
   });
@@ -729,8 +734,9 @@ test.describe('v1.1 adaptive drip, themes, locale', () => {
     expect(model.sleep.value).toBeGreaterThanOrEqual(3);
     await sheet.getByRole('button', { name: 'Close', exact: true }).click();
     await page.evaluate(() => (document.querySelector('#tabs button[data-tab="me"]') as HTMLElement).click());
-    await expect(page.getByText(/Stress load/)).toBeVisible();
-    await expect(page.locator('#view-me')).toContainText('Not a diagnosis or clinical score');
+    await page.getByRole('button', { name: /What SoulCap knows/ }).click();
+    await expect(page.locator('#subview').getByText(/Stress load/)).toBeVisible();
+    await expect(page.locator('#subview')).toContainText('Not a diagnosis or clinical score');
   });
 
   test('estimates are correctable and clearable without diagnosis language', async ({ page }) => {
@@ -741,13 +747,14 @@ test.describe('v1.1 adaptive drip, themes, locale', () => {
       api.answerDrip(q, q.options[3]);
     });
     await page.evaluate(() => (document.querySelector('#tabs button[data-tab="me"]') as HTMLElement).click());
-    await page.getByRole('button', { name: 'Adjust' }).first().click();
+    await page.getByRole('button', { name: /What SoulCap knows/ }).click();
+    await page.locator('#subview').getByRole('button', { name: 'Adjust' }).first().click();
     await expect(page.locator('#sheet')).toContainText('not diagnoses');
     await page.getByRole('button', { name: '2', exact: true }).click();
     const corrected = await page.evaluate(() => (window as any).__soulcap.getState().userModel.stress);
     expect(corrected.source).toBe('corrected');
     expect(corrected.value).toBeLessThan(4);
-    await page.getByRole('button', { name: 'Adjust' }).first().click();
+    await page.locator('#subview').getByRole('button', { name: 'Adjust' }).first().click();
     await page.getByRole('button', { name: 'Clear this estimate' }).click();
     expect(await page.evaluate(() => (window as any).__soulcap.getState().userModel.stress)).toBeUndefined();
   });
@@ -1384,7 +1391,7 @@ test.describe('Constellation', () => {
       return p && p.name;
     });
     expect(name).toBeTruthy();
-    await page.locator('#sheet').getByRole('button', { name: name!, exact: true }).click();
+    await page.locator('#subview').getByRole('button', { name: name!, exact: true }).click();
     await expect(page.getByLabel('People I can tell')).toHaveValue(new RegExp(name!));
   });
 });
@@ -1396,9 +1403,9 @@ test.describe('History & adaptation', () => {
     // Now fill some history from the You tab.
     await page.evaluate(() => (document.querySelector('#tabs button[data-tab="me"]') as HTMLElement).click());
     await page.getByRole('button', { name: /Your story/ }).click();
-    await page.locator('#sheetPanel textarea').first().fill('with my family');
-    await page.locator('#sheetPanel textarea').first().blur();
-    await page.locator('#sheetPanel').getByRole('button', { name: 'Done' }).click();
+    await page.locator('#subviewBody textarea').first().fill('with my family');
+    await page.locator('#subviewBody textarea').first().blur();
+    await page.locator('#subviewBody').getByRole('button', { name: 'Done' }).click();
     const saved = await page.evaluate(() => (window as any).__soulcap.getState().history);
     expect(Object.values(saved).join(' ')).toContain('with my family');
   });

@@ -289,7 +289,7 @@
     ]));
     if (opts.chevron !== false) kids.push(iconChevron());
     return el('button', {
-      class: 'list-row',
+      class: 'list-row' + (opts.className ? ' ' + opts.className : ''),
       type: 'button',
       onclick: opts.onclick || null
     }, kids);
@@ -1192,18 +1192,68 @@
     render();
   }
   function patternSheet(pattern) {
-    openSheet(function (p) {
-      p.appendChild(el('h2', { class: 'h-sec', text: pattern.title }));
-      p.appendChild(el('p', { class: 'p', text: pattern.summary }));
-      var conf = patternConfidenceLabel(pattern.count);
-      p.appendChild(el('p', { class: 'meta', text: pattern.count + ' ' + PATTERN_UI.dayBasis + (conf ? ' · ' + conf : '') }));
-      var dates = {};
-      pattern.dates.forEach(function (t) { dates[localDayKey(t)] = t; });
-      Object.keys(dates).sort().reverse().forEach(function (key) {
-        p.appendChild(el('p', { class: 'p-sm', text: new Date(dates[key]).toLocaleDateString(undefined, { weekday:'short', day:'numeric', month:'short', year:'numeric' }) }));
-      });
-      p.appendChild(el('p', { class: 'notice', text: PATTERN_UI.evidenceNote }));
-      p.appendChild(el('button', { class: 'btn', text: tUi('pattern', 'done', PATTERN_UI), onclick: closeSheet }));
+    pushView({
+      id: 'pattern-' + pattern.id,
+      title: pattern.title,
+      build: function (p) {
+        p.appendChild(el('p', { class: 'p', text: pattern.summary }));
+        var conf = patternConfidenceLabel(pattern.count);
+        p.appendChild(el('p', { class: 'meta', text: pattern.count + ' ' + PATTERN_UI.dayBasis + (conf ? ' · ' + conf : '') }));
+        var dates = {};
+        pattern.dates.forEach(function (t) { dates[localDayKey(t)] = t; });
+        Object.keys(dates).sort().reverse().forEach(function (key) {
+          p.appendChild(el('p', { class: 'p-sm', text: new Date(dates[key]).toLocaleDateString(undefined, { weekday:'short', day:'numeric', month:'short', year:'numeric' }) }));
+        });
+        p.appendChild(el('p', { class: 'notice', text: PATTERN_UI.evidenceNote }));
+        p.appendChild(el('button', { class: 'btn', text: tUi('pattern', 'done', PATTERN_UI), onclick: function () { popView(); } }));
+      }
+    });
+  }
+  function patternsOverviewSheet() {
+    pushOrReplaceView({
+      id: 'patterns',
+      title: PATTERN_UI.heading,
+      build: function (p) {
+        p.appendChild(el('p', { class: 'p-sm', text: PATTERN_UI.intro }));
+        var any = false;
+        derivePatterns().forEach(function (pattern) {
+          any = true;
+          var decision = state.patternPrefs.decisions[pattern.id];
+          var actions = [
+            el('button', { class: 'chip', text: tUi('pattern', 'evidence', PATTERN_UI), onclick: function () { patternSheet(pattern); } })
+          ];
+          if (decision !== 'confirmed') {
+            actions.push(el('button', { class: 'chip', text: tUi('pattern', 'confirm', PATTERN_UI), onclick: function () { setPatternDecision(pattern.id, 'confirmed'); patternsOverviewSheet(); } }));
+            actions.push(el('button', { class: 'chip', text: tUi('pattern', 'reject', PATTERN_UI), onclick: function () { setPatternDecision(pattern.id, 'rejected'); patternsOverviewSheet(); } }));
+          }
+          actions.push(el('button', { class: 'chip', text: tUi('pattern', 'hide', PATTERN_UI), onclick: function () { setPatternDecision(pattern.id, 'hidden'); patternsOverviewSheet(); } }));
+          p.appendChild(el('div', { class: 'row pattern-row' }, [
+            el('div', {}, [
+              el('div', { class: 'lab', text: pattern.title }),
+              el('div', { class: 'sub', text: pattern.summary + ' Based on ' + pattern.count + ' ' + PATTERN_UI.dayBasis + '.' + (patternConfidenceLabel(pattern.count) ? ' ' + patternConfidenceLabel(pattern.count) + '.' : '') }),
+              el('div', { class: 'chips pattern-actions' }, actions)
+            ]),
+            el('span', { class: decision === 'confirmed' ? 'tier declared' : 'tier guess', text: decision === 'confirmed' ? tUi('pattern', 'confirmed', PATTERN_UI) : tUi('pattern', 'guess', PATTERN_UI) })
+          ]));
+        });
+        if (!any) p.appendChild(el('p', { class: 'p-sm', text: PATTERN_UI.noWeekly }));
+      }
+    });
+  }
+  function weeklyOverviewSheet() {
+    var week = weeklySummary();
+    pushView({
+      id: 'weekly',
+      title: PATTERN_UI.weeklyTitle,
+      build: function (p) {
+        if (!week) {
+          p.appendChild(el('p', { class: 'p-voice', text: PATTERN_UI.noWeekly }));
+          return;
+        }
+        p.appendChild(el('p', { class: 'p', text: week.days + ' ' + PATTERN_UI.weeklySummary + ' · ' + week.common + ' ' + PATTERN_UI.weeklyCommon + '.' }));
+        if (week.detail.length) p.appendChild(el('p', { class: 'p-sm', text: week.detail.join(' · ') }));
+        p.appendChild(el('p', { class: 'reason', text: PATTERN_UI.weeklyNote }));
+      }
     });
   }
   function weeklySummary() {
@@ -1515,13 +1565,17 @@
       p.appendChild(el('div', { class: 'chips' }, [1, 2, 3, 4, 5].map(function (n) {
         return el('button', { class: 'chip', text: '' + n, onclick: function () {
           if (!correctEstimate(key, n)) return;
-          closeSheet(); render();
+          closeSheet();
+          if (viewStack.length && viewStack[viewStack.length - 1].id === 'knows') knowsSheet();
+          else render();
         } });
       })));
       p.appendChild(el('p', { class: 'p-sm', text: meta.low + ' → ' + meta.high }));
       p.appendChild(el('button', { class: 'btn ghost', text: DRIP_UI.reset, onclick: function () {
         if (!clearEstimate(key)) return;
-        closeSheet(); render();
+        closeSheet();
+        if (viewStack.length && viewStack[viewStack.length - 1].id === 'knows') knowsSheet();
+        else render();
       } }));
       p.appendChild(el('button', { class: 'btn quiet', text: DRIP_UI.close, onclick: closeSheet }));
     });
@@ -1838,6 +1892,15 @@
     });
     drawSubview();
     haptic('tick');
+  }
+  function pushOrReplaceView(opts) {
+    if (viewStack.length && viewStack[viewStack.length - 1].id === opts.id) {
+      viewStack[viewStack.length - 1].title = opts.title || '';
+      viewStack[viewStack.length - 1].build = opts.build;
+      drawSubview();
+      return;
+    }
+    pushView(opts);
   }
   function popView() {
     if (!viewStack.length) return;
@@ -2409,30 +2472,32 @@
   }
   var timelineOffset = 0;
   function timelineSheet() {
-    openSheet(function (p) {
-      p.appendChild(el('h2', { class: 'h-sec', text: tUi('timeline', 'title', TIMELINE_UI) }));
-      var days = weekTimelineDays(timelineOffset);
-      var any = days.some(function (d) { return d.checkins.length || d.journals.length; });
-      if (!any) p.appendChild(el('p', { class: 'p-voice', text: tUi('timeline', 'empty', TIMELINE_UI) }));
-      days.forEach(function (day) {
-        if (!day.checkins.length && !day.journals.length) return;
-        var block = el('div', { class: 'timeline-day card' }, [
-          el('p', { class: 'eyebrow', text: new Date(day.t).toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'short' }) })
-        ]);
-        day.checkins.forEach(function (c) {
-          var need = c.need ? (CHECKIN_DIRECT_NEEDS.filter(function (n) { return n.key === c.need; })[0] || {}).label : '';
-          block.appendChild(el('p', { class: 'p-sm', text: tUi('timeline', 'checkin', TIMELINE_UI) + ': ' + c.state + (need ? ' · ' + need : '') + (c.feeling ? ' · ' + c.feeling : '') }));
+    pushOrReplaceView({
+      id: 'timeline',
+      title: tUi('timeline', 'title', TIMELINE_UI),
+      build: function (p) {
+        var days = weekTimelineDays(timelineOffset);
+        var any = days.some(function (d) { return d.checkins.length || d.journals.length; });
+        if (!any) p.appendChild(el('p', { class: 'p-voice', text: tUi('timeline', 'empty', TIMELINE_UI) }));
+        days.forEach(function (day) {
+          if (!day.checkins.length && !day.journals.length) return;
+          var block = el('div', { class: 'timeline-day card' }, [
+            el('p', { class: 'eyebrow', text: new Date(day.t).toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'short' }) })
+          ]);
+          day.checkins.forEach(function (c) {
+            var need = c.need ? (CHECKIN_DIRECT_NEEDS.filter(function (n) { return n.key === c.need; })[0] || {}).label : '';
+            block.appendChild(el('p', { class: 'p-sm', text: tUi('timeline', 'checkin', TIMELINE_UI) + ': ' + c.state + (need ? ' · ' + need : '') + (c.feeling ? ' · ' + c.feeling : '') }));
+          });
+          day.journals.forEach(function (e) {
+            block.appendChild(el('p', { class: 'p-sm', text: tUi('timeline', 'journal', TIMELINE_UI) + ': ' + (e.title || 'Untitled') }));
+          });
+          p.appendChild(block);
         });
-        day.journals.forEach(function (e) {
-          block.appendChild(el('p', { class: 'p-sm', text: tUi('timeline', 'journal', TIMELINE_UI) + ': ' + (e.title || 'Untitled') }));
-        });
-        p.appendChild(block);
-      });
-      p.appendChild(el('div', { class: 'chips' }, [
-        el('button', { class: 'chip', text: tUi('timeline', 'prev', TIMELINE_UI), onclick: function () { timelineOffset--; closeSheet(); timelineSheet(); } }),
-        el('button', { class: 'chip', text: tUi('timeline', 'next', TIMELINE_UI), onclick: function () { timelineOffset++; closeSheet(); timelineSheet(); } })
-      ]));
-      p.appendChild(el('button', { class: 'btn quiet', text: tUi('timeline', 'close', TIMELINE_UI), onclick: closeSheet }));
+        p.appendChild(el('div', { class: 'chips' }, [
+          el('button', { class: 'chip', text: tUi('timeline', 'prev', TIMELINE_UI), onclick: function () { timelineOffset--; timelineSheet(); } }),
+          el('button', { class: 'chip', text: tUi('timeline', 'next', TIMELINE_UI), onclick: function () { timelineOffset++; timelineSheet(); } })
+        ]));
+      }
     });
   }
   function reflectionAnswerSheet() {
@@ -3643,33 +3708,35 @@
   /* ── History taking (optional, never in onboarding) ────────────────────── */
   function historyFilled() { return HISTORY_SECTIONS.filter(function (s) { return (state.history[s.key] || '').trim().length > 0; }).length; }
   function historySheet() {
-    openSheet(function (p) {
-      p.appendChild(el('h2', { class: 'h-sec', text: 'Your story' }));
-      p.appendChild(el('p', { class: 'p-sm', text: 'All optional. The more you tell SoulCap, the more it can shape itself around you. Nothing here leaves your device, and none of it is ever shown as a diagnosis.' }));
-      HISTORY_SECTIONS.forEach(function (sec) {
-        p.appendChild(el('p', { class: 'eyebrow', style: 'margin-top:12px', text: sec.title + (sec.sensitive ? ' · sensitive' : '') }));
-        p.appendChild(el('p', { class: 'p-sm', style: 'margin-bottom:8px', text: sec.hint }));
-        if (sec.kind === 'choice') {
-          var wrap = el('div', { class: 'chips' }, sec.options.map(function (o) {
-            return el('button', { class: 'chip', 'aria-pressed': state.history[sec.key] === o ? 'true' : 'false', text: o,
-              onclick: function () { state.history[sec.key] = state.history[sec.key] === o ? '' : o; save(); Array.prototype.forEach.call(wrap.children, function (b) { b.setAttribute('aria-pressed', b.textContent === state.history[sec.key] ? 'true' : 'false'); }); } });
-          }));
-          p.appendChild(wrap);
-        } else {
-          // Roomy field — write as much as you like, add as many things as you want.
-          var ta = el('textarea', { placeholder: sec.placeholder, 'aria-label': sec.title, style: 'min-height:130px' });
-          ta.value = state.history[sec.key] || '';
-          var grow = function () { ta.style.height = 'auto'; ta.style.height = Math.min(ta.scrollHeight + 4, 460) + 'px'; };
-          ta.addEventListener('input', grow);
-          wireSafetyText(ta, function () { state.history[sec.key] = ta.value; save(); });
-          p.appendChild(ta);
-          if (['family', 'relatives', 'hobbies', 'habits'].indexOf(sec.key) !== -1)
-            p.appendChild(el('p', { class: 'p-sm', text: 'Add as many as you like — one per line.' }));
-          setTimeout(grow, 0);
-        }
-      });
-      p.appendChild(el('div', { class: 'notice', html: '<b>How this changes things.</b> If you note that things are hard from your past, SoulCap keeps potentially-activating exercises out of its suggestions and leans toward gentle grounding. It never labels or diagnoses you.' }));
-      p.appendChild(el('button', { class: 'btn', text: 'Done', onclick: function () { save(); closeSheet(); render(); } }));
+    pushOrReplaceView({
+      id: 'history',
+      title: 'Your story',
+      build: function (p) {
+        p.appendChild(el('p', { class: 'p-sm', text: 'All optional. The more you tell SoulCap, the more it can shape itself around you. Nothing here leaves your device, and none of it is ever shown as a diagnosis.' }));
+        HISTORY_SECTIONS.forEach(function (sec) {
+          p.appendChild(el('p', { class: 'eyebrow', style: 'margin-top:12px', text: sec.title + (sec.sensitive ? ' · sensitive' : '') }));
+          p.appendChild(el('p', { class: 'p-sm', style: 'margin-bottom:8px', text: sec.hint }));
+          if (sec.kind === 'choice') {
+            var wrap = el('div', { class: 'chips' }, sec.options.map(function (o) {
+              return el('button', { class: 'chip', 'aria-pressed': state.history[sec.key] === o ? 'true' : 'false', text: o,
+                onclick: function () { state.history[sec.key] = state.history[sec.key] === o ? '' : o; save(); Array.prototype.forEach.call(wrap.children, function (b) { b.setAttribute('aria-pressed', b.textContent === state.history[sec.key] ? 'true' : 'false'); }); } });
+            }));
+            p.appendChild(wrap);
+          } else {
+            var ta = el('textarea', { placeholder: sec.placeholder, 'aria-label': sec.title, style: 'min-height:130px' });
+            ta.value = state.history[sec.key] || '';
+            var grow = function () { ta.style.height = 'auto'; ta.style.height = Math.min(ta.scrollHeight + 4, 460) + 'px'; };
+            ta.addEventListener('input', grow);
+            wireSafetyText(ta, function () { state.history[sec.key] = ta.value; save(); });
+            p.appendChild(ta);
+            if (['family', 'relatives', 'hobbies', 'habits'].indexOf(sec.key) !== -1)
+              p.appendChild(el('p', { class: 'p-sm', text: 'Add as many as you like — one per line.' }));
+            setTimeout(grow, 0);
+          }
+        });
+        p.appendChild(el('div', { class: 'notice', html: '<b>How this changes things.</b> If you note that things are hard from your past, SoulCap keeps potentially-activating exercises out of its suggestions and leans toward gentle grounding. It never labels or diagnoses you.' }));
+        p.appendChild(el('button', { class: 'btn', text: 'Done', onclick: function () { save(); closeSubview(); render(); } }));
+      }
     });
   }
 
@@ -3817,62 +3884,84 @@
 
   /* ── Safety plan ───────────────────────────────────────────────────────── */
   function safetyPlanSheet() {
-    openSheet(function (p) {
-      p.appendChild(el('h2', { class: 'h-sec', text: 'My plan' }));
-      p.appendChild(el('p', { class: 'p-sm', text: 'Written now, while you have room to think. It’ll be here when you don’t.' }));
-      SAFETY_PLAN_STEPS.forEach(function (step) {
-        var ta = el('textarea', { placeholder: step.placeholder, 'aria-label': step.title }); ta.value = state.safetyPlan[step.key] || '';
-        wireSafetyText(ta, function () { state.safetyPlan[step.key] = ta.value; save(); });
-        p.appendChild(el('div', {}, [el('p', { class: 'eyebrow', style: 'margin-top:10px', text: step.title }), el('p', { class: 'p-sm', style: 'margin-bottom:8px', text: step.hint }), ta]));
-        if (step.key === 'contacts') {
-          var pool = state.people.filter(function (person) {
-            return !person.hard && person.supportive >= 0.5 && person.suggestible !== false;
-          });
-          if (pool.length) {
-            p.appendChild(el('p', { class: 'p-sm', text: 'From your Constellation — tap to add. You can still type anyone else.' }));
-            p.appendChild(el('div', { class: 'chips', role: 'group', 'aria-label': 'People from Constellation' }, pool.map(function (person) {
-              return el('button', { class: 'chip', text: person.name, onclick: function () {
-                var cur = (state.safetyPlan.contacts || '').trim();
-                if (cur.split(/,\s*/).indexOf(person.name) !== -1) return;
-                state.safetyPlan.contacts = cur ? (cur + ', ' + person.name) : person.name;
-                ta.value = state.safetyPlan.contacts;
-                save(); buzz(8);
-              } });
-            })));
+    pushOrReplaceView({
+      id: 'safety-plan',
+      title: 'My plan',
+      build: function (p) {
+        p.appendChild(el('p', { class: 'p-sm', text: 'Written now, while you have room to think. It’ll be here when you don’t.' }));
+        SAFETY_PLAN_STEPS.forEach(function (step) {
+          var ta = el('textarea', { placeholder: step.placeholder, 'aria-label': step.title }); ta.value = state.safetyPlan[step.key] || '';
+          wireSafetyText(ta, function () { state.safetyPlan[step.key] = ta.value; save(); });
+          p.appendChild(el('div', {}, [el('p', { class: 'eyebrow', style: 'margin-top:10px', text: step.title }), el('p', { class: 'p-sm', style: 'margin-bottom:8px', text: step.hint }), ta]));
+          if (step.key === 'contacts') {
+            var pool = state.people.filter(function (person) {
+              return !person.hard && person.supportive >= 0.5 && person.suggestible !== false;
+            });
+            if (pool.length) {
+              p.appendChild(el('p', { class: 'p-sm', text: 'From your Constellation — tap to add. You can still type anyone else.' }));
+              p.appendChild(el('div', { class: 'chips', role: 'group', 'aria-label': 'People from Constellation' }, pool.map(function (person) {
+                return el('button', { class: 'chip', text: person.name, onclick: function () {
+                  var cur = (state.safetyPlan.contacts || '').trim();
+                  if (cur.split(/,\s*/).indexOf(person.name) !== -1) return;
+                  state.safetyPlan.contacts = cur ? (cur + ', ' + person.name) : person.name;
+                  ta.value = state.safetyPlan.contacts;
+                  save(); buzz(8);
+                } });
+              })));
+            }
           }
-        }
-      });
-      p.appendChild(el('button', { class: 'btn', text: 'Done', onclick: function () { save(); closeSheet(); render(); } }));
+        });
+        p.appendChild(el('button', { class: 'btn', text: 'Done', onclick: function () { save(); closeSubview(); render(); } }));
+      }
     });
   }
   function planFilled() { return SAFETY_PLAN_STEPS.filter(function (s) { return (state.safetyPlan[s.key] || '').trim().length > 0; }).length; }
 
-  /* ── Profile ───────────────────────────────────────────────────────────── */
   function profileSheet() {
-    openSheet(function (p) {
-      p.appendChild(el('h2', { class: 'h-sec', text: 'About you' }));
-      p.appendChild(el('p', { class: 'p-sm', text: 'Only used to make this feel like yours. Stays on your device.' }));
-      var name = el('input', { type: 'text', placeholder: 'What should we call you?', 'aria-label': 'Name', value: state.profile.name });
-      var age = el('input', { type: 'text', inputmode: 'numeric', placeholder: 'Age (optional)', 'aria-label': 'Age', value: state.profile.age });
-      var pron = el('input', { type: 'text', placeholder: 'Pronouns (optional)', 'aria-label': 'Pronouns', value: state.profile.pronouns });
-      p.appendChild(el('p', { class: 'eyebrow', text: 'Name' })); p.appendChild(name);
-      p.appendChild(el('p', { class: 'eyebrow', text: 'Age' })); p.appendChild(age);
-      p.appendChild(el('p', { class: 'eyebrow', text: 'Pronouns' })); p.appendChild(pron);
-      p.appendChild(el('button', { class: 'btn', text: 'Save', onclick: function () {
-        state.profile.name = name.value.trim().slice(0, 40);
-        state.profile.age = age.value.replace(/\D/g, '').slice(0, 3);
-        state.profile.pronouns = pron.value.trim().slice(0, 24);
-        save(); closeSheet(); render();
-      } }));
-      p.appendChild(el('button', { class: 'btn quiet', text: 'Cancel', onclick: closeSheet }));
+    pushOrReplaceView({
+      id: 'profile',
+      title: 'About you',
+      build: function (p) {
+        p.appendChild(el('p', { class: 'p-sm', text: 'Only used to make this feel like yours. Stays on your device.' }));
+        var name = el('input', { type: 'text', placeholder: 'What should we call you?', 'aria-label': 'Name', value: state.profile.name });
+        var age = el('input', { type: 'text', inputmode: 'numeric', placeholder: 'Age (optional)', 'aria-label': 'Age', value: state.profile.age });
+        var pron = el('input', { type: 'text', placeholder: 'Pronouns (optional)', 'aria-label': 'Pronouns', value: state.profile.pronouns });
+        p.appendChild(el('p', { class: 'eyebrow', text: 'Name' })); p.appendChild(name);
+        p.appendChild(el('p', { class: 'eyebrow', text: 'Age' })); p.appendChild(age);
+        p.appendChild(el('p', { class: 'eyebrow', text: 'Pronouns' })); p.appendChild(pron);
+        p.appendChild(el('button', { class: 'btn', text: 'Save', onclick: function () {
+          state.profile.name = name.value.trim().slice(0, 40);
+          state.profile.age = age.value.replace(/\D/g, '').slice(0, 3);
+          state.profile.pronouns = pron.value.trim().slice(0, 24);
+          save(); closeSubview(); render();
+        } }));
+        p.appendChild(el('button', { class: 'btn quiet', text: 'Cancel', onclick: function () { closeSubview(); } }));
+      }
     });
   }
 
   /* ── You ───────────────────────────────────────────────────────────────── */
+  function soulcapDayCount() {
+    var times = [];
+    state.checkins.forEach(function (c) { if (c.t) times.push(c.t); });
+    state.journal.forEach(function (j) { if (j.t) times.push(j.t); });
+    state.skillRuns.forEach(function (r) { if (r.t) times.push(r.t); });
+    if (!times.length) return 0;
+    var first = Math.min.apply(null, times);
+    return Math.max(1, Math.floor((Date.now() - first) / 86400000) + 1);
+  }
   function renderMe() {
     var v = $('#view-me'); clear(v);
     var name = (state.profile.name || '').trim();
-    v.appendChild(el('div', {}, [el('p', { class: 'eyebrow', text: tUi('me', 'eyebrow', { eyebrow: 'You' }) }), el('h1', { class: 'h-voice', text: name || tUi('me', 'yourSpace', { yourSpace: 'Your space.' }) })]));
+    var dayN = soulcapDayCount();
+    var hero = el('div', { class: 'hero-band me-hero' });
+    hero.appendChild(el('p', { class: 'eyebrow', text: tUi('me', 'eyebrow', { eyebrow: 'You' }) }));
+    hero.appendChild(el('h1', { class: 'h-voice', text: name || tUi('me', 'yourSpace', { yourSpace: 'Your space.' }) }));
+    hero.appendChild(el('p', { class: 'p-sm', text: dayN
+      ? (dayN === 1 ? 'Day 1 with SoulCap.' : ('Day ' + dayN + ' with SoulCap.'))
+      : 'A quiet place for what you notice.' }));
+    v.appendChild(hero);
+
     if (!name && !historyFilled() && !state.principles.length && !state.manual.lines.length && !planFilled()) {
       v.appendChild(el('div', { class: 'card empty-state' }, [
         el('p', { class: 'p-sm', text: tUi('empty', 'me', EMPTY_UI) }),
@@ -3880,87 +3969,8 @@
       ]));
     }
 
-    // About you — profile · story · what SoulCap knows
-    var about = el('div', { class: 'section-block me-about' }, [
-      el('p', { class: 'eyebrow', text: tUi('me', 'sectionAbout', { sectionAbout: 'About you' }) })
-    ]);
-    about.appendChild(el('button', { class: 'card tap', onclick: profileSheet }, [
-      el('div', { class: 'card-head' }, [el('h2', { class: 'card-title', text: name ? tUi('me', 'profile', { profile: 'Profile' }) : tUi('me', 'setupProfile', { setupProfile: 'Set up your profile' }) }), el('span', { class: 'pill', text: name ? tUi('me', 'edit', { edit: 'Edit' }) : tUi('me', 'add', { add: 'Add' }) })]),
-      el('p', { class: 'p-sm', text: name
-        ? [name, state.profile.age && state.profile.age + ' years', state.profile.pronouns].filter(Boolean).join(' · ')
-        : 'Add your name so this feels like yours. Age and pronouns optional.' })
-    ]));
-    var hf = historyFilled();
-    about.appendChild(el('button', { class: 'card tap', onclick: historySheet }, [
-      el('div', { class: 'card-head' }, [el('h2', { class: 'card-title', text: tUi('me', 'yourStory', { yourStory: 'Your story' }) }), el('span', { class: 'pill', text: hf ? hf + ' / ' + HISTORY_SECTIONS.length : tUi('me', 'optional', { optional: 'Optional' }) })]),
-      el('p', { class: 'p-sm', text: hf
-        ? 'Family, relationships, habits, hobbies, and the harder things — SoulCap adapts to what you’ve shared.'
-        : 'Tell SoulCap about your life — family, relationships, habits, hobbies, anything from your past. All optional. The more it knows, the more it fits you.' })
-    ]));
-    var knowRows = el('div', {}); var anyKnow = false;
-    USER_MODEL_KEYS.forEach(function (meta) {
-      var item = state.userModel[meta.key];
-      if (!item || typeof item.value !== 'number') return;
-      anyKnow = true;
-      knowRows.appendChild(el('div', { class: 'row pattern-row' }, [
-        el('div', {}, [
-          el('div', { class: 'lab', text: meta.label + ' · ' + item.value.toFixed(1) + '/5' }),
-          el('div', { class: 'sub', text: confidenceLabel(item.confidence) + ' ' + DRIP_UI.confidence + ' · ' + DRIP_UI.notDiagnosis }),
-          el('div', { class: 'chips pattern-actions' }, [
-            el('button', { class: 'chip', text: DRIP_UI.correct, onclick: function () { estimateSheet(meta.key); } })
-          ])
-        ]),
-        el('span', { class: 'tier declared', text: item.source === 'corrected' ? 'Corrected' : 'You said' })
-      ]));
-    });
-    SCREENERS.forEach(function (screener) {
-      var res = state.screenerResults[screener.id];
-      if (!res) return;
-      anyKnow = true;
-      knowRows.appendChild(el('div', { class: 'row pattern-row screener-signal' }, [
-        el('div', {}, [
-          el('div', { class: 'lab', text: SCREENER_UI.knowsLabel + ' · ' + screener.name }),
-          el('div', { class: 'sub', text: SCREENER_UI.historyLine.replace('{score}', '' + res.score).replace('{band}', res.bandLabel) + ' · ' + SCREENER_UI.knowsSub }),
-          el('div', { class: 'chips pattern-actions' }, [
-            el('button', { class: 'chip', text: SCREENER_UI.retake, onclick: function () { screenerRunSheet(screener.id); } }),
-            el('button', { class: 'chip', text: SCREENER_UI.clear, onclick: function () {
-              if (!clearScreenerResult(screener.id)) return;
-              render();
-            } })
-          ])
-        ]),
-        el('span', { class: 'tier guess', text: 'Low confidence' })
-      ]));
-    });
-    state.concerns.forEach(function (c) { anyKnow = true; knowRows.appendChild(el('div', { class: 'row' }, [el('div', {}, [el('div', { class: 'lab', text: c }), el('div', { class: 'sub', text: 'You picked this when you started' })]), el('span', { class: 'tier declared', text: 'You said' })])); });
-    var helpful = {}; state.skillRuns.forEach(function (r) { if (r.helpful === true) helpful[r.id] = (helpful[r.id] || 0) + 1; });
-    Object.keys(helpful).forEach(function (id) { var s = SKILLS.filter(function (x) { return x.id === id; })[0]; if (!s) return; anyKnow = true; knowRows.appendChild(el('div', { class: 'row' }, [el('div', {}, [el('div', { class: 'lab', text: s.name + ' seems to help' }), el('div', { class: 'sub', text: 'You said it helped ' + helpful[id] + ' time' + (helpful[id] > 1 ? 's' : '') })]), el('span', { class: 'tier observed', text: 'Observed' })])); });
-    (state.pathSessions || []).slice(-5).reverse().forEach(function (session) {
-      anyKnow = true;
-      var fam = FAMILY_META[session.family];
-      knowRows.appendChild(el('div', { class: 'row pattern-row path-signal' }, [
-        el('div', {}, [
-          el('div', { class: 'lab', text: PATH_UI.knowsLabel + (fam ? ' · ' + fam.label : '') }),
-          el('div', { class: 'sub', text: PATH_UI.knowsSub }),
-          el('div', { class: 'chips pattern-actions' }, [
-            el('button', { class: 'chip', text: PATH_UI.clear, onclick: function () {
-              if (!clearPathSession(session.id)) return;
-              render();
-            } })
-          ])
-        ]),
-        el('span', { class: 'tier observed', text: 'You tried' })
-      ]));
-    });
-    if (anyKnow) {
-      about.appendChild(el('p', { class: 'eyebrow', text: tUi('me', 'knowsHeading', { knowsHeading: 'What SoulCap knows' }) }));
-      about.appendChild(knowRows);
-    }
-    v.appendChild(about);
-
-    // Your insights — journey · seven-day · patterns · timeline (off Now)
     var insights = el('div', { class: 'section-block me-insights' }, [
-      el('p', { class: 'eyebrow', text: tUi('me', 'sectionInsights', { sectionInsights: 'Your insights' }) })
+      el('p', { class: 'section-label', text: tUi('me', 'sectionInsights', { sectionInsights: 'Your insights' }) })
     ]);
     var progDots = weekActivityDots();
     var progN = progDots.filter(function (x) { return x.on; }).length;
@@ -3969,8 +3979,8 @@
       : PROGRESS_UI.weekEmpty;
     var runs = state.skillRuns.length, helped = state.skillRuns.filter(function (r) { return r.helpful; }).length;
     var pathN = (state.pathSessions || []).length;
-    insights.appendChild(el('div', { class: 'card raised progress-dash' }, [
-      el('h2', { class: 'card-title', text: PROGRESS_UI.title }),
+    insights.appendChild(el('div', { class: 'hero-tile progress-dash' }, [
+      el('p', { class: 'ht-meta', text: PROGRESS_UI.title }),
       el('p', { class: 'glance-label', text: PROGRESS_UI.weekLabel }),
       el('div', { class: 'progress-dots', role: 'img', 'aria-label': weekLine }, progDots.map(function (d) {
         return el('i', { class: d.on ? 'on' : '' });
@@ -3986,76 +3996,82 @@
         : el('p', { class: 'p-sm', text: PROGRESS_UI.empty }),
       el('p', { class: 'reason', text: PROGRESS_UI.gentle })
     ]));
-    if (runs || state.checkins.length) {
-      var top = {}; state.skillRuns.forEach(function (r) { if (r.helpful) top[r.id] = (top[r.id] || 0) + 1; });
-      var best = Object.keys(top).sort(function (a, b) { return top[b] - top[a]; })[0];
-      var bestSkill = best ? SKILLS.filter(function (s) { return s.id === best; })[0] : null;
-      insights.appendChild(el('div', { class: 'card' }, [
-        el('h2', { class: 'card-title', text: 'Your journey' }),
-        el('p', { class: 'p', text: runs + ' exercise' + (runs === 1 ? '' : 's') + ' · ' + helped + ' helped · ' + state.checkins.length + ' day' + (state.checkins.length === 1 ? '' : 's') + ' checked in · ' + state.journal.length + ' journal' }),
-        bestSkill ? el('p', { class: 'reason', text: bestSkill.name + ' seems to work best for you.' }) : null,
-        el('p', { class: 'p-sm', text: 'No score, no rating. Just what’s happened.' })
-      ]));
-    }
+
+    var patternN = derivePatterns().length;
     var week = weeklySummary();
-    if (week) {
-      insights.appendChild(el('div', { class: 'card' }, [
-        el('h2', { class: 'card-title', text: PATTERN_UI.weeklyTitle }),
-        el('p', { class: 'p', text: week.days + ' ' + PATTERN_UI.weeklySummary + ' · ' + week.common + ' ' + PATTERN_UI.weeklyCommon + '.' }),
-        week.detail.length ? el('p', { class: 'p-sm', text: week.detail.join(' · ') }) : null,
-        el('p', { class: 'reason', text: PATTERN_UI.weeklyNote })
-      ]));
-    }
-    var patternRows = el('div', {}); var anyPattern = false;
-    derivePatterns().forEach(function (pattern) {
-      anyPattern = true;
-      var decision = state.patternPrefs.decisions[pattern.id];
-      var actions = [
-        el('button', { class: 'chip', text: tUi('pattern', 'evidence', PATTERN_UI), onclick: function () { patternSheet(pattern); } })
-      ];
-      if (decision !== 'confirmed') {
-        actions.push(el('button', { class: 'chip', text: tUi('pattern', 'confirm', PATTERN_UI), onclick: function () { setPatternDecision(pattern.id, 'confirmed'); } }));
-        actions.push(el('button', { class: 'chip', text: tUi('pattern', 'reject', PATTERN_UI), onclick: function () { setPatternDecision(pattern.id, 'rejected'); } }));
-      }
-      actions.push(el('button', { class: 'chip', text: tUi('pattern', 'hide', PATTERN_UI), onclick: function () { setPatternDecision(pattern.id, 'hidden'); } }));
-      patternRows.appendChild(el('div', { class: 'row pattern-row' }, [
-        el('div', {}, [
-          el('div', { class: 'lab', text: pattern.title }),
-          el('div', { class: 'sub', text: pattern.summary + ' Based on ' + pattern.count + ' ' + PATTERN_UI.dayBasis + '.' + (patternConfidenceLabel(pattern.count) ? ' ' + patternConfidenceLabel(pattern.count) + '.' : '') }),
-          el('div', { class: 'chips pattern-actions' }, actions)
-        ]),
-        el('span', { class: decision === 'confirmed' ? 'tier declared' : 'tier guess', text: decision === 'confirmed' ? tUi('pattern', 'confirmed', PATTERN_UI) : tUi('pattern', 'guess', PATTERN_UI) })
-      ]));
-    });
-    if (anyPattern) insights.appendChild(patternRows);
-    insights.appendChild(el('button', { class: 'card tap timeline-card', onclick: timelineSheet }, [
-      el('h2', { class: 'card-title', text: TIMELINE_UI.title }),
-      el('p', { class: 'p-sm', text: TIMELINE_UI.cardHint })
+    insights.appendChild(el('div', { class: 'bento-3 me-stats' }, [
+      el('button', { class: 'stat-tile tap', type: 'button', onclick: patternsOverviewSheet }, [
+        el('p', { class: 'st-label', text: 'Patterns' }),
+        el('p', { class: 'st-value', text: patternN ? ('' + patternN) : '—' }),
+        el('p', { class: 'p-sm', text: patternN ? PATTERN_UI.heading : PATTERN_UI.noWeekly })
+      ]),
+      el('button', { class: 'stat-tile tap', type: 'button', onclick: weeklyOverviewSheet }, [
+        el('p', { class: 'st-label', text: 'Weekly' }),
+        el('p', { class: 'st-value', text: week ? ('' + week.days) : '—' }),
+        el('p', { class: 'p-sm', text: week ? (week.common + ' · ' + PATTERN_UI.weeklyCommon) : PATTERN_UI.noWeekly })
+      ]),
+      el('button', { class: 'stat-tile tap timeline-card', type: 'button', onclick: timelineSheet }, [
+        el('p', { class: 'st-label', text: 'Timeline' }),
+        el('p', { class: 'st-value', text: TIMELINE_UI.title }),
+        el('p', { class: 'p-sm', text: TIMELINE_UI.cardHint })
+      ])
     ]));
     v.appendChild(insights);
 
-    // Your tools — plan · screener · principles · manual
     var tools = el('div', { class: 'section-block me-tools' }, [
-      el('p', { class: 'eyebrow', text: tUi('me', 'sectionTools', { sectionTools: 'Your tools' }) })
+      el('p', { class: 'section-label', text: tUi('me', 'sectionTools', { sectionTools: 'Your tools' }) })
     ]);
+    var toolsGroup = el('div', { class: 'list-group' });
     var filled = planFilled();
-    tools.appendChild(el('button', { class: 'card tap', onclick: safetyPlanSheet }, [
-      el('div', { class: 'card-head' }, [el('h2', { class: 'card-title', text: tUi('me', 'myPlan', { myPlan: 'My plan' }) }), el('span', { class: 'pill', text: filled + '/' + SAFETY_PLAN_STEPS.length })]),
-      el('p', { class: 'p-sm', text: filled ? 'Your warning signs, what helps, and who to tell. Tap to update.' : 'Write it while you’re steady, so it’s ready when you’re not.' })
-    ]));
-    tools.appendChild(el('button', { class: 'card tap screener-card', onclick: screenerPickSheet }, [
-      el('h2', { class: 'card-title', text: SCREENER_UI.cardTitle }),
-      el('p', { class: 'p-sm', text: SCREENER_UI.cardHint })
-    ]));
-    tools.appendChild(el('button', { class: 'card tap', onclick: principlesSheet }, [
-      el('h2', { class: 'card-title', text: PRINCIPLES_UI.title }),
-      el('p', { class: 'p-sm', text: state.principles.length ? state.principles.slice(0, 2).join(' · ') : PRINCIPLES_UI.cardHint })
-    ]));
-    tools.appendChild(el('button', { class: 'card tap manual-card', onclick: manualSheet }, [
-      el('h2', { class: 'card-title', text: MANUAL_UI.title }),
-      el('p', { class: 'p-sm', text: state.manual.lines.length ? (state.manual.lines.length + ' line' + (state.manual.lines.length === 1 ? '' : 's')) : MANUAL_UI.cardHint })
-    ]));
+    toolsGroup.appendChild(listRow({
+      title: tUi('me', 'myPlan', { myPlan: 'My plan' }),
+      meta: filled ? (filled + '/' + SAFETY_PLAN_STEPS.length + ' filled') : 'Write it while you’re steady',
+      onclick: safetyPlanSheet
+    }));
+    toolsGroup.appendChild(listRow({
+      className: 'screener-card',
+      title: SCREENER_UI.cardTitle,
+      meta: SCREENER_UI.cardHint,
+      onclick: screenerPickSheet
+    }));
+    toolsGroup.appendChild(listRow({
+      title: PRINCIPLES_UI.title,
+      meta: state.principles.length ? state.principles.slice(0, 2).join(' · ') : PRINCIPLES_UI.cardHint,
+      onclick: principlesSheet
+    }));
+    toolsGroup.appendChild(listRow({
+      className: 'manual-card',
+      title: MANUAL_UI.title,
+      meta: state.manual.lines.length ? (state.manual.lines.length + ' line' + (state.manual.lines.length === 1 ? '' : 's')) : MANUAL_UI.cardHint,
+      onclick: manualSheet
+    }));
+    tools.appendChild(toolsGroup);
     v.appendChild(tools);
+
+    var about = el('div', { class: 'section-block me-about' }, [
+      el('p', { class: 'section-label', text: tUi('me', 'sectionAbout', { sectionAbout: 'About you' }) })
+    ]);
+    var aboutGroup = el('div', { class: 'list-group' });
+    aboutGroup.appendChild(listRow({
+      title: name ? tUi('me', 'profile', { profile: 'Profile' }) : tUi('me', 'setupProfile', { setupProfile: 'Set up your profile' }),
+      meta: name
+        ? [name, state.profile.age && state.profile.age + ' years', state.profile.pronouns].filter(Boolean).join(' · ')
+        : 'Add your name so this feels like yours',
+      onclick: profileSheet
+    }));
+    var hf = historyFilled();
+    aboutGroup.appendChild(listRow({
+      title: tUi('me', 'yourStory', { yourStory: 'Your story' }),
+      meta: hf ? (hf + ' / ' + HISTORY_SECTIONS.length + ' sections') : tUi('me', 'optional', { optional: 'Optional' }),
+      onclick: historySheet
+    }));
+    aboutGroup.appendChild(listRow({
+      title: tUi('me', 'knowsHeading', { knowsHeading: 'What SoulCap knows' }),
+      meta: 'Estimates, screeners, and what seemed to help',
+      onclick: knowsSheet
+    }));
+    about.appendChild(aboutGroup);
+    v.appendChild(about);
 
     if (state.locale === 'rui' && !clinicalNoticeDismissed()) {
       v.appendChild(el('div', { class: 'notice' }, [
@@ -4064,115 +4080,194 @@
       ]));
     }
 
-    v.appendChild(el('button', { class: 'card tap settings-card', onclick: settingsSheet }, [
-      el('div', { class: 'card-head' }, [
-        el('h2', { class: 'card-title', text: tUi('settingsCard', 'title', { title: 'Settings' }) }),
-        el('span', { class: 'pill', text: tUi('settingsCard', 'open', { open: 'Open' }) })
-      ]),
-      el('p', { class: 'p-sm', text: tUi('settingsCard', 'hint', { hint: 'Appearance, language, accessibility, constellation pace, guided exercises, and your data.' }) })
+    v.appendChild(el('div', { class: 'list-group' }, [
+      listRow({
+        className: 'settings-card',
+        title: tUi('settingsCard', 'title', { title: 'Settings' }),
+        meta: tUi('settingsCard', 'hint', { hint: 'Appearance, language, accessibility, constellation pace, guided exercises, and your data.' }),
+        onclick: settingsSheet
+      })
     ]));
 
     v.appendChild(el('button', { class: 'help-btn', text: t('helpNow'), onclick: openPanic }));
   }
   function manualSheet() {
-    openSheet(function (p) {
-      p.appendChild(el('h2', { class: 'h-sec', text: tUi('manual', 'title', MANUAL_UI) }));
-      var live = el('p', { class: 'meta manual-live', role: 'status', 'aria-live': 'polite', 'aria-atomic': 'true' });
-      p.appendChild(live);
-      if (!state.manual.lines.length) p.appendChild(el('p', { class: 'p-sm', text: tUi('manual', 'empty', MANUAL_UI) }));
-      MANUAL_SECTIONS.forEach(function (section) {
-        var lines = state.manual.lines.filter(function (line) { return line.section === section; });
-        if (!lines.length) return;
-        p.appendChild(el('p', { class: 'eyebrow', style: 'margin-top:10px', text: manualSectionLabel(section) }));
-        lines.forEach(function (line) {
-          var lineId = line.id;
-          var inp = el('input', { type: 'text', value: line.text, 'aria-label': MANUAL_UI.lineLabel + ' — ' + manualSectionLabel(section) });
-          wireSafetyText(inp, function () {
-            var val = inp.value.trim().slice(0, 200);
-            if (!val) return;
-            for (var li = 0; li < state.manual.lines.length; li++) {
-              if (state.manual.lines[li].id === lineId) {
-                state.manual.lines[li].text = val;
-                state.manual.lines[li].edited = true;
-                if (state.manual.lines[li].source === 'auto') state.manual.lines[li].source = 'user';
-                break;
-              }
-            }
-            save();
-          });
-          p.appendChild(el('div', { class: 'stack manual-row' }, [
-            inp,
-            el('button', { class: 'btn quiet', text: MANUAL_UI.remove, onclick: function () {
-              for (var ri = 0; ri < state.manual.lines.length; ri++) {
-                if (state.manual.lines[ri].id === lineId) {
-                  if (state.manual.lines[ri].source === 'auto') state.manual.dismissedAuto[lineId] = true;
-                  state.manual.lines.splice(ri, 1);
+    pushOrReplaceView({
+      id: 'manual',
+      title: tUi('manual', 'title', MANUAL_UI),
+      build: function (p) {
+        var live = el('p', { class: 'meta manual-live', role: 'status', 'aria-live': 'polite', 'aria-atomic': 'true' });
+        p.appendChild(live);
+        if (!state.manual.lines.length) p.appendChild(el('p', { class: 'p-sm', text: tUi('manual', 'empty', MANUAL_UI) }));
+        MANUAL_SECTIONS.forEach(function (section) {
+          var lines = state.manual.lines.filter(function (line) { return line.section === section; });
+          if (!lines.length) return;
+          p.appendChild(el('p', { class: 'eyebrow', style: 'margin-top:10px', text: manualSectionLabel(section) }));
+          lines.forEach(function (line) {
+            var lineId = line.id;
+            var inp = el('input', { type: 'text', value: line.text, 'aria-label': MANUAL_UI.lineLabel + ' — ' + manualSectionLabel(section) });
+            wireSafetyText(inp, function () {
+              var val = inp.value.trim().slice(0, 200);
+              if (!val) return;
+              for (var li = 0; li < state.manual.lines.length; li++) {
+                if (state.manual.lines[li].id === lineId) {
+                  state.manual.lines[li].text = val;
+                  state.manual.lines[li].edited = true;
+                  if (state.manual.lines[li].source === 'auto') state.manual.lines[li].source = 'user';
                   break;
                 }
               }
-              save(); closeSheet(); manualSheet();
-            } })
-          ]));
-        });
-      });
-      var addSection = 'thinking';
-      var sectionWrap = el('div', { class: 'chips', role: 'group', 'aria-label': MANUAL_UI.pickSection });
-      MANUAL_SECTIONS.forEach(function (section) {
-        sectionWrap.appendChild(el('button', { class: 'chip', 'aria-pressed': addSection === section ? 'true' : 'false', text: manualSectionLabel(section),
-          onclick: function () {
-            addSection = section;
-            Array.prototype.forEach.call(sectionWrap.children, function (b) {
-              b.setAttribute('aria-pressed', b.textContent === manualSectionLabel(section) ? 'true' : 'false');
+              save();
             });
-          } }));
-      });
-      p.appendChild(el('p', { class: 'eyebrow', style: 'margin-top:12px', text: MANUAL_UI.add }));
-      p.appendChild(sectionWrap);
-      var newLine = el('input', { type: 'text', placeholder: MANUAL_UI.lineLabel, 'aria-label': MANUAL_UI.lineLabel });
-      p.appendChild(newLine);
-      p.appendChild(el('button', { class: 'btn ghost', text: MANUAL_UI.add, onclick: function () {
-        var text = newLine.value.trim().slice(0, 200);
-        if (!text) { newLine.focus(); return; }
-        state.manual.lines.push({ id: uid(), section: addSection, text: text, source: 'user', edited: false });
-        save(); closeSheet(); manualSheet();
-        openPanicIfTier3(text);
-      } }));
-      p.appendChild(el('button', { class: 'btn', text: MANUAL_UI.refresh, onclick: function () {
-        var added = refreshManual();
-        live.textContent = added
-          ? (added === 1 ? MANUAL_UI.refreshAdded.replace('{n}', '1') : MANUAL_UI.refreshAddedPlural.replace('{n}', '' + added))
-          : MANUAL_UI.refreshNone;
-        closeSheet(); manualSheet();
-      } }));
-      p.appendChild(el('p', { class: 'p-sm', text: MANUAL_UI.editHint }));
-      p.appendChild(el('button', { class: 'btn quiet', text: tUi('manual', 'close', MANUAL_UI), onclick: closeSheet }));
+            p.appendChild(el('div', { class: 'stack manual-row' }, [
+              inp,
+              el('button', { class: 'btn quiet', text: MANUAL_UI.remove, onclick: function () {
+                for (var ri = 0; ri < state.manual.lines.length; ri++) {
+                  if (state.manual.lines[ri].id === lineId) {
+                    if (state.manual.lines[ri].source === 'auto') state.manual.dismissedAuto[lineId] = true;
+                    state.manual.lines.splice(ri, 1);
+                    break;
+                  }
+                }
+                save(); manualSheet();
+              } })
+            ]));
+          });
+        });
+        var addSection = 'thinking';
+        var sectionWrap = el('div', { class: 'chips', role: 'group', 'aria-label': MANUAL_UI.pickSection });
+        MANUAL_SECTIONS.forEach(function (section) {
+          sectionWrap.appendChild(el('button', { class: 'chip', 'aria-pressed': addSection === section ? 'true' : 'false', text: manualSectionLabel(section),
+            onclick: function () {
+              addSection = section;
+              Array.prototype.forEach.call(sectionWrap.children, function (b) {
+                b.setAttribute('aria-pressed', b.textContent === manualSectionLabel(section) ? 'true' : 'false');
+              });
+            } }));
+        });
+        p.appendChild(el('p', { class: 'eyebrow', style: 'margin-top:12px', text: MANUAL_UI.add }));
+        p.appendChild(sectionWrap);
+        var newLine = el('input', { type: 'text', placeholder: MANUAL_UI.lineLabel, 'aria-label': MANUAL_UI.lineLabel });
+        p.appendChild(newLine);
+        p.appendChild(el('button', { class: 'btn ghost', text: MANUAL_UI.add, onclick: function () {
+          var text = newLine.value.trim().slice(0, 200);
+          if (!text) { newLine.focus(); return; }
+          state.manual.lines.push({ id: uid(), section: addSection, text: text, source: 'user', edited: false });
+          save(); manualSheet();
+          openPanicIfTier3(text);
+        } }));
+        p.appendChild(el('button', { class: 'btn', text: MANUAL_UI.refresh, onclick: function () {
+          var added = refreshManual();
+          live.textContent = added
+            ? (added === 1 ? MANUAL_UI.refreshAdded.replace('{n}', '1') : MANUAL_UI.refreshAddedPlural.replace('{n}', '' + added))
+            : MANUAL_UI.refreshNone;
+          manualSheet();
+        } }));
+        p.appendChild(el('p', { class: 'p-sm', text: MANUAL_UI.editHint }));
+      }
     });
   }
   function principlesSheet() {
-    openSheet(function (p) {
-      p.appendChild(el('h2', { class: 'h-sec', text: tUi('principles', 'title', PRINCIPLES_UI) }));
-      if (!state.principles.length) p.appendChild(el('p', { class: 'p-sm', text: tUi('principles', 'empty', PRINCIPLES_UI) }));
-      state.principles.forEach(function (line, idx) {
-        var inp = el('input', { type: 'text', value: line, 'aria-label': PRINCIPLES_UI.title });
-        wireSafetyText(inp, function () {
-          state.principles[idx] = inp.value.trim().slice(0, 120);
-          if (!state.principles[idx]) state.principles.splice(idx, 1);
-          save();
+    pushOrReplaceView({
+      id: 'principles',
+      title: tUi('principles', 'title', PRINCIPLES_UI),
+      build: function (p) {
+        if (!state.principles.length) p.appendChild(el('p', { class: 'p-sm', text: tUi('principles', 'empty', PRINCIPLES_UI) }));
+        state.principles.forEach(function (line, idx) {
+          var inp = el('input', { type: 'text', value: line, 'aria-label': PRINCIPLES_UI.title });
+          wireSafetyText(inp, function () {
+            state.principles[idx] = inp.value.trim().slice(0, 120);
+            if (!state.principles[idx]) state.principles.splice(idx, 1);
+            save();
+          });
+          p.appendChild(el('div', { class: 'stack' }, [
+            inp,
+            el('button', { class: 'btn quiet', text: PRINCIPLES_UI.remove, onclick: function () {
+              state.principles.splice(idx, 1); save(); principlesSheet();
+            } })
+          ]));
         });
-        p.appendChild(el('div', { class: 'stack' }, [
-          inp,
-          el('button', { class: 'btn quiet', text: PRINCIPLES_UI.remove, onclick: function () {
-            state.principles.splice(idx, 1); save(); closeSheet(); principlesSheet();
-          } })
-        ]));
-      });
-      p.appendChild(el('button', { class: 'btn ghost', text: PRINCIPLES_UI.add, onclick: function () {
-        state.principles.push(''); save(); closeSheet(); principlesSheet();
-      } }));
-      p.appendChild(el('button', { class: 'btn quiet', text: tUi('principles', 'close', PRINCIPLES_UI), onclick: closeSheet }));
+        p.appendChild(el('button', { class: 'btn ghost', text: PRINCIPLES_UI.add, onclick: function () {
+          state.principles.push(''); save(); principlesSheet();
+        } }));
+      }
     });
   }
-  var APP_VERSION = '4.0.2';
+  function knowsSheet() {
+    pushOrReplaceView({
+      id: 'knows',
+      title: tUi('me', 'knowsHeading', { knowsHeading: 'What SoulCap knows' }),
+      build: function (p) {
+        p.appendChild(el('p', { class: 'p-sm', text: DRIP_UI.notDiagnosis }));
+        var anyKnow = false;
+        USER_MODEL_KEYS.forEach(function (meta) {
+          var item = state.userModel[meta.key];
+          if (!item || typeof item.value !== 'number') return;
+          anyKnow = true;
+          p.appendChild(el('div', { class: 'row pattern-row' }, [
+            el('div', {}, [
+              el('div', { class: 'lab', text: meta.label + ' · ' + item.value.toFixed(1) + '/5' }),
+              el('div', { class: 'sub', text: confidenceLabel(item.confidence) + ' ' + DRIP_UI.confidence + ' · ' + DRIP_UI.notDiagnosis }),
+              el('div', { class: 'chips pattern-actions' }, [
+                el('button', { class: 'chip', text: DRIP_UI.correct, onclick: function () { estimateSheet(meta.key); } })
+              ])
+            ]),
+            el('span', { class: 'tier declared', text: item.source === 'corrected' ? 'Corrected' : 'You said' })
+          ]));
+        });
+        SCREENERS.forEach(function (screener) {
+          var res = state.screenerResults[screener.id];
+          if (!res) return;
+          anyKnow = true;
+          p.appendChild(el('div', { class: 'row pattern-row screener-signal' }, [
+            el('div', {}, [
+              el('div', { class: 'lab', text: SCREENER_UI.knowsLabel + ' · ' + screener.name }),
+              el('div', { class: 'sub', text: SCREENER_UI.historyLine.replace('{score}', '' + res.score).replace('{band}', res.bandLabel) + ' · ' + SCREENER_UI.knowsSub }),
+              el('div', { class: 'chips pattern-actions' }, [
+                el('button', { class: 'chip', text: SCREENER_UI.retake, onclick: function () { screenerRunSheet(screener.id); } }),
+                el('button', { class: 'chip', text: SCREENER_UI.clear, onclick: function () {
+                  if (!clearScreenerResult(screener.id)) return;
+                  knowsSheet();
+                } })
+              ])
+            ]),
+            el('span', { class: 'tier guess', text: 'Low confidence' })
+          ]));
+        });
+        state.concerns.forEach(function (c) {
+          anyKnow = true;
+          p.appendChild(el('div', { class: 'row' }, [el('div', {}, [el('div', { class: 'lab', text: c }), el('div', { class: 'sub', text: 'You picked this when you started' })]), el('span', { class: 'tier declared', text: 'You said' })]));
+        });
+        var helpful = {};
+        state.skillRuns.forEach(function (r) { if (r.helpful === true) helpful[r.id] = (helpful[r.id] || 0) + 1; });
+        Object.keys(helpful).forEach(function (id) {
+          var s = SKILLS.filter(function (x) { return x.id === id; })[0];
+          if (!s) return;
+          anyKnow = true;
+          p.appendChild(el('div', { class: 'row' }, [el('div', {}, [el('div', { class: 'lab', text: s.name + ' seems to help' }), el('div', { class: 'sub', text: 'You said it helped ' + helpful[id] + ' time' + (helpful[id] > 1 ? 's' : '') })]), el('span', { class: 'tier observed', text: 'Observed' })]));
+        });
+        (state.pathSessions || []).slice(-5).reverse().forEach(function (session) {
+          anyKnow = true;
+          var fam = FAMILY_META[session.family];
+          p.appendChild(el('div', { class: 'row pattern-row path-signal' }, [
+            el('div', {}, [
+              el('div', { class: 'lab', text: PATH_UI.knowsLabel + (fam ? ' · ' + fam.label : '') }),
+              el('div', { class: 'sub', text: PATH_UI.knowsSub }),
+              el('div', { class: 'chips pattern-actions' }, [
+                el('button', { class: 'chip', text: PATH_UI.clear, onclick: function () {
+                  if (!clearPathSession(session.id)) return;
+                  knowsSheet();
+                } })
+              ])
+            ]),
+            el('span', { class: 'tier observed', text: 'You tried' })
+          ]));
+        });
+        if (!anyKnow) p.appendChild(el('p', { class: 'p-sm', text: tUi('empty', 'knows', { knows: 'Nothing stored yet — check-ins and answers appear here.' }) }));
+      }
+    });
+  }
+  var APP_VERSION = '4.0.3';
   function settingsGroup(v, title, kids) { v.appendChild(el('p', { class: 'eyebrow', style: 'margin-top:var(--space-3)', text: title })); kids.forEach(function (k) { if (k) v.appendChild(k); }); }
   function toggleBtn(label, on, fn) {
     return el('button', { class: 'btn ghost', style: 'display:flex;justify-content:space-between', onclick: fn,
@@ -4514,7 +4609,7 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '4.0.2',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '4.0.3',
     experienceIds: EXPERIENCES.map(function (item) { return item.id; }),
     experienceHelpsOk: function () {
       return EXPERIENCES.every(function (exp) {

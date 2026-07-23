@@ -1,8 +1,8 @@
 {
   "name": "SoulCap",
-  "version": "4.0.2",
-  "swCache": "soulcap-v402",
+  "version": "4.0.3",
+  "swCache": "soulcap-v403",
   "schema": 12,
   "deploy": "docs/",
-  "note": "v4.0.2 master design PR-3 — Now hero band + bento (hero tile, 2-up, micro row)."
+  "note": "v4.0.3 master design PR-4 — You dashboard + list rows; plan/story/manual/timeline/patterns as pushView."
 }
