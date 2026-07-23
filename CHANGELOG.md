@@ -1,5 +1,13 @@
 ## [Unreleased]
 
+## [5.0.2] — 2026-07-24
+
+### Added
+- **Native motion PR-3 Gestures:** swipe between tabs; drag-down dismiss sheet (rubber-band);
+  edge swipe-back on pushed subviews. Still disables gestures. Panic/Runner/Editor stay
+  gesture-free for safety.
+- SW `soulcap-v502`. App **5.0.2**. Schema still **v12**.
+
 ## [5.0.1] — 2026-07-24
 
 ### Added

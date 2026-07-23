@@ -1935,6 +1935,8 @@
     if (!host) return;
     host.classList.remove('on');
     host.setAttribute('aria-hidden', 'true');
+    host.style.transform = '';
+    host.style.transition = '';
     clear($('#subviewNav'));
     clear($('#subviewBody'));
     setSubviewBackgroundInert(false);
@@ -2054,6 +2056,11 @@
     coverImageRequest++;
     clearMapFocus();
     if (mapState) mapState.sheetPause = false;
+    var panel = $('#sheetPanel');
+    if (panel) {
+      panel.style.transform = '';
+      panel.style.transition = '';
+    }
     $('#sheet').classList.remove('on');
     $('#sheet').classList.remove('flow');
     $('#sheet').setAttribute('aria-hidden', 'true');
@@ -2061,6 +2068,91 @@
     document.body.style.overflow = '';
     if (sheetOpener && document.documentElement.contains(sheetOpener)) sheetOpener.focus();
     sheetOpener = null;
+  }
+
+  /* ── Gestures (v5 PR-3) — always paired with visible controls ─────────── */
+  var TAB_ORDER = ['now', 'calm', 'journal', 'map', 'me'];
+  function gesturesEnabled() {
+    return effectiveMotion() !== 'still';
+  }
+  function bindGestures() {
+    var startX = 0, startY = 0, tracking = false, mode = null, dx = 0, dy = 0;
+    var edge = 28, dismiss = 110, tabSwipe = 72;
+
+    function overlayOpen() {
+      return ($('#panic') && $('#panic').classList.contains('on')) ||
+        ($('#runner') && $('#runner').classList.contains('on')) ||
+        ($('#journalEditor') && $('#journalEditor').classList.contains('on'));
+    }
+    function onStart(e) {
+      if (!gesturesEnabled() || overlayOpen()) return;
+      if (e.touches && e.touches.length !== 1) return;
+      var t = e.touches ? e.touches[0] : e;
+      startX = t.clientX; startY = t.clientY;
+      tracking = true; mode = null; dx = 0; dy = 0;
+    }
+    function onMove(e) {
+      if (!tracking) return;
+      var t = e.touches ? e.touches[0] : e;
+      dx = t.clientX - startX; dy = t.clientY - startY;
+      if (!mode) {
+        if (Math.abs(dx) < 10 && Math.abs(dy) < 10) return;
+        var sheetOn = $('#sheet').classList.contains('on');
+        var subOn = $('#subview').classList.contains('on');
+        if (sheetOn && dy > 8 && Math.abs(dy) > Math.abs(dx)) mode = 'sheet';
+        else if (subOn && dx > 12 && Math.abs(dx) > Math.abs(dy) && startX < edge + 24) mode = 'back';
+        else if (!sheetOn && !subOn && state.onboarded && Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > 12) mode = 'tabs';
+        else { tracking = false; return; }
+      }
+      if (mode === 'sheet') {
+        e.preventDefault();
+        var panel = $('#sheetPanel');
+        var y = Math.max(0, dy);
+        var rubber = y > 180 ? 180 + (y - 180) * 0.28 : y;
+        panel.style.transition = 'none';
+        panel.style.transform = 'translateY(' + rubber + 'px)';
+      } else if (mode === 'back') {
+        e.preventDefault();
+        var host = $('#subview');
+        var x = Math.max(0, dx);
+        var r = x > 200 ? 200 + (x - 200) * 0.25 : x;
+        host.style.transition = 'none';
+        host.style.transform = 'translateX(' + r + 'px)';
+      }
+    }
+    function finish() {
+      if (!tracking) return;
+      tracking = false;
+      var sheetPanel = $('#sheetPanel');
+      var sub = $('#subview');
+      if (mode === 'sheet') {
+        if (dy > dismiss) {
+          closeSheet();
+        } else if (sheetPanel) {
+          sheetPanel.style.transition = 'transform var(--dur-fast) var(--ease-spring)';
+          sheetPanel.style.transform = '';
+        }
+      } else if (mode === 'back') {
+        if (dx > dismiss) {
+          if (sub) { sub.style.transition = ''; sub.style.transform = ''; }
+          popView();
+        } else if (sub) {
+          sub.style.transition = 'transform var(--dur-fast) var(--ease-spring)';
+          sub.style.transform = '';
+        }
+      } else if (mode === 'tabs' && Math.abs(dx) > tabSwipe && Math.abs(dx) > Math.abs(dy) * 1.2) {
+        var i = TAB_ORDER.indexOf(tab);
+        if (i === -1) return;
+        if (dx < 0 && i < TAB_ORDER.length - 1) selectTab(TAB_ORDER[i + 1]);
+        else if (dx > 0 && i > 0) selectTab(TAB_ORDER[i - 1]);
+      }
+      mode = null;
+    }
+    var root = document;
+    root.addEventListener('touchstart', onStart, { passive: true });
+    root.addEventListener('touchmove', onMove, { passive: false });
+    root.addEventListener('touchend', finish, { passive: true });
+    root.addEventListener('touchcancel', finish, { passive: true });
   }
 
   /* ── Technique detail + card ───────────────────────────────────────────── */
@@ -4432,7 +4524,7 @@
       }
     });
   }
-  var APP_VERSION = '5.0.1';
+  var APP_VERSION = '5.0.2';
   function settingsGroup(v, title, kids) { v.appendChild(el('p', { class: 'eyebrow', style: 'margin-top:var(--space-3)', text: title })); kids.forEach(function (k) { if (k) v.appendChild(k); }); }
   function toggleBtn(label, on, fn) {
     return el('button', { class: 'btn ghost', style: 'display:flex;justify-content:space-between', onclick: fn,
@@ -4723,6 +4815,7 @@
     $('#runGuide').addEventListener('click', toggleGuide);
     $('#sheetScrim').addEventListener('click', closeSheet);
     $('#fab').addEventListener('click', function () { haptic('done'); openPanic(); });
+    bindGestures();
 
     // Journal editor
     $('#jeCancel').addEventListener('click', closeEditor);
@@ -4787,7 +4880,7 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '5.0.1',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '5.0.2',
     effectiveMotion: effectiveMotion,
     motionCap: function () { return motionCap; },
     loadGsap: loadGsap,

@@ -1,8 +1,8 @@
 {
   "name": "SoulCap",
-  "version": "5.0.1",
-  "swCache": "soulcap-v501",
+  "version": "5.0.2",
+  "swCache": "soulcap-v502",
   "schema": 12,
   "deploy": "docs/",
-  "note": "v5.0.1 native motion PR-2 — View Transitions on push/pop."
+  "note": "v5.0.2 native motion PR-3 — swipe tabs, drag-dismiss, swipe-back."
 }
