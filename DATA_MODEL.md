@@ -1,6 +1,6 @@
 # SoulCap Data Model
 
-**Schema:** 12 · **Storage key:** `localStorage['soulcap_v1']` · **App:** 2.1.0
+**Schema:** 12 · **Storage key:** `localStorage['soulcap_v1']` · **App:** 3.0.1
 
 ## State contract
 
@@ -94,7 +94,7 @@ screenerResults: { [id]: { score, band, bandLabel, t, answers? } }
 notices: { clinicalEnglishDismissed: boolean, seenVersion: null | string }
 ```
 
-### Guided Path (v2.1 / schema v12)
+### Guided Path (v2.1+) / approach packs (v3.0.1)
 
 ```text
 pathSessions: [{
@@ -103,15 +103,16 @@ pathSessions: [{
   arrival: string,       // Wired | Heavy | Flat | Overwhelmed | Not sure
   chips: string[],       // PATH_CHIPS / PATH_ADVANCED ids
   family: string,        // FAMILY_META key
+  approachId?: string,   // APPROACH_PACKS key (cbt|dbt|act|ba) when recommended
   skillId: string,
-  helped?: boolean       // reserved; not required in v2.1
+  helped?: boolean       // reserved; not required
 }]                       // capped (~40)
 
-pathPrefs: { hide: boolean }   // hide Now quiet card
+pathPrefs: { hide: boolean }   // hide Now path card (Explore)
 ```
 
 Path content tables live in `data.js`: `PATH_UI`, `PATH_ARRIVALS`, `PATH_CHIPS`, `PATH_ADVANCED`,
-`PATH_REASONS`. Never store diagnoses or severity scores.
+`PATH_REASONS`, `APPROACH_PACKS`, `PROGRESS_UI`. Never store diagnoses or severity scores.
 
 ### Constellation person
 

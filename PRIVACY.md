@@ -1,6 +1,6 @@
 # SoulCap Privacy Contract
 
-**Version:** 2.1.0 · **Updated:** 2026-07-23
+**Version:** 3.0.1 · **Updated:** 2026-07-23
 
 ## Promise
 

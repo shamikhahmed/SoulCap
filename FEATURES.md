@@ -1,16 +1,18 @@
 # SoulCap — Features (S/W/L/R)
 
-**Updated:** 2026-07-23 · Self-guided wellness companion · **v2.1.0**
+**Updated:** 2026-07-23 · Self-guided wellness companion · **v3.0.1**
 **Codes:** S = shipped · W = next wave · L = later · R = rejected
 
 ## S
 - Offline-first PWA in `docs/`: no account, server, analytics, CDN, LLM, or post-load network calls
+- **Design System v3 Amethyst** (dark-first elevation, grain, glow heroes, raised cards)
 - Five tabs: Now · Calm · Journal · People · You; Settings sheet off You; About + What’s new
 - 37 techniques with mechanisms, contraindications, context filtering, timed guidance, breathing
   sessions, device speech synthesis, optional haptics, and public-safe auto-quieting
-- **Guided Path:** arrival → symptom chips → exercise-family why → Begin (rule-based; educational
-  CBT/DBT/ACT footnote only; never diagnoses or modality prescriptions). Panic-like clusters offer
-  Help. Sessions clearable in What SoulCap knows; hide card in Settings
+- **Guided Path:** arrival → symptom chips → educational **approach pack** (CBT/DBT/ACT/BA ideas) →
+  exercise Begin (rule-based; never diagnoses or modality prescriptions). Panic-like clusters offer
+  Help. Sessions clearable in What SoulCap knows; hide card in Settings; Explore-folded on Now
+- **Progress dashboard** on You (week dots + counts; no streaks/scores)
 - Hard-coded keyword safety kernel on all user free-text surfaces (check-in detail, journal,
   story, plan, park, notes, manual, principles), number-free Help flow, persistent Help access,
   and 18+ age gate
@@ -42,7 +44,7 @@
 - Nest backend and Expo mobile **source labs only**; neither is wired to the PWA
 
 ## W
-- **Approach packs** + distortion lens + thought-record wizard (`SPEC-v2.2-approach-packs.md`)
+- Distortion lens + thought-record wizard detail (`SPEC-v2.2-approach-packs.md` remainder)
 - Values / opposite-action / body-scan depth (`SPEC-v2.3-regulation-depth.md`)
 - Sister / licensed review of path + technique copy (narrow path banner only after path sign-off)
 - Native-reviewed Roman Urdu clinical copy (replace English safety strings only after review)
