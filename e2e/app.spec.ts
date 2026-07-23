@@ -43,6 +43,16 @@ async function openSettings(page: Page) {
   await expect(page.locator('#sheet.on')).toBeVisible();
 }
 
+/** Wait until CSS transitions/animations under selector are idle (avoids mid-transition flaky reads). */
+async function waitForAnimationsIdle(page: Page, selector = 'body') {
+  await page.waitForFunction((sel) => {
+    const root = document.querySelector(sel);
+    if (!root || typeof (root as any).getAnimations !== 'function') return true;
+    const list = (root as Element).getAnimations({ subtree: true });
+    return list.every((a) => a.playState === 'finished' || a.playState === 'idle');
+  }, selector);
+}
+
 test.describe('Smoke', () => {
   test('loads with no console errors', async ({ page }) => {
     const errors: string[] = [];
@@ -1146,9 +1156,12 @@ test.describe('Accessibility', () => {
   });
 
   test('both themes keep body text readable', async ({ page }) => {
+    // Body colour/background transition mid-flight yields interpolated RGB and flakes under load.
+    await page.emulateMedia({ reducedMotion: 'reduce' });
     await seedDemo(page);
     for (const theme of ['light', 'dark']) {
       await page.evaluate((t) => document.documentElement.setAttribute('data-theme', t), theme);
+      await waitForAnimationsIdle(page, 'body');
       const result = await page.evaluate(() => {
         function lum(rgb: string) {
           const m = rgb.match(/\d+/g)!.map(Number);
