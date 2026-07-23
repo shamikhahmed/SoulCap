@@ -1,4 +1,4 @@
-**Version:** 1.9.1 · SW `soulcap-v191`
+**Version:** 1.9.2 · SW `soulcap-v192`
 
 # SoulCap — Project Handover
 
@@ -6,7 +6,7 @@
 > first — it is the current truth as of 2026-07-23. The sections further down describe an
 > earlier architecture and are kept for reference only.
 
-## Current state (v1.9.1 — 2026-07-23)
+## Current state (v1.9.2 — 2026-07-23)
 
 **The product is the PWA in `docs/`.** Offline-first, local-only, **no network calls after load** —
 no account, no server, no LLM, no analytics. State lives in `localStorage` (schema **v10**).
@@ -44,8 +44,8 @@ in-repo gallery: `npm run gallery` → `screen-gallery.html`.
   No crisis phone numbers; `sms:` only for “Message someone.”
 
 ### Schema & ship
-- State `DEFAULT.v = 10` · SW `soulcap-v191` · app **1.9.1** · mirrors: theme, appearance, locale,
-  clinical-notice dismiss.
+- State `DEFAULT.v = 10` · SW `soulcap-v192` · app **1.9.2** · mirrors: theme, appearance, locale,
+  clinical-notice dismiss. Optional `windDownHour` (17–23 or null).
 - Ship workflow: bump CACHE + VERSION.json + APP_VERSION together; CHANGELOG; SAFETY/HANDOVER;
   `npm run verify`; push `main`.
 

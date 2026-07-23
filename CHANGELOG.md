@@ -4,6 +4,17 @@
 - Flaky Playwright: wait for CSS animations idle + `reducedMotion` before theme contrast and journal
   control size assertions (`e2e/app.spec.ts`, `e2e/personas.spec.ts`).
 
+## [1.9.2] — 2026-07-23
+
+### Added
+- Library articles: **Your body’s alarm — fight, flight, freeze** and **Slowing down — boundaries
+  and winding down** (not reviewed; professional-support sections).
+- Optional **wind-down hour** in Settings (17:00–23:00 or Off). After that hour, Now shows a gentle
+  no-guilt card (no notifications).
+
+### Changed
+- SW `soulcap-v192`. App **1.9.2**. Article count 8.
+
 ## [1.9.1] — 2026-07-23
 
 ### Added

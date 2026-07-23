@@ -21,6 +21,8 @@
 - Personal Reset Menu on Calm; user Principles and **Personal Manual** on You
 - Library article bookmarks (Saved filter); constellation person notes, events, ring history
 - Optional **What’s happening?** picker on Now and Calm → experiences → skills (never forced)
+- Eight library articles including fight/flight/freeze and wind-down/boundaries; optional evening
+  wind-down hour (in-app card only, no notifications)
 - Six optional daily supports with local-day completion only; no streaks, scores, reminders, or
   missed-day pressure
 - Adaptive drip questionnaire (≤4 questions/day) with inspectable, correctable local estimates and

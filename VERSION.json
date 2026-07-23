@@ -1,8 +1,8 @@
 {
   "name": "SoulCap",
-  "version": "1.9.1",
-  "swCache": "soulcap-v191",
+  "version": "1.9.2",
+  "swCache": "soulcap-v192",
   "schema": 10,
   "deploy": "docs/",
-  "note": "v1.9.1 What's happening experience picker from Now and Calm."
+  "note": "v1.9.2 fight/flight + wind-down articles; optional wind-down hour card on Now."
 }

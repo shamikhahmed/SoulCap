@@ -314,7 +314,7 @@ test.describe('v1.0 offline library and daily supports', () => {
           article.skillIds.every((id: string) => skillIds.indexOf(id) !== -1))
       };
     });
-    expect(audit.count).toBe(6);
+    expect(audit.count).toBe(8);
     expect(audit.complete).toBe(true);
     expect(audit.linksValid).toBe(true);
   });
@@ -425,6 +425,40 @@ test.describe('v1.9 clinical experiences library', () => {
     await expect(page.locator('#sheet')).toContainText('What may help');
     await page.locator('#sheetPanel').getByRole('button', { name: /Try · Physiological sigh/ }).click();
     await expect(page.locator('#runner')).toBeVisible();
+  });
+});
+
+test.describe('v1.9.2 articles and wind-down', () => {
+  test('fight-or-flight and wind-down articles are searchable and complete', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="calm"]') as HTMLElement).click());
+    await page.getByRole('button', { name: /Understand what’s happening/ }).click();
+    await page.getByRole('button', { name: 'Articles', exact: true }).click();
+    await page.getByRole('searchbox', { name: 'Search the emotional library' }).fill('fight flight');
+    await page.getByRole('button', { name: /Your body’s alarm/ }).click();
+    await expect(page.locator('#sheet')).toContainText('Not yet reviewed');
+    await expect(page.locator('#sheet')).toContainText('When professional support may help');
+    await expect(page.locator('#sheet')).toContainText('parasympathetic');
+    await page.locator('#sheetPanel').getByRole('button', { name: 'Close' }).first().click();
+    await page.getByRole('searchbox', { name: 'Search the emotional library' }).fill('winding');
+    await page.getByRole('button', { name: /Slowing down/ }).click();
+    await expect(page.locator('#sheet')).toContainText('wind-down');
+    await expect(page.locator('#sheet')).toContainText('Not a diagnosis');
+  });
+
+  test('optional wind-down hour shows Now card without guilt', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => {
+      const s = (window as any).__soulcap.getState();
+      s.windDownHour = new Date().getHours();
+      localStorage.setItem('soulcap_v1', JSON.stringify(s));
+    });
+    // Reload without demo=1 so seedDemo does not wipe windDownHour.
+    await page.goto('/');
+    await page.waitForFunction(() => Boolean((window as any).__soulcap));
+    await dismissSplash(page);
+    await expect(page.getByRole('heading', { name: 'Wind-down window' })).toBeVisible();
+    await expect(page.locator('.wind-down-card')).toContainText('No guilt');
   });
 });
 
