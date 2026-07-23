@@ -677,7 +677,7 @@ test.describe('v2.0 IA restructure', () => {
     await openSettings(page);
     await page.getByRole('button', { name: 'About SoulCap' }).click();
     await expect(page.locator('#sheetPanel')).toContainText('Not therapy');
-    await expect(page.locator('#sheetPanel')).toContainText(/Version 5\.0/);
+    await expect(page.locator('#sheetPanel')).toContainText(/Version 5\./);
     await page.locator('#sheetPanel').getByRole('button', { name: 'Close' }).click();
     await page.evaluate(() => (window as any).__soulcap.setSeenVersion('1.9.3'));
     await expect(page.locator('#view-now .whats-new')).toContainText(/What.s new/);
@@ -1495,6 +1495,104 @@ test.describe('Accessibility', () => {
         return ratio;
       });
       expect(result, `${theme} body contrast`).toBeGreaterThan(7); // AAA for body text
+    }
+  });
+
+  test('breathing countdown is ink-contrast and orb has a body', async ({ page }) => {
+    // Still/reduced-motion → CSS orb (no WebGL). Spec: countdown ≥7:1, fill not transparent.
+    test.setTimeout(90000);
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await seedDemo(page);
+
+    const themes = ['light', 'dark', 'night', 'amoled', 'ocean'];
+    for (const theme of themes) {
+      await page.evaluate((t) => document.documentElement.setAttribute('data-theme', t), theme);
+      await waitForAnimationsIdle(page, 'body');
+
+      await page.getByRole('button', { name: 'I need help now' }).first().click();
+      await expect(page.locator('#panic.on')).toBeVisible();
+      const panic = await page.evaluate(() => {
+        function lum(rgb: string) {
+          const m = rgb.match(/\d+/g)!.map(Number);
+          const [r, g, b] = m.map((v) => {
+            const s = v / 255;
+            return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
+          });
+          return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+        }
+        function ratio(fg: string, bg: string) {
+          const a = lum(fg), b = lum(bg);
+          return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+        }
+        function orbOpaque(sel: string) {
+          const node = document.querySelector(sel) as HTMLElement | null;
+          if (!node) return false;
+          const st = getComputedStyle(node);
+          const img = st.backgroundImage || '';
+          if (img && img !== 'none') return true;
+          const c = st.backgroundColor || '';
+          const m = c.match(/rgba?\(([\d.]+),\s*([\d.]+),\s*([\d.]+)(?:,\s*([\d.]+))?\)/);
+          if (!m) return c !== 'transparent';
+          const a = m[4] === undefined ? 1 : parseFloat(m[4]);
+          return a > 0.05;
+        }
+        const count = getComputedStyle(document.getElementById('pacerCount')!);
+        // Layered backgrounds often report transparent — use --ground token via body.
+        const ground = getComputedStyle(document.body).backgroundColor;
+        return {
+          contrast: ratio(count.color, ground),
+          orbOk: orbOpaque('#pacer'),
+          ringOpacity: parseFloat(getComputedStyle(document.getElementById('pacerRing')!).opacity)
+        };
+      });
+      expect(panic.contrast, `${theme} panic countdown`).toBeGreaterThanOrEqual(7);
+      expect(panic.orbOk, `${theme} panic orb body`).toBe(true);
+      expect(panic.ringOpacity, `${theme} panic ring`).toBeGreaterThanOrEqual(0.4);
+      await page.locator('#panicExit').click();
+
+      await page.evaluate(() => (window as any).__soulcap.startSkill('box-breathing'));
+      await expect(page.locator('#runner.on')).toBeVisible();
+      await page.locator('#runner').getByRole('button', { name: 'Begin' }).click();
+      await expect(page.locator('#runOrbCount')).toBeVisible();
+      const runner = await page.evaluate(() => {
+        function lum(rgb: string) {
+          const m = rgb.match(/\d+/g)!.map(Number);
+          const [r, g, b] = m.map((v) => {
+            const s = v / 255;
+            return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
+          });
+          return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+        }
+        function ratio(fg: string, bg: string) {
+          const a = lum(fg), b = lum(bg);
+          return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+        }
+        function orbOpaque(sel: string) {
+          const node = document.querySelector(sel) as HTMLElement | null;
+          if (!node) return false;
+          const st = getComputedStyle(node);
+          const img = st.backgroundImage || '';
+          if (img && img !== 'none') return true;
+          const c = st.backgroundColor || '';
+          const m = c.match(/rgba?\(([\d.]+),\s*([\d.]+),\s*([\d.]+)(?:,\s*([\d.]+))?\)/);
+          if (!m) return c !== 'transparent';
+          const a = m[4] === undefined ? 1 : parseFloat(m[4]);
+          return a > 0.05;
+        }
+        const count = getComputedStyle(document.getElementById('runOrbCount')!);
+        const ground = getComputedStyle(document.body).backgroundColor;
+        const ring = document.getElementById('runOrbRing');
+        return {
+          contrast: ratio(count.color, ground),
+          orbOk: orbOpaque('#runOrb'),
+          ringOpacity: ring ? parseFloat(getComputedStyle(ring).opacity) : 0
+        };
+      });
+      expect(runner.contrast, `${theme} runner countdown`).toBeGreaterThanOrEqual(7);
+      expect(runner.orbOk, `${theme} runner orb body`).toBe(true);
+      expect(runner.ringOpacity, `${theme} runner ring`).toBeGreaterThanOrEqual(0.4);
+      await page.locator('#runner').getByRole('button', { name: 'End' }).click();
+      await expect(page.locator('#runner.on')).toHaveCount(0);
     }
   });
 

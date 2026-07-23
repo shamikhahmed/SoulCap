@@ -1,8 +1,8 @@
 {
   "name": "SoulCap",
-  "version": "5.0.7",
-  "swCache": "soulcap-v507",
+  "version": "5.1.0",
+  "swCache": "soulcap-v510",
   "schema": 12,
   "deploy": "docs/",
-  "note": "v5.0.7 native motion PR-8 — perf/a11y sweep; v5.0 complete."
+  "note": "v5.1.0 fixes PR-1 — breathing orb + countdown visibility."
 }

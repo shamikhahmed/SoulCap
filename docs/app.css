@@ -589,17 +589,17 @@ input[type="range"]{width:100%;min-height:48px;accent-color:var(--accent)}
 .panic-instruction{font-size:clamp(28px,7.5vw,40px);line-height:1.28;letter-spacing:-.013em;font-weight:500;margin:0;text-wrap:balance}
 .pacer-hold{display:flex;align-items:center;justify-content:center;flex:1;min-height:190px;position:relative}
 .pacer{
-  width:190px;height:190px;border-radius:50%;border:2px solid var(--accent);
-  background:radial-gradient(circle,var(--accent-soft) 0%,transparent 72%);
+  width:190px;height:190px;border-radius:50%;border:2.5px solid var(--accent);
+  background:radial-gradient(circle at 42% 38%,var(--accent-glow) 0%,var(--accent-soft) 42%,transparent 74%);
   display:flex;align-items:center;justify-content:center;
   transform:scale(.7);transition:transform 4s var(--ease-soft);
 }
 .pacer-ring{
   position:absolute;width:190px;height:190px;border-radius:50%;
-  border:1px solid var(--accent);opacity:.25;
+  border:2px solid var(--accent);opacity:.5;
   transform:scale(.7);transition:transform 4s var(--ease-soft);
 }
-.pacer-count{font-size:56px;font-weight:200;color:var(--accent);font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+.pacer-count{font-size:56px;font-weight:400;color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:-.03em}
 .panic-sub{font-family:var(--voice);font-size:17px;line-height:1.5;color:var(--ink-2);margin:0}
 .voice-row{display:flex;flex-direction:column;align-items:center;gap:5px}
 .voice-toggle{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:var(--ink-2);background:var(--sunken);border:1px solid var(--line-strong);border-radius:999px;padding:9px 16px;min-height:48px}
@@ -698,25 +698,31 @@ input[type="range"]{width:100%;min-height:48px;accent-color:var(--accent)}
   position:absolute;inset:0;margin:auto;width:210px;height:210px;pointer-events:none;z-index:0;
 }
 .pacer-hold .orb-canvas{width:180px;height:180px}
+/* Soft CSS underlay stays under WebGL so the orb always reads as a body. */
 .has-webgl-orb .run-orb,.has-webgl-orb .pacer{
-  background:transparent!important;box-shadow:none!important;
+  background:radial-gradient(circle at 42% 38%,var(--accent-glow) 0%,var(--accent-soft) 48%,transparent 76%)!important;
+  box-shadow:none!important;
 }
-.has-webgl-orb .run-orb-ring,.has-webgl-orb .pacer-ring{opacity:.12}
+.has-webgl-orb .run-orb-ring,.has-webgl-orb .pacer-ring{opacity:.55}
 .run-orb,.pacer{position:relative;z-index:1}
 .run-orb-count,.pacer-count{position:relative;z-index:2}
 .run-orb{
   width:150px;height:150px;border-radius:50%;
-  background:radial-gradient(circle at 40% 35%,var(--accent-glow) 0%,var(--accent-soft) 55%,transparent 78%);
-  border:1.5px solid var(--accent);
+  background:radial-gradient(circle at 40% 35%,var(--accent-glow) 0%,var(--accent-soft) 48%,transparent 78%);
+  border:2.5px solid var(--accent);
   display:flex;align-items:center;justify-content:center;
   animation:orbBreathe 11s var(--ease-soft) infinite;
 }
-.run-orb-ring{position:absolute;width:150px;height:150px;border-radius:50%;border:1px solid var(--accent);opacity:.22;animation:orbBreathe 11s var(--ease-soft) infinite;animation-delay:.25s}
+.run-orb-ring{
+  position:absolute;width:150px;height:150px;border-radius:50%;
+  border:2px solid var(--accent);opacity:.5;
+  animation:orbBreathe 11s var(--ease-soft) infinite;animation-delay:.25s;
+}
 /* Breath-family techniques drive the orb on a real 4-4-4-4 count via JS instead. */
 .run-orb.paced{animation:none;transition:transform 4s var(--ease-soft)}
 .run-orb-ring.paced{animation:none;transition:transform 4s var(--ease-soft)}
 @keyframes orbBreathe{0%,100%{transform:scale(.82)}50%{transform:scale(1.04)}}
-.run-orb-count{font-size:44px;font-weight:200;color:var(--accent);font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+.run-orb-count{font-size:44px;font-weight:400;color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:-.03em}
 
 .run-text{font-size:26px;line-height:1.36;letter-spacing:-.015em;font-weight:500;margin:0;max-width:16em;text-wrap:balance}
 .run-meta{font-size:14px;font-weight:600;color:var(--ink-3);font-variant-numeric:tabular-nums;margin:0;letter-spacing:.01em}

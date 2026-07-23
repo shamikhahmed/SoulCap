@@ -1,5 +1,13 @@
 ## [Unreleased]
 
+## [5.1.0] — 2026-07-24
+
+### Fixed
+- **v5.1 PR-1 Breathing visibility:** countdown uses `--ink` (not accent); orb keeps a filled
+  accent-soft body under WebGL; ring opacity ~0.5 / stroke ≥2px; stronger WebGL fill. Panic
+  layout unchanged (contrast only).
+- SW `soulcap-v510`. App **5.1.0**. Schema still **v12**.
+
 ## [5.0.7] — 2026-07-24
 
 ### Changed
