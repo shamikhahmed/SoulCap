@@ -147,9 +147,18 @@ Craft only — **not more features**. Rubric + checklist in the spec.
 - [x] Feeling → chips → family why → exercise (rule-based, offline). Sister reply + review kit.
 - [x] Schema **v12** · SW `soulcap-v210` · app **2.1.0** · e2e path / Help / no-diagnosis lexicon.
 
-### NEXT — v2.2 Approach packs · **[`SPEC-v2.2-approach-packs.md`](SPEC-v2.2-approach-packs.md)**
-- Educational skill collections + distortion lens + thought-record wizard (not therapy brands).
-- Then [`SPEC-v2.3-regulation-depth.md`](SPEC-v2.3-regulation-depth.md).
+### NEXT — v3.0 The redesign · **[`SPEC-v3.0-redesign.md`](SPEC-v3.0-redesign.md)** ← current priority
+Flagship visual + IA redesign (Apple/Calm/Fable-grade), engines **preserved and linked**, not a
+rewrite. New refined-purple "Amethyst" design system (surfaces <30% sat, accent ≤~55%, real card
+elevation, warmth/depth, FAB fix), unified component kit, one adaptive core connecting check-ins /
+screeners / Guided Path / technique feedback, and completion of the **assessment → approach
+recommendation** engine (folds in v2.2 approach packs) + a no-streak **progress dashboard**. 7-PR
+sequence, guardrails, and per-screen briefs in the spec. Owner-driven (2026-07-23).
+
+### After v3.0
+- [`SPEC-v2.3-regulation-depth.md`](SPEC-v2.3-regulation-depth.md) — deeper regulation tools.
+- `SPEC-v2.2-approach-packs.md` — its recommendation engine is now built inside v3.0 §4; keep the
+  spec for the distortion-lens / thought-record wizard detail.
 
 ### Later (post-2.2)
 - Encrypted optional local backup (passphrase) — lost phone ≠ lost journal.
