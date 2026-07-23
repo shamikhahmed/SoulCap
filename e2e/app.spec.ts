@@ -392,7 +392,7 @@ test.describe('v1.9 clinical experiences library', () => {
     await expect(page.locator('#sheet')).toContainText('Why this can happen');
     await expect(page.locator('#sheet')).toContainText('What may help');
     await expect(page.locator('#sheet')).toContainText('Not a diagnosis');
-    await page.locator('#sheetPanel').getByRole('button', { name: /Try · Physiological sigh/ }).click();
+    await page.locator('#sheetPanel .experience-help').filter({ hasText: 'Physiological sigh' }).click();
     await expect(page.locator('#runner')).toBeVisible();
   });
 
@@ -423,7 +423,7 @@ test.describe('v1.9 clinical experiences library', () => {
     await expect(page.locator('#sheet')).toContainText('Not a diagnosis');
     await page.locator('#sheetPanel .experience-card[data-experience-id="racing-heart"]').click();
     await expect(page.locator('#sheet')).toContainText('What may help');
-    await page.locator('#sheetPanel').getByRole('button', { name: /Try · Physiological sigh/ }).click();
+    await page.locator('#sheetPanel .experience-help').filter({ hasText: 'Physiological sigh' }).click();
     await expect(page.locator('#runner')).toBeVisible();
   });
 });
@@ -508,6 +508,48 @@ test.describe('v1.9.3 reflection screeners', () => {
     expect(v).toBe(11);
     const results = await page.evaluate(() => (window as any).__soulcap.getState().screenerResults);
     expect(results).toEqual({});
+  });
+});
+
+test.describe('v2.0 IA restructure', () => {
+  test('You has About / Insights / Tools sections; timeline on You not Now', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="me"]') as HTMLElement).click());
+    const me = page.locator('#view-me');
+    await expect(me.locator('.me-about')).toContainText('About you');
+    await expect(me.locator('.me-insights')).toContainText('Your insights');
+    await expect(me.locator('.me-tools')).toContainText('Your tools');
+    await expect(me.locator('.timeline-card')).toContainText('Your week');
+    await expect(me.locator('.settings-card')).toBeVisible();
+    await expect(me.locator('.screener-card')).toBeVisible();
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="now"]') as HTMLElement).click());
+    await expect(page.locator('#view-now .now-primary .now-suggest')).toBeVisible();
+    await expect(page.locator('#view-now .now-quiet')).toBeVisible();
+    await expect(page.locator('#view-now')).not.toContainText('Your week');
+  });
+
+  test('Calm keeps guided first with Also here tools', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="calm"]') as HTMLElement).click());
+    const calm = page.locator('#view-calm');
+    await expect(calm.locator('.opt').first()).toBeVisible();
+    await expect(calm.locator('.calm-more')).toContainText('Also here');
+    await expect(calm.getByRole('button', { name: /Understand what/i })).toBeVisible();
+    await expect(calm.getByRole('button', { name: /Notice what’s happening/ })).toBeVisible();
+    await expect(calm.getByRole('button', { name: /Small daily supports/i })).toBeVisible();
+  });
+
+  test('About sheet opens from Settings; What’s new dismisses once', async ({ page }) => {
+    await seedDemo(page);
+    await openSettings(page);
+    await page.getByRole('button', { name: 'About SoulCap' }).click();
+    await expect(page.locator('#sheetPanel')).toContainText('Not therapy');
+    await expect(page.locator('#sheetPanel')).toContainText(/Version 2\.0/);
+    await page.locator('#sheetPanel').getByRole('button', { name: 'Close' }).click();
+    await page.evaluate(() => (window as any).__soulcap.setSeenVersion('1.9.3'));
+    await expect(page.locator('#view-now .whats-new')).toContainText(/What.s new/);
+    await page.locator('#view-now .whats-new').getByRole('button', { name: 'Got it' }).click();
+    await expect(page.locator('.whats-new')).toHaveCount(0);
   });
 });
 

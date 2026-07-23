@@ -1,4 +1,4 @@
-**Version:** 1.9.3 · SW `soulcap-v193`
+**Version:** 2.0.1 · SW `soulcap-v201`
 
 # SoulCap — Project Handover
 
@@ -6,7 +6,7 @@
 > first — it is the current truth as of 2026-07-23. The sections further down describe an
 > earlier architecture and are kept for reference only.
 
-## Current state (v1.9.3 — 2026-07-23)
+## Current state (v2.0.1 — 2026-07-23)
 
 **The product is the PWA in `docs/`.** Offline-first, local-only, **no network calls after load** —
 no account, no server, no LLM, no analytics. State lives in `localStorage` (schema **v11**).
@@ -24,17 +24,17 @@ in-repo gallery: `npm run gallery` → `screen-gallery.html`.
 - **37 techniques** with mechanisms, contraindications, capacity/needs, discreet flag,
   traumaCaution. Guided runner + paced breathing sessions. Spoken guidance local-only voices;
   auto-silent around people / panic; speaker toggle; exercise pace Slow/Steady/Brisk.
-- **Calm** — guided “what do you need?” → context → fitted skills; browse-all; offline library
-  (6 articles + **24 clinical experiences** physical/cognitive with red-flag panels); bookmarks;
+- **Calm** — guided “what do you need?” first; library / experiences / supports / reset under
+  “Also here”; browse-all; offline library (articles + **24 clinical experiences**); bookmarks;
   daily supports (no streaks).
-- **Now** — greeting (late until 06:00), check-in (+ optional detail), adaptive drip (≤4/day),
-  skill suggestion, optional message card, gentle reflection cards, reset menu entry from Calm.
+- **Now** — greeting → check-in → one skill suggestion (primary); quieter: experience picker,
+  wind-down, drip, optional message, spark. Timeline lives on You.
 - **Journal** — book UI, templates, photos (down-scaled; warn >20), search (mood/feeling/parked),
   Thought Parking, on-device speech only when verified local. Emotion vocabulary chips.
 - **People (Constellation)** — SVG map, Still/Drift/Live pace, pinch rings 3–7, long-press rename,
   opt-in frequency sizing, person notes/events/ring history, safety-plan pull.
-- **You** — profile, Your story, safety plan, journey, weekly summary, patterns with confidence,
-  “What SoulCap knows”, Emotional Timeline, Principles, Personal Manual, Settings.
+- **You** — sections: About you (profile, story, What SoulCap knows) · Your insights (journey,
+  weekly, patterns, timeline) · Your tools (plan, screener, principles, manual) · Settings.
 - **Locale** — `en` | `rui` (Roman Urdu LTR preview). Chrome partially localized; clinical /
   safety / technique / library bodies stay English until clinical-copy review. One dismissible
   clinical-English notice when `rui`.
@@ -44,7 +44,7 @@ in-repo gallery: `npm run gallery` → `screen-gallery.html`.
   No crisis phone numbers; `sms:` only for “Message someone.”
 
 ### Schema & ship
-- State `DEFAULT.v = 11` · SW `soulcap-v193` · app **1.9.3** · mirrors: theme, appearance, locale,
+- State `DEFAULT.v = 11` · SW `soulcap-v201` · app **2.0.1** · mirrors: theme, appearance, locale,
   clinical-notice dismiss. Optional `windDownHour`. `screenerResults` for PHQ-9/GAD-7 signals.
 - Ship workflow: bump CACHE + VERSION.json + APP_VERSION together; CHANGELOG; SAFETY/HANDOVER;
   `npm run verify`; push `main`.

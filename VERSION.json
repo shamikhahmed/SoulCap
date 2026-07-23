@@ -1,8 +1,8 @@
 {
   "name": "SoulCap",
-  "version": "1.9.3",
-  "swCache": "soulcap-v193",
+  "version": "2.0.1",
+  "swCache": "soulcap-v201",
   "schema": 11,
   "deploy": "docs/",
-  "note": "v1.9.3 PHQ-9/GAD-7 reflection screeners; item-9 Help routing; schema 11."
+  "note": "v2.0.1 premium polish — tokens, empties, About, install shortcuts, clinical craft, gallery."
 }

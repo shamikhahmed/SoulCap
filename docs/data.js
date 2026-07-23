@@ -241,11 +241,52 @@ var MANUAL_UI = {
 };
 
 var EMPTY_UI = {
-  now:'No check-ins yet. When you tap how you are arriving, a quiet picture of your days can build here — no streaks, no score.',
+  now:'No check-ins yet. Tap how you are arriving — a quiet picture of your days can build here. No streaks, no score.',
   calm:'Pick what you need, or browse everything below. Nothing to get right.',
-  journal:'A private place for your words. One line is enough when you are ready.',
+  journal:'A private place for your words. One line is enough.',
   map:'You at the centre. Add someone when it feels useful — only you see this map.',
-  me:'This space fills in as you go. Profile, story, and plan are all optional.'
+  me:'This space fills in as you go. Profile, story, and plan are all optional.',
+  nowAction:'How are you arriving?',
+  journalAction:'Write first entry',
+  meAction:'Set up profile'
+};
+
+var ABOUT_UI = {
+  title:'About SoulCap',
+  purpose:'A calm, private place for self-regulation skills, a journal, and the people around you.',
+  honesty:'Not therapy. Not a diagnosis tool. Not a crisis service. Nothing leaves this device.',
+  credits:'Built by Capricorn Systems. Techniques are evidence-informed and not yet clinically reviewed.',
+  open:'About SoulCap',
+  close:'Close'
+};
+
+var WHATS_NEW_UI = {
+  title:'What’s new',
+  body:'SoulCap 2.0 — clearer layout on You, Now, and Calm. Same private, offline app. No new accounts. Nothing leaves your device.',
+  dismiss:'Got it'
+};
+
+var SETTINGS_UI = {
+  personalisation:'Personalisation',
+  guided:'Guided exercises',
+  constellation:'Constellation',
+  yourData:'Your data',
+  about:'About',
+  spoken:'Spoken guidance',
+  voiceAccent:'Voice & accent',
+  vibration:'Vibration',
+  exercisePace:'Exercise pace',
+  paceHint:'How long each step of a guided exercise stays on screen. Slow gives more time to read.',
+  mapPace:'Map pace',
+  mapPaceHint:'Still keeps the map fixed. Drift is gentle. Live moves faster. Reduced-motion always uses Still.',
+  showLinks:'Show links between people',
+  trackContact:'Track when we last spoke',
+  trackHint:'Both off by default. Contact tracking only ever shows you the number — it will never tell you to reach out to anyone.',
+  export:'Export everything',
+  delete:'Delete everything, permanently',
+  slow:'Slow',
+  steady:'Steady',
+  brisk:'Brisk'
 };
 
 var CONSTELLATION_UI = {
@@ -480,7 +521,12 @@ var STRINGS = {
       myPlan:'My plan',
       edit:'Edit',
       add:'Add',
-      optional:'Optional'
+      optional:'Optional',
+      sectionAbout:'About you',
+      sectionInsights:'Your insights',
+      sectionTools:'Your tools',
+      knowsHeading:'What SoulCap knows',
+      calmMore:'Also here'
     },
     concerns:{
       hard_to_switch_off:'Hard to switch off',
@@ -630,7 +676,12 @@ var STRINGS = {
       myPlan:'Mera plan',
       edit:'Tabdeel',
       add:'Shamil',
-      optional:'Optional'
+      optional:'Optional',
+      sectionAbout:'Aap ke baare mein',
+      sectionInsights:'Aap ki samajh',
+      sectionTools:'Aap ke tools',
+      knowsHeading:'SoulCap kya jaanta hai',
+      calmMore:'Aur yahan'
     },
     concerns:{
       hard_to_switch_off:'Band hona mushkil',
