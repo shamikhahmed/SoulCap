@@ -100,4 +100,4 @@ Use a normal revert and a new service-worker cache version. Never roll back by d
 
 ## Version
 
-Tracks `VERSION.json` → **1.8.0** · SW `soulcap-v180`.
+Tracks `VERSION.json` → **1.9.0** · SW `soulcap-v190`.

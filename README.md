@@ -1,8 +1,9 @@
 # SoulCap
 
-**v1.8.0 — offline-first wellness PWA.** A calm, private, personalised space for self-regulation
-skills, a journal, and a map of the people around you. **Not** therapy · not a diagnosis tool ·
-not a crisis service · not an AI therapist. See [`SAFETY.md`](SAFETY.md).
+**v1.9.0 — offline-first wellness PWA.** A calm, private, personalised space for self-regulation
+skills, clinical experiences (screen + reflect, never diagnose), a journal, and a map of the people
+around you. **Not** therapy · not a diagnosis tool · not a crisis service · not an AI therapist.
+See [`SAFETY.md`](SAFETY.md).
 
 > **New here? Read [`AGENTS.md`](AGENTS.md)** (build guide + rules) and [`ROADMAP.md`](ROADMAP.md)
 > (what's next, in detail). [`.cursorrules`](.cursorrules) is the short version for Cursor.

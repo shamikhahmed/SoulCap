@@ -4,6 +4,20 @@
 - Flaky Playwright: wait for CSS animations idle + `reducedMotion` before theme contrast and journal
   control size assertions (`e2e/app.spec.ts`, `e2e/personas.spec.ts`).
 
+## [1.9.0] — 2026-07-23
+
+### Added
+- **Clinical experiences library** (physical + cognitive): 24 searchable experiences with what/why/
+  helps/self-care/reflection, linked to existing skills. Never diagnoses.
+- **Red-flag panels:** `emergency` (crisis styling) and `seeDoctor` (caution token) — number-free,
+  country-agnostic; general medical-check notice at top of Experiences.
+- Library filters: All / Experiences / Articles / Saved; search matches experience `aka` terms.
+- Playwright coverage for helps-id integrity, detail→runner, emergency panel, aka search.
+
+### Changed
+- SW `soulcap-v190`. App **1.9.0**. `--caution` tokens in all themes.
+- Skill id note: SPEC `categories` → shipped `categories-game`.
+
 ## [1.8.0] — 2026-07-22
 
 ### Added
