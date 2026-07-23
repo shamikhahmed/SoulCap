@@ -1,5 +1,12 @@
 ## [Unreleased]
 
+## [4.0.4] — 2026-07-24
+
+### Changed
+- **Master design PR-5 Calm:** hero-band need picker; rails Fitted for you · Understand · Read;
+  quiet Also-here list rows (path / library / notice / supports / reset). Browse-all kept.
+- SW `soulcap-v404`. App **4.0.4**. Schema still **v12**.
+
 ## [4.0.3] — 2026-07-24
 
 ### Changed

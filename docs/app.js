@@ -2684,17 +2684,15 @@
   }
   function renderCalm() {
     var v = $('#view-calm'); clear(v);
-    var title = calm.browse ? 'Every exercise.' : calm.section === 'library' ? LIBRARY_UI.title : calm.section === 'supports' ? SUPPORT_UI.title : 'What do you need\nright now?';
-    v.appendChild(el('div', {}, [
-      el('p', { class: 'eyebrow', text: 'Calm' }),
-      el('h1', { class: 'h-voice', text: title })
-    ]));
-    v.appendChild(el('button', { class: 'help-btn', text: t('helpNow'), onclick: openPanic }));
-    v.appendChild(el('div', { class:'notice', text: state.locale === 'rui' ? tUi('pattern', 'reviewNote', PATTERN_UI) : CALM_REVIEW_NOTE }));
-
     if (calm.section === 'library') { renderLibrary(v); return; }
     if (calm.section === 'supports') { renderDailySupports(v); return; }
     if (calm.browse) {
+      v.appendChild(el('div', { class: 'hero-band' }, [
+        el('p', { class: 'eyebrow', text: 'Calm' }),
+        el('h1', { class: 'h-voice', text: 'Every technique.' })
+      ]));
+      v.appendChild(el('button', { class: 'help-btn', text: t('helpNow'), onclick: openPanic }));
+      v.appendChild(el('div', { class: 'notice', text: state.locale === 'rui' ? tUi('pattern', 'reviewNote', PATTERN_UI) : CALM_REVIEW_NOTE }));
       v.appendChild(el('button', { class: 'btn ghost', text: tUi('calm', 'backToGuided', { backToGuided: '← Back to guided' }), onclick: function () { calm.browse = false; render(); } }));
       Object.keys(FAMILY_META).forEach(function (fam) {
         var items = SKILLS.filter(function (s) { return s.family === fam; });
@@ -2708,82 +2706,118 @@
       return;
     }
 
-    // Guided path first — one question, then quieter tools below.
+    var hero = el('div', { class: 'hero-band' });
+    hero.appendChild(el('p', { class: 'eyebrow', text: 'Calm' }));
+    hero.appendChild(el('h1', { class: 'h-voice', text: 'What do you need\nright now?' }));
+    hero.appendChild(el('div', { class: 'notice', style: 'margin-top:var(--space-3)', text: state.locale === 'rui' ? tUi('pattern', 'reviewNote', PATTERN_UI) : CALM_REVIEW_NOTE }));
     if (!calm.need) {
-      v.appendChild(el('p', { class: 'p-sm calm-empty', text: tUi('empty', 'calm', EMPTY_UI) }));
+      hero.appendChild(el('p', { class: 'p-sm calm-empty', style: 'margin-top:var(--space-3)', text: tUi('empty', 'calm', EMPTY_UI) }));
     }
-    v.appendChild(el('div', { class: 'stack' }, CALM_NEEDS.map(function (n) {
+    hero.appendChild(el('div', { class: 'stack', style: 'margin-top:var(--space-3)' }, CALM_NEEDS.map(function (n) {
       return el('button', { class: 'opt', 'aria-pressed': calm.need === n.key ? 'true' : 'false',
         html: n.label + '<span class="os">' + n.sub + '</span>',
         onclick: function () { calm.need = calm.need === n.key ? null : n.key; buzz(8); render(); } });
     })));
+    v.appendChild(hero);
+    v.appendChild(el('button', { class: 'help-btn', text: t('helpNow'), onclick: openPanic }));
 
-    if (!calm.need) {
-      v.appendChild(el('button', { class: 'btn quiet', text: tUi('calm', 'showEverything', { showEverything: 'Just show me everything' }), onclick: function () { calm.browse = true; render(); } }));
-      v.appendChild(el('div', { class: 'calm-more section-block' }, [
-        el('p', { class: 'eyebrow', text: tUi('me', 'calmMore', { calmMore: 'Also here' }) }),
-        el('div', { class:'calm-tools' }, [
-          el('button', { class:'card tap calm-tool path-card', onclick: pathSheet }, [
-            el('h2', { class:'card-title', text: PATH_UI.cardTitle }),
-            el('p', { class:'p-sm', text: PATH_UI.calmHint })
-          ]),
-          el('button', { class:'card tap calm-tool', onclick:function () { calm.section = 'library'; calm.browse = false; render(); } }, [
-            el('h2', { class:'card-title', text:LIBRARY_UI.title }),
-            el('p', { class:'p-sm', text:LIBRARY_UI.homeHint })
-          ]),
-          el('button', { class:'card tap calm-tool', onclick: experiencePickerSheet }, [
-            el('h2', { class:'card-title', text: EXPERIENCE_PICKER_UI.cardTitle }),
-            el('p', { class:'p-sm', text: EXPERIENCE_PICKER_UI.calmHint })
-          ]),
-          el('button', { class:'card tap calm-tool', onclick:function () { calm.section = 'supports'; calm.browse = false; render(); } }, [
-            el('h2', { class:'card-title', text:SUPPORT_UI.title }),
-            el('p', { class:'p-sm', text:SUPPORT_UI.homeHint })
-          ]),
-          el('button', { class:'card tap calm-tool reset-card', onclick: resetMenuSheet }, [
-            el('h2', { class:'card-title', text: tUi('reset', 'title', RESET_UI) }),
-            el('p', { class:'p-sm', text: tUi('reset', 'homeHint', RESET_UI) })
-          ])
+    if (calm.need) {
+      v.appendChild(el('div', {}, [
+        el('p', { class: 'p-voice', text: tUi('calm', 'whereAreYou', { whereAreYou: 'Where are you?' }) }),
+        el('div', { class: 'chips', style: 'margin-top:var(--space-2)' }, [
+          el('button', { class: 'chip', 'aria-pressed': calm.seen === false ? 'true' : 'false', text: tUi('calm', 'onMyOwn', { onMyOwn: 'On my own' }),
+            onclick: function () { calm.seen = calm.seen === false ? null : false; render(); } }),
+          el('button', { class: 'chip', 'aria-pressed': calm.seen === true ? 'true' : 'false', text: tUi('calm', 'aroundPeople', { aroundPeople: 'Around people' }),
+            onclick: function () { calm.seen = calm.seen === true ? null : true; render(); } })
         ])
       ]));
-      return;
+      v.appendChild(el('div', { style: 'margin-top:var(--space-3)' }, [
+        el('p', { class: 'p-voice', text: tUi('calm', 'gotAnything', { gotAnything: 'Got anything to hand?' }) }),
+        el('div', { class: 'chips', style: 'margin-top:var(--space-2)', role: 'group', 'aria-label': 'Things available' }, CALM_HAND_OPTIONS.map(function (o) {
+          return el('button', { class: 'chip', 'aria-pressed': calm.hand.indexOf(o.key) !== -1 ? 'true' : 'false', text: o.label,
+            onclick: function () { toggleCalmHand(o.key); render(); } });
+        }))
+      ]));
+      var need = CALM_NEEDS.filter(function (n) { return n.key === calm.need; })[0];
+      var cap = currentCapacity();
+      var list = SKILLS.filter(function (s) {
+        if (need.families.indexOf(s.family) === -1) return false;
+        if (!capacityFits(s.capacity, cap)) return false;
+        if (calm.seen === true && !s.discreet) return false;
+        if (['water', 'cold', 'sour', 'space'].indexOf(s.needs) !== -1 && calm.hand.indexOf(s.needs) === -1) return false;
+        return true;
+      });
+      list.sort(function (a, b) { return helpfulScore(b.id) - helpfulScore(a.id); });
+      v.appendChild(el('p', { class: 'eyebrow', style: 'margin-top:var(--space-3)', text: list.length ? 'For "' + need.label.toLowerCase() + '"' : 'Nothing matches' }));
+      if (!list.length) {
+        v.appendChild(el('div', { class: 'notice', text: 'Nothing fits that exact combination. Try clearing what you’ve got to hand, or browse everything below.' }));
+      } else {
+        var fitTiles = list.slice(0, 8).map(function (s) {
+          var dm = DOMAIN_META[s.domain];
+          return el('button', { class: 'tile tap ratio-3-4', type: 'button', onclick: function () { skillSheet(s.id); } }, [
+            el('p', { class: 'tile-meta', text: dm.label + ' · ' + s.mins + ' min' }),
+            el('h2', { class: 'tile-title', text: s.name }),
+            el('p', { class: 'p-sm', text: s.blurb })
+          ]);
+        });
+        v.appendChild(railBlock('Fitted for you', fitTiles, function () { calm.browse = true; render(); }));
+        list.forEach(function (s) { v.appendChild(skillCard(s, true)); });
+      }
+      v.appendChild(el('button', { class: 'btn quiet', text: tUi('calm', 'browseAll', { browseAll: 'Browse all techniques' }), onclick: function () { calm.browse = true; render(); } }));
+    } else {
+      var fitted = SKILLS.slice().sort(function (a, b) {
+        var fa = state.favourites.indexOf(a.id) !== -1 ? 2 : 0;
+        var fb = state.favourites.indexOf(b.id) !== -1 ? 2 : 0;
+        return (fb + helpfulScore(b.id)) - (fa + helpfulScore(a.id));
+      }).slice(0, 6);
+      v.appendChild(railBlock('Fitted for you', fitted.map(function (s) {
+        var dm = DOMAIN_META[s.domain];
+        return el('button', { class: 'tile tap ratio-3-4', type: 'button', onclick: function () { skillSheet(s.id); } }, [
+          el('p', { class: 'tile-meta', text: dm.label + ' · ' + s.mins + ' min' }),
+          el('h2', { class: 'tile-title', text: s.name }),
+          el('p', { class: 'p-sm', text: s.blurb })
+        ]);
+      }), function () { calm.browse = true; render(); }));
+
+      var expTiles = EXPERIENCES.slice(0, 8).map(function (exp) {
+        return el('button', {
+          class: 'tile tap ratio-3-4 experience-card',
+          type: 'button',
+          'data-experience-id': exp.id,
+          onclick: function () { experienceSheet(exp.id); }
+        }, [
+          el('p', { class: 'tile-meta', text: 'Experience' }),
+          el('h2', { class: 'tile-title', text: exp.name }),
+          el('p', { class: 'p-sm', text: exp.whatItis })
+        ]);
+      });
+      v.appendChild(railBlock(LIBRARY_UI.title, expTiles, function () {
+        calm.section = 'library'; libraryFilter = 'experiences'; calm.browse = false; render();
+      }));
+
+      var artTiles = ARTICLES.slice(0, 8).map(function (article) {
+        return el('button', { class: 'tile tap ratio-3-4 article-card', type: 'button', onclick: function () { articleSheet(article.id); } }, [
+          el('p', { class: 'tile-meta', text: 'Article' }),
+          el('h2', { class: 'tile-title', text: article.title }),
+          el('p', { class: 'p-sm', text: article.summary })
+        ]);
+      });
+      v.appendChild(railBlock('Read', artTiles, function () {
+        calm.section = 'library'; libraryFilter = 'articles'; calm.browse = false; render();
+      }));
+
+      v.appendChild(el('button', { class: 'btn quiet', text: tUi('calm', 'showEverything', { showEverything: 'Just show me everything' }), onclick: function () { calm.browse = true; render(); } }));
+      v.appendChild(el('div', { class: 'calm-more section-block' }, [
+        el('p', { class: 'section-label', text: tUi('me', 'calmMore', { calmMore: 'Also here' }) }),
+        el('div', { class: 'list-group' }, [
+          listRow({ className: 'path-card', title: PATH_UI.cardTitle, meta: PATH_UI.calmHint, onclick: pathSheet }),
+          listRow({ title: LIBRARY_UI.title, meta: LIBRARY_UI.homeHint, onclick: function () { calm.section = 'library'; calm.browse = false; render(); } }),
+          listRow({ title: EXPERIENCE_PICKER_UI.cardTitle, meta: EXPERIENCE_PICKER_UI.calmHint, onclick: experiencePickerSheet }),
+          listRow({ title: SUPPORT_UI.title, meta: SUPPORT_UI.homeHint, onclick: function () { calm.section = 'supports'; calm.browse = false; render(); } }),
+          listRow({ className: 'reset-card', title: tUi('reset', 'title', RESET_UI), meta: tUi('reset', 'homeHint', RESET_UI), onclick: resetMenuSheet })
+        ])
+      ]));
     }
-
-    // Q2 — context (only once a need is chosen)
-    v.appendChild(el('div', {}, [
-      el('p', { class: 'p-voice', text: tUi('calm', 'whereAreYou', { whereAreYou: 'Where are you?' }) }),
-      el('div', { style: 'height:10px' }),
-      el('div', { class: 'chips' }, [
-        el('button', { class: 'chip', 'aria-pressed': calm.seen === false ? 'true' : 'false', text: tUi('calm', 'onMyOwn', { onMyOwn: 'On my own' }),
-          onclick: function () { calm.seen = calm.seen === false ? null : false; render(); } }),
-        el('button', { class: 'chip', 'aria-pressed': calm.seen === true ? 'true' : 'false', text: tUi('calm', 'aroundPeople', { aroundPeople: 'Around people' }),
-          onclick: function () { calm.seen = calm.seen === true ? null : true; render(); } })
-      ])
-    ]));
-    v.appendChild(el('div', {}, [
-      el('p', { class: 'p-voice', text: tUi('calm', 'gotAnything', { gotAnything: 'Got anything to hand?' }) }),
-      el('div', { style: 'height:10px' }),
-      el('div', { class: 'chips', role: 'group', 'aria-label': 'Things available' }, CALM_HAND_OPTIONS.map(function (o) {
-        return el('button', { class: 'chip', 'aria-pressed': calm.hand.indexOf(o.key) !== -1 ? 'true' : 'false', text: o.label,
-          onclick: function () { toggleCalmHand(o.key); render(); } });
-      }))
-    ]));
-
-    // Results
-    var need = CALM_NEEDS.filter(function (n) { return n.key === calm.need; })[0];
-    var cap = currentCapacity();
-    var list = SKILLS.filter(function (s) {
-      if (need.families.indexOf(s.family) === -1) return false;
-      if (!capacityFits(s.capacity, cap)) return false;
-      if (calm.seen === true && !s.discreet) return false;
-      if (['water', 'cold', 'sour', 'space'].indexOf(s.needs) !== -1 && calm.hand.indexOf(s.needs) === -1) return false;
-      return true;
-    });
-    list.sort(function (a, b) { return helpfulScore(b.id) - helpfulScore(a.id); });
-
-    v.appendChild(el('p', { class: 'eyebrow', style: 'margin-top:6px', text: list.length ? 'For "' + need.label.toLowerCase() + '"' : 'Nothing matches' }));
-    if (!list.length) v.appendChild(el('div', { class: 'notice', text: 'Nothing fits that exact combination. Try clearing what you’ve got to hand, or browse everything below.' }));
-    list.forEach(function (s) { v.appendChild(skillCard(s, true)); });
-    v.appendChild(el('button', { class: 'btn quiet', text: tUi('calm', 'browseAll', { browseAll: 'Browse all techniques' }), onclick: function () { calm.browse = true; render(); } }));
   }
 
   /* ── Journal ───────────────────────────────────────────────────────────── */
@@ -4267,7 +4301,7 @@
       }
     });
   }
-  var APP_VERSION = '4.0.3';
+  var APP_VERSION = '4.0.4';
   function settingsGroup(v, title, kids) { v.appendChild(el('p', { class: 'eyebrow', style: 'margin-top:var(--space-3)', text: title })); kids.forEach(function (k) { if (k) v.appendChild(k); }); }
   function toggleBtn(label, on, fn) {
     return el('button', { class: 'btn ghost', style: 'display:flex;justify-content:space-between', onclick: fn,
@@ -4609,7 +4643,7 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '4.0.3',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '4.0.4',
     experienceIds: EXPERIENCES.map(function (item) { return item.id; }),
     experienceHelpsOk: function () {
       return EXPERIENCES.every(function (exp) {
