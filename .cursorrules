@@ -10,7 +10,8 @@ NOT an AI therapist, mood tracker, or crisis service. Success = the user needs t
 
 ## Never
 - Never add a network call: no `fetch`, `XMLHttpRequest`, CDN `<script>`, web-font link, or
-  analytics. The shipped app in `docs/` makes ZERO network requests after load. No dependencies.
+  analytics. The shipped app in `docs/` makes ZERO network requests after load. Vendored libs
+  only under `docs/vendor/` (GSAP UMD + hand-written WebGL) — never Three.js, never a CDN.
 - Never claim it is therapy / treats / diagnoses / replaces care. Never mark a technique as
   clinically reviewed (none are).
 - Never add crisis phone numbers or a country/region picker (removed by owner). Help is
@@ -22,8 +23,8 @@ NOT an AI therapist, mood tracker, or crisis service. Success = the user needs t
   chaining). Plain `var`/`function`, ES5-safe, no transpile.
 
 ## Always
-- Product code = `docs/` only (`index.html`, `app.css`, `data.js`, `app.js`, `sw.js`).
-  `backend/` and `mobile/` are un-deployed labs — don't wire them into the PWA.
+- Product code = `docs/` only (`index.html`, `app.css`, `data.js`, `app.js`, `sw.js`,
+  `vendor/*`). `backend/` and `mobile/` are un-deployed labs — don't wire them into the PWA.
 - Build DOM with the `el()` helper; put user-visible content in `data.js`; style via CSS tokens
   in `app.css` (theme-aware: light default, dark, night). Never hardcode colours.
 - After a state change call `save()` then `render()` (or `reRender()` to keep scroll position).

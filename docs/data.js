@@ -104,11 +104,22 @@ var PRESENTATION_UI = {
   density:'Layout spacing',
   contrast:'Higher contrast',
   transparency:'Reduce transparency',
+  motion:'Movement',
+  motionHint:'How much motion feels right. Reduced-motion settings always win and force Still.',
+  motionVivid:'Vivid',
+  motionBalanced:'Balanced',
+  motionStill:'Still',
   patternLearning:'Local pattern observations',
   patternHint:'When off, SoulCap stops deriving new pattern cards. Your check-ins and existing data stay unchanged.',
   saveFailedTitle:'That setting did not save',
   saveFailedBody:'Your previous settings are still in place. This phone may be low on local storage.'
 };
+
+var MOTION_OPTIONS = [
+  { k:'vivid', l:'Vivid' },
+  { k:'balanced', l:'Balanced' },
+  { k:'still', l:'Still' }
+];
 
 var ACCENT_OPTIONS = [
   { k:'plum', l:'Plum' },
@@ -698,7 +709,10 @@ var STRINGS = {
     },
     presentation:{
       accent:'Accent colour', text:'Text size', density:'Layout spacing', contrast:'Higher contrast',
-      transparency:'Reduce transparency', patternLearning:'Local pattern observations',
+      transparency:'Reduce transparency', motion:'Movement',
+      motionHint:'How much motion feels right. Reduced-motion settings always win and force Still.',
+      vivid:'Vivid', balanced:'Balanced', still:'Still',
+      patternLearning:'Local pattern observations',
       patternHint:'When off, SoulCap stops deriving new pattern cards. Your check-ins and existing data stay unchanged.',
       themeNote:'Night is dimmer than dark. AMOLED is near-black. Mood themes keep contrast and reduced-motion intact.',
       standard:'Standard', large:'Large', compact:'Compact', comfortable:'Comfortable',

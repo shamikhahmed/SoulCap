@@ -253,13 +253,15 @@ html[dir="rtl"] .article-list,html[dir="rtl"] .opt .os{text-align:right}
   --type-callout:15px; --type-callout-lh:1.5;
   --type-label:13px; --type-label-lh:1.4; --type-label-track:.06em;
   --type-micro:11px; --type-micro-lh:1.3;
-  /* Motion (SPEC v4 §2) */
+  /* Motion (SPEC v4 §2 + v5 presets via data-motion) */
   --dur-instant:90ms; --dur-fast:160ms; --dur-normal:260ms; --dur-slow:420ms; --dur-sheet:360ms;
   --ease-standard:cubic-bezier(.2,0,0,1);
   --ease-out:cubic-bezier(.16,1,.3,1);
   --ease-soft:cubic-bezier(.25,.1,.25,1);
+  --ease-spring:cubic-bezier(.22,1,.36,1);
   --ease:var(--ease-out);
   --dur-base:var(--dur-normal); --dur-screen:var(--dur-slow);
+  --motion-parallax:.6; --motion-glow:.85; --motion-orb:1;
   /* Spacing: 4 · 8 · 12 · 16 · 20 · 24 · 32 · 48 · 64 */
   --space-1:4px; --space-2:8px; --space-3:12px; --space-4:16px;
   --space-4b:20px; --space-5:24px; --space-6:32px; --space-7:48px; --space-8:64px;
@@ -271,6 +273,14 @@ html[dir="rtl"] .article-list,html[dir="rtl"] .opt .os{text-align:right}
   --fab-h:48px;
   --fab-clearance:calc(var(--fab-h) + var(--space-6) + 12px);
   --nav-h:52px;
+}
+:root[data-motion="vivid"]{
+  --dur-fast:180ms; --dur-normal:320ms; --dur-slow:520ms; --dur-sheet:420ms;
+  --motion-parallax:1; --motion-glow:1; --motion-orb:1;
+}
+:root[data-motion="still"]{
+  --dur-instant:0ms; --dur-fast:0ms; --dur-normal:80ms; --dur-slow:90ms; --dur-sheet:90ms;
+  --motion-parallax:0; --motion-glow:0; --motion-orb:0;
 }
 
 @media (prefers-reduced-motion: reduce){

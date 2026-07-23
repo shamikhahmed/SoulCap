@@ -55,6 +55,9 @@ Success = the user needs the app **less** over time. Never optimise for time-in-
 - Everything is `localStorage`. **Zero network requests after load.** No account, no server, no
   analytics, no LLM, no external fonts/CDNs. Do not add any `fetch`, `XMLHttpRequest`, `<script src>`
   to a CDN, or web-font link. If a feature needs the network, it does not ship here.
+- **Vendored libs exception (v5.0):** self-hosted files under `docs/vendor/` only (currently GSAP
+  core UMD + hand-written WebGL). Precache them in `sw.js`. **No CDN, no remote fetch, no Three.js.**
+  Keep app code ES5 (`var`/`function`); call GSAP from the UMD global after lazy load.
 - Photos are down-scaled on-device (canvas, ~1000px JPEG) before storing.
 
 **Design (see `docs/app.css` tokens)**
@@ -72,20 +75,21 @@ Success = the user needs the app **less** over time. Never optimise for time-in-
 
 ## 3. Architecture
 
-No framework, no build step, no dependencies in the shipped app. The product is four files in
-`docs/`, served statically by GitHub Pages.
+No framework, no build step. Shipped product lives in `docs/`, served statically by GitHub Pages.
+Allowed offline deps: only files in `docs/vendor/` (see Privacy rule above).
 
 ```
 docs/
   index.html   Static shell: splash, view <section>s, tab bar, dialogs (panic, runner,
                journal editor, sheet), the floating Help button. Loads data.js then app.js.
-  app.css      Design System v2. CSS custom properties define light/dark/night themes.
-               Style through tokens; never hardcode colours in components.
+  app.css      Design System. CSS custom properties define themes + motion. Style through
+               tokens; never hardcode colours in components.
   data.js      Content only (global consts): SKILLS, DOMAIN_META, FAMILY_META, NEEDS_META,
                CALM_NEEDS, CONCERNS, RELATIONSHIP_TYPES, SAFETY_PLAN_STEPS, HISTORY_SECTIONS,
-               JOURNAL_PROMPTS, COVER_COLORS, JOURNAL_STICKERS.
+               JOURNAL_PROMPTS, COVER_COLORS, JOURNAL_STICKERS, *_UI, STRINGS.
   app.js       All logic, one IIFE. State, safety kernel, render/router, runner, journal,
-               constellation, settings.
+               constellation, settings, motion probe.
+  vendor/      Self-hosted libs only (gsap.min.js; later orb shader). Never CDN.
   sw.js        Service worker. Precaches assets for offline. Bump CACHE on every asset change.
   manifest.json, icons/  PWA install metadata + brand marks.
 ```

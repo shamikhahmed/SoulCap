@@ -1,5 +1,14 @@
 ## [Unreleased]
 
+## [5.0.0] — 2026-07-24
+
+### Added
+- **Native motion PR-1 foundation:** vendored GSAP core (`docs/vendor/gsap.min.js`, offline
+  precache), `data-motion` presets (Vivid / Balanced / Still), capability probe, Settings Movement
+  chips, haptics respect Still. Lazy-loads GSAP after first paint.
+- Dependency rule updated in `AGENTS.md` / `.cursorrules` (vendor only, no CDN, no Three.js).
+- SW `soulcap-v500`. App **5.0.0**. Schema still **v12**.
+
 ## [4.0.9] — 2026-07-24
 
 ### Changed

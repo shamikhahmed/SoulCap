@@ -67,7 +67,7 @@
     voice: { on: false, name: null, rate: 0.85, pitch: 1 },
     haptics: true, showLinks: false, trackContact: false,
     patternPrefs: { enabled: true, decisions: {} },
-    appearance: { text: 'standard', density: 'compact', accent: 'plum', contrast: 'standard', reduceTransparency: false },
+    appearance: { text: 'standard', density: 'compact', accent: 'plum', contrast: 'standard', reduceTransparency: false, motion: 'balanced' },
     dailySupports: { selected: [], days: {} },
     drip: { answers: {}, skipped: {}, dayKey: '', askedToday: [] },
     userModel: {},
@@ -107,6 +107,7 @@
       if (['compact','comfortable'].indexOf(p.appearance.density) === -1) p.appearance.density = DEFAULT.appearance.density;
       if (['plum','lilac','mulberry','indigo'].indexOf(p.appearance.accent) === -1) p.appearance.accent = DEFAULT.appearance.accent;
       if (['standard','high'].indexOf(p.appearance.contrast) === -1) p.appearance.contrast = DEFAULT.appearance.contrast;
+      if (['vivid','balanced','still'].indexOf(p.appearance.motion) === -1) p.appearance.motion = DEFAULT.appearance.motion;
       p.appearance.reduceTransparency = p.appearance.reduceTransparency === true;
       p.dailySupports = Object.assign(clone(DEFAULT.dailySupports), p.dailySupports || {});
       p.dailySupports.selected = Array.isArray(p.dailySupports.selected) ? p.dailySupports.selected : [];
@@ -360,7 +361,55 @@
     setTimeout(function () { t.classList.remove('on'); }, 2200);
   }
 
-  /* ── Theme / haptics ───────────────────────────────────────────────────── */
+  /* ── Theme / motion / haptics ──────────────────────────────────────────── */
+  var motionCap = { probed: false, weak: false, webgl: false, gsapReady: false, gsapLoading: false };
+  function probeMotion() {
+    if (motionCap.probed) return motionCap;
+    motionCap.probed = true;
+    try {
+      var c = document.createElement('canvas');
+      motionCap.webgl = !!(c.getContext('webgl') || c.getContext('experimental-webgl'));
+    } catch (e) { motionCap.webgl = false; }
+    var mem = typeof navigator.deviceMemory === 'number' ? navigator.deviceMemory : null;
+    var cores = typeof navigator.hardwareConcurrency === 'number' ? navigator.hardwareConcurrency : 4;
+    if ((mem !== null && mem <= 2) || cores <= 2) motionCap.weak = true;
+    return motionCap;
+  }
+  function effectiveMotion() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return 'still';
+    var m = (state.appearance && state.appearance.motion) || 'balanced';
+    if (['vivid', 'balanced', 'still'].indexOf(m) === -1) m = 'balanced';
+    probeMotion();
+    if (motionCap.weak && m === 'vivid') m = 'balanced';
+    return m;
+  }
+  function applyMotion() {
+    probeMotion();
+    document.documentElement.setAttribute('data-motion', effectiveMotion());
+  }
+  function loadGsap(cb) {
+    if (window.gsap) {
+      motionCap.gsapReady = true;
+      if (cb) cb(window.gsap);
+      return;
+    }
+    if (effectiveMotion() === 'still') { if (cb) cb(null); return; }
+    if (motionCap.gsapLoading) { if (cb) cb(null); return; }
+    motionCap.gsapLoading = true;
+    var s = document.createElement('script');
+    s.src = 'vendor/gsap.min.js';
+    s.async = true;
+    s.onload = function () {
+      motionCap.gsapReady = !!window.gsap;
+      motionCap.gsapLoading = false;
+      if (cb) cb(window.gsap || null);
+    };
+    s.onerror = function () {
+      motionCap.gsapLoading = false;
+      if (cb) cb(null);
+    };
+    document.head.appendChild(s);
+  }
   function applyTheme() {
     if (state.theme && VALID_THEMES[state.theme]) document.documentElement.setAttribute('data-theme', state.theme);
     else document.documentElement.removeAttribute('data-theme');
@@ -370,6 +419,7 @@
     document.documentElement.setAttribute('data-accent', appearance.accent);
     document.documentElement.setAttribute('data-contrast', appearance.contrast);
     document.documentElement.setAttribute('data-transparency', appearance.reduceTransparency ? 'reduced' : 'standard');
+    applyMotion();
     applyLocale();
     try {
       if (state.theme && VALID_THEMES[state.theme]) localStorage.setItem('soulcap_theme', state.theme);
@@ -461,8 +511,10 @@
   }
   function buzz(pattern) {
     if (!state.haptics) return;
+    if (effectiveMotion() === 'still') return;
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    if (navigator.vibrate) { try { navigator.vibrate(pattern); } catch (e) {} }
+    if (!navigator.vibrate) return;
+    try { navigator.vibrate(pattern); } catch (e) {}
   }
   /* One haptic language: tick = select, done = save/finish, open = sheet/panic. */
   function haptic(kind) {
@@ -2591,6 +2643,12 @@
           el('p', { class: 'p-sm', text: tUi('locale', 'clinicalNotice', LOCALE_UI) }),
           el('button', { class: 'btn ghost', text: tUi('locale', 'clinicalDismiss', LOCALE_UI), onclick: dismissClinicalNotice })
         ]) : null,
+        el('p', { class: 'eyebrow mt-2', text: tUi('presentation', 'motion', PRESENTATION_UI) }),
+        settingChips(MOTION_OPTIONS,
+          function (o) { return state.appearance.motion === o.k; },
+          function (o) { setAppearance('motion', o.k); },
+          function (o) { return presentationChipLabel(o.k, o.l); }),
+        el('p', { class: 'p-sm', text: tUi('presentation', 'motionHint', PRESENTATION_UI) }),
         el('p', { class: 'eyebrow mt-2', text: tUi('presentation', 'accent', PRESENTATION_UI) }),
         labeledSettingChips(ACCENT_OPTIONS,
           function (o) { return state.appearance.accent === o.k; }, function (o) { setAppearance('accent', o.k); }, function (o) { return presentationChipLabel(o.k, o.l); }),
@@ -4360,7 +4418,7 @@
       }
     });
   }
-  var APP_VERSION = '4.0.9';
+  var APP_VERSION = '5.0.0';
   function settingsGroup(v, title, kids) { v.appendChild(el('p', { class: 'eyebrow', style: 'margin-top:var(--space-3)', text: title })); kids.forEach(function (k) { if (k) v.appendChild(k); }); }
   function toggleBtn(label, on, fn) {
     return el('button', { class: 'btn ghost', style: 'display:flex;justify-content:space-between', onclick: fn,
@@ -4697,6 +4755,7 @@
     if ('speechSynthesis' in window) { loadVoices(); window.speechSynthesis.onvoiceschanged = loadVoices; }
 
     render();
+    setTimeout(function () { loadGsap(); }, 0);
     if (queryValue('panic') === '1') {
       $('#splash').classList.add('gone');
       openPanic();
@@ -4714,7 +4773,10 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '4.0.9',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '5.0.0',
+    effectiveMotion: effectiveMotion,
+    motionCap: function () { return motionCap; },
+    loadGsap: loadGsap,
     experienceIds: EXPERIENCES.map(function (item) { return item.id; }),
     experienceHelpsOk: function () {
       return EXPERIENCES.every(function (exp) {
