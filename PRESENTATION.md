@@ -23,9 +23,10 @@
 
 ## Slide 2: Introducing SoulCap
 
-**SoulCap** ships as an offline-first, self-guided wellness PWA with context-fitted skills, a
-private journal book, and a relationship map. Architecture work toward a Living Mind Model lives
-in undeployed Nest lab source. **Not clinical care or therapy.** See `SAFETY.md`.
+**SoulCap** ships as an offline-first, self-guided wellness PWA with context-fitted skills, an
+optional Guided Path, a private journal book, and a relationship map. Architecture work toward a
+Living Mind Model lives in undeployed Nest lab source. **Not clinical care or therapy.** See
+`SAFETY.md`.
 
 Not a chatbot pretending to be a therapist. A companion shell that stays honest about what runs on-device today.
 
