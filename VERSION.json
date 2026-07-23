@@ -1,8 +1,8 @@
 {
   "name": "SoulCap",
-  "version": "4.0.5",
-  "swCache": "soulcap-v405",
+  "version": "4.0.6",
+  "swCache": "soulcap-v406",
   "schema": 12,
   "deploy": "docs/",
-  "note": "v4.0.5 master design PR-6 — Journal book depth + People edge map + glass pills."
+  "note": "v4.0.6 master design PR-7 — full-screen Path/Screener flows; Panic/Runner polish."
 }

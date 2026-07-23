@@ -1011,7 +1011,7 @@
         }
         p.appendChild(el('button', { class: 'btn quiet', text: PATH_UI.back, onclick: function () { step = 'chips'; draw(); } }));
         p.appendChild(el('button', { class: 'btn quiet', text: PATH_UI.close, onclick: closeSheet }));
-      });
+      }, { flow: true, flowLabel: PATH_UI.cardTitle });
     }
     draw();
   }
@@ -1422,7 +1422,7 @@
         } }));
       }
       p.appendChild(el('button', { class: 'btn quiet', text: SCREENER_UI.close, onclick: closeSheet }));
-    });
+    }, { flow: true, flowLabel: SCREENER_UI.pickTitle });
   }
   function screenerFinish(screenerId, answers) {
     var screener = screenerById(screenerId);
@@ -1928,11 +1928,18 @@
     if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
     else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
   }
-  function openSheet(build) {
+  function openSheet(build, opts) {
+    opts = opts || {};
     if (!$('#sheet').classList.contains('on')) sheetOpener = document.activeElement;
     if (mapState) mapState.sheetPause = true;
     var panel = $('#sheetPanel'); clear(panel);
-    panel.appendChild(el('div', { class: 'grab' }));
+    if (opts.flow) {
+      $('#sheet').classList.add('flow');
+      panel.appendChild(el('p', { class: 'flow-eyebrow', text: opts.flowLabel || 'One step at a time' }));
+    } else {
+      $('#sheet').classList.remove('flow');
+      panel.appendChild(el('div', { class: 'grab' }));
+    }
     build(panel);
     var heading = panel.querySelector('h1, h2, h3');
     if (heading) {
@@ -1953,7 +1960,9 @@
     coverImageRequest++;
     clearMapFocus();
     if (mapState) mapState.sheetPause = false;
-    $('#sheet').classList.remove('on'); $('#sheet').setAttribute('aria-hidden', 'true');
+    $('#sheet').classList.remove('on');
+    $('#sheet').classList.remove('flow');
+    $('#sheet').setAttribute('aria-hidden', 'true');
     setSheetBackgroundInert(false);
     document.body.style.overflow = '';
     if (sheetOpener && document.documentElement.contains(sheetOpener)) sheetOpener.focus();
@@ -4319,7 +4328,7 @@
       }
     });
   }
-  var APP_VERSION = '4.0.5';
+  var APP_VERSION = '4.0.6';
   function settingsGroup(v, title, kids) { v.appendChild(el('p', { class: 'eyebrow', style: 'margin-top:var(--space-3)', text: title })); kids.forEach(function (k) { if (k) v.appendChild(k); }); }
   function toggleBtn(label, on, fn) {
     return el('button', { class: 'btn ghost', style: 'display:flex;justify-content:space-between', onclick: fn,
@@ -4661,7 +4670,7 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '4.0.5',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '4.0.6',
     experienceIds: EXPERIENCES.map(function (item) { return item.id; }),
     experienceHelpsOk: function () {
       return EXPERIENCES.every(function (exp) {

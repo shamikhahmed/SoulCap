@@ -551,12 +551,12 @@ input[type="range"]{width:100%;min-height:48px;accent-color:var(--accent)}
 .help-btn:active{transform:scale(.99)}
 
 #panic{
-  position:fixed;inset:0;background:var(--sunken);color:var(--ink);z-index:100;
+  position:fixed;inset:0;background:var(--glow),var(--sunken);color:var(--ink);z-index:100;
   display:none;flex-direction:column;padding:calc(var(--sat) + 30px) 24px calc(var(--sab) + 22px);gap:20px;
 }
 #panic.on{display:flex;animation:viewIn var(--dur-normal) var(--ease-out) both}
 .panic-step{font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:700;color:var(--crisis);margin:0}
-.panic-instruction{font-size:34px;line-height:1.3;letter-spacing:-.013em;font-weight:500;margin:0;text-wrap:balance}
+.panic-instruction{font-size:clamp(28px,7.5vw,40px);line-height:1.28;letter-spacing:-.013em;font-weight:500;margin:0;text-wrap:balance}
 .pacer-hold{display:flex;align-items:center;justify-content:center;flex:1;min-height:190px;position:relative}
 .pacer{
   width:190px;height:190px;border-radius:50%;border:2px solid var(--accent);
@@ -623,6 +623,20 @@ input[type="range"]{width:100%;min-height:48px;accent-color:var(--accent)}
 #sheet .scrim{position:absolute;inset:0;background:rgba(0,0,0,.24);animation:fadeIn var(--dur-normal) var(--ease-out) both;backdrop-filter:blur(20px)}
 :root[data-transparency="reduced"] #sheet .scrim{background:rgba(0,0,0,.72);backdrop-filter:none}
 :root[data-transparency="reduced"] #sheet .panel{backdrop-filter:none}
+#sheet.flow{align-items:stretch}
+#sheet.flow .scrim{opacity:.06;backdrop-filter:none;background:var(--ground)}
+#sheet.flow .panel{
+  max-height:none;height:100%;width:100%;max-width:none;border-radius:0;
+  padding:calc(var(--sat) + var(--space-5)) var(--space-4) calc(var(--sab) + var(--space-5));
+  box-shadow:none;border:none;background:var(--ground);
+}
+#sheet.flow .grab{display:none}
+#sheet.flow .flow-eyebrow{
+  font-size:var(--type-label);letter-spacing:var(--type-label-track);text-transform:uppercase;
+  font-weight:600;color:var(--ink-3);margin:0 0 var(--space-3);
+}
+#sheet.flow .h-sec{font-size:var(--type-title);line-height:var(--type-title-lh)}
+#sheet.flow .p-voice{font-size:var(--type-heading);line-height:var(--type-heading-lh)}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 #sheet .panel{
   position:relative;background:var(--surface-2,var(--raise));width:100%;max-width:580px;
@@ -638,8 +652,9 @@ input[type="range"]{width:100%;min-height:48px;accent-color:var(--accent)}
 /* ── Runner — the app exercises *with* you ─────────────────
    Every technique gets a living companion: a slow breathing orb, paced
    auto-advance, and spoken steps. It should feel guided, not read. */
-#runner{position:fixed;inset:0;background:var(--ground);z-index:90;display:none;flex-direction:column;padding:calc(var(--sat) + 26px) 24px calc(var(--sab) + 20px);gap:16px;overflow-y:auto}
+#runner{position:fixed;inset:0;background:var(--glow),var(--ground);z-index:90;display:none;flex-direction:column;padding:calc(var(--sat) + 26px) 24px calc(var(--sab) + 20px);gap:16px;overflow-y:auto}
 #runner.on{display:flex;animation:viewIn var(--dur-normal) var(--ease-out) both}
+#runner .breath-orb,#runner .pacer{margin:0 auto}
 .run-top{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .run-step{font-size:12px;letter-spacing:.13em;text-transform:uppercase;font-weight:700;color:var(--ink-3);margin:0}
 .run-progress{display:flex;gap:4px}

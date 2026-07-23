@@ -1,5 +1,12 @@
 ## [Unreleased]
 
+## [4.0.6] — 2026-07-24
+
+### Changed
+- **Master design PR-7 Focused flows:** Path + Screener run as full-screen `#sheet.flow` (one step at a time).
+  Panic/Runner ambient polish. Panic stays plainest surface.
+- SW `soulcap-v406`. App **4.0.6**. Schema still **v12**.
+
 ## [4.0.5] — 2026-07-24
 
 ### Changed
