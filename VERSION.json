@@ -1,8 +1,8 @@
 {
   "name": "SoulCap",
-  "version": "5.0.0",
-  "swCache": "soulcap-v500",
+  "version": "5.0.1",
+  "swCache": "soulcap-v501",
   "schema": 12,
   "deploy": "docs/",
-  "note": "v5.0.0 native motion PR-1 — vendored GSAP, data-motion, capability probe."
+  "note": "v5.0.1 native motion PR-2 — View Transitions on push/pop."
 }

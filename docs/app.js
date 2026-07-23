@@ -1906,10 +1906,21 @@
     runPhase();
   }
 
-  /* ── Pushed subview stack (SPEC v4 PR-2) ───────────────────────────────── */
+  /* ── Pushed subview stack (SPEC v4 PR-2) + View Transitions (v5 PR-2) ───── */
   var viewStack = [];
   var subviewOpener = null;
   var tabScrollY = 0;
+  function withViewTransition(update) {
+    if (effectiveMotion() === 'still' || typeof document.startViewTransition !== 'function') {
+      update();
+      return;
+    }
+    try {
+      document.startViewTransition(function () { update(); });
+    } catch (e) {
+      update();
+    }
+  }
   function setSubviewBackgroundInert(on) {
     ['#app', '#fab'].forEach(function (selector) {
       var node = $(selector);
@@ -1918,7 +1929,7 @@
       else node.removeAttribute('inert');
     });
   }
-  function closeSubview() {
+  function closeSubviewImmediate() {
     viewStack = [];
     var host = $('#subview');
     if (!host) return;
@@ -1932,9 +1943,12 @@
     if (subviewOpener && document.documentElement.contains(subviewOpener)) subviewOpener.focus();
     subviewOpener = null;
   }
+  function closeSubview() {
+    withViewTransition(closeSubviewImmediate);
+  }
   function drawSubview() {
     var top = viewStack[viewStack.length - 1];
-    if (!top) { closeSubview(); return; }
+    if (!top) { closeSubviewImmediate(); return; }
     var host = $('#subview'), nav = $('#subviewNav'), body = $('#subviewBody');
     clear(nav); clear(body);
     nav.appendChild(el('button', {
@@ -1970,14 +1984,14 @@
       build: opts.build,
       scrollY: 0
     });
-    drawSubview();
+    withViewTransition(drawSubview);
     haptic('tick');
   }
   function pushOrReplaceView(opts) {
     if (viewStack.length && viewStack[viewStack.length - 1].id === opts.id) {
       viewStack[viewStack.length - 1].title = opts.title || '';
       viewStack[viewStack.length - 1].build = opts.build;
-      drawSubview();
+      withViewTransition(drawSubview);
       return;
     }
     pushView(opts);
@@ -1986,7 +2000,7 @@
     if (!viewStack.length) return;
     viewStack.pop();
     if (!viewStack.length) closeSubview();
-    else drawSubview();
+    else withViewTransition(drawSubview);
   }
 
   /* ── Sheet ─────────────────────────────────────────────────────────────── */
@@ -4418,7 +4432,7 @@
       }
     });
   }
-  var APP_VERSION = '5.0.0';
+  var APP_VERSION = '5.0.1';
   function settingsGroup(v, title, kids) { v.appendChild(el('p', { class: 'eyebrow', style: 'margin-top:var(--space-3)', text: title })); kids.forEach(function (k) { if (k) v.appendChild(k); }); }
   function toggleBtn(label, on, fn) {
     return el('button', { class: 'btn ghost', style: 'display:flex;justify-content:space-between', onclick: fn,
@@ -4773,10 +4787,11 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '5.0.0',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '5.0.1',
     effectiveMotion: effectiveMotion,
     motionCap: function () { return motionCap; },
     loadGsap: loadGsap,
+    withViewTransition: withViewTransition,
     experienceIds: EXPERIENCES.map(function (item) { return item.id; }),
     experienceHelpsOk: function () {
       return EXPERIENCES.every(function (exp) {

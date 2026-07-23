@@ -1,5 +1,12 @@
 ## [Unreleased]
 
+## [5.0.1] — 2026-07-24
+
+### Added
+- **Native motion PR-2:** View Transitions API on push/pop/close subview (`withViewTransition`).
+  Still / reduced-motion skip VT. `#subview` named transition pair.
+- SW `soulcap-v501`. App **5.0.1**. Schema still **v12**.
+
 ## [5.0.0] — 2026-07-24
 
 ### Added
