@@ -418,7 +418,9 @@ test.describe('v1.9 clinical experiences library', () => {
 
   test('Now what’s-happening picker opens experience then runner', async ({ page }) => {
     await seedDemo(page);
-    await page.getByRole('button', { name: /Notice what’s happening/ }).click();
+    await page.locator('#view-now .explore-toggle').click();
+    await expect(page.locator('#view-now .explore-toggle')).toHaveAttribute('aria-expanded', 'true');
+    await page.locator('#view-now .experience-picker-card').click();
     await expect(page.locator('#sheet')).toContainText('What’s happening?');
     await expect(page.locator('#sheet')).toContainText('Not a diagnosis');
     await page.locator('#sheetPanel .experience-card[data-experience-id="racing-heart"]').click();
@@ -457,6 +459,8 @@ test.describe('v1.9.2 articles and wind-down', () => {
     await page.goto('/');
     await page.waitForFunction(() => Boolean((window as any).__soulcap));
     await dismissSplash(page);
+    await page.locator('#view-now .explore-toggle').click();
+    await expect(page.locator('#view-now .explore-toggle')).toHaveAttribute('aria-expanded', 'true');
     await expect(page.getByRole('heading', { name: 'Wind-down window' })).toBeVisible();
     await expect(page.locator('.wind-down-card')).toContainText('No guilt');
   });
@@ -532,6 +536,7 @@ test.describe('v1.9.3 reflection screeners', () => {
 test.describe('v2.1 Guided Path', () => {
   test('Now and Calm expose short path; complete path opens runner', async ({ page }) => {
     await seedDemo(page);
+    await page.locator('#view-now .explore-toggle').click();
     await expect(page.locator('#view-now .path-card')).toContainText('A short path');
     await page.locator('#view-now .path-card').click();
     const sheet = page.locator('#sheetPanel');
@@ -544,6 +549,8 @@ test.describe('v2.1 Guided Path', () => {
     await sheet.getByRole('button', { name: 'Continue' }).click();
     await expect(sheet).toContainText('Educational self-help only');
     await expect(sheet).toContainText('not those therapies');
+    await expect(sheet).toContainText('An approach you could try');
+    await expect(sheet).toContainText('Working with thoughts');
     const body = await sheet.innerText();
     const scrubbed = body.toLowerCase()
       .replace(/not (a |yet )?diagnos\w*/g, '')
@@ -558,6 +565,7 @@ test.describe('v2.1 Guided Path', () => {
     expect(sessions.length).toBeGreaterThan(0);
     expect(sessions[sessions.length - 1].arrival).toBe('Wired');
     expect(sessions[sessions.length - 1].chips).toContain('worry');
+    expect(sessions[sessions.length - 1].approachId).toBeTruthy();
   });
 
   test('panic-like cluster offers Help without crisis numbers', async ({ page }) => {
@@ -605,6 +613,7 @@ test.describe('v2.1 Guided Path', () => {
     await page.getByRole('button', { name: /Hide short path on Now/ }).click();
     await page.locator('#sheetPanel').getByRole('button', { name: 'Close' }).click();
     await page.evaluate(() => (document.querySelector('#tabs button[data-tab="now"]') as HTMLElement).click());
+    await page.locator('#view-now .explore-toggle').click();
     await expect(page.locator('#view-now .path-card')).toHaveCount(0);
   });
 
@@ -614,11 +623,18 @@ test.describe('v2.1 Guided Path', () => {
       const sc = (window as any).__soulcap;
       const scores = sc.scorePathFamilies(['worry', 'spin']);
       const skills = sc.suggestPathSkills(scores.family, ['worry', 'spin']);
-      return JSON.stringify({ scores, skills: skills.map((s: { id: string }) => s.id) });
+      const approach = sc.approachForFamily(scores.family, ['worry', 'spin']);
+      return JSON.stringify({
+        scores,
+        skills: skills.map((s: { id: string }) => s.id),
+        approach: approach && { id: approach.id, title: approach.title }
+      });
     });
     expect(blob.toLowerCase()).not.toMatch(/diagnos|prescribe|you have |severity/);
     const score = await page.evaluate(() => (window as any).__soulcap.scorePathFamilies(['worry']));
     expect(score.family).toBe('cognitive');
+    const approach = await page.evaluate(() => (window as any).__soulcap.approachForFamily('cognitive', ['worry']));
+    expect(approach.id).toBe('cbt');
   });
 });
 
@@ -629,12 +645,16 @@ test.describe('v2.0 IA restructure', () => {
     const me = page.locator('#view-me');
     await expect(me.locator('.me-about')).toContainText('About you');
     await expect(me.locator('.me-insights')).toContainText('Your insights');
+    await expect(me.locator('.progress-dash')).toContainText('Your progress');
     await expect(me.locator('.me-tools')).toContainText('Your tools');
     await expect(me.locator('.timeline-card')).toContainText('Your week');
     await expect(me.locator('.settings-card')).toBeVisible();
     await expect(me.locator('.screener-card')).toBeVisible();
     await page.evaluate(() => (document.querySelector('#tabs button[data-tab="now"]') as HTMLElement).click());
     await expect(page.locator('#view-now .now-primary .now-suggest')).toBeVisible();
+    await expect(page.locator('#view-now .progress-glance')).toBeVisible();
+    await expect(page.locator('#view-now .explore-toggle')).toBeVisible();
+    await page.locator('#view-now .explore-toggle').click();
     await expect(page.locator('#view-now .now-quiet')).toBeVisible();
     await expect(page.locator('#view-now')).not.toContainText('Your week');
   });
@@ -693,7 +713,9 @@ test.describe('v1.1 adaptive drip, themes, locale', () => {
 
   test('drip answers update estimates and stop after four asks today', async ({ page }) => {
     await seedDemo(page);
-    await page.getByRole('button', { name: /Know you a little better/ }).click();
+    await page.locator('#view-now .explore-toggle').click();
+    await expect(page.locator('#view-now .explore-toggle')).toHaveAttribute('aria-expanded', 'true');
+    await page.locator('#view-now').getByRole('button', { name: /Know you a little better/ }).click();
     await expect(page.getByRole('heading', { name: 'A few gentle questions' })).toBeVisible();
     await expect(page.locator('#sheet')).toContainText('Not a diagnosis');
     const sheet = page.locator('#sheet');

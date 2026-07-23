@@ -1,4 +1,4 @@
-**Version:** 3.0.0 · SW `soulcap-v300`
+**Version:** 3.0.1 · SW `soulcap-v301`
 
 # SoulCap — Project Handover
 
@@ -6,49 +6,30 @@
 > first — it is the current truth as of 2026-07-23. The sections further down describe an
 > earlier architecture and are kept for reference only.
 
-## Current state (v3.0.0 — 2026-07-23)
+## Current state (v3.0.1 — 2026-07-23)
 
 **The product is the PWA in `docs/`.** Offline-first, local-only, **no network calls after load** —
 no account, no server, no LLM, no analytics. State lives in `localStorage` (schema **v12**).
-**Design System v3 Amethyst** (dark-first elevation, grain, FAB clearance) — engines unchanged from
-2.1. Live: https://shamikhahmed.github.io/SoulCap/
+**Design System v3 Amethyst** (kit + Now hero/Explore + welcome + progress dash + path approaches).
+Live: https://shamikhahmed.github.io/SoulCap/
 
 ### What the PWA is now
-- **Design System v2 “plum & sand”** — logo-anchored violet, low chroma. Themes: Auto / light /
-  dark / **night** + Ocean / Forest / Rain / Space / Sunrise / Minimal / **AMOLED**. Accents:
-  plum / lilac / mulberry / indigo. Text size, density, contrast, transparency. **v2.0 craft:**
-  spacing tokens, empties, What’s new, About sheet, motion/haptics polish.
-- **Five tabs:** Now · Calm · Journal · People · You. **Settings sheet** off You (appearance,
-  language, guided exercises, Constellation pace, personalisation, data). Splash + welcome + 18+
-  onboarding. About SoulCap + What’s new (version-gated).
-- **37 techniques** with mechanisms, contraindications, capacity/needs, discreet flag,
-  traumaCaution. Guided runner + paced breathing sessions. Spoken guidance local-only voices;
-  auto-silent around people / panic; speaker toggle; exercise pace Slow/Steady/Brisk.
-- **Guided Path (v2.1)** — optional “A short path” on Now (quiet) + Calm Also here: arrival →
-  symptom chips (cap 4) → family why + educational footnote → Begin. Rule-based family scoring;
-  panic-like clusters offer Help; never diagnoses / never “start CBT”. `pathSessions` clearable
-  under What SoulCap knows; Settings can hide the Now card. Path copy not clinically reviewed.
-- **Calm** — guided “what do you need?” first; library / experiences / supports / reset / path under
-  “Also here”; browse-all; offline library (articles + **24 clinical experiences**); bookmarks;
-  daily supports (no streaks).
-- **Now** — greeting → check-in → one skill suggestion (primary); quieter: short path, experience
-  picker, wind-down, drip, optional message, spark. Timeline lives on You.
-- **Journal** — book UI, templates, photos (down-scaled; warn >20), search (mood/feeling/parked),
-  Thought Parking, on-device speech only when verified local. Emotion vocabulary chips.
-- **People (Constellation)** — SVG map, Still/Drift/Live pace, pinch rings 3–7, long-press rename,
-  opt-in frequency sizing, person notes/events/ring history, safety-plan pull.
-- **You** — sections: About you (profile, story, What SoulCap knows) · Your insights (journey,
-  weekly, patterns, timeline) · Your tools (plan, screener, principles, manual) · Settings.
-- **Locale** — `en` | `rui` (Roman Urdu LTR preview). Chrome partially localized; clinical /
-  safety / technique / library bodies stay English until clinical-copy review. One dismissible
-  clinical-English notice when `rui`.
-- **Safety kernel** — keyword tiers 0–3 in `docs/app.js`, mirrored in Nest lab. Tier 3 opens
-  hard-coded Help on check-in feeling **and** journal, Your story, safety plan, parked thoughts,
-  person notes, manual lines, principles, reflection notes (content still saves when storage allows).
-  Path core uses chips only (no free text). No crisis phone numbers; `sms:` only for “Message someone.”
+- **Design System v3 Amethyst** — dark-first elevation, grain, glow heroes, raised cards, accent-grad
+  primary. Themes re-derived. Engines preserved from 2.1.
+- **Five tabs:** Now · Calm · Journal · People · You. **Settings sheet** off You. Splash + welcome +
+  18+ onboarding (progress dots). About + What’s new.
+- **37 techniques** · Guided runner · Spoken guidance local-only · exercise pace.
+- **Guided Path** — arrival → chips → **approach recommendation** (CBT/DBT/ACT/BA educational packs)
+  → exercises → runner. Panic-like → Help. Never diagnoses. `pathSessions` + approachId.
+- **Calm** — guided first; Also here (path, library, experiences, supports).
+- **Now** — hero + check-in + one raised suggestion + week glance; **Explore** folds path /
+  experiences / wind-down / drip.
+- **Journal / People** — book UI + Constellation (reskinned via tokens).
+- **You** — About / Insights (**Progress dashboard**) / Tools / Settings.
+- **Safety kernel** — tiers 0–3; no crisis numbers; `sms:` only for Message someone.
 
 ### Schema & ship
-- State `DEFAULT.v = 12` · SW `soulcap-v300` · app **3.0.0** · mirrors: theme, appearance, locale,
+- State `DEFAULT.v = 12` · SW `soulcap-v301` · app **3.0.1** · mirrors: theme, appearance, locale,
   clinical-notice dismiss / `seenVersion`. Optional `windDownHour`. `screenerResults` (PHQ/GAD).
   `pathSessions` + `pathPrefs`.
 - Ship workflow: bump CACHE + VERSION.json + APP_VERSION together; CHANGELOG; SAFETY/HANDOVER;

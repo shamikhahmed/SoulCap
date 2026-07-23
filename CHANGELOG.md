@@ -4,6 +4,21 @@
 - Flaky Playwright: wait for CSS animations idle + `reducedMotion` before theme contrast and journal
   control size assertions (`e2e/app.spec.ts`, `e2e/personas.spec.ts`).
 
+## [3.0.1] — 2026-07-23
+
+### Added
+- **Progress dashboard** on You — week dots (not a streak), exercise/check-in/journal/path glance.
+- **Approach packs** after Guided Path — CBT / DBT / ACT / behavioural-activation educational
+  recommendation + linked exercises (runner). Warm why-copy; never diagnosis.
+
+### Changed
+- **Component kit** (SPEC §5): raised cards, opt/chip/input elevation, empty-state, seg, notice,
+  tab bar surface polish.
+- **Now** flagship: hero glow, raised suggestion, week progress glance, Explore folds path /
+  experiences / wind-down / drip.
+- **Welcome / onboarding**: larger mark + ambient glow; progress dots.
+- SW `soulcap-v301`. App **3.0.1**. Schema still **v12**.
+
 ## [3.0.0] — 2026-07-23
 
 ### Changed

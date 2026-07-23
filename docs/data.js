@@ -283,7 +283,10 @@ var PATH_UI = {
   advancedHint:'Gentle labels for how thinking can tilt — not a diagnosis.',
   pickArrival:'Choose how you are arriving to continue.',
   pickChip:'Pick at least one thing you notice, or go back.',
-  familyLabel:'Starting place'
+  familyLabel:'Starting place',
+  approachLabel:'An approach you could try',
+  approachMore:'Other exercises in this approach',
+  tryExercise:'Try'
 };
 
 var PATH_ARRIVALS = [
@@ -335,6 +338,56 @@ var PATH_REASONS = {
   connection:'A tiny step toward people can reverse withdrawal — only if it feels safe enough.'
 };
 
+/* Approach packs (v3) — educational recommendation after path chips.
+ * Titles name approaches warmly; never "you have X" or modality-as-prescription. */
+var APPROACH_PACKS = {
+  cbt: {
+    title:'Working with thoughts',
+    shortLabel:'CBT ideas',
+    family:'cognitive',
+    chips:['worry','spin','allornothing','mindread','overgeneral'],
+    why:'You mentioned a lot of what-if or looping thoughts — an approach called CBT works on looking at thoughts as thoughts. Not a diagnosis, just a good fit to try.',
+    skills:['thought-record','worry-vs-problem','defusion','count-backwards']
+  },
+  dbt: {
+    title:'Steadying when feelings run hot',
+    shortLabel:'DBT ideas',
+    family:'autonomic',
+    chips:['heart','tension','edge'],
+    why:'When the body alarm is loud, distress-tolerance moves from DBT often start with the body first. Not a diagnosis — a practical place to begin.',
+    skills:['physiological-sigh','grounding-54321','pmr','ice-hold','humming','cold-water','box-breathing']
+  },
+  act: {
+    title:'Making room for hard feelings',
+    shortLabel:'ACT ideas',
+    family:'cognitive',
+    chips:['avoid','spin'],
+    why:'Avoiding or fighting a feeling can tighten the knot. ACT-style moves practise noticing, stepping back, and choosing a small valued step. Not a diagnosis.',
+    skills:['defusion','values-check','opposite-action']
+  },
+  ba: {
+    title:'Small steps when energy is low',
+    shortLabel:'Behavioural activation',
+    family:'activation',
+    chips:['low','avoid'],
+    why:'When energy is flat, waiting to feel like acting often waits forever. Behavioural activation starts with one tiny outward step. Not a diagnosis — a gentle experiment.',
+    skills:['behavioural-activation','ten-minute-walk','opposite-action']
+  }
+};
+
+var PROGRESS_UI = {
+  title:'Your progress',
+  weekLabel:'This week',
+  weekEmpty:'This week is still open — no pressure.',
+  weekDays:'{n} day{s} with a check-in or exercise · not a streak.',
+  exercises:'Exercises completed',
+  checkins:'Check-ins',
+  journals:'Journal entries',
+  paths:'Short paths tried',
+  gentle:'Gentle glance only — no scores, no streaks, no targets.',
+  empty:'As you check in and try exercises, a quiet picture of the weeks builds here.'
+};
+
 var ABOUT_UI = {
   title:'About SoulCap',
   purpose:'A calm, private place for self-regulation skills, a journal, and the people around you.',
@@ -346,7 +399,7 @@ var ABOUT_UI = {
 
 var WHATS_NEW_UI = {
   title:'What’s new',
-  body:'SoulCap 2.1 — a short optional path: how you are arriving, what you notice, then one exercise that may fit. Still private and offline. Not therapy, not a diagnosis.',
+  body:'SoulCap 3.0 — Amethyst look, a clearer Now (one suggestion + week glance + Explore), approach ideas after a short path, and a quiet progress card on You. Still private and offline. Not therapy, not a diagnosis.',
   dismiss:'Got it'
 };
 

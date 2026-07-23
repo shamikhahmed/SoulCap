@@ -1,6 +1,6 @@
 # SoulCap
 
-**v3.0.0 — offline-first wellness PWA.** Amethyst dark-first shell; Guided Path; 37 exercises;
+**v3.0.1 — offline-first wellness PWA.** Amethyst dark-first shell; Guided Path + approach packs; 37 exercises;
 clinical experiences; journal; Constellation. **Not** therapy · not diagnosis · not crisis service.
 See [`SAFETY.md`](SAFETY.md).
 
@@ -13,7 +13,7 @@ See [`SAFETY.md`](SAFETY.md).
 
 | Surface | URL / path | Reality |
 |---|---|---|
-| **PWA** | [shamikhahmed.github.io/SoulCap](https://shamikhahmed.github.io/SoulCap/) · `docs/` | The product (**3.0.0** / schema v12). Amethyst UI, five tabs, Guided Path, Settings + About, Personal Manual, Thought Parking, optional detailed check-ins, inspectable local patterns, 37 exercises, offline library (articles + 24 experiences), no-streak daily supports, book-style journal, Constellation, Roman Urdu chrome preview, Help on free-text, themes, voice + haptics. **Zero network calls — localStorage only.** |
+| **PWA** | [shamikhahmed.github.io/SoulCap](https://shamikhahmed.github.io/SoulCap/) · `docs/` | The product (**3.0.1** / schema v12). Amethyst UI, five tabs, Guided Path, Settings + About, Personal Manual, Thought Parking, optional detailed check-ins, inspectable local patterns, 37 exercises, offline library (articles + 24 experiences), no-streak daily supports, book-style journal, Constellation, Roman Urdu chrome preview, Help on free-text, themes, voice + haptics. **Zero network calls — localStorage only.** |
 | Nest API | `backend/` | Full module **source** (LMM, safety gate). Builds clean, **not deployed**; PWA does not call it. |
 | Expo | `mobile/` | Thin client source. Lab only. |
 

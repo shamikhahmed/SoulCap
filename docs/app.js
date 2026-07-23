@@ -878,7 +878,18 @@
         var chips = selectedIds();
         var scored = scorePathFamilies(chips);
         var family = scored.family;
+        var approach = approachForFamily(family, chips);
         var skills = suggestPathSkills(family, chips);
+        if (approach && approach.skills && approach.skills.length) {
+          var fromPack = [];
+          approach.skills.forEach(function (sid) {
+            var sk = SKILLS.filter(function (x) { return x.id === sid; })[0];
+            if (sk && fromPack.indexOf(sk) === -1) fromPack.push(sk);
+          });
+          if (fromPack.length) skills = fromPack.concat(skills.filter(function (s) {
+            return fromPack.indexOf(s) === -1;
+          }));
+        }
         var pathPick = suggestSkill();
         var top = skills[0] || (pathPick && pathPick.skill) || SKILLS[0];
         var panic = pathPanicCluster(arrival.key, chips);
@@ -888,11 +899,13 @@
           var chip = pathChipById(cid);
           if (!expId && chip && chip.experiences && chip.experiences[0]) expId = chip.experiences[0];
         });
-        p.appendChild(el('p', { class: 'eyebrow', text: PATH_UI.familyLabel }));
-        p.appendChild(el('h2', { class: 'card-title', text: famMeta.label }));
-        p.appendChild(el('p', { class: 'p-voice', text: PATH_REASONS[family] || famMeta.note }));
-        p.appendChild(el('p', { class: 'p-sm', text: PATH_UI.footnote }));
-        p.appendChild(el('div', { class: 'notice', text: PATH_UI.disclaimer }));
+        p.appendChild(el('div', { class: 'path-result hero-glow' }, [
+          el('p', { class: 'eyebrow', text: PATH_UI.approachLabel }),
+          el('h2', { class: 'card-title', text: approach ? approach.title : famMeta.label }),
+          el('p', { class: 'p-voice', text: approach ? approach.why : (PATH_REASONS[family] || famMeta.note) }),
+          el('p', { class: 'p-sm', text: PATH_UI.footnote }),
+          el('div', { class: 'notice', text: PATH_UI.disclaimer })
+        ]));
         if (panic) {
           p.appendChild(el('div', { class: 'card mt-3' }, [
             el('p', { class: 'p-sm', text: PATH_UI.offerHelpHint }),
@@ -900,14 +913,14 @@
           ]));
         }
         if (top) {
-          p.appendChild(el('div', { class: 'card now-suggest mt-3 path-result-card' }, [
+          p.appendChild(el('div', { class: 'card raised now-suggest mt-3 path-result-card' }, [
             el('h2', { class: 'card-title', text: top.name }),
             el('p', { class: 'meta', text: top.mins + ' min · works offline' }),
             el('p', { class: 'p-sm', text: top.blurb || '' }),
             el('button', { class: 'btn', text: PATH_UI.begin, onclick: function () {
               var session = {
                 id: uid(), t: Date.now(), arrival: arrival.key, chips: chips,
-                family: family, skillId: top.id
+                family: family, approachId: approach ? approach.id : null, skillId: top.id
               };
               if (!todayCheckin() && arrival.checkin) recordCheckin(arrival.checkin);
               savePathSession(session);
@@ -916,15 +929,18 @@
             } })
           ]));
         }
-        if (skills[1]) {
-          p.appendChild(el('button', { class: 'btn ghost', text: PATH_UI.somethingElse + ' · ' + skills[1].name, onclick: function () {
-            savePathSession({
-              id: uid(), t: Date.now(), arrival: arrival.key, chips: chips,
-              family: family, skillId: skills[1].id
-            });
-            closeSheet();
-            startSkill(skills[1].id);
-          } }));
+        if (skills.length > 1) {
+          p.appendChild(el('p', { class: 'eyebrow mt-3', text: PATH_UI.approachMore }));
+          skills.slice(1, 4).forEach(function (alt) {
+            p.appendChild(el('button', { class: 'btn ghost', text: PATH_UI.tryExercise + ' · ' + alt.name, onclick: function () {
+              savePathSession({
+                id: uid(), t: Date.now(), arrival: arrival.key, chips: chips,
+                family: family, approachId: approach ? approach.id : null, skillId: alt.id
+              });
+              closeSheet();
+              startSkill(alt.id);
+            } }));
+          });
         }
         if (expId) {
           p.appendChild(el('button', { class: 'btn quiet', text: PATH_UI.readAbout, onclick: function () {
@@ -3526,7 +3542,7 @@
   }
   function renderNow() {
     var v = $('#view-now'); clear(v);
-    v.appendChild(el('div', {}, [
+    v.appendChild(el('div', { class: 'now-hero hero-glow' }, [
       el('p', { class: 'eyebrow', text: new Date().toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' }) }),
       el('h1', { class: 'h-voice', text: greeting() })
     ]));
@@ -3550,7 +3566,6 @@
       ]));
     }
 
-    // Primary: check-in → one suggestion. Everything else quieter.
     var primary = el('div', { class: 'now-primary' });
     var states = ['Steady', 'Wired', 'Flat', 'Heavy', 'Not sure'];
     var rc = todayCheckin(), today = rc ? rc.state : null;
@@ -3575,14 +3590,34 @@
       primary.appendChild(el('button', { class: 'btn ghost', text: hasDetail ? tUi('checkin', 'editDetail', CHECKIN_UI) : tUi('checkin', 'addDetail', CHECKIN_UI), onclick: checkinDetailSheet }));
     }
     var pick = suggestSkill(), dm = DOMAIN_META[pick.skill.domain];
-    primary.appendChild(el('div', { class: 'card now-suggest' }, [
+    primary.appendChild(el('div', { class: 'card raised now-suggest' }, [
       el('div', { class: 'card-head' }, [el('h2', { class: 'card-title', text: pick.skill.name }), el('span', { class: 'domain', style: 'color:var(' + dm.cssVar + ')', text: dm.label })]),
       el('p', { class: 'meta', text: pick.skill.mins + ' min · works offline' }),
       el('p', { class: 'reason', text: reasonText(pick) }),
       el('button', { class: 'btn', text: 'Begin', onclick: function () { startSkill(pick.skill.id); } }),
       el('button', { class: 'btn quiet', text: 'Something else', onclick: function () { calm.browse = false; selectTab('calm'); } })
     ]));
+    var dots = weekActivityDots();
+    primary.appendChild(el('div', { class: 'progress-glance', 'aria-label': 'This week' }, [
+      el('p', { class: 'glance-label', text: 'This week' }),
+      el('div', { class: 'progress-dots', role: 'img', 'aria-label': weekActivityLabel(dots) }, dots.map(function (d) {
+        return el('i', { class: d.on ? 'on' : '', title: d.key });
+      })),
+      el('p', { class: 'glance-sub', text: weekActivityLabel(dots) })
+    ]));
     v.appendChild(primary);
+
+    v.appendChild(el('button', {
+      class: 'btn ghost explore-toggle',
+      'aria-expanded': nowExploreOpen ? 'true' : 'false',
+      text: nowExploreOpen ? 'Hide explore' : 'Explore',
+      onclick: function () { nowExploreOpen = !nowExploreOpen; render(); }
+    }));
+
+    if (!nowExploreOpen) {
+      v.appendChild(el('button', { class: 'help-btn', text: t('helpNow'), onclick: openPanic }));
+      return;
+    }
 
     var quiet = el('div', { class: 'now-quiet' });
     if (!state.pathPrefs || !state.pathPrefs.hide) {
@@ -3618,15 +3653,6 @@
         el('p', { class: 'reason', text: 'You said ' + person.name + ' usually helps when things are hard.' }),
         el('p', { class: 'p-sm', text: 'SoulCap never sends anything. This just opens your own messages.' }),
         el('a', { class: 'btn ghost', href: 'sms:', style: 'text-decoration:none', text: 'Open messages' })
-      ]));
-    }
-    var recent = state.checkins.slice(-7);
-    if (recent.length > 1) {
-      var order = { Steady: 8, 'Not sure': 18, Flat: 26, Wired: 31, Heavy: 37 };
-      var pts = recent.map(function (c, i) { return (6 + i * (268 / Math.max(recent.length - 1, 1))).toFixed(0) + ',' + (order[c.state] || 20); }).join(' ');
-      quiet.appendChild(el('div', {}, [
-        el('p', { class: 'eyebrow', text: 'Recent days · ' + recent.length }),
-        el('div', { class: 'spark', html: '<svg viewBox="0 0 280 46" preserveAspectRatio="none" width="100%" height="46" aria-hidden="true"><polyline points="' + pts + '" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/></svg>' })
       ]));
     }
     v.appendChild(quiet);
@@ -3780,7 +3806,30 @@
     var insights = el('div', { class: 'section-block me-insights' }, [
       el('p', { class: 'eyebrow', text: tUi('me', 'sectionInsights', { sectionInsights: 'Your insights' }) })
     ]);
+    var progDots = weekActivityDots();
+    var progN = progDots.filter(function (x) { return x.on; }).length;
+    var weekLine = progN
+      ? PROGRESS_UI.weekDays.replace('{n}', '' + progN).replace('{s}', progN === 1 ? '' : 's')
+      : PROGRESS_UI.weekEmpty;
     var runs = state.skillRuns.length, helped = state.skillRuns.filter(function (r) { return r.helpful; }).length;
+    var pathN = (state.pathSessions || []).length;
+    insights.appendChild(el('div', { class: 'card raised progress-dash' }, [
+      el('h2', { class: 'card-title', text: PROGRESS_UI.title }),
+      el('p', { class: 'glance-label', text: PROGRESS_UI.weekLabel }),
+      el('div', { class: 'progress-dots', role: 'img', 'aria-label': weekLine }, progDots.map(function (d) {
+        return el('i', { class: d.on ? 'on' : '' });
+      })),
+      el('p', { class: 'glance-sub', text: weekLine }),
+      (runs || state.checkins.length || state.journal.length || pathN)
+        ? el('div', { class: 'progress-stats' }, [
+            el('p', { class: 'p-sm', text: PROGRESS_UI.exercises + ' · ' + runs + (helped ? ' (' + helped + ' felt helpful)' : '') }),
+            el('p', { class: 'p-sm', text: PROGRESS_UI.checkins + ' · ' + state.checkins.length }),
+            el('p', { class: 'p-sm', text: PROGRESS_UI.journals + ' · ' + state.journal.length }),
+            pathN ? el('p', { class: 'p-sm', text: PROGRESS_UI.paths + ' · ' + pathN }) : null
+          ])
+        : el('p', { class: 'p-sm', text: PROGRESS_UI.empty }),
+      el('p', { class: 'reason', text: PROGRESS_UI.gentle })
+    ]));
     if (runs || state.checkins.length) {
       var top = {}; state.skillRuns.forEach(function (r) { if (r.helpful) top[r.id] = (top[r.id] || 0) + 1; });
       var best = Object.keys(top).sort(function (a, b) { return top[b] - top[a]; })[0];
@@ -3967,7 +4016,7 @@
       p.appendChild(el('button', { class: 'btn quiet', text: tUi('principles', 'close', PRINCIPLES_UI), onclick: closeSheet }));
     });
   }
-  var APP_VERSION = '3.0.0';
+  var APP_VERSION = '3.0.1';
   function settingsGroup(v, title, kids) { v.appendChild(el('p', { class: 'eyebrow', style: 'margin-top:var(--space-3)', text: title })); kids.forEach(function (k) { if (k) v.appendChild(k); }); }
   function toggleBtn(label, on, fn) {
     return el('button', { class: 'btn ghost', style: 'display:flex;justify-content:space-between', onclick: fn,
@@ -3990,6 +4039,60 @@
   }
 
   var voiceFilter = 'All';
+  var nowExploreOpen = false;
+  function weekActivityDots() {
+    var dots = [], i, d, key, has;
+    for (i = 6; i >= 0; i--) {
+      d = new Date();
+      d.setHours(12, 0, 0, 0);
+      d.setDate(d.getDate() - i);
+      key = localDayKey(d.getTime());
+      has = (state.checkins || []).some(function (c) { return localDayKey(c.t) === key; }) ||
+        (state.skillRuns || []).some(function (r) { return localDayKey(r.t) === key; });
+      dots.push({ key: key, on: has });
+    }
+    return dots;
+  }
+  function weekActivityLabel(dots) {
+    var n = dots.filter(function (x) { return x.on; }).length;
+    if (!n) return 'This week is still open — no pressure.';
+    return n + ' day' + (n === 1 ? '' : 's') + ' with a check-in or exercise · not a streak.';
+  }
+  function approachForFamily(family, chipIds) {
+    if (typeof APPROACH_PACKS === 'undefined' || !APPROACH_PACKS) return null;
+    var packs = APPROACH_PACKS, best = null, bestScore = -1, id, pack, score;
+    for (id in packs) {
+      if (!packs.hasOwnProperty(id)) continue;
+      pack = packs[id];
+      score = 0;
+      if (pack.family === family) score += 4;
+      (chipIds || []).forEach(function (cid) {
+        if (pack.chips && pack.chips.indexOf(cid) !== -1) score += 2;
+      });
+      if (score > bestScore) {
+        bestScore = score;
+        best = {
+          id: id,
+          title: pack.title,
+          shortLabel: pack.shortLabel,
+          family: pack.family,
+          chips: pack.chips,
+          why: pack.why,
+          skills: pack.skills
+        };
+      }
+    }
+    if (bestScore > 0) return best;
+    return packs.cbt ? {
+      id: 'cbt',
+      title: packs.cbt.title,
+      shortLabel: packs.cbt.shortLabel,
+      family: packs.cbt.family,
+      chips: packs.cbt.chips,
+      why: packs.cbt.why,
+      skills: packs.cbt.skills
+    } : null;
+  }
   function voiceSheet() {
     loadVoices();
     openSheet(function (p) {
@@ -4059,13 +4162,13 @@
   /* ── Welcome & onboarding ──────────────────────────────────────────────── */
   function renderWelcome() {
     var v = $('#view-welcome'); clear(v);
-    v.appendChild(el('div', { style: 'flex:1;display:flex;flex-direction:column;justify-content:center;gap:22px' }, [
-      el('img', { src: 'icons/mark.svg', alt: '', width: '62', height: '62' }),
+    v.appendChild(el('div', { class: 'welcome-hero' }, [
+      el('img', { class: 'welcome-mark', src: 'icons/mark.svg', alt: '', width: '96', height: '96' }),
       el('h1', { class: 'h-voice', style: 'font-size:34px', text: tUi('welcome', 'title', { title: 'A quiet place to steady yourself.' }) }),
       el('p', { class: 'p-voice', text: tUi('welcome', 'subtitle', { subtitle: 'Techniques that work in a few minutes. A private journal. A map of the people around you. Everything stays on your phone.' }) }),
       el('p', { class: 'p-sm', text: tUi('welcome', 'tagline', { tagline: 'Not therapy. Not a crisis service. Just something that helps.' }) })
     ]));
-    v.appendChild(el('div', { class: 'stack' }, [
+    v.appendChild(el('div', { class: 'welcome-actions' }, [
       el('button', { class: 'btn', text: tUi('welcome', 'begin', { begin: 'Begin' }), onclick: function () { state.welcomed = true; save(); render(); } }),
       el('button', { class: 'help-btn', text: t('helpNow'), onclick: openPanic })
     ]));
@@ -4073,8 +4176,8 @@
   var obStep = 0;
   function renderOnboarding() {
     var v = $('#view-onboarding'); clear(v);
-    v.appendChild(el('div', { style: 'display:flex;gap:5px;margin-bottom:8px' }, [0, 1, 2, 3].map(function (i) {
-      return el('i', { style: 'height:3px;flex:1;border-radius:2px;display:block;background:' + (i <= obStep ? 'var(--accent)' : 'var(--line-strong)') });
+    v.appendChild(el('div', { class: 'onboard-dots', role: 'progressbar', 'aria-valuemin': '1', 'aria-valuemax': '4', 'aria-valuenow': String(obStep + 1), 'aria-label': 'Onboarding step ' + (obStep + 1) + ' of 4' }, [0, 1, 2, 3].map(function (i) {
+      return el('i', { class: i <= obStep ? 'on' : '' });
     })));
     if (obStep === 0) {
       v.appendChild(el('h1', { class: 'h-voice', text: tUi('onboarding', 'ageTitle', { ageTitle: 'First — how old are you?' }) }));
@@ -4254,7 +4357,7 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '3.0.0',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '3.0.1',
     experienceIds: EXPERIENCES.map(function (item) { return item.id; }),
     experienceHelpsOk: function () {
       return EXPERIENCES.every(function (exp) {
@@ -4292,6 +4395,7 @@
     scorePathFamilies: scorePathFamilies,
     pathPanicCluster: pathPanicCluster,
     suggestPathSkills: suggestPathSkills,
+    approachForFamily: approachForFamily,
     setSeenVersion: function (v) {
       if (!state.notices) state.notices = clone(DEFAULT.notices);
       state.notices.seenVersion = v;
