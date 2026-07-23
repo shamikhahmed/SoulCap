@@ -20,7 +20,7 @@ less. See `AGENTS.md §2` for the hard rules — every item inherits them.
 
 ## The three non-code blockers (gate any "it helps" claim)
 1. Licensed clinician reviews the techniques → then remove the "not yet reviewed" banner.
-2. Roman Urdu clinical-copy reviewer + localisation (LTR preview ships; clinical English until review).
+2. Roman Urdu clinical-copy reviewer + localisation (LTR chrome preview ships; clinical English until review).
 3. (No crisis lines ship, per owner — so no re-verification needed unless that reverses.)
 
 ---
@@ -126,7 +126,10 @@ less. See `AGENTS.md §2` for the hard rules — every item inherits them.
 - SW `soulcap-v180`.
 
 ### Next (v1.9+)
+- Encrypted optional local backup (passphrase) — lost phone ≠ lost journal.
+- Broader Roman Urdu chrome (editor / person sheets) still preview; clinical English until review.
 - Quiet Wins deferred (manipulative risk).
+- IndexedDB only if localStorage quota pain appears in the wild.
 
 ---
 

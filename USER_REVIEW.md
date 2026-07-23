@@ -1,9 +1,11 @@
-# SoulCap v1.2.0 — Synthetic User Review
+# SoulCap v1.8.0 — Synthetic User Review (historical base: v1.2 journeys)
 
-**Reviewed:** 2026-07-22
-**Scope:** onboarding, Help, Now, optional check-in detail, local patterns, presentation controls,
-Calm, offline emotional library, daily supports, journal, Constellation, persistence, privacy,
-mobile, desktop, reduced motion, marketing page, and screenshot gallery.
+**Reviewed:** 2026-07-22 (personas); **docs refreshed:** 2026-07-23 for v1.8.0 context
+**Scope (original):** onboarding, Help, Now, optional check-in detail, local patterns, presentation
+controls, Calm, offline emotional library, daily supports, journal, Constellation, persistence,
+privacy, mobile, desktop, reduced motion, marketing page, and screenshot gallery.
+**Since then (not re-run as full human review):** Settings sheet, Roman Urdu chrome, Personal Manual,
+Thought Parking, Emotional Timeline, map pace, tier-3 Help on free-text surfaces, premium polish.
 
 ## Method and limits
 
@@ -153,8 +155,10 @@ normal page scrolling keeps every action reachable.
 
 ## Release evidence
 
-- 164 Playwright checks across mobile and desktop.
+- Original v1.0 gate: 164 Playwright checks; **current v1.8.0 gate ~226** (mobile + desktop).
 - Five existing synthetic persona journeys plus library and no-streak support scenarios.
 - Manual 390×844 library and daily-support review: no overflow; all measured Calm targets ≥54px.
 - Article contract audit: six complete records and all 18 related exercise links resolve.
+- Post-v1.2 features (Settings, Manual, Roman Urdu chrome, free-text tier-3 Help) have automated
+  coverage; full human VoiceOver re-pass remains open.
 

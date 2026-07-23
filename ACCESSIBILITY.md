@@ -1,6 +1,6 @@
 # SoulCap Accessibility Contract
 
-**Version:** 1.2.0
+**Version:** 1.8.0 · **Updated:** 2026-07-23
 
 ## Baseline
 
@@ -10,10 +10,11 @@
 - Interactive controls have visible keyboard focus and semantic names.
 - Dialogs are named, modal, focus-trapped, Escape-dismissable where safe, and restore focus.
 - Colour is never the only carrier of meaning.
-- Light, dark, night, and mood themes use semantic tokens rather than component hard-coding.
-- `prefers-reduced-motion` collapses animations and repeated motion.
-- RTL layout helpers exist for the Urdu preview (`dir=rtl`); clinical/safety strings stay English
+- Light, dark, night, AMOLED, and mood themes use semantic tokens rather than component hard-coding.
+- `prefers-reduced-motion` collapses travel/scale/blur to short opacity fades (≤80–90ms).
+- Locale `rui` (Roman Urdu) is **LTR only** (Latin script). Clinical/safety strings stay English
   until a native clinical-copy review lands.
+- Journal editor uses `:focus-visible` rings (not outline-less fields).
 
 ## User presentation controls
 
@@ -26,10 +27,9 @@ Theme and presentation are independent:
 - Standard and higher contrast
 - Standard and reduced transparency
 
-Choices are applied before first paint from validated local mirrors, then reconciled with the
-canonical state. Large text must not reduce a tap target, hide a primary action, or introduce
-horizontal page overflow at 320px CSS width. Help and Exercise dialogs remain usable at 200%
-browser zoom (automated smoke).
+Choices apply before first paint from validated local mirrors, then reconcile with canonical state.
+Large text must not shrink tap targets, hide a primary action, or introduce horizontal overflow at
+320px CSS width. Help and Exercise dialogs remain usable at 200% browser zoom (automated smoke).
 
 ## Check-in requirements
 
@@ -43,8 +43,8 @@ browser zoom (automated smoke).
 ## Automated gates
 
 Playwright covers mobile and desktop smoke, keyboard/dialog behavior, compact-label hierarchy,
-48px targets, reduced motion, presentation persistence, slider naming, and no horizontal overflow.
-Safety-critical accessibility is part of deploy-gating tests.
+48px targets, reduced motion, presentation persistence, slider naming, locale chrome, and no
+horizontal overflow. Safety-critical accessibility is part of deploy-gating tests.
 
 ## Library and daily supports
 
@@ -59,7 +59,7 @@ Safety-critical accessibility is part of deploy-gating tests.
 - VoiceOver on a current iPhone: onboarding, Now, detail sheet, Calm, journal, People, You, Help
 - Dynamic Type/browser zoom at 200% on core paths
 - Keyboard-only desktop pass including all sheets and dialogs
-- Light, dark, night, and high-contrast visual review
+- Light, dark, night, AMOLED, and high-contrast visual review
 - Reduced-motion review on breathing, maps, sheets, splash, and runner
 - Touch review at 320px, 390px, and tablet widths
 

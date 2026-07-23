@@ -14,6 +14,11 @@
 - Removed unused `.panic-call` / `.crisis-alt` CSS.
 - SW `soulcap-v180`.
 
+### Docs (2026-07-23)
+- Synced HANDOVER, ARCHITECTURE, DATA_MODEL, ACCESSIBILITY, PRIVACY, EVALUATION, SAFETY, CLINICAL,
+  FEATURES, ROADMAP, INVESTOR_DECK, USER_REVIEW, and PRESENTATION to **1.8.0** / schema **v10** /
+  ~226 tests / Roman Urdu LTR / free-text tier-3 Help. Fixed stale RTL and “check-in only” claims.
+
 ## [1.7.0] — 2026-07-22
 
 ### Added

@@ -1,6 +1,6 @@
 # SoulCap Privacy Contract
 
-**Version:** 1.2.0
+**Version:** 1.8.0 · **Updated:** 2026-07-23
 
 ## Promise
 
@@ -10,17 +10,20 @@ the browser's local storage unless the user explicitly exports a file.
 
 ## Data inventory
 
-- Profile and optional personal history
+- Profile and optional personal history (“Your story”)
 - Arrival check-ins and optional dimensions, direct needs, tags, and short phrases
 - Exercise history, favourites, and helpful/not-helpful feedback
-- Journal entries, stickers, and down-scaled local images
-- Constellation people, closeness, optional links, and optional contact timestamps
+- Journal entries, stickers, emotion words, down-scaled local images, Thought Parking
+- Constellation people, closeness, optional links, contact timestamps, notes, events, ring history
 - Safety-plan text
-- Theme, presentation, voice, haptic, and personalisation settings
+- Theme, presentation, voice, haptic, locale, map pace, and personalisation settings
 - Chosen daily supports and per-local-day completion IDs
+- Reset menu items and same-day completion IDs
+- Principles, Personal Manual lines, library bookmarks, reflection prefs
+- Local drip answers and user-model estimates (never diagnoses)
 
-No location, contacts, message contents, microphone audio, advertising identifiers, or account
-credentials are collected.
+No location, contacts, message contents, microphone audio blobs, advertising identifiers, or
+account credentials are collected.
 
 ## Device integrations
 
@@ -34,29 +37,18 @@ credentials are collected.
 ## Local analysis
 
 Recommendation ranking and patterns use controlled fields only. Pattern evidence is a list of
-local check-in IDs/dates and never includes journal text. The optional check-in phrase is checked
-against the offline safety keyword kernel so hard-coded Help can appear for explicit tier-3
-wording. It is not transmitted, embedded, classified remotely, or reused for pattern mining.
+local check-in IDs/dates and never includes journal text. Free-text surfaces (check-in phrase,
+journal, story, plan, parking, notes, manual, principles, reflection) are assessed by the offline
+keyword safety kernel so hard-coded Help can appear for explicit tier-3 wording. Text is not
+transmitted, embedded, classified remotely, or reused for pattern mining.
 Library search compares typed text against bundled article titles, summaries, and tags in memory.
-Daily-support completion stays separate from recommendation and pattern scoring.
 
-## User control
+## Export and delete
 
-- Every optional check-in detail can be skipped.
-- Pattern observations can be inspected, corrected, hidden, or disabled.
-- Daily supports can be selected or removed at any time; no streak or adherence score is derived.
-- Export produces a local JSON file under user control.
-- Delete removes the canonical state and display mirrors. There is no remote copy to delete.
-- SoulCap has no retention schedule because it has no server-side custody; browser storage lasts
-  until the user, browser, or operating system clears it.
+- Export downloads a JSON file of local state to the device; it does not upload.
+- Delete permanently clears SoulCap keys and returns to defaults. There is no server copy to erase.
 
-## Threat model and limits
+## Quota
 
-Local-only is not equivalent to encrypted-at-rest. Anyone with access to an unlocked device,
-browser profile, backup, or developer tools may be able to read localStorage. Private browsing,
-storage pressure, or browser cleanup may remove data. SoulCap must not imply secure cloud backup,
-multi-device sync, medical-record protection, or recovery after deletion.
-
-Any future sync, clinician portal, account, remote model, or analytics proposal requires a new
-architecture decision, authentication and authorization design, encryption and key-management
-plan, retention/deletion policy, incident response, consent flow, and independent security review.
+All data (including base64 photos) shares one `localStorage` quota (~5MB typical). The app warns
+when a journal entry has many photos and surfaces a calm notice when a save fails for quota.

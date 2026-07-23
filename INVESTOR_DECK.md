@@ -1,9 +1,9 @@
 # SoulCap — Investor Deck
 
-> **Product honesty (read first):** The v1.2.0 release candidate is an offline
-> **self-guided wellness PWA** — deterministic suggestions, keyword safety, and a private
-> on-device journal. NestJS + model orchestration in `backend/` is **lab source only (not
-> deployed)**. Do not pitch the Pages demo as AI, therapy, clinical care, or a crisis service.
+> **Product honesty (read first):** The live product (**v1.8.0**) is an offline
+> **self-guided wellness PWA** — deterministic suggestions, keyword safety on free-text surfaces,
+> and a private on-device journal. NestJS + model orchestration in `backend/` is **lab source only
+> (not deployed)**. Do not pitch the Pages demo as AI, therapy, clinical care, or a crisis service.
 > See `README.md` and `SAFETY.md`.
 
 ## Directional narrative (lab + raise framing)

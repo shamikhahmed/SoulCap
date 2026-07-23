@@ -3,104 +3,68 @@
 # SoulCap — Project Handover
 
 > **⚠️ This document below the divider is historical (v0.3.0).** Read this header block
-> first — it is the current truth as of 2026-07-22. The sections further down describe an
+> first — it is the current truth as of 2026-07-23. The sections further down describe an
 > earlier architecture and are kept for reference only.
 
-## Current state (v1.8.0 — 2026-07-22)
+## Current state (v1.8.0 — 2026-07-23)
 
-**The product is the PWA in `docs/`.** Fully rewritten. Offline-first, local-only, **no network
-calls at all** after load — no account, no server, no LLM, no analytics. Everything is
-`localStorage`. Live Pages deploy still needs a push to `main` (CI). Local hub mirror:
-`Cap-Apps/shamikhahmed.github.io/SoulCap/` (rsync from `docs/`). Marketing shots live in
-`shamikhahmed.github.io/assets/screenshots/soulcap*.png`. In-repo gallery:
-`npm run gallery` then open `screen-gallery.html`.
+**The product is the PWA in `docs/`.** Offline-first, local-only, **no network calls after load** —
+no account, no server, no LLM, no analytics. State lives in `localStorage` (schema **v10**).
+Live: https://shamikhahmed.github.io/SoulCap/ · CI gates Pages on Playwright. Hub mirror:
+`Cap-Apps/shamikhahmed.github.io/SoulCap/` · marketing shots `assets/screenshots/soulcap*.png` ·
+in-repo gallery: `npm run gallery` → `screen-gallery.html`.
 
 ### What the PWA is now
-- **Design System v2 "plum & sand"** — palette anchored to the brand mark (violet), chroma held
-  low so it reads calm. Compact iPhone chrome uses a small label scale over 48px tap areas.
-  Themes: Auto, light, dark, **night**, plus mood themes Ocean / Forest / Rain / Space / Sunrise /
-  Minimal / AMOLED.
-- **Five tabs:** Now · Calm · Journal · People · You (Techniques folded into Calm as a guided front door). Splash + welcome screens.
-- **37 techniques** organised by mechanism (nervous system, senses, orienting, crowding out,
-  self-soothing, imagery, sleep, thinking, doing, people). Each documents *why it works*, its
-  contraindications, what it needs to hand, and whether it's discreet enough for public.
-- **Guided runner** — the app moves through each exercise *with* you, walking every step: paced
-  auto-advance with a **visible countdown** in the orb (min ~9s/step, kind to second-language
-  readers), spoken steps (device speech synthesis, local), breathing haptics. **Exercise pace**
-  setting (Slow/Steady/Brisk) + per-run "Pause the timer". Spoken guidance **auto-quiets around
-  people** (silent on panic, and on exercises started after "around people" in Calm); one-tap
-  speaker toggle. Voice picker filters out novelty system voices and labels the rest by accent.
-- **Apple-Watch-style breathing** — paced techniques (box, 4-7-8, physiological sigh) open a
-  setup screen: choose breaths + pace, see the estimated time, then a synced orb + voice +
-  haptics runs the full cycle with in-nose / out-mouth cues, breath count and time remaining.
-  Driven by a `pattern` field on those skills in `data.js`.
-- **Calm tab** — a *guided front door*, not a library mirror: "what do you need right now?"
-  → where you are / what's to hand → a fitted shortlist, with "browse all" behind it.
-- **Offline emotional library + daily supports** — six searchable, evidence-informed articles
-  include support guidance, source notes, review-status honesty, and stable exercise links. Six
-  optional daily supports record only selected IDs and current local-day completion. No streaks,
-  scores, reminders, missed-day pressure, or network.
-- **Adaptive drip + local estimates** — optional tiny questions (cap 4/day) feed gradual
-  estimates with confidence. Viewable/correctable under “What SoulCap knows”; never diagnoses.
-  Schema v8. Urdu is an RTL layout preview only; clinical/safety English remains until review.
-- **Constellation polish** — pinch to add/remove rings (3–7), long-press rename, opt-in node size
-  from logged speak frequency (never importance), and safety-plan pull of supportive people.
-- **Detailed check-ins + local patterns** — the five one-tap arrival words remain the default.
-  Optional detail adds energy, tension, mental noise, social capacity, sleep quality, a direct
-  need, and trigger tags. The You tab derives only thresholded, evidence-backed correlations
-  across distinct days; users can inspect, confirm, reject, hide, or disable them. No journal
-  text mining, score, streak, diagnosis, or server.
-- **Presentation controls** — four purple-family accents, text size, density, higher contrast,
-  and reduced transparency are independent from theme mode and persist before first paint.
-- **Journal** — private paper-feeling book (serif, ruled lines that the text actually sits on):
-  title, free writing, mood, stickers, optional page decoration, and photos down-scaled on device.
-  New entries can start blank or from seven gentle templates. **Voice transcription runs only
-  when the browser verifies an already-installed on-device language pack** — no cloud/webkit
-  fallback and no stored audio blobs. The customisable cover supports a local photo; contents are
-  grouped by month and searchable by title/body.
-- **Theme** — plum remains matched to the logo mark, with optional lilac, mulberry, and indigo.
-  Toggling theme/settings no longer scrolls the page to the top (in-place re-render).
-- **Profile** — name / age / pronouns (optional, local). Home greeting uses the name.
-- **History / "Your story"** — optional, never in onboarding (in You): relationship status,
-  household, family, relatives, work/study, habits, hobbies, past relationships, and (marked
-  sensitive) past trauma. The suggestion engine adapts to it — single / breakup / trauma reshape
-  weighting, and trauma keeps `traumaCaution` techniques out of auto-suggestions. Never diagnoses.
-- **Constellation** — relationship map. **JS-driven slow rotation** (rebuilt: the old CSS spin
-  flung labels off-origin), labels kept upright, 3–**7** rings that are **user-nameable**,
-  drag people in/out to change closeness, optional person-to-person links and contact history
-  (both off by default; contact history never nags). `hard right now` suppresses all suggestions
-  for that person, permanently, silently.
-- **Safety plan** (Stanley-Brown) and Journey view (no score), both in the You tab.
-- **Persistent floating Help** on every tab, plus a Help button on every screen and full-screen
-  panic pacer. Crisis routing is hard-coded, never generated.
+- **Design System v2 “plum & sand”** — logo-anchored violet, low chroma. Themes: Auto / light /
+  dark / **night** + Ocean / Forest / Rain / Space / Sunrise / Minimal / **AMOLED**. Accents:
+  plum / lilac / mulberry / indigo. Text size, density, contrast, transparency. **v1.7 polish:**
+  motion tokens, softer sheets/cards, deep dark surfaces, reduced-motion ≤80–90ms opacity-only.
+- **Five tabs:** Now · Calm · Journal · People · You. **Settings sheet** off You (appearance,
+  language, guided exercises, Constellation pace, data). Splash + welcome + 18+ onboarding.
+- **37 techniques** with mechanisms, contraindications, capacity/needs, discreet flag,
+  traumaCaution. Guided runner + paced breathing sessions. Spoken guidance local-only voices;
+  auto-silent around people / panic; speaker toggle; exercise pace Slow/Steady/Brisk.
+- **Calm** — guided “what do you need?” → context → fitted skills; browse-all; offline library
+  (6 articles, bookmarks); daily supports (no streaks).
+- **Now** — greeting (late until 06:00), check-in (+ optional detail), adaptive drip (≤4/day),
+  skill suggestion, optional message card, gentle reflection cards, reset menu entry from Calm.
+- **Journal** — book UI, templates, photos (down-scaled; warn >20), search (mood/feeling/parked),
+  Thought Parking, on-device speech only when verified local. Emotion vocabulary chips.
+- **People (Constellation)** — SVG map, Still/Drift/Live pace, pinch rings 3–7, long-press rename,
+  opt-in frequency sizing, person notes/events/ring history, safety-plan pull.
+- **You** — profile, Your story, safety plan, journey, weekly summary, patterns with confidence,
+  “What SoulCap knows”, Emotional Timeline, Principles, Personal Manual, Settings.
+- **Locale** — `en` | `rui` (Roman Urdu LTR preview). Chrome partially localized; clinical /
+  safety / technique / library bodies stay English until clinical-copy review. One dismissible
+  clinical-English notice when `rui`.
+- **Safety kernel** — keyword tiers 0–3 in `docs/app.js`, mirrored in Nest lab. Tier 3 opens
+  hard-coded Help on check-in feeling **and** journal, Your story, safety plan, parked thoughts,
+  person notes, manual lines, principles, reflection notes (content still saves when storage allows).
+  No crisis phone numbers; `sms:` only for “Message someone.”
 
-### Safety kernel
-Keyword tier gate (0–3) in `docs/app.js`, ported from `backend/src/ai/safety/safety-gate.service.ts`.
-**The two lists must be kept in sync by hand** until a shared engine package exists. Inflected
-crisis forms are covered (`ending my life`, not just `end my life`). Crisis flows are hard-coded.
-
-### Reaching out (no crisis directory)
-All crisis phone numbers and country selection were **removed at the owner's instruction** — we can't promise any specific line is reachable. The help screen gives gentle, number-free guidance (reach out to someone you trust; contact local emergency services if in danger) and a one-tap "Message someone I trust" that opens the user's own messages. Onboarding no longer asks the user's country.
+### Schema & ship
+- State `DEFAULT.v = 10` · SW `soulcap-v180` · app **1.8.0** · mirrors: theme, appearance, locale,
+  clinical-notice dismiss.
+- Ship workflow: bump CACHE + VERSION.json + APP_VERSION together; CHANGELOG; SAFETY/HANDOVER;
+  `npm run verify`; push `main`.
 
 ### Backend / mobile
-`backend/` (NestJS) builds clean (0 TS errors) but is **not deployed** and the PWA does not call
-it. An earlier duplicate AI stack and a dead JWT auth path are quarantined in `backend/_legacy/`.
-`mobile/` (Expo) is lab source only.
+`backend/` Nest lab (not deployed; PWA never calls it). `backend/_legacy/` quarantined — don’t
+revive. `mobile/` Expo lab only.
 
 ### Tests & CI
-164 Playwright checks across mobile + desktop (`e2e/`). `.github/workflows/deploy.yml` gates the
-GitHub Pages deploy on `npm run verify`. `?demo=1` seeds a Pakistan-region demo.
+~**226** Playwright checks (mobile + desktop Chromium; gallery gated by `CAPTURE_GALLERY=1`).
+`.github/workflows/deploy.yml` runs `npm run verify` then deploys `docs/`.
 
 ### Open blockers (not code)
-1. **No clinician has reviewed any technique or library article.** Stated in-product in Calm.
-2. No Urdu clinical reviewer; no Urdu localisation.
-3. Kernel is keyword-based — blind to oblique risk. Needs the classifier in the eval-harness spec.
-4. Prisma schema has uncommitted enum additions needing a migration before any real DB use.
+1. No clinician has signed off techniques/articles — banner stays.
+2. Roman Urdu clinical-copy review not done — safety/clinical English stays.
+3. Keyword kernel misses oblique risk — needs Kernel v2 / eval harness before any generative text.
+4. Nest Prisma enums still lab-only; no production DB.
 
 ### For the next developer / AI agent
-Start with **`AGENTS.md`** (architecture, hard rules, code conventions, recipes, ship workflow) and
-**`ROADMAP.md`** (build-ready specs for what's next). `.cursorrules` is the short version for Cursor.
-Deeper planning lives in `~/Capricorn-Brain/AI/Claude-Code/SoulCap-*.md`.
+Read **`AGENTS.md`** then **`ROADMAP.md`**. `.cursorrules` is the short Cursor version. Vault notes:
+`~/Capricorn-Brain/01 Projects/SoulCap-Therapy-App.md` and `AI/Claude-Code/SoulCap-*.md`.
 
 ---
 

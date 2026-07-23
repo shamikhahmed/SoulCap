@@ -13,7 +13,7 @@ not a crisis service · not an AI therapist. See [`SAFETY.md`](SAFETY.md).
 
 | Surface | URL / path | Reality |
 |---|---|---|
-| **PWA** | [shamikhahmed.github.io/SoulCap](https://shamikhahmed.github.io/SoulCap/) · `docs/` | The product. Five tabs (Now · Calm · Journal · People · You), optional detailed check-ins, inspectable local patterns, 37 techniques, six searchable offline articles, no-streak daily supports, a book-style journal with verified local transcription, the Constellation, presentation controls, light/dark/night, voice + haptics. **Zero network calls — localStorage only.** |
+| **PWA** | [shamikhahmed.github.io/SoulCap](https://shamikhahmed.github.io/SoulCap/) · `docs/` | The product (**1.8.0** / schema v10). Five tabs (Now · Calm · Journal · People · You), Settings sheet, Personal Manual, Thought Parking, optional detailed check-ins, inspectable local patterns, 37 techniques, six searchable offline articles, no-streak daily supports, book-style journal (local transcription when verified), Constellation (Still/Drift/Live), Roman Urdu chrome preview (`rui` LTR), keyword Help on free-text surfaces, presentation themes, voice + haptics. **Zero network calls — localStorage only.** |
 | Nest API | `backend/` | Full module **source** (LMM, safety gate). Builds clean, **not deployed**; PWA does not call it. |
 | Expo | `mobile/` | Thin client source. Lab only. |
 
