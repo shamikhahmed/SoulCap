@@ -1,6 +1,6 @@
 # SoulCap — Features (S/W/L/R)
 
-**Updated:** 2026-07-23 · Self-guided wellness companion · **v1.8.0**
+**Updated:** 2026-07-23 · Self-guided wellness companion · **v1.9.0**
 **Codes:** S = shipped · W = next wave · L = later · R = rejected
 
 ## S
@@ -20,8 +20,9 @@
   summaries; Emotional Timeline week view; Gentle Reflection Cards
 - Personal Reset Menu on Calm; user Principles and **Personal Manual** on You
 - Library article bookmarks (Saved filter); constellation person notes, events, ring history
-- Six searchable offline emotional articles with source notes, support guidance, review-status
-  honesty, and stable links to related exercises
+- Six searchable offline emotional articles **plus 24 clinical experiences** (physical/cognitive)
+  with red-flag routing; source notes, support guidance, review-status honesty, and stable links
+  to related exercises
 - Six optional daily supports with local-day completion only; no streaks, scores, reminders, or
   missed-day pressure
 - Adaptive drip questionnaire (≤4 questions/day) with inspectable, correctable local estimates and

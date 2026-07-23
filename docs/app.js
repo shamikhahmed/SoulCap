@@ -1523,12 +1523,83 @@
       p.appendChild(el('button', { class: 'btn quiet', text: LIBRARY_UI.close, onclick: closeSheet }));
     });
   }
+  function redFlagPanel(flag) {
+    if (!flag || !flag.level) return null;
+    var emergency = flag.level === 'emergency';
+    var title = emergency ? REDFLAG_UI.emergencyTitle : REDFLAG_UI.seeDoctorTitle;
+    var lead = emergency ? REDFLAG_UI.emergencyLead : REDFLAG_UI.seeDoctorLead;
+    var tail = emergency ? REDFLAG_UI.emergencyTail : REDFLAG_UI.seeDoctorTail;
+    return el('div', {
+      class: 'redflag ' + (emergency ? 'redflag-emergency' : 'redflag-seeDoctor'),
+      role: 'region',
+      'aria-label': title
+    }, [
+      el('p', { class: 'redflag-title', text: title }),
+      el('p', { class: 'redflag-body', text: lead + ' ' + (flag.text || '') + ' ' + tail })
+    ]);
+  }
+  function experienceById(id) {
+    return EXPERIENCES.filter(function (item) { return item.id === id; })[0];
+  }
+  function experienceSheet(id) {
+    var exp = experienceById(id);
+    if (!exp) return;
+    openSheet(function (p) {
+      var group = EXPERIENCE_GROUPS.filter(function (g) { return g.id === exp.group; })[0];
+      p.appendChild(el('p', { class: 'eyebrow', text: LIBRARY_UI.experiencesHeading }));
+      p.appendChild(el('h2', { class: 'h-sec', text: exp.name }));
+      p.appendChild(el('button', { class: 'btn quiet article-close-top', text: LIBRARY_UI.close, onclick: closeSheet }));
+      if (group) p.appendChild(el('p', { class: 'meta', text: group.label }));
+      if (exp.aka && exp.aka.length) {
+        p.appendChild(el('p', { class: 'p-sm', text: LIBRARY_UI.akaPrefix + ': ' + exp.aka.join(', ') }));
+      }
+      p.appendChild(el('div', { class: 'notice', text: LIBRARY_UI.reviewNote }));
+      p.appendChild(el('p', { class: 'eyebrow article-label', text: LIBRARY_UI.whatItIs }));
+      p.appendChild(el('p', { class: 'p', text: exp.whatItis }));
+      p.appendChild(el('p', { class: 'eyebrow article-label', text: LIBRARY_UI.why }));
+      p.appendChild(el('p', { class: 'p', text: exp.why }));
+      p.appendChild(el('p', { class: 'eyebrow article-label', text: LIBRARY_UI.helps }));
+      (exp.helps || []).forEach(function (skillId) {
+        var skill = SKILLS.filter(function (item) { return item.id === skillId; })[0];
+        if (!skill) return;
+        p.appendChild(el('button', {
+          class: 'btn ghost experience-help',
+          text: LIBRARY_UI.tryExercise + ' · ' + skill.name,
+          onclick: function () { closeSheet(); startSkill(skill.id); }
+        }));
+      });
+      p.appendChild(el('p', { class: 'eyebrow article-label', text: LIBRARY_UI.selfCare }));
+      p.appendChild(el('ul', { class: 'article-list' }, (exp.selfCare || []).map(function (item) {
+        return el('li', { text: item });
+      })));
+      if (exp.reflection && exp.reflection.length) {
+        p.appendChild(el('p', { class: 'eyebrow article-label', text: LIBRARY_UI.reflect }));
+        p.appendChild(el('ul', { class: 'article-list' }, exp.reflection.map(function (item) {
+          return el('li', { text: item });
+        })));
+      }
+      var flag = redFlagPanel(exp.redFlag);
+      if (flag) p.appendChild(flag);
+      p.appendChild(el('p', { class: 'eyebrow article-label', text: LIBRARY_UI.source }));
+      p.appendChild(el('p', { class: 'p-sm', text: exp.source || '' }));
+      p.appendChild(el('p', { class: 'p-sm', text: REDFLAG_UI.notDiagnosis }));
+      p.appendChild(el('button', { class: 'btn quiet', text: LIBRARY_UI.close, onclick: closeSheet }));
+    });
+  }
+  function experienceSearchBlob(exp) {
+    return [exp.name, exp.whatItis, exp.why].concat(exp.aka || []).concat(exp.commonWith || []).join(' ').toLowerCase();
+  }
   function renderLibrary(v) {
     v.appendChild(el('button', { class: 'btn ghost', text: LIBRARY_UI.back, onclick: function () { calm.section = 'guided'; render(); } }));
     v.appendChild(el('p', { class: 'p', text: LIBRARY_UI.intro }));
+    v.appendChild(el('div', { class: 'notice', text: LIBRARY_UI.experiencesIntro }));
     v.appendChild(el('div', { class: 'chips', role: 'group', 'aria-label': 'Library filter' }, [
       el('button', { class: 'chip', 'aria-pressed': libraryFilter === 'all' ? 'true' : 'false', text: LIBRARY_UI.filterAll,
         onclick: function () { libraryFilter = 'all'; render(); } }),
+      el('button', { class: 'chip', 'aria-pressed': libraryFilter === 'experiences' ? 'true' : 'false', text: LIBRARY_UI.filterExperiences,
+        onclick: function () { libraryFilter = 'experiences'; render(); } }),
+      el('button', { class: 'chip', 'aria-pressed': libraryFilter === 'articles' ? 'true' : 'false', text: LIBRARY_UI.filterArticles,
+        onclick: function () { libraryFilter = 'articles'; render(); } }),
       el('button', { class: 'chip', 'aria-pressed': libraryFilter === 'saved' ? 'true' : 'false', text: LIBRARY_UI.filterSaved,
         onclick: function () { libraryFilter = 'saved'; render(); } })
     ]));
@@ -1538,22 +1609,62 @@
     function draw() {
       clear(results);
       var query = libraryQuery.trim().toLowerCase();
-      var matches = ARTICLES.filter(function (article) {
-        if (libraryFilter === 'saved' && !isLibraryBookmarked(article.id)) return false;
-        return !query || [article.title, article.summary].concat(article.tags).join(' ').toLowerCase().indexOf(query) !== -1;
-      });
-      status.textContent = !matches.length
+      var showExp = libraryFilter === 'all' || libraryFilter === 'experiences';
+      var showArt = libraryFilter === 'all' || libraryFilter === 'articles' || libraryFilter === 'saved';
+      var expMatches = [];
+      var artMatches = [];
+      if (showExp && libraryFilter !== 'saved') {
+        expMatches = EXPERIENCES.filter(function (exp) {
+          return !query || experienceSearchBlob(exp).indexOf(query) !== -1;
+        });
+      }
+      if (showArt) {
+        artMatches = ARTICLES.filter(function (article) {
+          if (libraryFilter === 'saved' && !isLibraryBookmarked(article.id)) return false;
+          return !query || [article.title, article.summary].concat(article.tags).join(' ').toLowerCase().indexOf(query) !== -1;
+        });
+      }
+      var total = expMatches.length + artMatches.length;
+      status.textContent = !total
         ? (libraryFilter === 'saved' ? LIBRARY_UI.noSaved : LIBRARY_UI.noMatches)
-        : (matches.length === 1 ? LIBRARY_UI.resultStatusOne : LIBRARY_UI.resultStatus.replace('{n}', '' + matches.length));
-      if (!matches.length) results.appendChild(el('div', { class:'notice', text: libraryFilter === 'saved' ? LIBRARY_UI.noSaved : LIBRARY_UI.noMatches }));
-      matches.forEach(function (article) {
-        var saved = isLibraryBookmarked(article.id);
-        results.appendChild(el('button', { class:'card tap article-card', onclick:function () { articleSheet(article.id); } }, [
-          el('h2', { class:'card-title', text:article.title + (saved ? ' · Saved' : '') }),
-          el('p', { class:'p-sm', text:article.summary }),
-          el('p', { class:'meta', text:article.skillIds.length + ' related exercise' + (article.skillIds.length === 1 ? '' : 's') })
-        ]));
-      });
+        : (total === 1 ? LIBRARY_UI.resultStatusOne : LIBRARY_UI.resultStatus.replace('{n}', '' + total));
+      if (!total) {
+        results.appendChild(el('div', { class:'notice', text: libraryFilter === 'saved' ? LIBRARY_UI.noSaved : LIBRARY_UI.noMatches }));
+        return;
+      }
+      if (expMatches.length) {
+        if (libraryFilter === 'all') results.appendChild(el('p', { class: 'eyebrow', text: LIBRARY_UI.experiencesHeading }));
+        EXPERIENCE_GROUPS.forEach(function (group) {
+          var groupItems = expMatches.filter(function (exp) { return exp.group === group.id; });
+          if (!groupItems.length) return;
+          if (libraryFilter === 'experiences' || libraryFilter === 'all') {
+            results.appendChild(el('p', { class: 'domain', style: 'color:var(--ink-3);margin:8px 0 2px', text: group.label }));
+            results.appendChild(el('p', { class: 'p-sm', style: 'margin-bottom:8px', text: group.blurb }));
+          }
+          groupItems.forEach(function (exp) {
+            results.appendChild(el('button', {
+              class: 'card tap experience-card',
+              'data-experience-id': exp.id,
+              onclick: function () { experienceSheet(exp.id); }
+            }, [
+              el('h2', { class: 'card-title', text: exp.name }),
+              el('p', { class: 'p-sm', text: exp.whatItis }),
+              el('p', { class: 'meta', text: (exp.helps || []).length + ' related exercise' + ((exp.helps || []).length === 1 ? '' : 's') })
+            ]));
+          });
+        });
+      }
+      if (artMatches.length) {
+        if (libraryFilter === 'all' && expMatches.length) results.appendChild(el('p', { class: 'eyebrow', text: LIBRARY_UI.articlesHeading }));
+        artMatches.forEach(function (article) {
+          var saved = isLibraryBookmarked(article.id);
+          results.appendChild(el('button', { class:'card tap article-card', onclick:function () { articleSheet(article.id); } }, [
+            el('h2', { class:'card-title', text:article.title + (saved ? ' · Saved' : '') }),
+            el('p', { class:'p-sm', text:article.summary }),
+            el('p', { class:'meta', text:article.skillIds.length + ' related exercise' + (article.skillIds.length === 1 ? '' : 's') })
+          ]));
+        });
+      }
     }
     search.addEventListener('input', function () { libraryQuery = search.value; draw(); });
     v.appendChild(search); v.appendChild(status); v.appendChild(results); draw();
@@ -3273,7 +3384,7 @@
       p.appendChild(el('button', { class: 'btn quiet', text: tUi('principles', 'close', PRINCIPLES_UI), onclick: closeSheet }));
     });
   }
-  var APP_VERSION = '1.8.0';
+  var APP_VERSION = '1.9.0';
   function settingsGroup(v, title, kids) { v.appendChild(el('p', { class: 'eyebrow', style: 'margin-top:var(--space-3)', text: title })); kids.forEach(function (k) { if (k) v.appendChild(k); }); }
   function toggleBtn(label, on, fn) {
     return el('button', { class: 'btn ghost', style: 'display:flex;justify-content:space-between', onclick: fn,
@@ -3553,7 +3664,16 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }), version: '1.8.0',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }), version: '1.9.0',
+    experienceIds: EXPERIENCES.map(function (item) { return item.id; }),
+    experienceHelpsOk: function () {
+      return EXPERIENCES.every(function (exp) {
+        return (exp.helps || []).every(function (hid) {
+          return SKILLS.some(function (s) { return s.id === hid; });
+        });
+      });
+    },
+    openExperience: experienceSheet,
     nextDripQuestion: nextDripQuestion, estimateValue: estimateValue,
     answerDrip: answerDrip, skipDrip: skipDrip, correctEstimate: correctEstimate,
     clearEstimate: clearEstimate, setTheme: setTheme, setLocale: setLocale,

@@ -1,4 +1,4 @@
-**Version:** 1.8.0 · SW `soulcap-v180`
+**Version:** 1.9.0 · SW `soulcap-v190`
 
 # SoulCap — Project Handover
 
@@ -6,7 +6,7 @@
 > first — it is the current truth as of 2026-07-23. The sections further down describe an
 > earlier architecture and are kept for reference only.
 
-## Current state (v1.8.0 — 2026-07-23)
+## Current state (v1.9.0 — 2026-07-23)
 
 **The product is the PWA in `docs/`.** Offline-first, local-only, **no network calls after load** —
 no account, no server, no LLM, no analytics. State lives in `localStorage` (schema **v10**).
@@ -25,7 +25,8 @@ in-repo gallery: `npm run gallery` → `screen-gallery.html`.
   traumaCaution. Guided runner + paced breathing sessions. Spoken guidance local-only voices;
   auto-silent around people / panic; speaker toggle; exercise pace Slow/Steady/Brisk.
 - **Calm** — guided “what do you need?” → context → fitted skills; browse-all; offline library
-  (6 articles, bookmarks); daily supports (no streaks).
+  (6 articles + **24 clinical experiences** physical/cognitive with red-flag panels); bookmarks;
+  daily supports (no streaks).
 - **Now** — greeting (late until 06:00), check-in (+ optional detail), adaptive drip (≤4/day),
   skill suggestion, optional message card, gentle reflection cards, reset menu entry from Calm.
 - **Journal** — book UI, templates, photos (down-scaled; warn >20), search (mood/feeling/parked),
@@ -43,7 +44,7 @@ in-repo gallery: `npm run gallery` → `screen-gallery.html`.
   No crisis phone numbers; `sms:` only for “Message someone.”
 
 ### Schema & ship
-- State `DEFAULT.v = 10` · SW `soulcap-v180` · app **1.8.0** · mirrors: theme, appearance, locale,
+- State `DEFAULT.v = 10` · SW `soulcap-v190` · app **1.9.0** · mirrors: theme, appearance, locale,
   clinical-notice dismiss.
 - Ship workflow: bump CACHE + VERSION.json + APP_VERSION together; CHANGELOG; SAFETY/HANDOVER;
   `npm run verify`; push `main`.

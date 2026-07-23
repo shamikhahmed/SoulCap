@@ -271,7 +271,7 @@ test.describe('v1.0 offline library and daily supports', () => {
     await seedDemo(page);
     await page.evaluate(() => (document.querySelector('#tabs button[data-tab="calm"]') as HTMLElement).click());
     await page.getByRole('button', { name: /Understand what’s happening/ }).click();
-    await expect(page.getByRole('status')).toContainText(/articles/);
+    await expect(page.getByRole('status')).toContainText(/results/);
     await page.getByRole('searchbox', { name: 'Search the emotional library' }).fill('zzzz-no-match');
     await expect(page.getByRole('status')).toContainText('Nothing matches that search yet.');
   });
@@ -370,6 +370,50 @@ test.describe('v1.0 offline library and daily supports', () => {
     await expect(page.getByRole('heading', { name: 'That did not save' })).toBeVisible();
     const after = await page.evaluate(() => JSON.stringify((window as any).__soulcap.getState().dailySupports));
     expect(after).toBe(before);
+  });
+});
+
+test.describe('v1.9 clinical experiences library', () => {
+  test('every experience helps id exists in SKILLS', async ({ page }) => {
+    await seedDemo(page);
+    const ok = await page.evaluate(() => (window as any).__soulcap.experienceHelpsOk());
+    expect(ok).toBe(true);
+    const count = await page.evaluate(() => (window as any).__soulcap.experienceIds.length);
+    expect(count).toBe(24);
+  });
+
+  test('opening an experience shows what/why/helps and launches runner', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="calm"]') as HTMLElement).click());
+    await page.getByRole('button', { name: /Understand what’s happening/ }).click();
+    await page.getByRole('button', { name: 'Experiences', exact: true }).click();
+    await page.locator('.experience-card[data-experience-id="racing-heart"]').click();
+    await expect(page.locator('#sheet')).toContainText('What it can feel like');
+    await expect(page.locator('#sheet')).toContainText('Why this can happen');
+    await expect(page.locator('#sheet')).toContainText('What may help');
+    await expect(page.locator('#sheet')).toContainText('Not a diagnosis');
+    await page.locator('#sheetPanel').getByRole('button', { name: /Try · Physiological sigh/ }).click();
+    await expect(page.locator('#runner')).toBeVisible();
+  });
+
+  test('emergency red-flag panel is number-free and country-agnostic', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => (window as any).__soulcap.openExperience('racing-heart'));
+    const panel = page.locator('#sheetPanel .redflag-emergency');
+    await expect(panel).toBeVisible();
+    await expect(panel).toContainText('Please get urgent help');
+    const text = await panel.innerText();
+    expect(text).not.toMatch(/\b\d{3,}\b/);
+    expect(text.toLowerCase()).not.toMatch(/\bunited states\b|\buk\b|\bcanada\b|\baustralia\b|\bindia\b|\bpakistan\b/);
+  });
+
+  test('library search finds an experience by aka', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="calm"]') as HTMLElement).click());
+    await page.getByRole('button', { name: /Understand what’s happening/ }).click();
+    await page.getByRole('searchbox', { name: 'Search the emotional library' }).fill('heart pounding');
+    await expect(page.locator('.experience-card[data-experience-id="racing-heart"]')).toBeVisible();
+    await expect(page.getByRole('status')).toContainText(/result/);
   });
 });
 
