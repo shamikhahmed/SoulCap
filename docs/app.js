@@ -57,7 +57,7 @@
   /* ── State ─────────────────────────────────────────────────────────────── */
   var KEY = 'soulcap_v1';
   var DEFAULT = {
-    v: 10, onboarded: false, welcomed: false, ageOk: null, consent: false,
+    v: 11, onboarded: false, welcomed: false, ageOk: null, consent: false,
     profile: { name: '', age: '', pronouns: '' },
     history: {},
     concerns: [], checkins: [], skillRuns: [], people: [], links: [],
@@ -77,6 +77,7 @@
     manual: { lines: [], dismissedAuto: {} },
     libraryBookmarks: [],
     windDownHour: null,
+    screenerResults: {},
     notices: { clinicalEnglishDismissed: false }
   };
   var VALID_THEMES = { light:1, dark:1, night:1, ocean:1, forest:1, rain:1, space:1, sunrise:1, minimal:1, amoled:1 };
@@ -132,6 +133,8 @@
       } else {
         p.windDownHour = null;
       }
+      p.screenerResults = p.screenerResults && typeof p.screenerResults === 'object' && !Array.isArray(p.screenerResults)
+        ? p.screenerResults : {};
       p.notices = Object.assign(clone(DEFAULT.notices), p.notices || {});
       try {
         if (localStorage.getItem('soulcap_notice_clinical') === '1') p.notices.clinicalEnglishDismissed = true;
@@ -200,6 +203,12 @@
       p.libraryBookmarks = Array.isArray(p.libraryBookmarks) ? p.libraryBookmarks : [];
       p.people = (Array.isArray(p.people) ? p.people : []).map(normalizePerson);
       p.v = 10; changed = true;
+    }
+    if (version < 11) {
+      p.screenerResults = p.screenerResults && typeof p.screenerResults === 'object' && !Array.isArray(p.screenerResults)
+        ? p.screenerResults : {};
+      if (typeof p.windDownHour !== 'number') p.windDownHour = null;
+      p.v = 11; changed = true;
     }
     return { value: p, changed: changed };
   }
@@ -946,6 +955,155 @@
       p.appendChild(el('h2', { class: 'h-sec', text: DRIP_UI.saveFailedTitle }));
       p.appendChild(el('p', { class: 'p', text: DRIP_UI.saveFailedBody }));
       p.appendChild(el('button', { class: 'btn', text: CHECKIN_UI.ok, onclick: closeSheet }));
+    });
+  }
+  function screenerById(id) {
+    return SCREENERS.filter(function (s) { return s.id === id; })[0];
+  }
+  function screenerBandFor(screener, score) {
+    var i, band;
+    for (i = 0; i < screener.bands.length; i++) {
+      band = screener.bands[i];
+      if (score >= band.min && score <= band.max) return band;
+    }
+    return screener.bands[screener.bands.length - 1];
+  }
+  function saveScreenerResult(screenerId, answers) {
+    var screener = screenerById(screenerId);
+    if (!screener) return null;
+    var score = 0, i;
+    for (i = 0; i < answers.length; i++) score += answers[i] || 0;
+    var band = screenerBandFor(screener, score);
+    var item9Positive = screener.item9Index >= 0 && (answers[screener.item9Index] || 0) > 0;
+    var before = clone(state.screenerResults);
+    var prev = state.screenerResults[screenerId] || {};
+    var history = Array.isArray(prev.history) ? prev.history.slice() : [];
+    history.push({ t: Date.now(), score: score, band: band.id });
+    if (history.length > 12) history = history.slice(-12);
+    state.screenerResults[screenerId] = {
+      score: score,
+      band: band.id,
+      bandLabel: band.label,
+      t: Date.now(),
+      item9Positive: item9Positive,
+      confidence: 0.35,
+      history: history
+    };
+    if (!save()) {
+      state.screenerResults = before;
+      showDripSaveFailed();
+      return null;
+    }
+    return state.screenerResults[screenerId];
+  }
+  function clearScreenerResult(screenerId) {
+    var before = clone(state.screenerResults);
+    delete state.screenerResults[screenerId];
+    if (!save()) { state.screenerResults = before; showDripSaveFailed(); return false; }
+    return true;
+  }
+  function screenerPickSheet() {
+    openSheet(function (p) {
+      p.appendChild(el('h2', { class: 'h-sec', text: SCREENER_UI.pickTitle }));
+      p.appendChild(el('p', { class: 'p-sm', text: SCREENER_UI.pickIntro }));
+      p.appendChild(el('div', { class: 'notice', text: SCREENER_UI.notDiagnosis }));
+      SCREENERS.forEach(function (screener) {
+        p.appendChild(el('button', { class: 'card tap', onclick: function () { closeSheet(); screenerRunSheet(screener.id); } }, [
+          el('h2', { class: 'card-title', text: screener.name }),
+          el('p', { class: 'p-sm', text: screener.blurb })
+        ]));
+      });
+      p.appendChild(el('button', { class: 'btn quiet', text: SCREENER_UI.close, onclick: closeSheet }));
+    });
+  }
+  function screenerRunSheet(screenerId, startIndex, answers) {
+    var screener = screenerById(screenerId);
+    if (!screener) return;
+    var idx = typeof startIndex === 'number' ? startIndex : 0;
+    var vals = Array.isArray(answers) ? answers.slice() : [];
+    openSheet(function (p) {
+      p.appendChild(el('h2', { class: 'h-sec', text: screener.name }));
+      p.appendChild(el('p', { class: 'meta', text: SCREENER_UI.progress.replace('{n}', '' + (idx + 1)).replace('{total}', '' + screener.items.length) }));
+      p.appendChild(el('p', { class: 'p-sm', text: SCREENER_UI.scaleHint }));
+      p.appendChild(el('p', { class: 'p-voice', text: screener.items[idx] }));
+      p.appendChild(el('div', { class: 'notice', text: SCREENER_UI.notDiagnosis }));
+      var scale = [
+        { v: 0, l: SCREENER_UI.scale0 },
+        { v: 1, l: SCREENER_UI.scale1 },
+        { v: 2, l: SCREENER_UI.scale2 },
+        { v: 3, l: SCREENER_UI.scale3 }
+      ];
+      scale.forEach(function (opt) {
+        p.appendChild(el('button', { class: 'opt', text: opt.l, onclick: function () {
+          vals[idx] = opt.v;
+          if (screener.item9Index === idx && opt.v > 0) {
+            closeSheet();
+            openPanic();
+            // Continue after Help is available; user can finish when ready.
+            setTimeout(function () {
+              if (idx + 1 >= screener.items.length) screenerFinish(screenerId, vals);
+              else screenerRunSheet(screenerId, idx + 1, vals);
+            }, 0);
+            return;
+          }
+          if (idx + 1 >= screener.items.length) {
+            closeSheet();
+            screenerFinish(screenerId, vals);
+          } else {
+            closeSheet();
+            screenerRunSheet(screenerId, idx + 1, vals);
+          }
+        } }));
+      });
+      if (idx > 0) {
+        p.appendChild(el('button', { class: 'btn quiet', text: SCREENER_UI.back, onclick: function () {
+          closeSheet(); screenerRunSheet(screenerId, idx - 1, vals);
+        } }));
+      }
+      p.appendChild(el('button', { class: 'btn quiet', text: SCREENER_UI.close, onclick: closeSheet }));
+    });
+  }
+  function screenerFinish(screenerId, answers) {
+    var screener = screenerById(screenerId);
+    var result = saveScreenerResult(screenerId, answers);
+    if (!result) return;
+    // Item-9 Help is terminal priority — do not cover it with the result sheet.
+    if (result.item9Positive) {
+      openPanic();
+      return;
+    }
+    screenerResultSheet(screenerId);
+  }
+  function screenerResultSheet(screenerId) {
+    var screener = screenerById(screenerId);
+    var result = state.screenerResults[screenerId];
+    if (!screener || !result) return;
+    openSheet(function (p) {
+      p.appendChild(el('h2', { class: 'h-sec', text: SCREENER_UI.resultTitle }));
+      p.appendChild(el('p', { class: 'p', text: SCREENER_UI.resultLead + result.bandLabel + SCREENER_UI.resultMid }));
+      p.appendChild(el('div', { class: 'notice', text: SCREENER_UI.notDiagnosis + ' ' + SCREENER_UI.lowConfidence }));
+      if (result.band === screener.topBand) {
+        p.appendChild(el('div', { class: 'redflag redflag-seeDoctor', role: 'region', 'aria-label': SCREENER_UI.topBandNudge }, [
+          el('p', { class: 'redflag-title', text: 'Professional support' }),
+          el('p', { class: 'redflag-body', text: SCREENER_UI.topBandNudge })
+        ]));
+      }
+      p.appendChild(el('p', { class: 'meta', text: SCREENER_UI.historyLine.replace('{score}', '' + result.score).replace('{band}', result.bandLabel) }));
+      p.appendChild(el('p', { class: 'eyebrow article-label', text: LIBRARY_UI.helps }));
+      (screener.helpSkills || []).forEach(function (skillId) {
+        var skill = SKILLS.filter(function (s) { return s.id === skillId; })[0];
+        if (skill) p.appendChild(el('button', { class: 'btn ghost', text: skill.name, onclick: function () { closeSheet(); startSkill(skill.id); } }));
+      });
+      (screener.helpExperiences || []).forEach(function (expId) {
+        var exp = experienceById(expId);
+        if (exp) p.appendChild(el('button', { class: 'btn ghost', text: exp.name, onclick: function () { closeSheet(); experienceSheet(expId); } }));
+      });
+      p.appendChild(el('button', { class: 'btn ghost', text: SCREENER_UI.retake, onclick: function () { closeSheet(); screenerRunSheet(screenerId); } }));
+      p.appendChild(el('button', { class: 'btn quiet', text: SCREENER_UI.clear, onclick: function () {
+        if (!clearScreenerResult(screenerId)) return;
+        closeSheet(); render();
+      } }));
+      p.appendChild(el('button', { class: 'btn quiet', text: SCREENER_UI.close, onclick: function () { closeSheet(); render(); } }));
     });
   }
   function updateEstimate(key, raw, weight, source) {
@@ -3157,6 +3315,7 @@
       el('h2', { class: 'card-title', text: DRIP_UI.cardTitle }),
       el('p', { class: 'p-sm', text: dripQ ? DRIP_UI.cardHint : DRIP_UI.doneToday })
     ]));
+    // note: screener card is on You, not Now — keep Now calm
     var pick = suggestSkill(), dm = DOMAIN_META[pick.skill.domain];
     v.appendChild(el('div', { class: 'card' }, [
       el('div', { class: 'card-head' }, [el('h2', { class: 'card-title', text: pick.skill.name }), el('span', { class: 'domain', style: 'color:var(' + dm.cssVar + ')', text: dm.label })]),
@@ -3271,6 +3430,10 @@
       el('div', { class: 'card-head' }, [el('h2', { class: 'card-title', text: tUi('me', 'myPlan', { myPlan: 'My plan' }) }), el('span', { class: 'pill', text: filled + '/' + SAFETY_PLAN_STEPS.length })]),
       el('p', { class: 'p-sm', text: filled ? 'Your warning signs, what helps, and who to tell. Tap to update.' : 'Write it while you’re steady, so it’s ready when you’re not.' })
     ]));
+    v.appendChild(el('button', { class: 'card tap screener-card', onclick: screenerPickSheet }, [
+      el('h2', { class: 'card-title', text: SCREENER_UI.cardTitle }),
+      el('p', { class: 'p-sm', text: SCREENER_UI.cardHint })
+    ]));
 
     // Journey
     var runs = state.skillRuns.length, helped = state.skillRuns.filter(function (r) { return r.helpful; }).length;
@@ -3310,6 +3473,25 @@
           ])
         ]),
         el('span', { class: 'tier declared', text: item.source === 'corrected' ? 'Corrected' : 'You said' })
+      ]));
+    });
+    SCREENERS.forEach(function (screener) {
+      var res = state.screenerResults[screener.id];
+      if (!res) return;
+      any = true;
+      rows.appendChild(el('div', { class: 'row pattern-row screener-signal' }, [
+        el('div', {}, [
+          el('div', { class: 'lab', text: SCREENER_UI.knowsLabel + ' · ' + screener.name }),
+          el('div', { class: 'sub', text: SCREENER_UI.historyLine.replace('{score}', '' + res.score).replace('{band}', res.bandLabel) + ' · ' + SCREENER_UI.knowsSub }),
+          el('div', { class: 'chips pattern-actions' }, [
+            el('button', { class: 'chip', text: SCREENER_UI.retake, onclick: function () { screenerRunSheet(screener.id); } }),
+            el('button', { class: 'chip', text: SCREENER_UI.clear, onclick: function () {
+              if (!clearScreenerResult(screener.id)) return;
+              render();
+            } })
+          ])
+        ]),
+        el('span', { class: 'tier guess', text: 'Low confidence' })
       ]));
     });
     state.concerns.forEach(function (c) { any = true; rows.appendChild(el('div', { class: 'row' }, [el('div', {}, [el('div', { class: 'lab', text: c }), el('div', { class: 'sub', text: 'You picked this when you started' })]), el('span', { class: 'tier declared', text: 'You said' })])); });
@@ -3467,7 +3649,7 @@
       p.appendChild(el('button', { class: 'btn quiet', text: tUi('principles', 'close', PRINCIPLES_UI), onclick: closeSheet }));
     });
   }
-  var APP_VERSION = '1.9.2';
+  var APP_VERSION = '1.9.3';
   function settingsGroup(v, title, kids) { v.appendChild(el('p', { class: 'eyebrow', style: 'margin-top:var(--space-3)', text: title })); kids.forEach(function (k) { if (k) v.appendChild(k); }); }
   function toggleBtn(label, on, fn) {
     return el('button', { class: 'btn ghost', style: 'display:flex;justify-content:space-between', onclick: fn,
@@ -3747,7 +3929,7 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '1.9.2',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '1.9.3',
     experienceIds: EXPERIENCES.map(function (item) { return item.id; }),
     experienceHelpsOk: function () {
       return EXPERIENCES.every(function (exp) {
@@ -3758,6 +3940,11 @@
     },
     openExperience: experienceSheet,
     openExperiencePicker: experiencePickerSheet,
+    openScreener: screenerPickSheet,
+    runScreener: screenerRunSheet,
+    saveScreenerResult: saveScreenerResult,
+    clearScreenerResult: clearScreenerResult,
+    completeScreener: screenerFinish,
     nextDripQuestion: nextDripQuestion, estimateValue: estimateValue,
     answerDrip: answerDrip, skipDrip: skipDrip, correctEstimate: correctEstimate,
     clearEstimate: clearEstimate, setTheme: setTheme, setLocale: setLocale,
