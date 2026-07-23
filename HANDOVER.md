@@ -1,43 +1,25 @@
-**Version:** 3.0.1 · SW `soulcap-v301`
+**Version:** 4.0.0 · SW `soulcap-v400`
 
 # SoulCap — Project Handover
 
 > **⚠️ This document below the divider is historical (v0.3.0).** Read this header block
-> first — it is the current truth as of 2026-07-23. The sections further down describe an
+> first — it is the current truth as of 2026-07-24. The sections further down describe an
 > earlier architecture and are kept for reference only.
 
-## Current state (v3.0.1 — 2026-07-23)
+## Current state (v4.0.0 — 2026-07-24)
 
-**The product is the PWA in `docs/`.** Offline-first, local-only, **no network calls after load** —
-no account, no server, no LLM, no analytics. State lives in `localStorage` (schema **v12**).
-**Design System v3 Amethyst** (kit + Now hero/Explore + welcome + progress dash + path approaches).
-Live: https://shamikhahmed.github.io/SoulCap/
-
-### What the PWA is now
-- **Design System v3 Amethyst** — dark-first elevation, grain, glow heroes, raised cards, accent-grad
-  primary. Themes re-derived. Engines preserved from 2.1.
-- **Five tabs:** Now · Calm · Journal · People · You. **Settings sheet** off You. Splash + welcome +
-  18+ onboarding (progress dots). About + What’s new.
-- **37 techniques** · Guided runner · Spoken guidance local-only · exercise pace.
-- **Guided Path** — arrival → chips → **approach recommendation** (CBT/DBT/ACT/BA educational packs)
-  → exercises → runner. Panic-like → Help. Never diagnoses. `pathSessions` + approachId.
-- **Calm** — guided first; Also here (path, library, experiences, supports).
-- **Now** — hero + check-in + one raised suggestion + week glance; **Explore** folds path /
-  experiences / wind-down / drip.
-- **Journal / People** — book UI + Constellation (reskinned via tokens).
-- **You** — About / Insights (**Progress dashboard**) / Tools / Settings.
-- **Safety kernel** — tiers 0–3; no crisis numbers; `sms:` only for Message someone.
+**The product is the PWA in `docs/`.** Offline-first, local-only, **no network calls after load**.
+Schema **v12**. **Design System v4** foundations (type/spacing/radii/motion + composition kit);
+Amethyst palette from v3. Building `SPEC-v4.0-master-design.md` PR-by-PR, then
+`SPEC-v5.0-native-motion.md`. Live: https://shamikhahmed.github.io/SoulCap/
 
 ### Schema & ship
-- State `DEFAULT.v = 12` · SW `soulcap-v301` · app **3.0.1** · mirrors: theme, appearance, locale,
-  clinical-notice dismiss / `seenVersion`. Optional `windDownHour`. `screenerResults` (PHQ/GAD).
-  `pathSessions` + `pathPrefs`.
-- Ship workflow: bump CACHE + VERSION.json + APP_VERSION together; CHANGELOG; SAFETY/HANDOVER;
+- State `DEFAULT.v = 12` · SW `soulcap-v400` · app **4.0.0**
+- Ship workflow: bump CACHE + VERSION.json + APP_VERSION; CHANGELOG; SAFETY/HANDOVER; gallery;
   `npm run verify`; push `main`.
 
 ### Backend / mobile
-`backend/` Nest lab (not deployed; PWA never calls it). `backend/_legacy/` quarantined — don’t
-revive. `mobile/` Expo lab only.
+`backend/` Nest lab (not deployed). `mobile/` Expo lab only.
 
 ### Tests & CI
 ~**260** Playwright checks (mobile + desktop Chromium; gallery gated by `CAPTURE_GALLERY=1`).

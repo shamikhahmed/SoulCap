@@ -82,6 +82,12 @@ else{document.documentElement.setAttribute('lang','en');document.documentElement
   </nav>
 </div>
 
+<!-- Pushed subview host (in-tab depth; PR-2 wires stack) -->
+<div id="subview" aria-hidden="true">
+  <div class="nav-header" id="subviewNav"></div>
+  <div class="subview-body" id="subviewBody"></div>
+</div>
+
 <!-- Persistent help — reachable from every tab in one tap -->
 <button id="fab" aria-label="I need help now">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a7 7 0 0 0-4 12.7V18h8v-2.3A7 7 0 0 0 12 3z"/><path d="M10 21h4"/></svg>

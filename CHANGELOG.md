@@ -1,13 +1,15 @@
 ## [Unreleased]
 
-### Fixed
-- Flaky Playwright: wait for CSS animations idle + `reducedMotion` before theme contrast and journal
-  control size assertions (`e2e/app.spec.ts`, `e2e/personas.spec.ts`).
+## [4.0.0] — 2026-07-24
+
+### Added
+- **Master design PR-1 Foundations:** formal type scale (display→micro), spacing (incl. 20px),
+  radii (lg 24 / xl 32), motion (160/260/420ms), composition kit CSS + helpers — `hero-band`,
+  `hero-tile`, `tile`, `rail`, `list-row`, `stat-tile`, `glass-pill`, `nav-header`, `toast`,
+  `#subview` host shell. Engines unchanged.
 
 ### Changed
-- Companion docs version headers aligned to **3.0.1** / `soulcap-v301` (ARCHITECTURE, DATA_MODEL,
-  FEATURES, CLINICAL, PRIVACY, ACCESSIBILITY, EVALUATION, INVESTOR_DECK, PRESENTATION, AGENTS,
-  package.json, assets gallery manifest).
+- SW `soulcap-v400`. App **4.0.0**. Schema still **v12**.
 
 ## [3.0.1] — 2026-07-23
 

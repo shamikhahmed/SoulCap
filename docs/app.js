@@ -276,6 +276,68 @@
   }
   function clear(n) { while (n.firstChild) n.removeChild(n.firstChild); }
 
+  /* ── v4 composition helpers (SPEC §6) ─────────────────────────────────── */
+  function iconChevron() {
+    return el('span', { class: 'lr-chevron', 'aria-hidden': 'true' });
+  }
+  function listRow(opts) {
+    var kids = [];
+    if (opts.iconHtml) kids.push(el('span', { class: 'lr-icon', html: opts.iconHtml, 'aria-hidden': 'true' }));
+    kids.push(el('span', { class: 'lr-body' }, [
+      el('p', { class: 'lr-title', text: opts.title }),
+      opts.meta ? el('p', { class: 'lr-meta', text: opts.meta }) : null
+    ]));
+    if (opts.chevron !== false) kids.push(iconChevron());
+    return el('button', {
+      class: 'list-row',
+      type: 'button',
+      onclick: opts.onclick || null
+    }, kids);
+  }
+  function navHeader(title, onBack, actionEl) {
+    return el('div', { class: 'nav-header' }, [
+      el('button', {
+        class: 'nav-back', type: 'button', 'aria-label': 'Back',
+        onclick: onBack || function () {},
+        html: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"/></svg>'
+      }),
+      el('h1', { class: 'nav-title', text: title || '' }),
+      actionEl || null
+    ]);
+  }
+  function railBlock(title, items, seeAllFn) {
+    var headKids = [el('p', { class: 'section-label', text: title, style: 'margin:0' })];
+    if (seeAllFn) {
+      headKids.push(el('button', { class: 'see-all', type: 'button', text: 'See all', onclick: seeAllFn }));
+    }
+    return el('div', { class: 'rail-wrap' }, [
+      el('div', { class: 'rail-head' }, headKids),
+      el('div', { class: 'rail', role: 'list' }, items)
+    ]);
+  }
+  function heroTile(opts) {
+    return el(opts.onclick ? 'button' : 'div', {
+      class: 'hero-tile' + (opts.onclick ? ' tap' : ''),
+      type: opts.onclick ? 'button' : undefined,
+      onclick: opts.onclick || null
+    }, [
+      opts.meta ? el('p', { class: 'ht-meta', text: opts.meta }) : null,
+      el('h2', { class: 'ht-title', text: opts.title }),
+      opts.reason ? el('p', { class: 'ht-reason', text: opts.reason }) : null,
+      opts.action || null
+    ].filter(Boolean));
+  }
+  function toast(msg) {
+    var t = $('#toast');
+    if (!t) {
+      t = el('div', { class: 'toast', id: 'toast', role: 'status', 'aria-live': 'polite' });
+      document.body.appendChild(t);
+    }
+    t.textContent = msg;
+    t.classList.add('on');
+    setTimeout(function () { t.classList.remove('on'); }, 2200);
+  }
+
   /* ── Theme / haptics ───────────────────────────────────────────────────── */
   function applyTheme() {
     if (state.theme && VALID_THEMES[state.theme]) document.documentElement.setAttribute('data-theme', state.theme);
@@ -4016,7 +4078,7 @@
       p.appendChild(el('button', { class: 'btn quiet', text: tUi('principles', 'close', PRINCIPLES_UI), onclick: closeSheet }));
     });
   }
-  var APP_VERSION = '3.0.1';
+  var APP_VERSION = '4.0.0';
   function settingsGroup(v, title, kids) { v.appendChild(el('p', { class: 'eyebrow', style: 'margin-top:var(--space-3)', text: title })); kids.forEach(function (k) { if (k) v.appendChild(k); }); }
   function toggleBtn(label, on, fn) {
     return el('button', { class: 'btn ghost', style: 'display:flex;justify-content:space-between', onclick: fn,
@@ -4357,7 +4419,7 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '3.0.1',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '4.0.0',
     experienceIds: EXPERIENCES.map(function (item) { return item.id; }),
     experienceHelpsOk: function () {
       return EXPERIENCES.every(function (exp) {

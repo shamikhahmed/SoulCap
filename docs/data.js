@@ -399,7 +399,7 @@ var ABOUT_UI = {
 
 var WHATS_NEW_UI = {
   title:'What’s new',
-  body:'SoulCap 3.0 — Amethyst look, a clearer Now (one suggestion + week glance + Explore), approach ideas after a short path, and a quiet progress card on You. Still private and offline. Not therapy, not a diagnosis.',
+  body:'SoulCap 4.0 — a clearer design system: type and spacing scales, rails, list rows, and hero tiles. Same private offline tools. Not therapy, not a diagnosis.',
   dismiss:'Got it'
 };
 

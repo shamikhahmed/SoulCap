@@ -1,7 +1,7 @@
 {
   "name": "soulcap",
   "private": true,
-  "version": "3.0.1",
+  "version": "4.0.0",
   "description": "SoulCap PWA \u2014 private, offline-first self-guided wellness tools",
   "scripts": {
     "dev": "python3 -m http.server 8788 --directory docs",
