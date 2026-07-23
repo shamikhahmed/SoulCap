@@ -693,6 +693,17 @@ input[type="range"]{width:100%;min-height:48px;accent-color:var(--accent)}
 
 .run-stage{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px;text-align:center;position:relative}
 .run-orb-hold{position:relative;width:210px;height:210px;display:flex;align-items:center;justify-content:center;flex:none}
+.pacer-hold{position:relative}
+.orb-canvas{
+  position:absolute;inset:0;margin:auto;width:210px;height:210px;pointer-events:none;z-index:0;
+}
+.pacer-hold .orb-canvas{width:180px;height:180px}
+.has-webgl-orb .run-orb,.has-webgl-orb .pacer{
+  background:transparent!important;box-shadow:none!important;
+}
+.has-webgl-orb .run-orb-ring,.has-webgl-orb .pacer-ring{opacity:.12}
+.run-orb,.pacer{position:relative;z-index:1}
+.run-orb-count,.pacer-count{position:relative;z-index:2}
 .run-orb{
   width:150px;height:150px;border-radius:50%;
   background:radial-gradient(circle at 40% 35%,var(--accent-glow) 0%,var(--accent-soft) 55%,transparent 78%);

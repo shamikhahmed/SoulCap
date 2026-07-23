@@ -89,7 +89,7 @@ docs/
                JOURNAL_PROMPTS, COVER_COLORS, JOURNAL_STICKERS, *_UI, STRINGS.
   app.js       All logic, one IIFE. State, safety kernel, render/router, runner, journal,
                constellation, settings, motion probe.
-  vendor/      Self-hosted libs only (gsap.min.js; later orb shader). Never CDN.
+  vendor/      Self-hosted libs only (gsap.min.js, breath-orb.js). Never CDN.
   sw.js        Service worker. Precaches assets for offline. Bump CACHE on every asset change.
   manifest.json, icons/  PWA install metadata + brand marks.
 ```

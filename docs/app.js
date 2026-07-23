@@ -410,6 +410,50 @@
     };
     document.head.appendChild(s);
   }
+  var orbInstances = { panic: null, run: null };
+  var orbScriptLoading = false;
+  function orbAllowed() {
+    probeMotion();
+    if (effectiveMotion() === 'still') return false;
+    if (getComputedStyle(document.documentElement).getPropertyValue('--motion-orb').trim() === '0') return false;
+    return motionCap.webgl;
+  }
+  function loadOrbScript(cb) {
+    if (window.SoulCapOrb) { if (cb) cb(window.SoulCapOrb); return; }
+    if (orbScriptLoading) { if (cb) cb(null); return; }
+    orbScriptLoading = true;
+    var s = document.createElement('script');
+    s.src = 'vendor/breath-orb.js';
+    s.async = true;
+    s.onload = function () { orbScriptLoading = false; if (cb) cb(window.SoulCapOrb || null); };
+    s.onerror = function () { orbScriptLoading = false; if (cb) cb(null); };
+    document.head.appendChild(s);
+  }
+  function destroyOrb(key) {
+    if (orbInstances[key] && orbInstances[key].destroy) orbInstances[key].destroy();
+    orbInstances[key] = null;
+  }
+  function mountOrb(key, holdSel, cssOrbSel) {
+    destroyOrb(key);
+    if (!orbAllowed()) return;
+    var hold = $(holdSel);
+    if (!hold) return;
+    loadOrbScript(function (api) {
+      if (!api || !api.mount || !orbAllowed()) return;
+      var inst = api.mount(hold, {});
+      if (!inst) return;
+      orbInstances[key] = inst;
+      var css = $(cssOrbSel);
+      if (css) css.classList.add('orb-css-fallback');
+      hold.classList.add('has-webgl-orb');
+    });
+  }
+  function setOrbBreath(key, scale) {
+    var inst = orbInstances[key];
+    if (!inst || !inst.setBreath) return;
+    var b = typeof scale === 'number' ? (scale - 0.7) / 0.3 : 0.5;
+    inst.setBreath(Math.max(0, Math.min(1, b)), 0.55 + b * 0.35);
+  }
   function applyTheme() {
     if (state.theme && VALID_THEMES[state.theme]) document.documentElement.setAttribute('data-theme', state.theme);
     else document.documentElement.removeAttribute('data-theme');
@@ -615,6 +659,7 @@
     $('#panic').classList.add('on'); $('#panic').setAttribute('aria-hidden', 'false');
     document.body.style.overflow = 'hidden';
     renderPanicHelp($('#panicLinks')); renderVoiceToggle($('#panicVoice'), 'panic');
+    mountOrb('panic', '.pacer-hold', '#pacer');
     runPacer(); buzz(18); $('#panicExit').focus();
   }
 
@@ -639,6 +684,11 @@
   function closePanic() {
     $('#panic').classList.remove('on'); $('#panic').setAttribute('aria-hidden', 'true');
     document.body.style.overflow = ''; stopPacer(); hushVoice(); panicSaveWarning = false;
+    destroyOrb('panic');
+    var hold = $('.pacer-hold');
+    if (hold) hold.classList.remove('has-webgl-orb');
+    var css = $('#pacer');
+    if (css) css.classList.remove('orb-css-fallback');
   }
   function runPacer() {
     stopPacer(); pacerPhase = 0;
@@ -649,6 +699,7 @@
       var ph = PHASES[pacerPhase % 4];
       label.textContent = ph.label; step.textContent = 'Step ' + ((pacerPhase % 4) + 1) + ' of 4';
       if (!reduced) { circle.style.transform = 'scale(' + ph.scale + ')'; ring.style.transform = 'scale(' + (ph.scale + 0.12) + ')'; }
+      setOrbBreath('panic', ph.scale);
       if (pacerPhase % 2 === 0) buzz(ph.scale === 1 ? [12, 90, 12] : 12);
       speak(ph.label);
       var n = 4; count.textContent = n;
@@ -1682,9 +1733,12 @@
     if (runState) { clearTimeout(runState.timer); clearInterval(runState.ticker); }
     $('#runner').classList.remove('on'); $('#runner').setAttribute('aria-hidden', 'true');
     document.body.style.overflow = ''; runState = null; hushVoice();
+    destroyOrb('run');
+    var hold = $('.run-orb-hold');
+    if (hold) hold.classList.remove('has-webgl-orb');
     // Setup mode may have replaced the orb markup, so guard before touching it.
     var o = $('#runOrb'), r = $('#runOrbRing');
-    if (o) { o.classList.remove('paced'); o.style.transition = ''; o.style.transform = ''; }
+    if (o) { o.classList.remove('paced'); o.classList.remove('orb-css-fallback'); o.style.transition = ''; o.style.transform = ''; }
     if (r) { r.classList.remove('paced'); r.style.transition = ''; r.style.transform = ''; }
   }
   function finishSkill(helpful) {
@@ -1828,6 +1882,7 @@
   }
   // Setup replaced the stage's inner nodes; rebuild the canonical orb markup.
   function rebuildStage() {
+    destroyOrb('run');
     var stage = $('.run-stage'); clear(stage);
     stage.appendChild(el('div', { class: 'run-orb-hold' }, [
       el('div', { class: 'run-orb-ring', id: 'runOrbRing' }),
@@ -1844,6 +1899,7 @@
     var orb = $('#runOrb'), ring = $('#runOrbRing');
     orb.classList.add('paced'); ring.classList.add('paced');
     $('#runGuide').style.display = 'none';
+    mountOrb('run', '.run-orb-hold', '#runOrb');
 
     function totalRemaining() {
       var per = cycleSecs(s) * paceMult();
@@ -1862,6 +1918,7 @@
       ring.style.transition = 'transform ' + dur + 'ms var(--ease-soft)';
       orb.style.transform = 'scale(' + ph.scale + ')';
       ring.style.transform = 'scale(' + (ph.scale + 0.12) + ')';
+      setOrbBreath('run', ph.scale);
       speak(ph.label);
       buzz(ph.scale >= 0.9 ? [14, 60, 14] : 14);
       runState.phaseEnd = Date.now() + dur;
@@ -4524,7 +4581,7 @@
       }
     });
   }
-  var APP_VERSION = '5.0.2';
+  var APP_VERSION = '5.0.3';
   function settingsGroup(v, title, kids) { v.appendChild(el('p', { class: 'eyebrow', style: 'margin-top:var(--space-3)', text: title })); kids.forEach(function (k) { if (k) v.appendChild(k); }); }
   function toggleBtn(label, on, fn) {
     return el('button', { class: 'btn ghost', style: 'display:flex;justify-content:space-between', onclick: fn,
@@ -4880,7 +4937,7 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '5.0.2',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '5.0.3',
     effectiveMotion: effectiveMotion,
     motionCap: function () { return motionCap; },
     loadGsap: loadGsap,

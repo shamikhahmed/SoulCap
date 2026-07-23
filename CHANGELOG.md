@@ -1,5 +1,13 @@
 ## [Unreleased]
 
+## [5.0.3] — 2026-07-24
+
+### Added
+- **Native motion PR-4 Breathing orb:** hand-written WebGL soft sphere
+  (`docs/vendor/breath-orb.js`), drives Runner + Panic pacer breath timing.
+  Fallback ladder: no WebGL / Still / reduced-motion → existing CSS orb.
+- SW `soulcap-v503`. App **5.0.3**. Schema still **v12**.
+
 ## [5.0.2] — 2026-07-24
 
 ### Added
