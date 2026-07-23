@@ -1,8 +1,8 @@
 {
   "name": "SoulCap",
-  "version": "1.9.2",
-  "swCache": "soulcap-v192",
-  "schema": 10,
+  "version": "1.9.3",
+  "swCache": "soulcap-v193",
+  "schema": 11,
   "deploy": "docs/",
-  "note": "v1.9.2 fight/flight + wind-down articles; optional wind-down hour card on Now."
+  "note": "v1.9.3 PHQ-9/GAD-7 reflection screeners; item-9 Help routing; schema 11."
 }

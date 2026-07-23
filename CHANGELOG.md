@@ -4,6 +4,18 @@
 - Flaky Playwright: wait for CSS animations idle + `reducedMotion` before theme contrast and journal
   control size assertions (`e2e/app.spec.ts`, `e2e/personas.spec.ts`).
 
+## [1.9.3] — 2026-07-23
+
+### Added
+- **Reflection check** on You: opt-in PHQ-9 and GAD-7 style questionnaires (public domain).
+  Reflection framing only — never a diagnosis. Results stored as low-confidence local signals
+  (view/clear in What SoulCap knows); history kept as plain score/band lines.
+- **Safety:** any PHQ-9 item-9 endorsement opens hard-coded Help; top-band totals show a
+  professional-support nudge.
+
+### Changed
+- Schema **v11** (`screenerResults`). SW `soulcap-v193`. App **1.9.3**.
+
 ## [1.9.2] — 2026-07-23
 
 ### Added

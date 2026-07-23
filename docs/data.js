@@ -295,6 +295,84 @@ var DRIP_UI = {
   notDiagnosis:'Not a diagnosis or clinical score.'
 };
 
+var SCREENER_UI = {
+  cardTitle:'Reflection check',
+  cardHint:'Optional PHQ-9 or GAD-7 style check. Reflection only — never a diagnosis.',
+  pickTitle:'Choose a reflection check',
+  pickIntro:'Public-domain questionnaires used for reflection. Scores are not diagnoses. Skip anytime.',
+  scaleHint:'Over the last 2 weeks, how often have you been bothered by the following?',
+  scale0:'Not at all',
+  scale1:'Several days',
+  scale2:'More than half the days',
+  scale3:'Nearly every day',
+  next:'Next',
+  back:'Back',
+  finish:'See reflection',
+  resultTitle:'Your reflection',
+  resultLead:'Your answers over the last two weeks are in a range some people describe as ',
+  resultMid:'. This is not a diagnosis — only a professional can give one — but a level around here often means it is worth talking to someone you trust or a professional. Here are some things that may help in the meantime.',
+  topBandNudge:'This range is often a signal to seek professional support soon, alongside anything that helps day to day.',
+  notDiagnosis:'Not a diagnosis.',
+  lowConfidence:'Stored as a low-confidence local signal — never a label like a diagnosis.',
+  clear:'Clear this signal',
+  retake:'Take again',
+  close:'Close',
+  progress:'Question {n} of {total}',
+  knowsLabel:'Reflection check',
+  knowsSub:'Local signal only · low confidence · not a diagnosis',
+  historyLine:'Last score {score} · {band}'
+};
+
+var SCREENERS = [
+  { id:'phq9', name:'Mood reflection (PHQ-9)',
+    blurb:'Nine questions about the last two weeks. Reflection only.',
+    item9Index:8,
+    items:[
+      'Little interest or pleasure in doing things',
+      'Feeling down, depressed, or hopeless',
+      'Trouble falling or staying asleep, or sleeping too much',
+      'Feeling tired or having little energy',
+      'Poor appetite or overeating',
+      'Feeling bad about yourself — or that you are a failure or have let yourself or your family down',
+      'Trouble concentrating on things, such as reading the newspaper or watching television',
+      'Moving or speaking so slowly that other people could have noticed — or being so fidgety or restless that you have been moving around a lot more than usual',
+      'Thoughts that you would be better off dead, or of hurting yourself'
+    ],
+    bands:[
+      { id:'minimal', min:0, max:4, label:'minimal' },
+      { id:'mild', min:5, max:9, label:'mild' },
+      { id:'moderate', min:10, max:14, label:'moderate' },
+      { id:'moderately_severe', min:15, max:19, label:'moderately severe' },
+      { id:'severe', min:20, max:27, label:'severe' }
+    ],
+    topBand:'severe',
+    helpSkills:['self-compassion-break','behavioural-activation','hand-on-heart'],
+    helpExperiences:['fatigue','self-criticism','rumination']
+  },
+  { id:'gad7', name:'Worry reflection (GAD-7)',
+    blurb:'Seven questions about anxiety and worry over the last two weeks. Reflection only.',
+    item9Index:-1,
+    items:[
+      'Feeling nervous, anxious, or on edge',
+      'Not being able to stop or control worrying',
+      'Worrying too much about different things',
+      'Trouble relaxing',
+      'Being so restless that it is hard to sit still',
+      'Becoming easily annoyed or irritable',
+      'Feeling afraid as if something awful might happen'
+    ],
+    bands:[
+      { id:'minimal', min:0, max:4, label:'minimal' },
+      { id:'mild', min:5, max:9, label:'mild' },
+      { id:'moderate', min:10, max:14, label:'moderate' },
+      { id:'severe', min:15, max:21, label:'severe' }
+    ],
+    topBand:'severe',
+    helpSkills:['box-breathing','worry-postponement','grounding-54321'],
+    helpExperiences:['racing-thoughts','catastrophising','hypervigilance']
+  }
+];
+
 var USER_MODEL_KEYS = [
   { key:'stress', label:'Stress load', low:'Lighter', high:'Heavier' },
   { key:'sleep', label:'Sleep strain', low:'Rested', high:'Worn' },

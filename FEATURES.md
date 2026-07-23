@@ -1,6 +1,6 @@
 # SoulCap — Features (S/W/L/R)
 
-**Updated:** 2026-07-23 · Self-guided wellness companion · **v1.9.0**
+**Updated:** 2026-07-23 · Self-guided wellness companion · **v1.9.3**
 **Codes:** S = shipped · W = next wave · L = later · R = rejected
 
 ## S
@@ -23,6 +23,8 @@
 - Optional **What’s happening?** picker on Now and Calm → experiences → skills (never forced)
 - Eight library articles including fight/flight/freeze and wind-down/boundaries; optional evening
   wind-down hour (in-app card only, no notifications)
+- Opt-in **Reflection check** (PHQ-9 / GAD-7): never diagnoses; item-9 → Help; top band →
+  professional nudge; low-confidence correctable signals in What SoulCap knows
 - Six optional daily supports with local-day completion only; no streaks, scores, reminders, or
   missed-day pressure
 - Adaptive drip questionnaire (≤4 questions/day) with inspectable, correctable local estimates and
