@@ -20,6 +20,15 @@ async function selectTab(page: Page, tab: string) {
   }, tab);
 }
 
+async function waitForAnimationsIdle(page: Page, selector: string) {
+  await page.waitForFunction((sel) => {
+    const root = document.querySelector(sel);
+    if (!root || typeof (root as any).getAnimations !== 'function') return true;
+    const list = (root as Element).getAnimations({ subtree: true });
+    return list.every((a) => a.playState === 'finished' || a.playState === 'idle');
+  }, selector);
+}
+
 test.describe('Synthetic user journeys', () => {
   test('overwhelmed newcomer reaches help before consent and gets discreet Calm options', async ({ page }) => {
     await page.goto('/');
@@ -107,6 +116,9 @@ test.describe('Synthetic user journeys', () => {
     await selectTab(page, 'journal');
     await page.getByRole('button', { name: /New entry/ }).click();
     await page.getByRole('button', { name: /Blank page/ }).click();
+    await expect(page.locator('#journalEditor')).toBeVisible();
+    // Editor open animation still runs (opacity) under reduce; measure after idle.
+    await waitForAnimationsIdle(page, '#journalEditor');
     const targets = await page.locator('.je-tool, .je-mood button').evaluateAll((nodes) =>
       nodes.map((node) => {
         const box = node.getBoundingClientRect();
