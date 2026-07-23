@@ -879,6 +879,83 @@ test.describe('Skills', () => {
     await expect(page.locator('#runText')).toContainText(/Breathe in through your nose/);
   });
 
+  test('box-breathing and 4-7-8 phase timings match the pattern at Steady', async ({ page }) => {
+    test.setTimeout(90000);
+    await seedDemo(page);
+    await page.evaluate(() => {
+      const s = (window as any).__soulcap.getState();
+      s.pace = 1;
+    });
+
+    async function measurePhases(skillId: string, expectedSecs: number[]) {
+      await page.evaluate((sid) => (window as any).__soulcap.startSkill(sid), skillId);
+      await expect(page.locator('#runner.on')).toBeVisible();
+      await page.locator('#runner').getByRole('button', { name: 'Begin' }).click();
+      const samples = await page.evaluate(async (need) => {
+        const out: { t: number; text: string }[] = [];
+        const textEl = () => document.getElementById('runText')!;
+        out.push({ t: performance.now(), text: textEl().textContent || '' });
+        return await new Promise<{ t: number; text: string }[]>((resolve) => {
+          const el = textEl();
+          const mo = new MutationObserver(() => {
+            const cur = el.textContent || '';
+            if (cur !== out[out.length - 1].text) {
+              out.push({ t: performance.now(), text: cur });
+              if (out.length >= need + 1) {
+                mo.disconnect();
+                resolve(out);
+              }
+            }
+          });
+          mo.observe(el, { characterData: true, childList: true, subtree: true });
+        });
+      }, expectedSecs.length);
+      await page.locator('#runner').getByRole('button', { name: 'End' }).click();
+      await expect(page.locator('#runner.on')).toHaveCount(0);
+      const deltas: number[] = [];
+      for (let i = 1; i < samples.length; i++) deltas.push(samples[i].t - samples[i - 1].t);
+      return deltas.slice(0, expectedSecs.length);
+    }
+
+    const box = await measurePhases('box-breathing', [4, 4, 4, 4]);
+    box.forEach((ms, i) => {
+      // ±250ms allows setTimeout + MutationObserver poll jitter under CI load.
+      expect(Math.abs(ms - 4000), `box phase ${i}`).toBeLessThanOrEqual(250);
+    });
+
+    await page.evaluate(() => {
+      (window as any).__soulcap.getState().pace = 1;
+    });
+    const fse = await measurePhases('four-seven-eight', [4, 7, 8]);
+    const expectMs = [4000, 7000, 8000];
+    fse.forEach((ms, i) => {
+      expect(Math.abs(ms - expectMs[i]), `478 phase ${i}`).toBeLessThanOrEqual(250);
+    });
+  });
+
+  test('step duration at Steady is at least 9 seconds', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => { (window as any).__soulcap.getState().pace = 1; });
+    await runSkill(page, 'thought-record');
+    const first = await page.locator('#runText').innerText();
+    await page.waitForTimeout(8500);
+    expect(await page.locator('#runText').innerText()).toBe(first);
+    await expect(async () => {
+      expect(await page.locator('#runText').innerText()).not.toBe(first);
+    }).toPass({ timeout: 4000 });
+  });
+
+  test('runner exposes Slow/Steady/Brisk pace control', async ({ page }) => {
+    await seedDemo(page);
+    await runSkill(page, 'thought-record');
+    const pace = page.locator('#runner').getByRole('group', { name: 'Technique pace' });
+    await expect(pace.getByRole('button', { name: 'Slow' })).toBeVisible();
+    await expect(pace.getByRole('button', { name: 'Steady' })).toBeVisible();
+    await expect(pace.getByRole('button', { name: 'Brisk' })).toBeVisible();
+    await pace.getByRole('button', { name: 'Steady' }).click();
+    await expect(pace.getByRole('button', { name: 'Steady' })).toHaveAttribute('aria-pressed', 'true');
+  });
+
   test('an exercise can be abandoned without penalty', async ({ page }) => {
     await seedDemo(page);
     await runSkill(page, 'thought-record');

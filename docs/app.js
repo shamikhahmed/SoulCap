@@ -63,7 +63,7 @@
     concerns: [], checkins: [], skillRuns: [], people: [], links: [],
     safetyPlan: {}, episodes: [], favourites: [], journal: [],
     journalCover: { title: 'My Journal', subtitle: '', color: 0, sticker: '📔', photo: '' },
-    theme: null, locale: 'en', rings: 3, ringNames: {}, pace: 1,
+    theme: null, locale: 'en', rings: 3, ringNames: {}, pace: 1.35,
     voice: { on: false, name: null, rate: 0.85, pitch: 1 },
     haptics: true, showLinks: false, trackContact: false,
     patternPrefs: { enabled: true, decisions: {} },
@@ -786,9 +786,10 @@
         label = $('#panicInstruction'), step = $('#panicStep');
     function tick() {
       var ph = PHASES[pacerPhase % 4];
-      label.textContent = ph.label; step.textContent = 'Step ' + ((pacerPhase % 4) + 1) + ' of 4';
+      setPhaseLabel(label, ph.label); step.textContent = 'Step ' + ((pacerPhase % 4) + 1) + ' of 4';
       if (!reduced) { circle.style.transform = 'scale(' + ph.scale + ')'; ring.style.transform = 'scale(' + (ph.scale + 0.12) + ')'; }
       setOrbBreath('panic', ph.scale);
+      setPhaseArc('pacerPhaseArc', 4000);
       if (pacerPhase % 2 === 0) buzz(ph.scale === 1 ? [12, 90, 12] : 12);
       speak(ph.label);
       var n = 4; count.textContent = n;
@@ -1802,7 +1803,72 @@
     });
   }
 
-  function paceMult() { return state.pace || 1; }
+  function paceMult() { return typeof state.pace === 'number' ? state.pace : 1.35; }
+  var PACE_OPTS = [
+    { l: 'Slow', v: 1.35 }, { l: 'Steady', v: 1 }, { l: 'Brisk', v: 0.8 }
+  ];
+  function phaseArcSvg(progId, size) {
+    size = size || 210;
+    var ns = 'http://www.w3.org/2000/svg';
+    var svg = document.createElementNS(ns, 'svg');
+    svg.setAttribute('class', 'phase-arc');
+    svg.setAttribute('viewBox', '0 0 ' + size + ' ' + size);
+    svg.setAttribute('aria-hidden', 'true');
+    var cx = String(size / 2);
+    var r = String(Math.round(size * 0.4667));
+    var track = document.createElementNS(ns, 'circle');
+    track.setAttribute('class', 'phase-arc-track');
+    track.setAttribute('cx', cx); track.setAttribute('cy', cx); track.setAttribute('r', r);
+    var prog = document.createElementNS(ns, 'circle');
+    prog.setAttribute('class', 'phase-arc-prog');
+    prog.setAttribute('id', progId);
+    prog.setAttribute('cx', cx); prog.setAttribute('cy', cx); prog.setAttribute('r', r);
+    svg.appendChild(track); svg.appendChild(prog);
+    return svg;
+  }
+  function setPhaseArc(id, durMs) {
+    var arc = document.getElementById(id);
+    if (!arc) return;
+    var r = parseFloat(arc.getAttribute('r')) || 98;
+    var c = 2 * Math.PI * r;
+    arc.style.strokeDasharray = String(c);
+    arc.style.transition = 'none';
+    arc.style.strokeDashoffset = '0';
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !durMs) return;
+    // Restart deplete from a full ring.
+    void arc.getBoundingClientRect();
+    requestAnimationFrame(function () {
+      arc.style.transition = 'stroke-dashoffset ' + durMs + 'ms linear';
+      arc.style.strokeDashoffset = String(c);
+    });
+  }
+  function setPhaseLabel(node, text) {
+    if (!node) return;
+    if (node.textContent === text) return;
+    node.textContent = text;
+    node.classList.remove('phase-label-in');
+    node.classList.add('phase-label-out');
+    requestAnimationFrame(function () {
+      node.classList.remove('phase-label-out');
+      node.classList.add('phase-label-in');
+    });
+  }
+  function paceControlRow(onPick) {
+    return el('div', { class: 'bs-opts run-pace', role: 'group', 'aria-label': 'Technique pace' },
+      PACE_OPTS.map(function (o) {
+        return el('button', {
+          class: 'bs-opt', type: 'button',
+          'aria-pressed': paceMult() === o.v ? 'true' : 'false',
+          text: o.l,
+          onclick: function () {
+            state.pace = o.v;
+            save();
+            buzz(8);
+            if (onPick) onPick(o.v);
+          }
+        });
+      }));
+  }
   function fmtTime(sec) {
     sec = Math.round(sec);
     var m = Math.floor(sec / 60), s = sec % 60;
@@ -1881,7 +1947,7 @@
     $('#runStep').textContent = s.name;
     var prog = $('#runProgress'); clear(prog);
     s.steps.forEach(function (_, i) { prog.appendChild(el('i', { class: i <= runState.i ? 'on' : '' })); });
-    $('#runText').textContent = s.steps[runState.i];
+    setPhaseLabel($('#runText'), s.steps[runState.i]);
     $('#runMeta').textContent = 'Step ' + (runState.i + 1) + ' of ' + s.steps.length;
     var why = $('#runWhy'); why.textContent = runState.i === 0 ? s.mechanism : '';
     why.style.display = runState.i === 0 ? '' : 'none';
@@ -1899,6 +1965,7 @@
       orb.classList.add('paced'); orb.style.transition = 'transform ' + dur + 'ms var(--ease-soft)';
       orb.style.transform = 'scale(1.02)';
       count.textContent = Math.ceil(dur / 1000);
+      setPhaseArc('runPhaseArc', dur);
       runState.ticker = setInterval(function () {
         var left = Math.ceil((endAt - Date.now()) / 1000);
         count.textContent = left > 0 ? left : '';
@@ -1906,9 +1973,13 @@
       runState.timer = setTimeout(function () { orb.style.transform = 'scale(.82)'; runState.i++; renderSteps(); }, dur);
     } else {
       count.textContent = ''; orb.classList.remove('paced'); orb.style.transition = ''; orb.style.transform = '';
+      setPhaseArc('runPhaseArc', 0);
     }
 
     var actions = $('#runActions'); clear(actions);
+    actions.appendChild(paceControlRow(function () {
+      clearTimeout(runState.timer); clearInterval(runState.ticker); renderSteps();
+    }));
     actions.appendChild(el('button', { class: 'btn', text: runState.i === s.steps.length - 1 ? 'Finish' : 'Next',
       onclick: function () { clearTimeout(runState.timer); clearInterval(runState.ticker); runState.i++; renderSteps(); } }));
     actions.appendChild(el('button', { class: 'btn quiet',
@@ -1952,10 +2023,8 @@
         html: n + '<small>' + ['short', 'steady', 'long'][i] + '</small>',
         onclick: function () { runState.breaths = n; buzz(8); refreshEst(); markPressed(breathRow, this); } });
     }));
-    var paceRow = el('div', { class: 'bs-opts' }, [
-      { l: 'Slow', v: 1.25 }, { l: 'Steady', v: 1 }
-    ].map(function (o) {
-      return el('button', { class: 'bs-opt', 'aria-pressed': (state.pace || 1) === o.v ? 'true' : 'false',
+    var paceRow = el('div', { class: 'bs-opts' }, PACE_OPTS.map(function (o) {
+      return el('button', { class: 'bs-opt', 'aria-pressed': paceMult() === o.v ? 'true' : 'false',
         html: o.l, onclick: function () { state.pace = o.v; save(); buzz(8); refreshEst(); markPressed(paceRow, this); } });
     }));
     stage.appendChild(el('div', { class: 'bs-group' }, [el('p', { class: 'eyebrow', text: 'Breaths' }), breathRow]));
@@ -1975,6 +2044,7 @@
     destroyOrb('run');
     var stage = $('.run-stage'); clear(stage);
     stage.appendChild(el('div', { class: 'run-orb-hold' }, [
+      phaseArcSvg('runPhaseArc', 210),
       el('div', { class: 'run-orb-ring', id: 'runOrbRing' }),
       el('div', { class: 'run-orb', id: 'runOrb' }, [el('span', { class: 'run-orb-count', id: 'runOrbCount' })])
     ]));
@@ -2002,13 +2072,14 @@
     function runPhase() {
       var ph = phases[runState.pi];
       var dur = ph.secs * paceMult() * 1000;
-      $('#runText').textContent = ph.label;
+      setPhaseLabel($('#runText'), ph.label);
       $('#runMeta').textContent = 'Breath ' + (runState.bi + 1) + ' of ' + runState.breaths + ' · ' + fmtTime(totalRemaining()) + ' left';
       orb.style.transition = 'transform ' + dur + 'ms var(--ease-soft)';
       ring.style.transition = 'transform ' + dur + 'ms var(--ease-soft)';
       orb.style.transform = 'scale(' + ph.scale + ')';
       ring.style.transform = 'scale(' + (ph.scale + 0.12) + ')';
       setOrbBreath('run', ph.scale);
+      setPhaseArc('runPhaseArc', dur);
       speak(ph.label);
       buzz(ph.scale >= 0.9 ? [14, 60, 14] : 14);
       runState.phaseEnd = Date.now() + dur;
@@ -2044,6 +2115,11 @@
     }
     function drawRunActions() {
       var actions = $('#runActions'); clear(actions);
+      actions.appendChild(paceControlRow(function () {
+        clearTimeout(runState.timer); clearInterval(runState.ticker);
+        if (!runState.paused) runPhase();
+        else drawRunActions();
+      }));
       actions.appendChild(el('button', { class: 'btn', text: runState.paused ? 'Resume' : 'Pause',
         onclick: function () { buzz(10); runState.paused ? resume() : pause(); } }));
       actions.appendChild(el('button', { class: 'btn quiet', text: 'End', onclick: closeRunner }));
@@ -2953,7 +3029,7 @@
         ]),
         el('p', { class: 'eyebrow mt-3', text: SETTINGS_UI.exercisePace }),
         settingChips([{ v: 1.35, l: SETTINGS_UI.slow }, { v: 1, l: SETTINGS_UI.steady }, { v: 0.8, l: SETTINGS_UI.brisk }],
-          function (o) { return (state.pace || 1) === o.v; }, function (o) {
+          function (o) { return paceMult() === o.v; }, function (o) {
             var before = state.pace; state.pace = o.v;
             if (!save()) { state.pace = before; showPreferenceSaveFailed(); return; }
             haptic('tick'); reRender();
@@ -4675,7 +4751,7 @@
       }
     });
   }
-  var APP_VERSION = '5.1.0';
+  var APP_VERSION = '5.1.1';
   function settingsGroup(v, title, kids) { v.appendChild(el('p', { class: 'eyebrow', style: 'margin-top:var(--space-3)', text: title })); kids.forEach(function (k) { if (k) v.appendChild(k); }); }
   function toggleBtn(label, on, fn) {
     return el('button', { class: 'btn ghost', style: 'display:flex;justify-content:space-between', onclick: fn,
@@ -5056,7 +5132,7 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '5.1.0',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '5.1.1',
     effectiveMotion: effectiveMotion,
     motionCap: function () { return motionCap; },
     loadGsap: loadGsap,

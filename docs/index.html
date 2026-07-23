@@ -102,6 +102,10 @@ else{document.documentElement.setAttribute('lang','en');document.documentElement
     <p id="panicInstruction" class="panic-instruction">Breathe in, slowly.</p>
   </div>
   <div class="pacer-hold">
+    <svg class="phase-arc" viewBox="0 0 190 190" aria-hidden="true">
+      <circle class="phase-arc-track" cx="95" cy="95" r="88"></circle>
+      <circle class="phase-arc-prog" id="pacerPhaseArc" cx="95" cy="95" r="88"></circle>
+    </svg>
     <div id="pacerRing" class="pacer-ring"></div>
     <div id="pacer" class="pacer"><span id="pacerCount" class="pacer-count">4</span></div>
   </div>
@@ -124,6 +128,10 @@ else{document.documentElement.setAttribute('lang','en');document.documentElement
   <div id="runVoice" class="voice-row"></div>
   <div class="run-stage">
     <div class="run-orb-hold">
+      <svg class="phase-arc" viewBox="0 0 210 210" aria-hidden="true">
+        <circle class="phase-arc-track" cx="105" cy="105" r="98"></circle>
+        <circle class="phase-arc-prog" id="runPhaseArc" cx="105" cy="105" r="98"></circle>
+      </svg>
       <div id="runOrbRing" class="run-orb-ring"></div>
       <div id="runOrb" class="run-orb"><span id="runOrbCount" class="run-orb-count"></span></div>
     </div>

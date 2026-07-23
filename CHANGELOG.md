@@ -1,5 +1,13 @@
 ## [Unreleased]
 
+## [5.1.1] — 2026-07-24
+
+### Changed
+- **v5.1 PR-2 Rhythm:** phase label is largest/highest-contrast with calm swap; depleting
+  progress arc around orb; default pace **Slow** (1.35); Slow/Steady/Brisk inside runner +
+  breath setup; timing tests for box-breathing / 4-7-8 / step ≥9s.
+- SW `soulcap-v511`. App **5.1.1**. Schema still **v12**.
+
 ## [5.1.0] — 2026-07-24
 
 ### Fixed
