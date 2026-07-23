@@ -1,5 +1,13 @@
 ## [Unreleased]
 
+## [4.0.7] — 2026-07-24
+
+### Changed
+- **Master design PR-8 First run:** Splash gradient+grain + ambient breath; Welcome full-bleed
+  lockup with Help as quiet text link; Onboarding slim progress bar + Help in header, one step
+  per screen.
+- SW `soulcap-v407`. App **4.0.7**. Schema still **v12**.
+
 ## [4.0.6] — 2026-07-24
 
 ### Changed

@@ -1,4 +1,4 @@
-**Version:** 4.0.6 · SW `soulcap-v406`
+**Version:** 4.0.7 · SW `soulcap-v407`
 
 # SoulCap — Project Handover
 
@@ -6,7 +6,7 @@
 > first — it is the current truth as of 2026-07-24. The sections further down describe an
 > earlier architecture and are kept for reference only.
 
-## Current state (v4.0.6 — 2026-07-24)
+## Current state (v4.0.7 — 2026-07-24)
 
 **The product is the PWA in `docs/`.** Offline-first, local-only, **no network calls after load**.
 Schema **v12**. **Design System v4** through Journal/People polish.
@@ -14,7 +14,7 @@ Building `SPEC-v4.0-master-design.md` PR-by-PR, then `SPEC-v5.0-native-motion.md
 Live: https://shamikhahmed.github.io/SoulCap/
 
 ### Schema & ship
-- State `DEFAULT.v = 12` · SW `soulcap-v406` · app **4.0.6**
+- State `DEFAULT.v = 12` · SW `soulcap-v407` · app **4.0.7**
 - Ship workflow: bump CACHE + VERSION.json + APP_VERSION; CHANGELOG; SAFETY/HANDOVER; gallery;
   `npm run verify`; push `main`.
 

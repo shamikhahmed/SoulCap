@@ -4328,7 +4328,7 @@
       }
     });
   }
-  var APP_VERSION = '4.0.6';
+  var APP_VERSION = '4.0.7';
   function settingsGroup(v, title, kids) { v.appendChild(el('p', { class: 'eyebrow', style: 'margin-top:var(--space-3)', text: title })); kids.forEach(function (k) { if (k) v.appendChild(k); }); }
   function toggleBtn(label, on, fn) {
     return el('button', { class: 'btn ghost', style: 'display:flex;justify-content:space-between', onclick: fn,
@@ -4475,51 +4475,63 @@
   function renderWelcome() {
     var v = $('#view-welcome'); clear(v);
     v.appendChild(el('div', { class: 'welcome-hero' }, [
-      el('img', { class: 'welcome-mark', src: 'icons/mark.svg', alt: '', width: '96', height: '96' }),
-      el('h1', { class: 'h-voice', style: 'font-size:34px', text: tUi('welcome', 'title', { title: 'A quiet place to steady yourself.' }) }),
+      el('img', { class: 'welcome-mark', src: 'icons/mark.svg', alt: '', width: '104', height: '104' }),
+      el('h1', { class: 'h-voice type-display', text: tUi('welcome', 'title', { title: 'A quiet place to steady yourself.' }) }),
       el('p', { class: 'p-voice', text: tUi('welcome', 'subtitle', { subtitle: 'Techniques that work in a few minutes. A private journal. A map of the people around you. Everything stays on your phone.' }) }),
       el('p', { class: 'p-sm', text: tUi('welcome', 'tagline', { tagline: 'Not therapy. Not a crisis service. Just something that helps.' }) })
     ]));
     v.appendChild(el('div', { class: 'welcome-actions' }, [
       el('button', { class: 'btn', text: tUi('welcome', 'begin', { begin: 'Begin' }), onclick: function () { state.welcomed = true; save(); render(); } }),
-      el('button', { class: 'help-btn', text: t('helpNow'), onclick: openPanic })
+      el('button', { class: 'help-btn welcome-help', text: t('helpNow'), onclick: openPanic })
     ]));
   }
   var obStep = 0;
   function renderOnboarding() {
     var v = $('#view-onboarding'); clear(v);
-    v.appendChild(el('div', { class: 'onboard-dots', role: 'progressbar', 'aria-valuemin': '1', 'aria-valuemax': '4', 'aria-valuenow': String(obStep + 1), 'aria-label': 'Onboarding step ' + (obStep + 1) + ' of 4' }, [0, 1, 2, 3].map(function (i) {
-      return el('i', { class: i <= obStep ? 'on' : '' });
-    })));
+    var pct = Math.round(((obStep + 1) / 4) * 100);
+    v.appendChild(el('div', { class: 'onboard-top' }, [
+      el('div', {
+        class: 'onboard-progress',
+        role: 'progressbar',
+        'aria-valuemin': '1',
+        'aria-valuemax': '4',
+        'aria-valuenow': String(obStep + 1),
+        'aria-label': 'Onboarding step ' + (obStep + 1) + ' of 4'
+      }, [
+        el('div', { class: 'onboard-progress-fill', style: 'width:' + pct + '%' })
+      ]),
+      el('button', { class: 'help-btn onboard-help', text: t('helpNow'), onclick: openPanic })
+    ]));
+    var body = el('div', { class: 'onboard-body' });
     if (obStep === 0) {
-      v.appendChild(el('h1', { class: 'h-voice', text: tUi('onboarding', 'ageTitle', { ageTitle: 'First — how old are you?' }) }));
-      v.appendChild(el('p', { class: 'p', text: tUi('onboarding', 'ageBody', { ageBody: 'SoulCap is built for adults. We ask because the right support for someone under 18 looks different, and we’d rather point you somewhere better than get it wrong.' }) }));
-      v.appendChild(el('div', { class: 'stack' }, [
+      body.appendChild(el('h1', { class: 'h-voice', text: tUi('onboarding', 'ageTitle', { ageTitle: 'First — how old are you?' }) }));
+      body.appendChild(el('p', { class: 'p', text: tUi('onboarding', 'ageBody', { ageBody: 'SoulCap is built for adults. We ask because the right support for someone under 18 looks different, and we’d rather point you somewhere better than get it wrong.' }) }));
+      body.appendChild(el('div', { class: 'stack' }, [
         el('button', { class: 'opt', html: tUi('onboarding', 'over18', { over18: '18 or older' }), onclick: function () { state.ageOk = true; save(); obStep = 1; render(); } }),
         el('button', { class: 'opt', html: tUi('onboarding', 'under18', { under18: 'Under 18' }) + '<span class="os">' + tUi('onboarding', 'under18Hint', { under18Hint: 'This isn’t built for you yet — please talk to a trusted adult or a service for young people' }) + '</span>', onclick: function () { state.ageOk = false; save(); render(); } })
       ]));
-      if (state.ageOk === false) v.appendChild(el('div', { class: 'card' }, [el('p', { class: 'p-voice', text: tUi('onboarding', 'under18Body', { under18Body: 'SoulCap isn’t the right fit yet. Please reach out to a trusted adult, or a support service made for young people where you are.' }) })]));
+      if (state.ageOk === false) body.appendChild(el('div', { class: 'card' }, [el('p', { class: 'p-voice', text: tUi('onboarding', 'under18Body', { under18Body: 'SoulCap isn’t the right fit yet. Please reach out to a trusted adult, or a support service made for young people where you are.' }) })]));
     } else if (obStep === 1) {
-      v.appendChild(el('h1', { class: 'h-voice', text: tUi('onboarding', 'nameTitle', { nameTitle: 'What should we call you?' }) }));
-      v.appendChild(el('p', { class: 'p', text: tUi('onboarding', 'nameBody', { nameBody: 'So this feels like yours. Skip it if you’d rather not.' }) }));
+      body.appendChild(el('h1', { class: 'h-voice', text: tUi('onboarding', 'nameTitle', { nameTitle: 'What should we call you?' }) }));
+      body.appendChild(el('p', { class: 'p', text: tUi('onboarding', 'nameBody', { nameBody: 'So this feels like yours. Skip it if you’d rather not.' }) }));
       var name = el('input', { type: 'text', placeholder: tUi('onboarding', 'namePlaceholder', { namePlaceholder: 'Your name or a nickname' }), 'aria-label': 'Name', value: state.profile.name });
-      v.appendChild(name);
-      v.appendChild(el('button', { class: 'btn', text: tUi('onboarding', 'continue', { continue: 'Continue' }), onclick: function () { state.profile.name = name.value.trim().slice(0, 40); save(); obStep = 2; render(); } }));
-      v.appendChild(el('button', { class: 'btn quiet', text: t('common.skip', 'Skip'), onclick: function () { obStep = 2; render(); } }));
+      body.appendChild(name);
+      body.appendChild(el('button', { class: 'btn', text: tUi('onboarding', 'continue', { continue: 'Continue' }), onclick: function () { state.profile.name = name.value.trim().slice(0, 40); save(); obStep = 2; render(); } }));
+      body.appendChild(el('button', { class: 'btn quiet', text: t('common.skip', 'Skip'), onclick: function () { obStep = 2; render(); } }));
     } else if (obStep === 2) {
-      v.appendChild(el('h1', { class: 'h-voice', text: tUi('onboarding', 'consentTitle', { consentTitle: 'What this is, plainly.' }) }));
-      v.appendChild(el('div', { class: 'notice', html: '<b>SoulCap is not therapy</b>, not a doctor, and not a crisis service. It teaches skills and helps you notice patterns.<ul style="margin:9px 0 0;padding-left:17px"><li>Everything stays on your phone. No account, no server.</li><li>We never sell your data or train on it.</li><li>You can export or delete all of it, any time.</li><li>If you ever feel unsafe, please reach out to someone you trust or your local emergency services.</li></ul>' }));
-      v.appendChild(el('button', { class: 'btn', text: tUi('onboarding', 'understand', { understand: 'I understand' }), onclick: function () { state.consent = true; save(); obStep = 3; render(); } }));
+      body.appendChild(el('h1', { class: 'h-voice', text: tUi('onboarding', 'consentTitle', { consentTitle: 'What this is, plainly.' }) }));
+      body.appendChild(el('div', { class: 'notice', html: '<b>SoulCap is not therapy</b>, not a doctor, and not a crisis service. It teaches skills and helps you notice patterns.<ul style="margin:9px 0 0;padding-left:17px"><li>Everything stays on your phone. No account, no server.</li><li>We never sell your data or train on it.</li><li>You can export or delete all of it, any time.</li><li>If you ever feel unsafe, please reach out to someone you trust or your local emergency services.</li></ul>' }));
+      body.appendChild(el('button', { class: 'btn', text: tUi('onboarding', 'understand', { understand: 'I understand' }), onclick: function () { state.consent = true; save(); obStep = 3; render(); } }));
     } else {
-      v.appendChild(el('h1', { class: 'h-voice', text: tUi('onboarding', 'concernsTitle', { concernsTitle: 'What’s been hard lately?' }) }));
-      v.appendChild(el('p', { class: 'p', text: tUi('onboarding', 'concernsBody', { concernsBody: 'Pick any, or none. You can change this whenever — skipping doesn’t break anything.' }) }));
-      v.appendChild(el('div', { class: 'chips' }, CONCERNS.map(function (c) {
+      body.appendChild(el('h1', { class: 'h-voice', text: tUi('onboarding', 'concernsTitle', { concernsTitle: 'What’s been hard lately?' }) }));
+      body.appendChild(el('p', { class: 'p', text: tUi('onboarding', 'concernsBody', { concernsBody: 'Pick any, or none. You can change this whenever — skipping doesn’t break anything.' }) }));
+      body.appendChild(el('div', { class: 'chips' }, CONCERNS.map(function (c) {
         return el('button', { class: 'chip', 'aria-pressed': state.concerns.indexOf(c) !== -1 ? 'true' : 'false', text: concernLabel(c), onclick: function () { var i = state.concerns.indexOf(c); if (i === -1) state.concerns.push(c); else state.concerns.splice(i, 1); save(); render(); } });
       })));
-      v.appendChild(el('button', { class: 'btn', text: tUi('onboarding', 'start', { start: 'Start' }), onclick: finishOnboarding }));
-      v.appendChild(el('button', { class: 'btn quiet', text: tUi('onboarding', 'skipIn', { skipIn: 'Skip — just let me in' }), onclick: finishOnboarding }));
+      body.appendChild(el('button', { class: 'btn', text: tUi('onboarding', 'start', { start: 'Start' }), onclick: finishOnboarding }));
+      body.appendChild(el('button', { class: 'btn quiet', text: tUi('onboarding', 'skipIn', { skipIn: 'Skip — just let me in' }), onclick: finishOnboarding }));
     }
-    v.appendChild(el('button', { class: 'help-btn', style: 'margin-top:auto', text: t('helpNow'), onclick: openPanic }));
+    v.appendChild(body);
   }
   function finishOnboarding() {
     if (!state.notices) state.notices = clone(DEFAULT.notices);
@@ -4670,7 +4682,7 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '4.0.6',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '4.0.7',
     experienceIds: EXPERIENCES.map(function (item) { return item.id; }),
     experienceHelpsOk: function () {
       return EXPERIENCES.every(function (exp) {
