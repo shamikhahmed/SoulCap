@@ -62,7 +62,6 @@ async function captureAll(page: Page, viewport: keyof typeof VIEWPORTS) {
   i += 1;
   await page.evaluate(() => (document.querySelector('#tabs button[data-tab="now"]') as HTMLElement).click());
   await page.waitForTimeout(300);
-  await page.locator('#view-now .explore-toggle').click();
   await page.locator('#view-now .path-card').click();
   await page.waitForTimeout(300);
   await page.locator('#sheetPanel').getByRole('button', { name: 'Wired', exact: true }).click();

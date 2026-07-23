@@ -3684,10 +3684,28 @@
   }
   function renderNow() {
     var v = $('#view-now'); clear(v);
-    v.appendChild(el('div', { class: 'now-hero hero-glow' }, [
-      el('p', { class: 'eyebrow', text: new Date().toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' }) }),
-      el('h1', { class: 'h-voice', text: greeting() })
-    ]));
+    var states = ['Steady', 'Wired', 'Flat', 'Heavy', 'Not sure'];
+    var rc = todayCheckin(), today = rc ? rc.state : null;
+    var pick = suggestSkill(), dm = DOMAIN_META[pick.skill.domain];
+    var dots = weekActivityDots();
+
+    var hero = el('div', { class: 'hero-band' });
+    hero.appendChild(el('p', { class: 'eyebrow', text: new Date().toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' }) }));
+    hero.appendChild(el('h1', { class: 'h-voice', text: greeting() }));
+    hero.appendChild(el('p', { class: 'p-voice', style: 'margin-top:var(--space-3)', text: tUi('checkin', 'arrival', { arrival: 'How are you arriving right now?' }) }));
+    hero.appendChild(el('div', { class: 'chips', style: 'margin-top:var(--space-3)' }, states.map(function (s) {
+      return el('button', { class: 'chip', 'aria-pressed': today === s ? 'true' : 'false', text: checkinStateLabel(s),
+        onclick: function () {
+          if (!recordCheckin(s)) { showCheckinSaveFailed(); return; }
+          haptic('select'); render();
+        } });
+    })));
+    if (rc) {
+      var hasDetail = Object.keys(rc.dims || {}).length || (rc.triggers || []).length || rc.need || rc.feeling;
+      hero.appendChild(el('button', { class: 'btn ghost', style: 'margin-top:var(--space-2)', text: hasDetail ? tUi('checkin', 'editDetail', CHECKIN_UI) : tUi('checkin', 'addDetail', CHECKIN_UI), onclick: checkinDetailSheet }));
+    }
+    v.appendChild(hero);
+
     if (state.pendingReflection && !state.reflectionPrefs.dismissedForever) {
       var pr = REFLECTION_PROMPTS[state.pendingReflection.trigger] || REFLECTION_PROMPTS.journal;
       v.appendChild(el('div', { class: 'card' }, [
@@ -3707,46 +3725,63 @@
         el('button', { class: 'btn ghost', text: WHATS_NEW_UI.dismiss, onclick: dismissWhatsNew })
       ]));
     }
-
-    var primary = el('div', { class: 'now-primary' });
-    var states = ['Steady', 'Wired', 'Flat', 'Heavy', 'Not sure'];
-    var rc = todayCheckin(), today = rc ? rc.state : null;
     if (!state.checkins.length) {
-      primary.appendChild(el('div', { class: 'card empty-state' }, [
+      v.appendChild(el('div', { class: 'card empty-state' }, [
         el('p', { class: 'p-sm', text: tUi('empty', 'now', EMPTY_UI) })
       ]));
     }
-    primary.appendChild(el('div', {}, [
-      el('p', { class: 'p-voice', text: tUi('checkin', 'arrival', { arrival: 'How are you arriving right now?' }) }),
-      el('div', { style: 'height:11px' }),
-      el('div', { class: 'chips' }, states.map(function (s) {
-        return el('button', { class: 'chip', 'aria-pressed': today === s ? 'true' : 'false', text: checkinStateLabel(s),
-          onclick: function () {
-            if (!recordCheckin(s)) { showCheckinSaveFailed(); return; }
-            haptic('select'); render();
-          } });
-      }))
-    ]));
-    if (rc) {
-      var hasDetail = Object.keys(rc.dims || {}).length || (rc.triggers || []).length || rc.need || rc.feeling;
-      primary.appendChild(el('button', { class: 'btn ghost', text: hasDetail ? tUi('checkin', 'editDetail', CHECKIN_UI) : tUi('checkin', 'addDetail', CHECKIN_UI), onclick: checkinDetailSheet }));
-    }
-    var pick = suggestSkill(), dm = DOMAIN_META[pick.skill.domain];
-    primary.appendChild(el('div', { class: 'card raised now-suggest' }, [
-      el('div', { class: 'card-head' }, [el('h2', { class: 'card-title', text: pick.skill.name }), el('span', { class: 'domain', style: 'color:var(' + dm.cssVar + ')', text: dm.label })]),
-      el('p', { class: 'meta', text: pick.skill.mins + ' min · works offline' }),
-      el('p', { class: 'reason', text: reasonText(pick) }),
+
+    var primary = el('div', { class: 'now-primary' });
+    primary.appendChild(el('div', { class: 'hero-tile now-suggest' }, [
+      el('p', { class: 'ht-meta', text: dm.label + ' · ' + pick.skill.mins + ' min · offline' }),
+      el('h2', { class: 'ht-title', text: pick.skill.name }),
+      el('p', { class: 'ht-reason reason', text: reasonText(pick) }),
       el('button', { class: 'btn', text: 'Begin', onclick: function () { startSkill(pick.skill.id); } }),
       el('button', { class: 'btn quiet', text: 'Something else', onclick: function () { calm.browse = false; selectTab('calm'); } })
     ]));
-    var dots = weekActivityDots();
-    primary.appendChild(el('div', { class: 'progress-glance', 'aria-label': 'This week' }, [
-      el('p', { class: 'glance-label', text: 'This week' }),
-      el('div', { class: 'progress-dots', role: 'img', 'aria-label': weekActivityLabel(dots) }, dots.map(function (d) {
-        return el('i', { class: d.on ? 'on' : '', title: d.key });
-      })),
-      el('p', { class: 'glance-sub', text: weekActivityLabel(dots) })
-    ]));
+
+    var utilKids = [
+      el('div', { class: 'tile progress-glance', 'aria-label': 'This week' }, [
+        el('p', { class: 'tile-meta glance-label', text: 'This week' }),
+        el('div', { class: 'progress-dots', role: 'img', 'aria-label': weekActivityLabel(dots) }, dots.map(function (d) {
+          return el('i', { class: d.on ? 'on' : '', title: d.key });
+        })),
+        el('p', { class: 'glance-sub', text: weekActivityLabel(dots) })
+      ])
+    ];
+    if (!state.pathPrefs || !state.pathPrefs.hide) {
+      utilKids.push(el('button', { class: 'tile tap path-card', onclick: pathSheet }, [
+        el('p', { class: 'tile-meta', text: 'Optional' }),
+        el('h2', { class: 'tile-title', text: PATH_UI.cardTitle }),
+        el('p', { class: 'p-sm', text: PATH_UI.cardHint })
+      ]));
+    } else {
+      utilKids.push(el('button', { class: 'tile tap experience-picker-card', onclick: experiencePickerSheet }, [
+        el('p', { class: 'tile-meta', text: 'Library' }),
+        el('h2', { class: 'tile-title', text: EXPERIENCE_PICKER_UI.cardTitle }),
+        el('p', { class: 'p-sm', text: EXPERIENCE_PICKER_UI.cardHint })
+      ]));
+    }
+    primary.appendChild(el('div', { class: 'bento-2' }, utilKids));
+
+    var micro = el('div', { class: 'bento-2 now-micro' });
+    if (!state.pathPrefs || !state.pathPrefs.hide) {
+      micro.appendChild(el('button', { class: 'tile tap experience-picker-card', onclick: experiencePickerSheet }, [
+        el('h2', { class: 'tile-title', text: EXPERIENCE_PICKER_UI.cardTitle }),
+        el('p', { class: 'p-sm', text: EXPERIENCE_PICKER_UI.cardHint })
+      ]));
+    }
+    if (typeof state.windDownHour === 'number' && new Date().getHours() >= state.windDownHour) {
+      micro.appendChild(el('div', { class: 'tile wind-down-card' }, [
+        el('h2', { class: 'tile-title', text: WIND_DOWN_UI.nowTitle }),
+        el('p', { class: 'p-sm', text: WIND_DOWN_UI.nowHint }),
+        el('button', { class: 'btn ghost', text: WIND_DOWN_UI.openArticle, onclick: function () {
+          selectTab('calm'); calm.section = 'library'; libraryQuery = 'winding'; libraryFilter = 'articles'; render();
+          setTimeout(function () { articleSheet('wind-down-boundaries'); }, 0);
+        } })
+      ]));
+    }
+    if (micro.childNodes.length) primary.appendChild(micro);
     v.appendChild(primary);
 
     v.appendChild(el('button', {
@@ -3762,27 +3797,6 @@
     }
 
     var quiet = el('div', { class: 'now-quiet' });
-    if (!state.pathPrefs || !state.pathPrefs.hide) {
-      quiet.appendChild(el('button', { class: 'card tap path-card', onclick: pathSheet }, [
-        el('h2', { class: 'card-title', text: PATH_UI.cardTitle }),
-        el('p', { class: 'p-sm', text: PATH_UI.cardHint })
-      ]));
-    }
-    quiet.appendChild(el('button', { class: 'card tap experience-picker-card', onclick: experiencePickerSheet }, [
-      el('h2', { class: 'card-title', text: EXPERIENCE_PICKER_UI.cardTitle }),
-      el('p', { class: 'p-sm', text: EXPERIENCE_PICKER_UI.cardHint })
-    ]));
-    if (typeof state.windDownHour === 'number' && new Date().getHours() >= state.windDownHour) {
-      quiet.appendChild(el('div', { class: 'card wind-down-card' }, [
-        el('h2', { class: 'card-title', text: WIND_DOWN_UI.nowTitle }),
-        el('p', { class: 'p-sm', text: WIND_DOWN_UI.nowHint }),
-        el('button', { class: 'btn ghost', text: WIND_DOWN_UI.openArticle, onclick: function () {
-          selectTab('calm'); calm.section = 'library'; libraryQuery = 'winding'; libraryFilter = 'articles'; render();
-          setTimeout(function () { articleSheet('wind-down-boundaries'); }, 0);
-        } }),
-        el('button', { class: 'btn quiet', text: WIND_DOWN_UI.journalNight, onclick: function () { selectTab('journal'); } })
-      ]));
-    }
     var dripQ = nextDripQuestion();
     quiet.appendChild(el('button', { class: 'card tap', onclick: dripSheet }, [
       el('h2', { class: 'card-title', text: DRIP_UI.cardTitle }),
@@ -4158,7 +4172,7 @@
       p.appendChild(el('button', { class: 'btn quiet', text: tUi('principles', 'close', PRINCIPLES_UI), onclick: closeSheet }));
     });
   }
-  var APP_VERSION = '4.0.1';
+  var APP_VERSION = '4.0.2';
   function settingsGroup(v, title, kids) { v.appendChild(el('p', { class: 'eyebrow', style: 'margin-top:var(--space-3)', text: title })); kids.forEach(function (k) { if (k) v.appendChild(k); }); }
   function toggleBtn(label, on, fn) {
     return el('button', { class: 'btn ghost', style: 'display:flex;justify-content:space-between', onclick: fn,
@@ -4500,7 +4514,7 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '4.0.1',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '4.0.2',
     experienceIds: EXPERIENCES.map(function (item) { return item.id; }),
     experienceHelpsOk: function () {
       return EXPERIENCES.every(function (exp) {

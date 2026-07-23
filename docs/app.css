@@ -924,6 +924,9 @@ hr.sep{border:none;border-top:1px solid var(--line);margin:2px 0}
 .hero-tile .ht-meta{font-size:var(--type-label);letter-spacing:var(--type-label-track);text-transform:uppercase;color:var(--ink-3);font-weight:600;margin:0}
 .hero-tile .ht-title{font-family:var(--voice);font-size:var(--type-title);line-height:var(--type-title-lh);font-weight:500;margin:0}
 .hero-tile .ht-reason{font-size:var(--type-callout);line-height:var(--type-callout-lh);color:var(--ink-2);margin:0}
+.hero-tile.now-suggest{aspect-ratio:auto;min-height:200px;justify-content:flex-start}
+.tile.progress-glance{box-shadow:var(--shadow-1);gap:var(--space-3);justify-content:center}
+.now-micro{margin-top:0}
 
 .tile{
   display:flex;flex-direction:column;gap:var(--space-2);

@@ -418,8 +418,6 @@ test.describe('v1.9 clinical experiences library', () => {
 
   test('Now what’s-happening picker opens experience then runner', async ({ page }) => {
     await seedDemo(page);
-    await page.locator('#view-now .explore-toggle').click();
-    await expect(page.locator('#view-now .explore-toggle')).toHaveAttribute('aria-expanded', 'true');
     await page.locator('#view-now .experience-picker-card').click();
     await expect(page.locator('#sheet')).toContainText('What’s happening?');
     await expect(page.locator('#sheet')).toContainText('Not a diagnosis');
@@ -460,8 +458,6 @@ test.describe('v1.9.2 articles and wind-down', () => {
     await page.goto('/');
     await page.waitForFunction(() => Boolean((window as any).__soulcap));
     await dismissSplash(page);
-    await page.locator('#view-now .explore-toggle').click();
-    await expect(page.locator('#view-now .explore-toggle')).toHaveAttribute('aria-expanded', 'true');
     await expect(page.getByRole('heading', { name: 'Wind-down window' })).toBeVisible();
     await expect(page.locator('.wind-down-card')).toContainText('No guilt');
   });
@@ -537,7 +533,6 @@ test.describe('v1.9.3 reflection screeners', () => {
 test.describe('v2.1 Guided Path', () => {
   test('Now and Calm expose short path; complete path opens runner', async ({ page }) => {
     await seedDemo(page);
-    await page.locator('#view-now .explore-toggle').click();
     await expect(page.locator('#view-now .path-card')).toContainText('A short path');
     await page.locator('#view-now .path-card').click();
     const sheet = page.locator('#sheetPanel');
@@ -614,7 +609,6 @@ test.describe('v2.1 Guided Path', () => {
     await page.getByRole('button', { name: /Hide short path on Now/ }).click();
     await page.locator('#sheetPanel').getByRole('button', { name: 'Close' }).click();
     await page.evaluate(() => (document.querySelector('#tabs button[data-tab="now"]') as HTMLElement).click());
-    await page.locator('#view-now .explore-toggle').click();
     await expect(page.locator('#view-now .path-card')).toHaveCount(0);
   });
 
@@ -1208,10 +1202,10 @@ test.describe('Check-ins', () => {
     const results: { state: string; title: string; reason: string }[] = [];
     for (const state of states) {
       await page.locator('#view-now .chips .chip').filter({ hasText: state }).click();
-      const skillCard = page.locator('#view-now .card').filter({ has: page.getByRole('button', { name: 'Begin' }) }).first();
+      const skillCard = page.locator('#view-now .now-suggest').first();
       results.push({
         state,
-        title: await skillCard.locator('.card-title').innerText(),
+        title: await skillCard.locator('.ht-title').innerText(),
         reason: await skillCard.locator('.reason').innerText(),
       });
     }

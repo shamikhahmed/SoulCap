@@ -1,5 +1,13 @@
 ## [Unreleased]
 
+## [4.0.2] — 2026-07-24
+
+### Changed
+- **Master design PR-3 Now:** hero-band (date + greeting + arrival chips) → hero-tile suggestion →
+  2-up utility (This week · Short path) → micro row (notice what’s happening · wind-down) →
+  quiet Explore (drip + connect). Kit classes end-to-end.
+- SW `soulcap-v402`. App **4.0.2**. Schema still **v12**.
+
 ## [4.0.1] — 2026-07-24
 
 ### Added
