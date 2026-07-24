@@ -1,5 +1,17 @@
 ## [Unreleased]
 
+## [5.1.8] — 2026-07-24
+
+### Fixed
+- **Runner reopen:** breath setup stripped `#runOrb` ids; closing now restores
+  the shell so a second breathing session does not crash.
+
+### Changed
+- **Screen gallery:** captures every theme + appearance axis (text, density,
+  contrast, transparency, accents, motion, combo) on hero surfaces, plus full
+  default screen pack. Viewer filters by pack/variant.
+- SW `soulcap-v518`. App **5.1.8**. Schema still **v12**.
+
 ## [5.1.7] — 2026-07-24
 
 ### Fixed

@@ -1,607 +1,3495 @@
 {
   "app": "SoulCap",
-  "version": "5.1.7",
-  "generated": "2026-07-24T14:25:32.666Z",
+  "version": "5.1.8",
+  "generated": "2026-07-24T14:43:13.659Z",
   "shots": [
     {
-      "file": "desktop-01-welcome.png",
-      "label": "Welcome",
-      "route": "welcome",
-      "viewport": "desktop"
-    },
-    {
-      "file": "desktop-02-onboard-age.png",
-      "label": "Onboarding · age",
-      "route": "onboard/age",
-      "viewport": "desktop"
-    },
-    {
-      "file": "desktop-03-under-18.png",
-      "label": "Under 18",
-      "route": "onboard/under-18",
-      "viewport": "desktop"
-    },
-    {
-      "file": "desktop-04-onboard-name.png",
-      "label": "Onboarding · name",
-      "route": "onboard/name",
-      "viewport": "desktop"
-    },
-    {
-      "file": "desktop-05-onboard-consent.png",
-      "label": "Onboarding · consent",
-      "route": "onboard/consent",
-      "viewport": "desktop"
-    },
-    {
-      "file": "desktop-06-onboard-motion.png",
-      "label": "Onboarding · motion",
-      "route": "onboard/motion",
-      "viewport": "desktop"
-    },
-    {
-      "file": "desktop-07-onboard-concerns.png",
-      "label": "Onboarding · concerns",
-      "route": "onboard/concerns",
-      "viewport": "desktop"
-    },
-    {
-      "file": "desktop-08-now.png",
-      "label": "Now",
-      "route": "tab/now",
-      "viewport": "desktop"
-    },
-    {
-      "file": "desktop-09-whats-new.png",
-      "label": "What's new",
-      "route": "now/whats-new",
-      "viewport": "desktop"
-    },
-    {
-      "file": "desktop-10-calm.png",
-      "label": "Calm",
+      "file": "desktop__accent-indigo__calm.png",
+      "label": "Calm · Accent · Indigo",
       "route": "tab/calm",
-      "viewport": "desktop"
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "accent-indigo"
     },
     {
-      "file": "desktop-11-journal.png",
-      "label": "Journal",
+      "file": "desktop__accent-indigo__help.png",
+      "label": "Help now · Accent · Indigo",
+      "route": "help",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "accent-indigo"
+    },
+    {
+      "file": "desktop__accent-indigo__journal.png",
+      "label": "Journal · Accent · Indigo",
       "route": "tab/journal",
-      "viewport": "desktop"
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "accent-indigo"
     },
     {
-      "file": "desktop-12-map.png",
-      "label": "Constellation",
+      "file": "desktop__accent-indigo__map.png",
+      "label": "Constellation · Accent · Indigo",
       "route": "tab/map",
-      "viewport": "desktop"
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "accent-indigo"
     },
     {
-      "file": "desktop-13-me.png",
-      "label": "You",
+      "file": "desktop__accent-indigo__me.png",
+      "label": "You · Accent · Indigo",
       "route": "tab/me",
-      "viewport": "desktop"
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "accent-indigo"
     },
     {
-      "file": "desktop-14-library.png",
-      "label": "Emotional library",
-      "route": "calm/library",
-      "viewport": "desktop"
+      "file": "desktop__accent-indigo__now.png",
+      "label": "Now · Accent · Indigo",
+      "route": "tab/now",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "accent-indigo"
     },
     {
-      "file": "desktop-15-library-experiences.png",
-      "label": "Library · Experiences",
-      "route": "calm/library/experiences",
-      "viewport": "desktop"
-    },
-    {
-      "file": "desktop-16-library-articles.png",
-      "label": "Library · Articles",
-      "route": "calm/library/articles",
-      "viewport": "desktop"
-    },
-    {
-      "file": "desktop-17-daily-supports.png",
-      "label": "Daily supports",
-      "route": "calm/supports",
-      "viewport": "desktop"
-    },
-    {
-      "file": "desktop-18-skill-box-breathing.png",
-      "label": "Technique · Box breathing",
-      "route": "skill/box-breathing",
-      "viewport": "desktop"
-    },
-    {
-      "file": "desktop-19-skill-thought-record.png",
-      "label": "Technique · Thought record",
-      "route": "skill/thought-record",
-      "viewport": "desktop"
-    },
-    {
-      "file": "desktop-20-runner-breathing.png",
-      "label": "Runner · Breathing",
+      "file": "desktop__accent-indigo__runner-breathing.png",
+      "label": "Runner · Breathing · Accent · Indigo",
       "route": "runner/box-breathing",
-      "viewport": "desktop"
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "accent-indigo"
     },
     {
-      "file": "desktop-21-runner-steps.png",
-      "label": "Runner · Steps",
-      "route": "runner/thought-record",
-      "viewport": "desktop"
-    },
-    {
-      "file": "desktop-22-article-alarm.png",
-      "label": "Article · Alarm system",
-      "route": "article/alarm-system",
-      "viewport": "desktop"
-    },
-    {
-      "file": "desktop-23-article-wind-down.png",
-      "label": "Article · Wind-down",
-      "route": "article/wind-down-boundaries",
-      "viewport": "desktop"
-    },
-    {
-      "file": "desktop-24-experience.png",
-      "label": "Experience detail",
-      "route": "experience",
-      "viewport": "desktop"
-    },
-    {
-      "file": "desktop-25-experience-picker.png",
-      "label": "Experience picker",
-      "route": "experience/picker",
-      "viewport": "desktop"
-    },
-    {
-      "file": "desktop-26-guided-path.png",
-      "label": "Guided Path · start",
-      "route": "path/start",
-      "viewport": "desktop"
-    },
-    {
-      "file": "desktop-27-checkin-detail.png",
-      "label": "Check-in detail",
-      "route": "checkin/detail",
-      "viewport": "desktop"
-    },
-    {
-      "file": "desktop-28-drip.png",
-      "label": "Gentle questions",
-      "route": "drip",
-      "viewport": "desktop"
-    },
-    {
-      "file": "desktop-29-settings.png",
-      "label": "Settings",
+      "file": "desktop__accent-indigo__settings.png",
+      "label": "Settings · Accent · Indigo",
       "route": "settings",
-      "viewport": "desktop"
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "accent-indigo"
     },
     {
-      "file": "desktop-30-about.png",
+      "file": "desktop__accent-lilac__calm.png",
+      "label": "Calm · Accent · Lilac",
+      "route": "tab/calm",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "accent-lilac"
+    },
+    {
+      "file": "desktop__accent-lilac__help.png",
+      "label": "Help now · Accent · Lilac",
+      "route": "help",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "accent-lilac"
+    },
+    {
+      "file": "desktop__accent-lilac__journal.png",
+      "label": "Journal · Accent · Lilac",
+      "route": "tab/journal",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "accent-lilac"
+    },
+    {
+      "file": "desktop__accent-lilac__map.png",
+      "label": "Constellation · Accent · Lilac",
+      "route": "tab/map",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "accent-lilac"
+    },
+    {
+      "file": "desktop__accent-lilac__me.png",
+      "label": "You · Accent · Lilac",
+      "route": "tab/me",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "accent-lilac"
+    },
+    {
+      "file": "desktop__accent-lilac__now.png",
+      "label": "Now · Accent · Lilac",
+      "route": "tab/now",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "accent-lilac"
+    },
+    {
+      "file": "desktop__accent-lilac__runner-breathing.png",
+      "label": "Runner · Breathing · Accent · Lilac",
+      "route": "runner/box-breathing",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "accent-lilac"
+    },
+    {
+      "file": "desktop__accent-lilac__settings.png",
+      "label": "Settings · Accent · Lilac",
+      "route": "settings",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "accent-lilac"
+    },
+    {
+      "file": "desktop__accent-mulberry__calm.png",
+      "label": "Calm · Accent · Mulberry",
+      "route": "tab/calm",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "accent-mulberry"
+    },
+    {
+      "file": "desktop__accent-mulberry__help.png",
+      "label": "Help now · Accent · Mulberry",
+      "route": "help",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "accent-mulberry"
+    },
+    {
+      "file": "desktop__accent-mulberry__journal.png",
+      "label": "Journal · Accent · Mulberry",
+      "route": "tab/journal",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "accent-mulberry"
+    },
+    {
+      "file": "desktop__accent-mulberry__map.png",
+      "label": "Constellation · Accent · Mulberry",
+      "route": "tab/map",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "accent-mulberry"
+    },
+    {
+      "file": "desktop__accent-mulberry__me.png",
+      "label": "You · Accent · Mulberry",
+      "route": "tab/me",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "accent-mulberry"
+    },
+    {
+      "file": "desktop__accent-mulberry__now.png",
+      "label": "Now · Accent · Mulberry",
+      "route": "tab/now",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "accent-mulberry"
+    },
+    {
+      "file": "desktop__accent-mulberry__runner-breathing.png",
+      "label": "Runner · Breathing · Accent · Mulberry",
+      "route": "runner/box-breathing",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "accent-mulberry"
+    },
+    {
+      "file": "desktop__accent-mulberry__settings.png",
+      "label": "Settings · Accent · Mulberry",
+      "route": "settings",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "accent-mulberry"
+    },
+    {
+      "file": "desktop__combo-large-comfortable-high__calm.png",
+      "label": "Calm · Combo · Large + Comfortable + High contrast",
+      "route": "tab/calm",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "combo-large-comfortable-high"
+    },
+    {
+      "file": "desktop__combo-large-comfortable-high__help.png",
+      "label": "Help now · Combo · Large + Comfortable + High contrast",
+      "route": "help",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "combo-large-comfortable-high"
+    },
+    {
+      "file": "desktop__combo-large-comfortable-high__journal.png",
+      "label": "Journal · Combo · Large + Comfortable + High contrast",
+      "route": "tab/journal",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "combo-large-comfortable-high"
+    },
+    {
+      "file": "desktop__combo-large-comfortable-high__map.png",
+      "label": "Constellation · Combo · Large + Comfortable + High contrast",
+      "route": "tab/map",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "combo-large-comfortable-high"
+    },
+    {
+      "file": "desktop__combo-large-comfortable-high__me.png",
+      "label": "You · Combo · Large + Comfortable + High contrast",
+      "route": "tab/me",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "combo-large-comfortable-high"
+    },
+    {
+      "file": "desktop__combo-large-comfortable-high__now.png",
+      "label": "Now · Combo · Large + Comfortable + High contrast",
+      "route": "tab/now",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "combo-large-comfortable-high"
+    },
+    {
+      "file": "desktop__combo-large-comfortable-high__runner-breathing.png",
+      "label": "Runner · Breathing · Combo · Large + Comfortable + High contrast",
+      "route": "runner/box-breathing",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "combo-large-comfortable-high"
+    },
+    {
+      "file": "desktop__combo-large-comfortable-high__settings.png",
+      "label": "Settings · Combo · Large + Comfortable + High contrast",
+      "route": "settings",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "combo-large-comfortable-high"
+    },
+    {
+      "file": "desktop__contrast-high__calm.png",
+      "label": "Calm · Contrast · High",
+      "route": "tab/calm",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "contrast-high"
+    },
+    {
+      "file": "desktop__contrast-high__help.png",
+      "label": "Help now · Contrast · High",
+      "route": "help",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "contrast-high"
+    },
+    {
+      "file": "desktop__contrast-high__journal.png",
+      "label": "Journal · Contrast · High",
+      "route": "tab/journal",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "contrast-high"
+    },
+    {
+      "file": "desktop__contrast-high__map.png",
+      "label": "Constellation · Contrast · High",
+      "route": "tab/map",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "contrast-high"
+    },
+    {
+      "file": "desktop__contrast-high__me.png",
+      "label": "You · Contrast · High",
+      "route": "tab/me",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "contrast-high"
+    },
+    {
+      "file": "desktop__contrast-high__now.png",
+      "label": "Now · Contrast · High",
+      "route": "tab/now",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "contrast-high"
+    },
+    {
+      "file": "desktop__contrast-high__runner-breathing.png",
+      "label": "Runner · Breathing · Contrast · High",
+      "route": "runner/box-breathing",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "contrast-high"
+    },
+    {
+      "file": "desktop__contrast-high__settings.png",
+      "label": "Settings · Contrast · High",
+      "route": "settings",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "contrast-high"
+    },
+    {
+      "file": "desktop__default__about.png",
       "label": "About SoulCap",
       "route": "about",
-      "viewport": "desktop"
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
     },
     {
-      "file": "desktop-31-safety-plan.png",
-      "label": "My plan",
-      "route": "me/plan",
-      "viewport": "desktop"
-    },
-    {
-      "file": "desktop-32-screener-pick.png",
-      "label": "Reflection screeners",
-      "route": "screener/pick",
-      "viewport": "desktop"
-    },
-    {
-      "file": "desktop-33-screener-run.png",
-      "label": "Screener · in progress",
-      "route": "screener/run",
-      "viewport": "desktop"
-    },
-    {
-      "file": "desktop-34-principles.png",
-      "label": "Principles",
-      "route": "me/principles",
-      "viewport": "desktop"
-    },
-    {
-      "file": "desktop-35-manual.png",
-      "label": "Personal Manual",
-      "route": "me/manual",
-      "viewport": "desktop"
-    },
-    {
-      "file": "desktop-36-patterns.png",
-      "label": "Patterns",
-      "route": "me/patterns",
-      "viewport": "desktop"
-    },
-    {
-      "file": "desktop-37-weekly.png",
-      "label": "Weekly overview",
-      "route": "me/weekly",
-      "viewport": "desktop"
-    },
-    {
-      "file": "desktop-38-timeline.png",
-      "label": "Timeline",
-      "route": "me/timeline",
-      "viewport": "desktop"
-    },
-    {
-      "file": "desktop-39-profile.png",
-      "label": "Profile",
-      "route": "me/profile",
-      "viewport": "desktop"
-    },
-    {
-      "file": "desktop-40-your-story.png",
-      "label": "Your story",
-      "route": "me/story",
-      "viewport": "desktop"
-    },
-    {
-      "file": "desktop-41-knows.png",
-      "label": "What SoulCap knows",
-      "route": "me/knows",
-      "viewport": "desktop"
-    },
-    {
-      "file": "desktop-42-reset-menu.png",
-      "label": "Reset menu",
-      "route": "reset-menu",
-      "viewport": "desktop"
-    },
-    {
-      "file": "desktop-43-park-thought.png",
-      "label": "Thought parking",
-      "route": "park-thought",
-      "viewport": "desktop"
-    },
-    {
-      "file": "desktop-44-journal-new.png",
-      "label": "New journal entry",
-      "route": "journal/new",
-      "viewport": "desktop"
-    },
-    {
-      "file": "desktop-45-journal-editor.png",
-      "label": "Journal editor",
-      "route": "journal/editor",
-      "viewport": "desktop"
-    },
-    {
-      "file": "desktop-46-journal-cover.png",
-      "label": "Journal cover",
-      "route": "journal/cover",
-      "viewport": "desktop"
-    },
-    {
-      "file": "desktop-47-add-person.png",
+      "file": "desktop__default__add-person.png",
       "label": "Add someone",
       "route": "map/add",
-      "viewport": "desktop"
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
     },
     {
-      "file": "desktop-48-person.png",
-      "label": "Person detail",
-      "route": "map/person",
-      "viewport": "desktop"
-    },
-    {
-      "file": "desktop-49-help.png",
-      "label": "Help now",
-      "route": "help",
-      "viewport": "desktop"
-    },
-    {
-      "file": "desktop-50-guided-path-result.png",
-      "label": "Guided Path · result",
-      "route": "path/result",
-      "viewport": "desktop"
-    },
-    {
-      "file": "mobile-01-welcome.png",
-      "label": "Welcome",
-      "route": "welcome",
-      "viewport": "mobile"
-    },
-    {
-      "file": "mobile-02-onboard-age.png",
-      "label": "Onboarding · age",
-      "route": "onboard/age",
-      "viewport": "mobile"
-    },
-    {
-      "file": "mobile-03-under-18.png",
-      "label": "Under 18",
-      "route": "onboard/under-18",
-      "viewport": "mobile"
-    },
-    {
-      "file": "mobile-04-onboard-name.png",
-      "label": "Onboarding · name",
-      "route": "onboard/name",
-      "viewport": "mobile"
-    },
-    {
-      "file": "mobile-05-onboard-consent.png",
-      "label": "Onboarding · consent",
-      "route": "onboard/consent",
-      "viewport": "mobile"
-    },
-    {
-      "file": "mobile-06-onboard-motion.png",
-      "label": "Onboarding · motion",
-      "route": "onboard/motion",
-      "viewport": "mobile"
-    },
-    {
-      "file": "mobile-07-onboard-concerns.png",
-      "label": "Onboarding · concerns",
-      "route": "onboard/concerns",
-      "viewport": "mobile"
-    },
-    {
-      "file": "mobile-08-now.png",
-      "label": "Now",
-      "route": "tab/now",
-      "viewport": "mobile"
-    },
-    {
-      "file": "mobile-09-whats-new.png",
-      "label": "What's new",
-      "route": "now/whats-new",
-      "viewport": "mobile"
-    },
-    {
-      "file": "mobile-10-calm.png",
-      "label": "Calm",
-      "route": "tab/calm",
-      "viewport": "mobile"
-    },
-    {
-      "file": "mobile-11-journal.png",
-      "label": "Journal",
-      "route": "tab/journal",
-      "viewport": "mobile"
-    },
-    {
-      "file": "mobile-12-map.png",
-      "label": "Constellation",
-      "route": "tab/map",
-      "viewport": "mobile"
-    },
-    {
-      "file": "mobile-13-me.png",
-      "label": "You",
-      "route": "tab/me",
-      "viewport": "mobile"
-    },
-    {
-      "file": "mobile-14-library.png",
-      "label": "Emotional library",
-      "route": "calm/library",
-      "viewport": "mobile"
-    },
-    {
-      "file": "mobile-15-library-experiences.png",
-      "label": "Library · Experiences",
-      "route": "calm/library/experiences",
-      "viewport": "mobile"
-    },
-    {
-      "file": "mobile-16-library-articles.png",
-      "label": "Library · Articles",
-      "route": "calm/library/articles",
-      "viewport": "mobile"
-    },
-    {
-      "file": "mobile-17-daily-supports.png",
-      "label": "Daily supports",
-      "route": "calm/supports",
-      "viewport": "mobile"
-    },
-    {
-      "file": "mobile-18-skill-box-breathing.png",
-      "label": "Technique · Box breathing",
-      "route": "skill/box-breathing",
-      "viewport": "mobile"
-    },
-    {
-      "file": "mobile-19-skill-thought-record.png",
-      "label": "Technique · Thought record",
-      "route": "skill/thought-record",
-      "viewport": "mobile"
-    },
-    {
-      "file": "mobile-20-runner-breathing.png",
-      "label": "Runner · Breathing",
-      "route": "runner/box-breathing",
-      "viewport": "mobile"
-    },
-    {
-      "file": "mobile-21-runner-steps.png",
-      "label": "Runner · Steps",
-      "route": "runner/thought-record",
-      "viewport": "mobile"
-    },
-    {
-      "file": "mobile-22-article-alarm.png",
+      "file": "desktop__default__article-alarm.png",
       "label": "Article · Alarm system",
       "route": "article/alarm-system",
-      "viewport": "mobile"
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
     },
     {
-      "file": "mobile-23-article-wind-down.png",
+      "file": "desktop__default__article-wind-down.png",
       "label": "Article · Wind-down",
       "route": "article/wind-down-boundaries",
-      "viewport": "mobile"
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
     },
     {
-      "file": "mobile-24-experience.png",
-      "label": "Experience detail",
-      "route": "experience",
-      "viewport": "mobile"
+      "file": "desktop__default__calm.png",
+      "label": "Calm",
+      "route": "tab/calm",
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
     },
     {
-      "file": "mobile-25-experience-picker.png",
-      "label": "Experience picker",
-      "route": "experience/picker",
-      "viewport": "mobile"
-    },
-    {
-      "file": "mobile-26-guided-path.png",
-      "label": "Guided Path · start",
-      "route": "path/start",
-      "viewport": "mobile"
-    },
-    {
-      "file": "mobile-27-checkin-detail.png",
+      "file": "desktop__default__checkin-detail.png",
       "label": "Check-in detail",
       "route": "checkin/detail",
-      "viewport": "mobile"
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
     },
     {
-      "file": "mobile-28-drip.png",
+      "file": "desktop__default__daily-supports.png",
+      "label": "Daily supports",
+      "route": "calm/supports",
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "desktop__default__drip.png",
       "label": "Gentle questions",
       "route": "drip",
-      "viewport": "mobile"
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
     },
     {
-      "file": "mobile-29-settings.png",
-      "label": "Settings",
-      "route": "settings",
-      "viewport": "mobile"
+      "file": "desktop__default__experience-picker.png",
+      "label": "Experience picker",
+      "route": "experience/picker",
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
     },
     {
-      "file": "mobile-30-about.png",
-      "label": "About SoulCap",
-      "route": "about",
-      "viewport": "mobile"
+      "file": "desktop__default__experience.png",
+      "label": "Experience detail",
+      "route": "experience",
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
     },
     {
-      "file": "mobile-31-safety-plan.png",
-      "label": "My plan",
-      "route": "me/plan",
-      "viewport": "mobile"
-    },
-    {
-      "file": "mobile-32-screener-pick.png",
-      "label": "Reflection screeners",
-      "route": "screener/pick",
-      "viewport": "mobile"
-    },
-    {
-      "file": "mobile-33-screener-run.png",
-      "label": "Screener · in progress",
-      "route": "screener/run",
-      "viewport": "mobile"
-    },
-    {
-      "file": "mobile-34-principles.png",
-      "label": "Principles",
-      "route": "me/principles",
-      "viewport": "mobile"
-    },
-    {
-      "file": "mobile-35-manual.png",
-      "label": "Personal Manual",
-      "route": "me/manual",
-      "viewport": "mobile"
-    },
-    {
-      "file": "mobile-36-patterns.png",
-      "label": "Patterns",
-      "route": "me/patterns",
-      "viewport": "mobile"
-    },
-    {
-      "file": "mobile-37-weekly.png",
-      "label": "Weekly overview",
-      "route": "me/weekly",
-      "viewport": "mobile"
-    },
-    {
-      "file": "mobile-38-timeline.png",
-      "label": "Timeline",
-      "route": "me/timeline",
-      "viewport": "mobile"
-    },
-    {
-      "file": "mobile-39-profile.png",
-      "label": "Profile",
-      "route": "me/profile",
-      "viewport": "mobile"
-    },
-    {
-      "file": "mobile-40-your-story.png",
-      "label": "Your story",
-      "route": "me/story",
-      "viewport": "mobile"
-    },
-    {
-      "file": "mobile-41-knows.png",
-      "label": "What SoulCap knows",
-      "route": "me/knows",
-      "viewport": "mobile"
-    },
-    {
-      "file": "mobile-42-reset-menu.png",
-      "label": "Reset menu",
-      "route": "reset-menu",
-      "viewport": "mobile"
-    },
-    {
-      "file": "mobile-43-park-thought.png",
-      "label": "Thought parking",
-      "route": "park-thought",
-      "viewport": "mobile"
-    },
-    {
-      "file": "mobile-44-journal-new.png",
-      "label": "New journal entry",
-      "route": "journal/new",
-      "viewport": "mobile"
-    },
-    {
-      "file": "mobile-45-journal-editor.png",
-      "label": "Journal editor",
-      "route": "journal/editor",
-      "viewport": "mobile"
-    },
-    {
-      "file": "mobile-46-journal-cover.png",
-      "label": "Journal cover",
-      "route": "journal/cover",
-      "viewport": "mobile"
-    },
-    {
-      "file": "mobile-47-add-person.png",
-      "label": "Add someone",
-      "route": "map/add",
-      "viewport": "mobile"
-    },
-    {
-      "file": "mobile-48-person.png",
-      "label": "Person detail",
-      "route": "map/person",
-      "viewport": "mobile"
-    },
-    {
-      "file": "mobile-49-help.png",
-      "label": "Help now",
-      "route": "help",
-      "viewport": "mobile"
-    },
-    {
-      "file": "mobile-50-guided-path-result.png",
+      "file": "desktop__default__guided-path-result.png",
       "label": "Guided Path · result",
       "route": "path/result",
-      "viewport": "mobile"
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "desktop__default__guided-path.png",
+      "label": "Guided Path · start",
+      "route": "path/start",
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "desktop__default__help.png",
+      "label": "Help now",
+      "route": "help",
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "desktop__default__journal-cover.png",
+      "label": "Journal cover",
+      "route": "journal/cover",
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "desktop__default__journal-editor.png",
+      "label": "Journal editor",
+      "route": "journal/editor",
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "desktop__default__journal-new.png",
+      "label": "New journal entry",
+      "route": "journal/new",
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "desktop__default__journal.png",
+      "label": "Journal",
+      "route": "tab/journal",
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "desktop__default__knows.png",
+      "label": "What SoulCap knows",
+      "route": "me/knows",
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "desktop__default__library-articles.png",
+      "label": "Library · Articles",
+      "route": "calm/library/articles",
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "desktop__default__library-experiences.png",
+      "label": "Library · Experiences",
+      "route": "calm/library/experiences",
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "desktop__default__library.png",
+      "label": "Emotional library",
+      "route": "calm/library",
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "desktop__default__manual.png",
+      "label": "Personal Manual",
+      "route": "me/manual",
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "desktop__default__map.png",
+      "label": "Constellation",
+      "route": "tab/map",
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "desktop__default__me.png",
+      "label": "You",
+      "route": "tab/me",
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "desktop__default__now.png",
+      "label": "Now",
+      "route": "tab/now",
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "desktop__default__onboard-age.png",
+      "label": "Onboarding · age",
+      "route": "onboard/age",
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "desktop__default__onboard-concerns.png",
+      "label": "Onboarding · concerns",
+      "route": "onboard/concerns",
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "desktop__default__onboard-consent.png",
+      "label": "Onboarding · consent",
+      "route": "onboard/consent",
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "desktop__default__onboard-motion.png",
+      "label": "Onboarding · motion",
+      "route": "onboard/motion",
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "desktop__default__onboard-name.png",
+      "label": "Onboarding · name",
+      "route": "onboard/name",
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "desktop__default__park-thought.png",
+      "label": "Thought parking",
+      "route": "park-thought",
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "desktop__default__patterns.png",
+      "label": "Patterns",
+      "route": "me/patterns",
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "desktop__default__person.png",
+      "label": "Person detail",
+      "route": "map/person",
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "desktop__default__principles.png",
+      "label": "Principles",
+      "route": "me/principles",
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "desktop__default__profile.png",
+      "label": "Profile",
+      "route": "me/profile",
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "desktop__default__reset-menu.png",
+      "label": "Reset menu",
+      "route": "reset-menu",
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "desktop__default__runner-breathing.png",
+      "label": "Runner · Breathing",
+      "route": "runner/box-breathing",
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "desktop__default__runner-steps.png",
+      "label": "Runner · Steps",
+      "route": "runner/thought-record",
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "desktop__default__safety-plan.png",
+      "label": "My plan",
+      "route": "me/plan",
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "desktop__default__screener-pick.png",
+      "label": "Reflection screeners",
+      "route": "screener/pick",
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "desktop__default__screener-run.png",
+      "label": "Screener · in progress",
+      "route": "screener/run",
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "desktop__default__settings.png",
+      "label": "Settings",
+      "route": "settings",
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "desktop__default__skill-box-breathing.png",
+      "label": "Technique · Box breathing",
+      "route": "skill/box-breathing",
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "desktop__default__skill-thought-record.png",
+      "label": "Technique · Thought record",
+      "route": "skill/thought-record",
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "desktop__default__timeline.png",
+      "label": "Timeline",
+      "route": "me/timeline",
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "desktop__default__under-18.png",
+      "label": "Under 18",
+      "route": "onboard/under-18",
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "desktop__default__weekly.png",
+      "label": "Weekly overview",
+      "route": "me/weekly",
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "desktop__default__welcome.png",
+      "label": "Welcome",
+      "route": "welcome",
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "desktop__default__whats-new.png",
+      "label": "What's new",
+      "route": "now/whats-new",
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "desktop__default__your-story.png",
+      "label": "Your story",
+      "route": "me/story",
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "desktop__density-comfortable__calm.png",
+      "label": "Calm · Density · Comfortable",
+      "route": "tab/calm",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "density-comfortable"
+    },
+    {
+      "file": "desktop__density-comfortable__help.png",
+      "label": "Help now · Density · Comfortable",
+      "route": "help",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "density-comfortable"
+    },
+    {
+      "file": "desktop__density-comfortable__journal.png",
+      "label": "Journal · Density · Comfortable",
+      "route": "tab/journal",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "density-comfortable"
+    },
+    {
+      "file": "desktop__density-comfortable__map.png",
+      "label": "Constellation · Density · Comfortable",
+      "route": "tab/map",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "density-comfortable"
+    },
+    {
+      "file": "desktop__density-comfortable__me.png",
+      "label": "You · Density · Comfortable",
+      "route": "tab/me",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "density-comfortable"
+    },
+    {
+      "file": "desktop__density-comfortable__now.png",
+      "label": "Now · Density · Comfortable",
+      "route": "tab/now",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "density-comfortable"
+    },
+    {
+      "file": "desktop__density-comfortable__runner-breathing.png",
+      "label": "Runner · Breathing · Density · Comfortable",
+      "route": "runner/box-breathing",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "density-comfortable"
+    },
+    {
+      "file": "desktop__density-comfortable__settings.png",
+      "label": "Settings · Density · Comfortable",
+      "route": "settings",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "density-comfortable"
+    },
+    {
+      "file": "desktop__motion-still__calm.png",
+      "label": "Calm · Motion · Still",
+      "route": "tab/calm",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "motion-still"
+    },
+    {
+      "file": "desktop__motion-still__help.png",
+      "label": "Help now · Motion · Still",
+      "route": "help",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "motion-still"
+    },
+    {
+      "file": "desktop__motion-still__journal.png",
+      "label": "Journal · Motion · Still",
+      "route": "tab/journal",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "motion-still"
+    },
+    {
+      "file": "desktop__motion-still__map.png",
+      "label": "Constellation · Motion · Still",
+      "route": "tab/map",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "motion-still"
+    },
+    {
+      "file": "desktop__motion-still__me.png",
+      "label": "You · Motion · Still",
+      "route": "tab/me",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "motion-still"
+    },
+    {
+      "file": "desktop__motion-still__now.png",
+      "label": "Now · Motion · Still",
+      "route": "tab/now",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "motion-still"
+    },
+    {
+      "file": "desktop__motion-still__runner-breathing.png",
+      "label": "Runner · Breathing · Motion · Still",
+      "route": "runner/box-breathing",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "motion-still"
+    },
+    {
+      "file": "desktop__motion-still__settings.png",
+      "label": "Settings · Motion · Still",
+      "route": "settings",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "motion-still"
+    },
+    {
+      "file": "desktop__motion-vivid__calm.png",
+      "label": "Calm · Motion · Vivid",
+      "route": "tab/calm",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "motion-vivid"
+    },
+    {
+      "file": "desktop__motion-vivid__help.png",
+      "label": "Help now · Motion · Vivid",
+      "route": "help",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "motion-vivid"
+    },
+    {
+      "file": "desktop__motion-vivid__journal.png",
+      "label": "Journal · Motion · Vivid",
+      "route": "tab/journal",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "motion-vivid"
+    },
+    {
+      "file": "desktop__motion-vivid__map.png",
+      "label": "Constellation · Motion · Vivid",
+      "route": "tab/map",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "motion-vivid"
+    },
+    {
+      "file": "desktop__motion-vivid__me.png",
+      "label": "You · Motion · Vivid",
+      "route": "tab/me",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "motion-vivid"
+    },
+    {
+      "file": "desktop__motion-vivid__now.png",
+      "label": "Now · Motion · Vivid",
+      "route": "tab/now",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "motion-vivid"
+    },
+    {
+      "file": "desktop__motion-vivid__runner-breathing.png",
+      "label": "Runner · Breathing · Motion · Vivid",
+      "route": "runner/box-breathing",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "motion-vivid"
+    },
+    {
+      "file": "desktop__motion-vivid__settings.png",
+      "label": "Settings · Motion · Vivid",
+      "route": "settings",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "motion-vivid"
+    },
+    {
+      "file": "desktop__text-large__calm.png",
+      "label": "Calm · Text · Large",
+      "route": "tab/calm",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "text-large"
+    },
+    {
+      "file": "desktop__text-large__help.png",
+      "label": "Help now · Text · Large",
+      "route": "help",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "text-large"
+    },
+    {
+      "file": "desktop__text-large__journal.png",
+      "label": "Journal · Text · Large",
+      "route": "tab/journal",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "text-large"
+    },
+    {
+      "file": "desktop__text-large__map.png",
+      "label": "Constellation · Text · Large",
+      "route": "tab/map",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "text-large"
+    },
+    {
+      "file": "desktop__text-large__me.png",
+      "label": "You · Text · Large",
+      "route": "tab/me",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "text-large"
+    },
+    {
+      "file": "desktop__text-large__now.png",
+      "label": "Now · Text · Large",
+      "route": "tab/now",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "text-large"
+    },
+    {
+      "file": "desktop__text-large__runner-breathing.png",
+      "label": "Runner · Breathing · Text · Large",
+      "route": "runner/box-breathing",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "text-large"
+    },
+    {
+      "file": "desktop__text-large__settings.png",
+      "label": "Settings · Text · Large",
+      "route": "settings",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "text-large"
+    },
+    {
+      "file": "desktop__theme-amoled__calm.png",
+      "label": "Calm · AMOLED",
+      "route": "tab/calm",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-amoled"
+    },
+    {
+      "file": "desktop__theme-amoled__help.png",
+      "label": "Help now · AMOLED",
+      "route": "help",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-amoled"
+    },
+    {
+      "file": "desktop__theme-amoled__journal.png",
+      "label": "Journal · AMOLED",
+      "route": "tab/journal",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-amoled"
+    },
+    {
+      "file": "desktop__theme-amoled__map.png",
+      "label": "Constellation · AMOLED",
+      "route": "tab/map",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-amoled"
+    },
+    {
+      "file": "desktop__theme-amoled__me.png",
+      "label": "You · AMOLED",
+      "route": "tab/me",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-amoled"
+    },
+    {
+      "file": "desktop__theme-amoled__now.png",
+      "label": "Now · AMOLED",
+      "route": "tab/now",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-amoled"
+    },
+    {
+      "file": "desktop__theme-amoled__runner-breathing.png",
+      "label": "Runner · Breathing · AMOLED",
+      "route": "runner/box-breathing",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-amoled"
+    },
+    {
+      "file": "desktop__theme-amoled__settings.png",
+      "label": "Settings · AMOLED",
+      "route": "settings",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-amoled"
+    },
+    {
+      "file": "desktop__theme-auto__calm.png",
+      "label": "Calm · Auto",
+      "route": "tab/calm",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-auto"
+    },
+    {
+      "file": "desktop__theme-auto__help.png",
+      "label": "Help now · Auto",
+      "route": "help",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-auto"
+    },
+    {
+      "file": "desktop__theme-auto__journal.png",
+      "label": "Journal · Auto",
+      "route": "tab/journal",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-auto"
+    },
+    {
+      "file": "desktop__theme-auto__map.png",
+      "label": "Constellation · Auto",
+      "route": "tab/map",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-auto"
+    },
+    {
+      "file": "desktop__theme-auto__me.png",
+      "label": "You · Auto",
+      "route": "tab/me",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-auto"
+    },
+    {
+      "file": "desktop__theme-auto__now.png",
+      "label": "Now · Auto",
+      "route": "tab/now",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-auto"
+    },
+    {
+      "file": "desktop__theme-auto__runner-breathing.png",
+      "label": "Runner · Breathing · Auto",
+      "route": "runner/box-breathing",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-auto"
+    },
+    {
+      "file": "desktop__theme-auto__settings.png",
+      "label": "Settings · Auto",
+      "route": "settings",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-auto"
+    },
+    {
+      "file": "desktop__theme-dark__calm.png",
+      "label": "Calm · Dark",
+      "route": "tab/calm",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-dark"
+    },
+    {
+      "file": "desktop__theme-dark__help.png",
+      "label": "Help now · Dark",
+      "route": "help",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-dark"
+    },
+    {
+      "file": "desktop__theme-dark__journal.png",
+      "label": "Journal · Dark",
+      "route": "tab/journal",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-dark"
+    },
+    {
+      "file": "desktop__theme-dark__map.png",
+      "label": "Constellation · Dark",
+      "route": "tab/map",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-dark"
+    },
+    {
+      "file": "desktop__theme-dark__me.png",
+      "label": "You · Dark",
+      "route": "tab/me",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-dark"
+    },
+    {
+      "file": "desktop__theme-dark__now.png",
+      "label": "Now · Dark",
+      "route": "tab/now",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-dark"
+    },
+    {
+      "file": "desktop__theme-dark__runner-breathing.png",
+      "label": "Runner · Breathing · Dark",
+      "route": "runner/box-breathing",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-dark"
+    },
+    {
+      "file": "desktop__theme-dark__settings.png",
+      "label": "Settings · Dark",
+      "route": "settings",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-dark"
+    },
+    {
+      "file": "desktop__theme-forest__calm.png",
+      "label": "Calm · Forest",
+      "route": "tab/calm",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-forest"
+    },
+    {
+      "file": "desktop__theme-forest__help.png",
+      "label": "Help now · Forest",
+      "route": "help",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-forest"
+    },
+    {
+      "file": "desktop__theme-forest__journal.png",
+      "label": "Journal · Forest",
+      "route": "tab/journal",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-forest"
+    },
+    {
+      "file": "desktop__theme-forest__map.png",
+      "label": "Constellation · Forest",
+      "route": "tab/map",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-forest"
+    },
+    {
+      "file": "desktop__theme-forest__me.png",
+      "label": "You · Forest",
+      "route": "tab/me",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-forest"
+    },
+    {
+      "file": "desktop__theme-forest__now.png",
+      "label": "Now · Forest",
+      "route": "tab/now",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-forest"
+    },
+    {
+      "file": "desktop__theme-forest__runner-breathing.png",
+      "label": "Runner · Breathing · Forest",
+      "route": "runner/box-breathing",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-forest"
+    },
+    {
+      "file": "desktop__theme-forest__settings.png",
+      "label": "Settings · Forest",
+      "route": "settings",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-forest"
+    },
+    {
+      "file": "desktop__theme-light__calm.png",
+      "label": "Calm · Light",
+      "route": "tab/calm",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-light"
+    },
+    {
+      "file": "desktop__theme-light__help.png",
+      "label": "Help now · Light",
+      "route": "help",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-light"
+    },
+    {
+      "file": "desktop__theme-light__journal.png",
+      "label": "Journal · Light",
+      "route": "tab/journal",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-light"
+    },
+    {
+      "file": "desktop__theme-light__map.png",
+      "label": "Constellation · Light",
+      "route": "tab/map",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-light"
+    },
+    {
+      "file": "desktop__theme-light__me.png",
+      "label": "You · Light",
+      "route": "tab/me",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-light"
+    },
+    {
+      "file": "desktop__theme-light__now.png",
+      "label": "Now · Light",
+      "route": "tab/now",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-light"
+    },
+    {
+      "file": "desktop__theme-light__runner-breathing.png",
+      "label": "Runner · Breathing · Light",
+      "route": "runner/box-breathing",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-light"
+    },
+    {
+      "file": "desktop__theme-light__settings.png",
+      "label": "Settings · Light",
+      "route": "settings",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-light"
+    },
+    {
+      "file": "desktop__theme-minimal__calm.png",
+      "label": "Calm · Minimal",
+      "route": "tab/calm",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-minimal"
+    },
+    {
+      "file": "desktop__theme-minimal__help.png",
+      "label": "Help now · Minimal",
+      "route": "help",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-minimal"
+    },
+    {
+      "file": "desktop__theme-minimal__journal.png",
+      "label": "Journal · Minimal",
+      "route": "tab/journal",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-minimal"
+    },
+    {
+      "file": "desktop__theme-minimal__map.png",
+      "label": "Constellation · Minimal",
+      "route": "tab/map",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-minimal"
+    },
+    {
+      "file": "desktop__theme-minimal__me.png",
+      "label": "You · Minimal",
+      "route": "tab/me",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-minimal"
+    },
+    {
+      "file": "desktop__theme-minimal__now.png",
+      "label": "Now · Minimal",
+      "route": "tab/now",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-minimal"
+    },
+    {
+      "file": "desktop__theme-minimal__runner-breathing.png",
+      "label": "Runner · Breathing · Minimal",
+      "route": "runner/box-breathing",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-minimal"
+    },
+    {
+      "file": "desktop__theme-minimal__settings.png",
+      "label": "Settings · Minimal",
+      "route": "settings",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-minimal"
+    },
+    {
+      "file": "desktop__theme-night__calm.png",
+      "label": "Calm · Night",
+      "route": "tab/calm",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-night"
+    },
+    {
+      "file": "desktop__theme-night__help.png",
+      "label": "Help now · Night",
+      "route": "help",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-night"
+    },
+    {
+      "file": "desktop__theme-night__journal.png",
+      "label": "Journal · Night",
+      "route": "tab/journal",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-night"
+    },
+    {
+      "file": "desktop__theme-night__map.png",
+      "label": "Constellation · Night",
+      "route": "tab/map",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-night"
+    },
+    {
+      "file": "desktop__theme-night__me.png",
+      "label": "You · Night",
+      "route": "tab/me",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-night"
+    },
+    {
+      "file": "desktop__theme-night__now.png",
+      "label": "Now · Night",
+      "route": "tab/now",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-night"
+    },
+    {
+      "file": "desktop__theme-night__runner-breathing.png",
+      "label": "Runner · Breathing · Night",
+      "route": "runner/box-breathing",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-night"
+    },
+    {
+      "file": "desktop__theme-night__settings.png",
+      "label": "Settings · Night",
+      "route": "settings",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-night"
+    },
+    {
+      "file": "desktop__theme-ocean__calm.png",
+      "label": "Calm · Ocean",
+      "route": "tab/calm",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-ocean"
+    },
+    {
+      "file": "desktop__theme-ocean__help.png",
+      "label": "Help now · Ocean",
+      "route": "help",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-ocean"
+    },
+    {
+      "file": "desktop__theme-ocean__journal.png",
+      "label": "Journal · Ocean",
+      "route": "tab/journal",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-ocean"
+    },
+    {
+      "file": "desktop__theme-ocean__map.png",
+      "label": "Constellation · Ocean",
+      "route": "tab/map",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-ocean"
+    },
+    {
+      "file": "desktop__theme-ocean__me.png",
+      "label": "You · Ocean",
+      "route": "tab/me",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-ocean"
+    },
+    {
+      "file": "desktop__theme-ocean__now.png",
+      "label": "Now · Ocean",
+      "route": "tab/now",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-ocean"
+    },
+    {
+      "file": "desktop__theme-ocean__runner-breathing.png",
+      "label": "Runner · Breathing · Ocean",
+      "route": "runner/box-breathing",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-ocean"
+    },
+    {
+      "file": "desktop__theme-ocean__settings.png",
+      "label": "Settings · Ocean",
+      "route": "settings",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-ocean"
+    },
+    {
+      "file": "desktop__theme-rain__calm.png",
+      "label": "Calm · Rain",
+      "route": "tab/calm",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-rain"
+    },
+    {
+      "file": "desktop__theme-rain__help.png",
+      "label": "Help now · Rain",
+      "route": "help",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-rain"
+    },
+    {
+      "file": "desktop__theme-rain__journal.png",
+      "label": "Journal · Rain",
+      "route": "tab/journal",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-rain"
+    },
+    {
+      "file": "desktop__theme-rain__map.png",
+      "label": "Constellation · Rain",
+      "route": "tab/map",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-rain"
+    },
+    {
+      "file": "desktop__theme-rain__me.png",
+      "label": "You · Rain",
+      "route": "tab/me",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-rain"
+    },
+    {
+      "file": "desktop__theme-rain__now.png",
+      "label": "Now · Rain",
+      "route": "tab/now",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-rain"
+    },
+    {
+      "file": "desktop__theme-rain__runner-breathing.png",
+      "label": "Runner · Breathing · Rain",
+      "route": "runner/box-breathing",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-rain"
+    },
+    {
+      "file": "desktop__theme-rain__settings.png",
+      "label": "Settings · Rain",
+      "route": "settings",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-rain"
+    },
+    {
+      "file": "desktop__theme-space__calm.png",
+      "label": "Calm · Space",
+      "route": "tab/calm",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-space"
+    },
+    {
+      "file": "desktop__theme-space__help.png",
+      "label": "Help now · Space",
+      "route": "help",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-space"
+    },
+    {
+      "file": "desktop__theme-space__journal.png",
+      "label": "Journal · Space",
+      "route": "tab/journal",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-space"
+    },
+    {
+      "file": "desktop__theme-space__map.png",
+      "label": "Constellation · Space",
+      "route": "tab/map",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-space"
+    },
+    {
+      "file": "desktop__theme-space__me.png",
+      "label": "You · Space",
+      "route": "tab/me",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-space"
+    },
+    {
+      "file": "desktop__theme-space__now.png",
+      "label": "Now · Space",
+      "route": "tab/now",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-space"
+    },
+    {
+      "file": "desktop__theme-space__runner-breathing.png",
+      "label": "Runner · Breathing · Space",
+      "route": "runner/box-breathing",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-space"
+    },
+    {
+      "file": "desktop__theme-space__settings.png",
+      "label": "Settings · Space",
+      "route": "settings",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-space"
+    },
+    {
+      "file": "desktop__theme-sunrise__calm.png",
+      "label": "Calm · Sunrise",
+      "route": "tab/calm",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-sunrise"
+    },
+    {
+      "file": "desktop__theme-sunrise__help.png",
+      "label": "Help now · Sunrise",
+      "route": "help",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-sunrise"
+    },
+    {
+      "file": "desktop__theme-sunrise__journal.png",
+      "label": "Journal · Sunrise",
+      "route": "tab/journal",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-sunrise"
+    },
+    {
+      "file": "desktop__theme-sunrise__map.png",
+      "label": "Constellation · Sunrise",
+      "route": "tab/map",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-sunrise"
+    },
+    {
+      "file": "desktop__theme-sunrise__me.png",
+      "label": "You · Sunrise",
+      "route": "tab/me",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-sunrise"
+    },
+    {
+      "file": "desktop__theme-sunrise__now.png",
+      "label": "Now · Sunrise",
+      "route": "tab/now",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-sunrise"
+    },
+    {
+      "file": "desktop__theme-sunrise__runner-breathing.png",
+      "label": "Runner · Breathing · Sunrise",
+      "route": "runner/box-breathing",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-sunrise"
+    },
+    {
+      "file": "desktop__theme-sunrise__settings.png",
+      "label": "Settings · Sunrise",
+      "route": "settings",
+      "viewport": "desktop",
+      "pack": "theme",
+      "variant": "theme-sunrise"
+    },
+    {
+      "file": "desktop__transparency-reduced__calm.png",
+      "label": "Calm · Transparency · Reduced",
+      "route": "tab/calm",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "transparency-reduced"
+    },
+    {
+      "file": "desktop__transparency-reduced__help.png",
+      "label": "Help now · Transparency · Reduced",
+      "route": "help",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "transparency-reduced"
+    },
+    {
+      "file": "desktop__transparency-reduced__journal.png",
+      "label": "Journal · Transparency · Reduced",
+      "route": "tab/journal",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "transparency-reduced"
+    },
+    {
+      "file": "desktop__transparency-reduced__map.png",
+      "label": "Constellation · Transparency · Reduced",
+      "route": "tab/map",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "transparency-reduced"
+    },
+    {
+      "file": "desktop__transparency-reduced__me.png",
+      "label": "You · Transparency · Reduced",
+      "route": "tab/me",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "transparency-reduced"
+    },
+    {
+      "file": "desktop__transparency-reduced__now.png",
+      "label": "Now · Transparency · Reduced",
+      "route": "tab/now",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "transparency-reduced"
+    },
+    {
+      "file": "desktop__transparency-reduced__runner-breathing.png",
+      "label": "Runner · Breathing · Transparency · Reduced",
+      "route": "runner/box-breathing",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "transparency-reduced"
+    },
+    {
+      "file": "desktop__transparency-reduced__settings.png",
+      "label": "Settings · Transparency · Reduced",
+      "route": "settings",
+      "viewport": "desktop",
+      "pack": "appearance",
+      "variant": "transparency-reduced"
+    },
+    {
+      "file": "mobile__accent-indigo__calm.png",
+      "label": "Calm · Accent · Indigo",
+      "route": "tab/calm",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "accent-indigo"
+    },
+    {
+      "file": "mobile__accent-indigo__help.png",
+      "label": "Help now · Accent · Indigo",
+      "route": "help",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "accent-indigo"
+    },
+    {
+      "file": "mobile__accent-indigo__journal.png",
+      "label": "Journal · Accent · Indigo",
+      "route": "tab/journal",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "accent-indigo"
+    },
+    {
+      "file": "mobile__accent-indigo__map.png",
+      "label": "Constellation · Accent · Indigo",
+      "route": "tab/map",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "accent-indigo"
+    },
+    {
+      "file": "mobile__accent-indigo__me.png",
+      "label": "You · Accent · Indigo",
+      "route": "tab/me",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "accent-indigo"
+    },
+    {
+      "file": "mobile__accent-indigo__now.png",
+      "label": "Now · Accent · Indigo",
+      "route": "tab/now",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "accent-indigo"
+    },
+    {
+      "file": "mobile__accent-indigo__runner-breathing.png",
+      "label": "Runner · Breathing · Accent · Indigo",
+      "route": "runner/box-breathing",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "accent-indigo"
+    },
+    {
+      "file": "mobile__accent-indigo__settings.png",
+      "label": "Settings · Accent · Indigo",
+      "route": "settings",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "accent-indigo"
+    },
+    {
+      "file": "mobile__accent-lilac__calm.png",
+      "label": "Calm · Accent · Lilac",
+      "route": "tab/calm",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "accent-lilac"
+    },
+    {
+      "file": "mobile__accent-lilac__help.png",
+      "label": "Help now · Accent · Lilac",
+      "route": "help",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "accent-lilac"
+    },
+    {
+      "file": "mobile__accent-lilac__journal.png",
+      "label": "Journal · Accent · Lilac",
+      "route": "tab/journal",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "accent-lilac"
+    },
+    {
+      "file": "mobile__accent-lilac__map.png",
+      "label": "Constellation · Accent · Lilac",
+      "route": "tab/map",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "accent-lilac"
+    },
+    {
+      "file": "mobile__accent-lilac__me.png",
+      "label": "You · Accent · Lilac",
+      "route": "tab/me",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "accent-lilac"
+    },
+    {
+      "file": "mobile__accent-lilac__now.png",
+      "label": "Now · Accent · Lilac",
+      "route": "tab/now",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "accent-lilac"
+    },
+    {
+      "file": "mobile__accent-lilac__runner-breathing.png",
+      "label": "Runner · Breathing · Accent · Lilac",
+      "route": "runner/box-breathing",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "accent-lilac"
+    },
+    {
+      "file": "mobile__accent-lilac__settings.png",
+      "label": "Settings · Accent · Lilac",
+      "route": "settings",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "accent-lilac"
+    },
+    {
+      "file": "mobile__accent-mulberry__calm.png",
+      "label": "Calm · Accent · Mulberry",
+      "route": "tab/calm",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "accent-mulberry"
+    },
+    {
+      "file": "mobile__accent-mulberry__help.png",
+      "label": "Help now · Accent · Mulberry",
+      "route": "help",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "accent-mulberry"
+    },
+    {
+      "file": "mobile__accent-mulberry__journal.png",
+      "label": "Journal · Accent · Mulberry",
+      "route": "tab/journal",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "accent-mulberry"
+    },
+    {
+      "file": "mobile__accent-mulberry__map.png",
+      "label": "Constellation · Accent · Mulberry",
+      "route": "tab/map",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "accent-mulberry"
+    },
+    {
+      "file": "mobile__accent-mulberry__me.png",
+      "label": "You · Accent · Mulberry",
+      "route": "tab/me",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "accent-mulberry"
+    },
+    {
+      "file": "mobile__accent-mulberry__now.png",
+      "label": "Now · Accent · Mulberry",
+      "route": "tab/now",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "accent-mulberry"
+    },
+    {
+      "file": "mobile__accent-mulberry__runner-breathing.png",
+      "label": "Runner · Breathing · Accent · Mulberry",
+      "route": "runner/box-breathing",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "accent-mulberry"
+    },
+    {
+      "file": "mobile__accent-mulberry__settings.png",
+      "label": "Settings · Accent · Mulberry",
+      "route": "settings",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "accent-mulberry"
+    },
+    {
+      "file": "mobile__combo-large-comfortable-high__calm.png",
+      "label": "Calm · Combo · Large + Comfortable + High contrast",
+      "route": "tab/calm",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "combo-large-comfortable-high"
+    },
+    {
+      "file": "mobile__combo-large-comfortable-high__help.png",
+      "label": "Help now · Combo · Large + Comfortable + High contrast",
+      "route": "help",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "combo-large-comfortable-high"
+    },
+    {
+      "file": "mobile__combo-large-comfortable-high__journal.png",
+      "label": "Journal · Combo · Large + Comfortable + High contrast",
+      "route": "tab/journal",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "combo-large-comfortable-high"
+    },
+    {
+      "file": "mobile__combo-large-comfortable-high__map.png",
+      "label": "Constellation · Combo · Large + Comfortable + High contrast",
+      "route": "tab/map",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "combo-large-comfortable-high"
+    },
+    {
+      "file": "mobile__combo-large-comfortable-high__me.png",
+      "label": "You · Combo · Large + Comfortable + High contrast",
+      "route": "tab/me",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "combo-large-comfortable-high"
+    },
+    {
+      "file": "mobile__combo-large-comfortable-high__now.png",
+      "label": "Now · Combo · Large + Comfortable + High contrast",
+      "route": "tab/now",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "combo-large-comfortable-high"
+    },
+    {
+      "file": "mobile__combo-large-comfortable-high__runner-breathing.png",
+      "label": "Runner · Breathing · Combo · Large + Comfortable + High contrast",
+      "route": "runner/box-breathing",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "combo-large-comfortable-high"
+    },
+    {
+      "file": "mobile__combo-large-comfortable-high__settings.png",
+      "label": "Settings · Combo · Large + Comfortable + High contrast",
+      "route": "settings",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "combo-large-comfortable-high"
+    },
+    {
+      "file": "mobile__contrast-high__calm.png",
+      "label": "Calm · Contrast · High",
+      "route": "tab/calm",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "contrast-high"
+    },
+    {
+      "file": "mobile__contrast-high__help.png",
+      "label": "Help now · Contrast · High",
+      "route": "help",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "contrast-high"
+    },
+    {
+      "file": "mobile__contrast-high__journal.png",
+      "label": "Journal · Contrast · High",
+      "route": "tab/journal",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "contrast-high"
+    },
+    {
+      "file": "mobile__contrast-high__map.png",
+      "label": "Constellation · Contrast · High",
+      "route": "tab/map",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "contrast-high"
+    },
+    {
+      "file": "mobile__contrast-high__me.png",
+      "label": "You · Contrast · High",
+      "route": "tab/me",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "contrast-high"
+    },
+    {
+      "file": "mobile__contrast-high__now.png",
+      "label": "Now · Contrast · High",
+      "route": "tab/now",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "contrast-high"
+    },
+    {
+      "file": "mobile__contrast-high__runner-breathing.png",
+      "label": "Runner · Breathing · Contrast · High",
+      "route": "runner/box-breathing",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "contrast-high"
+    },
+    {
+      "file": "mobile__contrast-high__settings.png",
+      "label": "Settings · Contrast · High",
+      "route": "settings",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "contrast-high"
+    },
+    {
+      "file": "mobile__default__about.png",
+      "label": "About SoulCap",
+      "route": "about",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__add-person.png",
+      "label": "Add someone",
+      "route": "map/add",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__article-alarm.png",
+      "label": "Article · Alarm system",
+      "route": "article/alarm-system",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__article-wind-down.png",
+      "label": "Article · Wind-down",
+      "route": "article/wind-down-boundaries",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__calm.png",
+      "label": "Calm",
+      "route": "tab/calm",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__checkin-detail.png",
+      "label": "Check-in detail",
+      "route": "checkin/detail",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__daily-supports.png",
+      "label": "Daily supports",
+      "route": "calm/supports",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__drip.png",
+      "label": "Gentle questions",
+      "route": "drip",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__experience-picker.png",
+      "label": "Experience picker",
+      "route": "experience/picker",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__experience.png",
+      "label": "Experience detail",
+      "route": "experience",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__guided-path-result.png",
+      "label": "Guided Path · result",
+      "route": "path/result",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__guided-path.png",
+      "label": "Guided Path · start",
+      "route": "path/start",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__help.png",
+      "label": "Help now",
+      "route": "help",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__journal-cover.png",
+      "label": "Journal cover",
+      "route": "journal/cover",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__journal-editor.png",
+      "label": "Journal editor",
+      "route": "journal/editor",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__journal-new.png",
+      "label": "New journal entry",
+      "route": "journal/new",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__journal.png",
+      "label": "Journal",
+      "route": "tab/journal",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__knows.png",
+      "label": "What SoulCap knows",
+      "route": "me/knows",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__library-articles.png",
+      "label": "Library · Articles",
+      "route": "calm/library/articles",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__library-experiences.png",
+      "label": "Library · Experiences",
+      "route": "calm/library/experiences",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__library.png",
+      "label": "Emotional library",
+      "route": "calm/library",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__manual.png",
+      "label": "Personal Manual",
+      "route": "me/manual",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__map.png",
+      "label": "Constellation",
+      "route": "tab/map",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__me.png",
+      "label": "You",
+      "route": "tab/me",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__now.png",
+      "label": "Now",
+      "route": "tab/now",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__onboard-age.png",
+      "label": "Onboarding · age",
+      "route": "onboard/age",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__onboard-concerns.png",
+      "label": "Onboarding · concerns",
+      "route": "onboard/concerns",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__onboard-consent.png",
+      "label": "Onboarding · consent",
+      "route": "onboard/consent",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__onboard-motion.png",
+      "label": "Onboarding · motion",
+      "route": "onboard/motion",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__onboard-name.png",
+      "label": "Onboarding · name",
+      "route": "onboard/name",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__park-thought.png",
+      "label": "Thought parking",
+      "route": "park-thought",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__patterns.png",
+      "label": "Patterns",
+      "route": "me/patterns",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__person.png",
+      "label": "Person detail",
+      "route": "map/person",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__principles.png",
+      "label": "Principles",
+      "route": "me/principles",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__profile.png",
+      "label": "Profile",
+      "route": "me/profile",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__reset-menu.png",
+      "label": "Reset menu",
+      "route": "reset-menu",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__runner-breathing.png",
+      "label": "Runner · Breathing",
+      "route": "runner/box-breathing",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__runner-steps.png",
+      "label": "Runner · Steps",
+      "route": "runner/thought-record",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__safety-plan.png",
+      "label": "My plan",
+      "route": "me/plan",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__screener-pick.png",
+      "label": "Reflection screeners",
+      "route": "screener/pick",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__screener-run.png",
+      "label": "Screener · in progress",
+      "route": "screener/run",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__settings.png",
+      "label": "Settings",
+      "route": "settings",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__skill-box-breathing.png",
+      "label": "Technique · Box breathing",
+      "route": "skill/box-breathing",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__skill-thought-record.png",
+      "label": "Technique · Thought record",
+      "route": "skill/thought-record",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__timeline.png",
+      "label": "Timeline",
+      "route": "me/timeline",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__under-18.png",
+      "label": "Under 18",
+      "route": "onboard/under-18",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__weekly.png",
+      "label": "Weekly overview",
+      "route": "me/weekly",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__welcome.png",
+      "label": "Welcome",
+      "route": "welcome",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__whats-new.png",
+      "label": "What's new",
+      "route": "now/whats-new",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__your-story.png",
+      "label": "Your story",
+      "route": "me/story",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__density-comfortable__calm.png",
+      "label": "Calm · Density · Comfortable",
+      "route": "tab/calm",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "density-comfortable"
+    },
+    {
+      "file": "mobile__density-comfortable__help.png",
+      "label": "Help now · Density · Comfortable",
+      "route": "help",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "density-comfortable"
+    },
+    {
+      "file": "mobile__density-comfortable__journal.png",
+      "label": "Journal · Density · Comfortable",
+      "route": "tab/journal",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "density-comfortable"
+    },
+    {
+      "file": "mobile__density-comfortable__map.png",
+      "label": "Constellation · Density · Comfortable",
+      "route": "tab/map",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "density-comfortable"
+    },
+    {
+      "file": "mobile__density-comfortable__me.png",
+      "label": "You · Density · Comfortable",
+      "route": "tab/me",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "density-comfortable"
+    },
+    {
+      "file": "mobile__density-comfortable__now.png",
+      "label": "Now · Density · Comfortable",
+      "route": "tab/now",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "density-comfortable"
+    },
+    {
+      "file": "mobile__density-comfortable__runner-breathing.png",
+      "label": "Runner · Breathing · Density · Comfortable",
+      "route": "runner/box-breathing",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "density-comfortable"
+    },
+    {
+      "file": "mobile__density-comfortable__settings.png",
+      "label": "Settings · Density · Comfortable",
+      "route": "settings",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "density-comfortable"
+    },
+    {
+      "file": "mobile__motion-still__calm.png",
+      "label": "Calm · Motion · Still",
+      "route": "tab/calm",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "motion-still"
+    },
+    {
+      "file": "mobile__motion-still__help.png",
+      "label": "Help now · Motion · Still",
+      "route": "help",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "motion-still"
+    },
+    {
+      "file": "mobile__motion-still__journal.png",
+      "label": "Journal · Motion · Still",
+      "route": "tab/journal",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "motion-still"
+    },
+    {
+      "file": "mobile__motion-still__map.png",
+      "label": "Constellation · Motion · Still",
+      "route": "tab/map",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "motion-still"
+    },
+    {
+      "file": "mobile__motion-still__me.png",
+      "label": "You · Motion · Still",
+      "route": "tab/me",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "motion-still"
+    },
+    {
+      "file": "mobile__motion-still__now.png",
+      "label": "Now · Motion · Still",
+      "route": "tab/now",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "motion-still"
+    },
+    {
+      "file": "mobile__motion-still__runner-breathing.png",
+      "label": "Runner · Breathing · Motion · Still",
+      "route": "runner/box-breathing",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "motion-still"
+    },
+    {
+      "file": "mobile__motion-still__settings.png",
+      "label": "Settings · Motion · Still",
+      "route": "settings",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "motion-still"
+    },
+    {
+      "file": "mobile__motion-vivid__calm.png",
+      "label": "Calm · Motion · Vivid",
+      "route": "tab/calm",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "motion-vivid"
+    },
+    {
+      "file": "mobile__motion-vivid__help.png",
+      "label": "Help now · Motion · Vivid",
+      "route": "help",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "motion-vivid"
+    },
+    {
+      "file": "mobile__motion-vivid__journal.png",
+      "label": "Journal · Motion · Vivid",
+      "route": "tab/journal",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "motion-vivid"
+    },
+    {
+      "file": "mobile__motion-vivid__map.png",
+      "label": "Constellation · Motion · Vivid",
+      "route": "tab/map",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "motion-vivid"
+    },
+    {
+      "file": "mobile__motion-vivid__me.png",
+      "label": "You · Motion · Vivid",
+      "route": "tab/me",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "motion-vivid"
+    },
+    {
+      "file": "mobile__motion-vivid__now.png",
+      "label": "Now · Motion · Vivid",
+      "route": "tab/now",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "motion-vivid"
+    },
+    {
+      "file": "mobile__motion-vivid__runner-breathing.png",
+      "label": "Runner · Breathing · Motion · Vivid",
+      "route": "runner/box-breathing",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "motion-vivid"
+    },
+    {
+      "file": "mobile__motion-vivid__settings.png",
+      "label": "Settings · Motion · Vivid",
+      "route": "settings",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "motion-vivid"
+    },
+    {
+      "file": "mobile__text-large__calm.png",
+      "label": "Calm · Text · Large",
+      "route": "tab/calm",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "text-large"
+    },
+    {
+      "file": "mobile__text-large__help.png",
+      "label": "Help now · Text · Large",
+      "route": "help",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "text-large"
+    },
+    {
+      "file": "mobile__text-large__journal.png",
+      "label": "Journal · Text · Large",
+      "route": "tab/journal",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "text-large"
+    },
+    {
+      "file": "mobile__text-large__map.png",
+      "label": "Constellation · Text · Large",
+      "route": "tab/map",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "text-large"
+    },
+    {
+      "file": "mobile__text-large__me.png",
+      "label": "You · Text · Large",
+      "route": "tab/me",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "text-large"
+    },
+    {
+      "file": "mobile__text-large__now.png",
+      "label": "Now · Text · Large",
+      "route": "tab/now",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "text-large"
+    },
+    {
+      "file": "mobile__text-large__runner-breathing.png",
+      "label": "Runner · Breathing · Text · Large",
+      "route": "runner/box-breathing",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "text-large"
+    },
+    {
+      "file": "mobile__text-large__settings.png",
+      "label": "Settings · Text · Large",
+      "route": "settings",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "text-large"
+    },
+    {
+      "file": "mobile__theme-amoled__calm.png",
+      "label": "Calm · AMOLED",
+      "route": "tab/calm",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-amoled"
+    },
+    {
+      "file": "mobile__theme-amoled__help.png",
+      "label": "Help now · AMOLED",
+      "route": "help",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-amoled"
+    },
+    {
+      "file": "mobile__theme-amoled__journal.png",
+      "label": "Journal · AMOLED",
+      "route": "tab/journal",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-amoled"
+    },
+    {
+      "file": "mobile__theme-amoled__map.png",
+      "label": "Constellation · AMOLED",
+      "route": "tab/map",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-amoled"
+    },
+    {
+      "file": "mobile__theme-amoled__me.png",
+      "label": "You · AMOLED",
+      "route": "tab/me",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-amoled"
+    },
+    {
+      "file": "mobile__theme-amoled__now.png",
+      "label": "Now · AMOLED",
+      "route": "tab/now",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-amoled"
+    },
+    {
+      "file": "mobile__theme-amoled__runner-breathing.png",
+      "label": "Runner · Breathing · AMOLED",
+      "route": "runner/box-breathing",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-amoled"
+    },
+    {
+      "file": "mobile__theme-amoled__settings.png",
+      "label": "Settings · AMOLED",
+      "route": "settings",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-amoled"
+    },
+    {
+      "file": "mobile__theme-auto__calm.png",
+      "label": "Calm · Auto",
+      "route": "tab/calm",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-auto"
+    },
+    {
+      "file": "mobile__theme-auto__help.png",
+      "label": "Help now · Auto",
+      "route": "help",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-auto"
+    },
+    {
+      "file": "mobile__theme-auto__journal.png",
+      "label": "Journal · Auto",
+      "route": "tab/journal",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-auto"
+    },
+    {
+      "file": "mobile__theme-auto__map.png",
+      "label": "Constellation · Auto",
+      "route": "tab/map",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-auto"
+    },
+    {
+      "file": "mobile__theme-auto__me.png",
+      "label": "You · Auto",
+      "route": "tab/me",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-auto"
+    },
+    {
+      "file": "mobile__theme-auto__now.png",
+      "label": "Now · Auto",
+      "route": "tab/now",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-auto"
+    },
+    {
+      "file": "mobile__theme-auto__runner-breathing.png",
+      "label": "Runner · Breathing · Auto",
+      "route": "runner/box-breathing",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-auto"
+    },
+    {
+      "file": "mobile__theme-auto__settings.png",
+      "label": "Settings · Auto",
+      "route": "settings",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-auto"
+    },
+    {
+      "file": "mobile__theme-dark__calm.png",
+      "label": "Calm · Dark",
+      "route": "tab/calm",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-dark"
+    },
+    {
+      "file": "mobile__theme-dark__help.png",
+      "label": "Help now · Dark",
+      "route": "help",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-dark"
+    },
+    {
+      "file": "mobile__theme-dark__journal.png",
+      "label": "Journal · Dark",
+      "route": "tab/journal",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-dark"
+    },
+    {
+      "file": "mobile__theme-dark__map.png",
+      "label": "Constellation · Dark",
+      "route": "tab/map",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-dark"
+    },
+    {
+      "file": "mobile__theme-dark__me.png",
+      "label": "You · Dark",
+      "route": "tab/me",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-dark"
+    },
+    {
+      "file": "mobile__theme-dark__now.png",
+      "label": "Now · Dark",
+      "route": "tab/now",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-dark"
+    },
+    {
+      "file": "mobile__theme-dark__runner-breathing.png",
+      "label": "Runner · Breathing · Dark",
+      "route": "runner/box-breathing",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-dark"
+    },
+    {
+      "file": "mobile__theme-dark__settings.png",
+      "label": "Settings · Dark",
+      "route": "settings",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-dark"
+    },
+    {
+      "file": "mobile__theme-forest__calm.png",
+      "label": "Calm · Forest",
+      "route": "tab/calm",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-forest"
+    },
+    {
+      "file": "mobile__theme-forest__help.png",
+      "label": "Help now · Forest",
+      "route": "help",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-forest"
+    },
+    {
+      "file": "mobile__theme-forest__journal.png",
+      "label": "Journal · Forest",
+      "route": "tab/journal",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-forest"
+    },
+    {
+      "file": "mobile__theme-forest__map.png",
+      "label": "Constellation · Forest",
+      "route": "tab/map",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-forest"
+    },
+    {
+      "file": "mobile__theme-forest__me.png",
+      "label": "You · Forest",
+      "route": "tab/me",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-forest"
+    },
+    {
+      "file": "mobile__theme-forest__now.png",
+      "label": "Now · Forest",
+      "route": "tab/now",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-forest"
+    },
+    {
+      "file": "mobile__theme-forest__runner-breathing.png",
+      "label": "Runner · Breathing · Forest",
+      "route": "runner/box-breathing",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-forest"
+    },
+    {
+      "file": "mobile__theme-forest__settings.png",
+      "label": "Settings · Forest",
+      "route": "settings",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-forest"
+    },
+    {
+      "file": "mobile__theme-light__calm.png",
+      "label": "Calm · Light",
+      "route": "tab/calm",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-light"
+    },
+    {
+      "file": "mobile__theme-light__help.png",
+      "label": "Help now · Light",
+      "route": "help",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-light"
+    },
+    {
+      "file": "mobile__theme-light__journal.png",
+      "label": "Journal · Light",
+      "route": "tab/journal",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-light"
+    },
+    {
+      "file": "mobile__theme-light__map.png",
+      "label": "Constellation · Light",
+      "route": "tab/map",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-light"
+    },
+    {
+      "file": "mobile__theme-light__me.png",
+      "label": "You · Light",
+      "route": "tab/me",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-light"
+    },
+    {
+      "file": "mobile__theme-light__now.png",
+      "label": "Now · Light",
+      "route": "tab/now",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-light"
+    },
+    {
+      "file": "mobile__theme-light__runner-breathing.png",
+      "label": "Runner · Breathing · Light",
+      "route": "runner/box-breathing",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-light"
+    },
+    {
+      "file": "mobile__theme-light__settings.png",
+      "label": "Settings · Light",
+      "route": "settings",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-light"
+    },
+    {
+      "file": "mobile__theme-minimal__calm.png",
+      "label": "Calm · Minimal",
+      "route": "tab/calm",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-minimal"
+    },
+    {
+      "file": "mobile__theme-minimal__help.png",
+      "label": "Help now · Minimal",
+      "route": "help",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-minimal"
+    },
+    {
+      "file": "mobile__theme-minimal__journal.png",
+      "label": "Journal · Minimal",
+      "route": "tab/journal",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-minimal"
+    },
+    {
+      "file": "mobile__theme-minimal__map.png",
+      "label": "Constellation · Minimal",
+      "route": "tab/map",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-minimal"
+    },
+    {
+      "file": "mobile__theme-minimal__me.png",
+      "label": "You · Minimal",
+      "route": "tab/me",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-minimal"
+    },
+    {
+      "file": "mobile__theme-minimal__now.png",
+      "label": "Now · Minimal",
+      "route": "tab/now",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-minimal"
+    },
+    {
+      "file": "mobile__theme-minimal__runner-breathing.png",
+      "label": "Runner · Breathing · Minimal",
+      "route": "runner/box-breathing",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-minimal"
+    },
+    {
+      "file": "mobile__theme-minimal__settings.png",
+      "label": "Settings · Minimal",
+      "route": "settings",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-minimal"
+    },
+    {
+      "file": "mobile__theme-night__calm.png",
+      "label": "Calm · Night",
+      "route": "tab/calm",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-night"
+    },
+    {
+      "file": "mobile__theme-night__help.png",
+      "label": "Help now · Night",
+      "route": "help",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-night"
+    },
+    {
+      "file": "mobile__theme-night__journal.png",
+      "label": "Journal · Night",
+      "route": "tab/journal",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-night"
+    },
+    {
+      "file": "mobile__theme-night__map.png",
+      "label": "Constellation · Night",
+      "route": "tab/map",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-night"
+    },
+    {
+      "file": "mobile__theme-night__me.png",
+      "label": "You · Night",
+      "route": "tab/me",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-night"
+    },
+    {
+      "file": "mobile__theme-night__now.png",
+      "label": "Now · Night",
+      "route": "tab/now",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-night"
+    },
+    {
+      "file": "mobile__theme-night__runner-breathing.png",
+      "label": "Runner · Breathing · Night",
+      "route": "runner/box-breathing",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-night"
+    },
+    {
+      "file": "mobile__theme-night__settings.png",
+      "label": "Settings · Night",
+      "route": "settings",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-night"
+    },
+    {
+      "file": "mobile__theme-ocean__calm.png",
+      "label": "Calm · Ocean",
+      "route": "tab/calm",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-ocean"
+    },
+    {
+      "file": "mobile__theme-ocean__help.png",
+      "label": "Help now · Ocean",
+      "route": "help",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-ocean"
+    },
+    {
+      "file": "mobile__theme-ocean__journal.png",
+      "label": "Journal · Ocean",
+      "route": "tab/journal",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-ocean"
+    },
+    {
+      "file": "mobile__theme-ocean__map.png",
+      "label": "Constellation · Ocean",
+      "route": "tab/map",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-ocean"
+    },
+    {
+      "file": "mobile__theme-ocean__me.png",
+      "label": "You · Ocean",
+      "route": "tab/me",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-ocean"
+    },
+    {
+      "file": "mobile__theme-ocean__now.png",
+      "label": "Now · Ocean",
+      "route": "tab/now",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-ocean"
+    },
+    {
+      "file": "mobile__theme-ocean__runner-breathing.png",
+      "label": "Runner · Breathing · Ocean",
+      "route": "runner/box-breathing",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-ocean"
+    },
+    {
+      "file": "mobile__theme-ocean__settings.png",
+      "label": "Settings · Ocean",
+      "route": "settings",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-ocean"
+    },
+    {
+      "file": "mobile__theme-rain__calm.png",
+      "label": "Calm · Rain",
+      "route": "tab/calm",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-rain"
+    },
+    {
+      "file": "mobile__theme-rain__help.png",
+      "label": "Help now · Rain",
+      "route": "help",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-rain"
+    },
+    {
+      "file": "mobile__theme-rain__journal.png",
+      "label": "Journal · Rain",
+      "route": "tab/journal",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-rain"
+    },
+    {
+      "file": "mobile__theme-rain__map.png",
+      "label": "Constellation · Rain",
+      "route": "tab/map",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-rain"
+    },
+    {
+      "file": "mobile__theme-rain__me.png",
+      "label": "You · Rain",
+      "route": "tab/me",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-rain"
+    },
+    {
+      "file": "mobile__theme-rain__now.png",
+      "label": "Now · Rain",
+      "route": "tab/now",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-rain"
+    },
+    {
+      "file": "mobile__theme-rain__runner-breathing.png",
+      "label": "Runner · Breathing · Rain",
+      "route": "runner/box-breathing",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-rain"
+    },
+    {
+      "file": "mobile__theme-rain__settings.png",
+      "label": "Settings · Rain",
+      "route": "settings",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-rain"
+    },
+    {
+      "file": "mobile__theme-space__calm.png",
+      "label": "Calm · Space",
+      "route": "tab/calm",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-space"
+    },
+    {
+      "file": "mobile__theme-space__help.png",
+      "label": "Help now · Space",
+      "route": "help",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-space"
+    },
+    {
+      "file": "mobile__theme-space__journal.png",
+      "label": "Journal · Space",
+      "route": "tab/journal",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-space"
+    },
+    {
+      "file": "mobile__theme-space__map.png",
+      "label": "Constellation · Space",
+      "route": "tab/map",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-space"
+    },
+    {
+      "file": "mobile__theme-space__me.png",
+      "label": "You · Space",
+      "route": "tab/me",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-space"
+    },
+    {
+      "file": "mobile__theme-space__now.png",
+      "label": "Now · Space",
+      "route": "tab/now",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-space"
+    },
+    {
+      "file": "mobile__theme-space__runner-breathing.png",
+      "label": "Runner · Breathing · Space",
+      "route": "runner/box-breathing",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-space"
+    },
+    {
+      "file": "mobile__theme-space__settings.png",
+      "label": "Settings · Space",
+      "route": "settings",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-space"
+    },
+    {
+      "file": "mobile__theme-sunrise__calm.png",
+      "label": "Calm · Sunrise",
+      "route": "tab/calm",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-sunrise"
+    },
+    {
+      "file": "mobile__theme-sunrise__help.png",
+      "label": "Help now · Sunrise",
+      "route": "help",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-sunrise"
+    },
+    {
+      "file": "mobile__theme-sunrise__journal.png",
+      "label": "Journal · Sunrise",
+      "route": "tab/journal",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-sunrise"
+    },
+    {
+      "file": "mobile__theme-sunrise__map.png",
+      "label": "Constellation · Sunrise",
+      "route": "tab/map",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-sunrise"
+    },
+    {
+      "file": "mobile__theme-sunrise__me.png",
+      "label": "You · Sunrise",
+      "route": "tab/me",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-sunrise"
+    },
+    {
+      "file": "mobile__theme-sunrise__now.png",
+      "label": "Now · Sunrise",
+      "route": "tab/now",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-sunrise"
+    },
+    {
+      "file": "mobile__theme-sunrise__runner-breathing.png",
+      "label": "Runner · Breathing · Sunrise",
+      "route": "runner/box-breathing",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-sunrise"
+    },
+    {
+      "file": "mobile__theme-sunrise__settings.png",
+      "label": "Settings · Sunrise",
+      "route": "settings",
+      "viewport": "mobile",
+      "pack": "theme",
+      "variant": "theme-sunrise"
+    },
+    {
+      "file": "mobile__transparency-reduced__calm.png",
+      "label": "Calm · Transparency · Reduced",
+      "route": "tab/calm",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "transparency-reduced"
+    },
+    {
+      "file": "mobile__transparency-reduced__help.png",
+      "label": "Help now · Transparency · Reduced",
+      "route": "help",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "transparency-reduced"
+    },
+    {
+      "file": "mobile__transparency-reduced__journal.png",
+      "label": "Journal · Transparency · Reduced",
+      "route": "tab/journal",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "transparency-reduced"
+    },
+    {
+      "file": "mobile__transparency-reduced__map.png",
+      "label": "Constellation · Transparency · Reduced",
+      "route": "tab/map",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "transparency-reduced"
+    },
+    {
+      "file": "mobile__transparency-reduced__me.png",
+      "label": "You · Transparency · Reduced",
+      "route": "tab/me",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "transparency-reduced"
+    },
+    {
+      "file": "mobile__transparency-reduced__now.png",
+      "label": "Now · Transparency · Reduced",
+      "route": "tab/now",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "transparency-reduced"
+    },
+    {
+      "file": "mobile__transparency-reduced__runner-breathing.png",
+      "label": "Runner · Breathing · Transparency · Reduced",
+      "route": "runner/box-breathing",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "transparency-reduced"
+    },
+    {
+      "file": "mobile__transparency-reduced__settings.png",
+      "label": "Settings · Transparency · Reduced",
+      "route": "settings",
+      "viewport": "mobile",
+      "pack": "appearance",
+      "variant": "transparency-reduced"
     }
   ]
 }

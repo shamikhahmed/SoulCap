@@ -1,8 +1,8 @@
 {
   "name": "SoulCap",
-  "version": "5.1.7",
-  "swCache": "soulcap-v517",
+  "version": "5.1.8",
+  "swCache": "soulcap-v518",
   "schema": 12,
   "released": "2026-07-24",
-  "note": "v5.1.7 fixed tab footer + readable secondary text."
+  "note": "v5.1.8 gallery matrix (all themes/appearance) + runner reopen fix."
 }

@@ -9,9 +9,28 @@ const VIEWPORTS = {
   desktop: { width: 1280, height: 800 },
 } as const;
 
-type ManifestShot = { file: string; label: string; route: string; viewport: string };
+type ManifestShot = {
+  file: string;
+  label: string;
+  route: string;
+  viewport: string;
+  pack: string;
+  variant: string;
+};
 
-/** Every named surface we can open via __soulcap.galleryOpen (demo state). */
+/** Surfaces that show chrome, colour, type — enough to prove every look. */
+const MATRIX_SHOTS: { kind: string; arg?: string; slug: string; label: string; route: string }[] = [
+  { kind: 'tab', arg: 'now', slug: 'now', label: 'Now', route: 'tab/now' },
+  { kind: 'tab', arg: 'calm', slug: 'calm', label: 'Calm', route: 'tab/calm' },
+  { kind: 'tab', arg: 'journal', slug: 'journal', label: 'Journal', route: 'tab/journal' },
+  { kind: 'tab', arg: 'map', slug: 'map', label: 'Constellation', route: 'tab/map' },
+  { kind: 'tab', arg: 'me', slug: 'me', label: 'You', route: 'tab/me' },
+  { kind: 'settings', slug: 'settings', label: 'Settings', route: 'settings' },
+  { kind: 'help', slug: 'help', label: 'Help now', route: 'help' },
+  { kind: 'runner', arg: 'box-breathing', slug: 'runner-breathing', label: 'Runner · Breathing', route: 'runner/box-breathing' },
+];
+
+/** Full surface list at default look. */
 const DEMO_SHOTS: { kind: string; arg?: string; slug: string; label: string; route: string }[] = [
   { kind: 'tab', arg: 'now', slug: 'now', label: 'Now', route: 'tab/now' },
   { kind: 'whats-new', slug: 'whats-new', label: "What's new", route: 'now/whats-new' },
@@ -57,6 +76,59 @@ const DEMO_SHOTS: { kind: string; arg?: string; slug: string; label: string; rou
   { kind: 'help', slug: 'help', label: 'Help now', route: 'help' },
 ];
 
+type Look = {
+  theme?: string | null;
+  appearance?: {
+    text?: string;
+    density?: string;
+    accent?: string;
+    contrast?: string;
+    reduceTransparency?: boolean;
+    motion?: string;
+  };
+};
+
+const DEFAULT_APPEARANCE = {
+  text: 'standard',
+  density: 'compact',
+  accent: 'plum',
+  contrast: 'standard',
+  reduceTransparency: false,
+  motion: 'balanced',
+};
+
+const THEMES: { id: string; theme: string | null; label: string }[] = [
+  { id: 'auto', theme: null, label: 'Auto' },
+  { id: 'light', theme: 'light', label: 'Light' },
+  { id: 'dark', theme: 'dark', label: 'Dark' },
+  { id: 'night', theme: 'night', label: 'Night' },
+  { id: 'ocean', theme: 'ocean', label: 'Ocean' },
+  { id: 'forest', theme: 'forest', label: 'Forest' },
+  { id: 'rain', theme: 'rain', label: 'Rain' },
+  { id: 'space', theme: 'space', label: 'Space' },
+  { id: 'sunrise', theme: 'sunrise', label: 'Sunrise' },
+  { id: 'minimal', theme: 'minimal', label: 'Minimal' },
+  { id: 'amoled', theme: 'amoled', label: 'AMOLED' },
+];
+
+/** One axis change at a time (plus defaults already covered by theme pack). */
+const APPEARANCE_LOOKS: { id: string; label: string; look: Look }[] = [
+  { id: 'text-large', label: 'Text · Large', look: { theme: 'light', appearance: { text: 'large' } } },
+  { id: 'density-comfortable', label: 'Density · Comfortable', look: { theme: 'light', appearance: { density: 'comfortable' } } },
+  { id: 'contrast-high', label: 'Contrast · High', look: { theme: 'light', appearance: { contrast: 'high' } } },
+  { id: 'transparency-reduced', label: 'Transparency · Reduced', look: { theme: 'dark', appearance: { reduceTransparency: true } } },
+  { id: 'accent-lilac', label: 'Accent · Lilac', look: { theme: 'light', appearance: { accent: 'lilac' } } },
+  { id: 'accent-mulberry', label: 'Accent · Mulberry', look: { theme: 'light', appearance: { accent: 'mulberry' } } },
+  { id: 'accent-indigo', label: 'Accent · Indigo', look: { theme: 'light', appearance: { accent: 'indigo' } } },
+  { id: 'motion-vivid', label: 'Motion · Vivid', look: { theme: 'light', appearance: { motion: 'vivid' } } },
+  { id: 'motion-still', label: 'Motion · Still', look: { theme: 'light', appearance: { motion: 'still' } } },
+  {
+    id: 'combo-large-comfortable-high',
+    label: 'Combo · Large + Comfortable + High contrast',
+    look: { theme: 'dark', appearance: { text: 'large', density: 'comfortable', contrast: 'high' } },
+  },
+];
+
 function writeManifest(shots: ManifestShot[], viewport: string) {
   const manifestPath = join(GALLERY_DIR, 'gallery-manifest.json');
   let existing: { shots: ManifestShot[] } = { shots: [] };
@@ -89,37 +161,62 @@ async function seedDemo(page: Page) {
   });
 }
 
+async function applyLook(page: Page, look: Look) {
+  await page.evaluate(
+    ({ look, def }) => {
+      const api = (window as any).__soulcap;
+      const s = api.getState();
+      s.appearance = Object.assign({}, def, look.appearance || {});
+      const theme = look.theme !== undefined ? look.theme : null;
+      api.setTheme(theme);
+    },
+    { look, def: DEFAULT_APPEARANCE },
+  );
+  await page.waitForTimeout(120);
+}
+
+async function openSurface(page: Page, kind: string, arg?: string) {
+  await page.evaluate(
+    ({ kind, arg }) => {
+      (window as any).__soulcap.galleryOpen(kind, arg);
+    },
+    { kind, arg },
+  );
+  if (kind === 'runner') await page.waitForTimeout(600);
+  else await page.waitForTimeout(200);
+}
+
 async function snap(
   page: Page,
   shots: ManifestShot[],
   viewport: string,
-  n: { i: number },
+  pack: string,
+  variant: string,
   slug: string,
   label: string,
   route: string,
 ) {
-  n.i += 1;
-  const file = `${viewport}-${String(n.i).padStart(2, '0')}-${slug}.png`;
-  await page.waitForTimeout(350);
+  const file = `${viewport}__${variant}__${slug}.png`;
+  await page.waitForTimeout(280);
   await page.screenshot({ path: join(GALLERY_DIR, file), fullPage: true });
-  shots.push({ file, label, route, viewport });
+  shots.push({ file, label, route, viewport, pack, variant });
 }
 
-async function captureFreshFlow(page: Page, viewport: keyof typeof VIEWPORTS, shots: ManifestShot[], n: { i: number }) {
+async function captureFreshFlow(page: Page, viewport: keyof typeof VIEWPORTS, shots: ManifestShot[]) {
   await page.goto('/');
   await page.evaluate(() => localStorage.clear());
   await page.goto('/');
   await page.waitForFunction(() => Boolean((window as any).__soulcap));
   await dismissSplash(page);
-  await snap(page, shots, viewport, n, 'welcome', 'Welcome', 'welcome');
+  await snap(page, shots, viewport, 'default', 'default', 'welcome', 'Welcome', 'welcome');
 
   await page.getByRole('button', { name: 'Begin' }).click();
   await page.waitForTimeout(300);
-  await snap(page, shots, viewport, n, 'onboard-age', 'Onboarding · age', 'onboard/age');
+  await snap(page, shots, viewport, 'default', 'default', 'onboard-age', 'Onboarding · age', 'onboard/age');
 
   await page.getByRole('button', { name: /Under 18/ }).click();
   await page.waitForTimeout(300);
-  await snap(page, shots, viewport, n, 'under-18', 'Under 18', 'onboard/under-18');
+  await snap(page, shots, viewport, 'default', 'default', 'under-18', 'Under 18', 'onboard/under-18');
 
   await page.goto('/');
   await page.evaluate(() => localStorage.clear());
@@ -129,22 +226,23 @@ async function captureFreshFlow(page: Page, viewport: keyof typeof VIEWPORTS, sh
   await page.getByRole('button', { name: 'Begin' }).click();
   await page.getByRole('button', { name: '18 or older' }).click();
   await page.waitForTimeout(300);
-  await snap(page, shots, viewport, n, 'onboard-name', 'Onboarding · name', 'onboard/name');
+  await snap(page, shots, viewport, 'default', 'default', 'onboard-name', 'Onboarding · name', 'onboard/name');
 
   await page.getByRole('button', { name: 'Skip', exact: true }).click();
   await page.waitForTimeout(300);
-  await snap(page, shots, viewport, n, 'onboard-consent', 'Onboarding · consent', 'onboard/consent');
+  await snap(page, shots, viewport, 'default', 'default', 'onboard-consent', 'Onboarding · consent', 'onboard/consent');
 
   await page.getByRole('button', { name: 'I understand' }).click();
   await page.waitForTimeout(300);
-  await snap(page, shots, viewport, n, 'onboard-motion', 'Onboarding · motion', 'onboard/motion');
+  await snap(page, shots, viewport, 'default', 'default', 'onboard-motion', 'Onboarding · motion', 'onboard/motion');
 
   await page.getByRole('button', { name: 'Skip', exact: true }).click();
   await page.waitForTimeout(300);
-  await snap(page, shots, viewport, n, 'onboard-concerns', 'Onboarding · concerns', 'onboard/concerns');
+  await snap(page, shots, viewport, 'default', 'default', 'onboard-concerns', 'Onboarding · concerns', 'onboard/concerns');
 }
 
-async function capturePathResult(page: Page, viewport: string, shots: ManifestShot[], n: { i: number }) {
+async function capturePathResult(page: Page, viewport: string, shots: ManifestShot[]) {
+  await applyLook(page, { theme: 'light', appearance: DEFAULT_APPEARANCE });
   await page.evaluate(() => (window as any).__soulcap.galleryOpen('path'));
   await page.waitForTimeout(300);
   const sheet = page.locator('#sheetPanel');
@@ -153,29 +251,60 @@ async function capturePathResult(page: Page, viewport: string, shots: ManifestSh
   await sheet.getByRole('button', { name: /Worry/ }).click();
   await sheet.getByRole('button', { name: 'Continue' }).click();
   await page.waitForTimeout(400);
-  await snap(page, shots, viewport, n, 'guided-path-result', 'Guided Path · result', 'path/result');
+  await snap(page, shots, viewport, 'default', 'default', 'guided-path-result', 'Guided Path · result', 'path/result');
   await page.evaluate(() => (window as any).__soulcap.galleryReset());
+}
+
+async function captureMatrixScreens(
+  page: Page,
+  viewport: string,
+  shots: ManifestShot[],
+  pack: string,
+  variant: string,
+  lookLabel: string,
+  look: Look,
+) {
+  await applyLook(page, look);
+  for (const s of MATRIX_SHOTS) {
+    await openSurface(page, s.kind, s.arg);
+    await snap(
+      page,
+      shots,
+      viewport,
+      pack,
+      variant,
+      s.slug,
+      `${s.label} · ${lookLabel}`,
+      s.route,
+    );
+    await page.evaluate(() => (window as any).__soulcap.galleryReset());
+  }
 }
 
 async function captureAll(page: Page, viewport: keyof typeof VIEWPORTS) {
   const shots: ManifestShot[] = [];
-  const n = { i: 0 };
 
-  await captureFreshFlow(page, viewport, shots, n);
-
+  await captureFreshFlow(page, viewport, shots);
   await seedDemo(page);
+  await applyLook(page, { theme: 'light', appearance: DEFAULT_APPEARANCE });
 
   for (const s of DEMO_SHOTS) {
-    await page.evaluate(({ kind, arg }) => {
-      (window as any).__soulcap.galleryOpen(kind, arg);
-    }, { kind: s.kind, arg: s.arg });
-    // Breathing runner needs a beat so orb paints
-    if (s.kind === 'runner') await page.waitForTimeout(600);
-    await snap(page, shots, viewport, n, s.slug, s.label, s.route);
+    await openSurface(page, s.kind, s.arg);
+    await snap(page, shots, viewport, 'default', 'default', s.slug, s.label, s.route);
     await page.evaluate(() => (window as any).__soulcap.galleryReset());
   }
+  await capturePathResult(page, viewport, shots);
 
-  await capturePathResult(page, viewport, shots, n);
+  for (const t of THEMES) {
+    await captureMatrixScreens(page, viewport, shots, 'theme', `theme-${t.id}`, t.label, {
+      theme: t.theme,
+      appearance: DEFAULT_APPEARANCE,
+    });
+  }
+
+  for (const a of APPEARANCE_LOOKS) {
+    await captureMatrixScreens(page, viewport, shots, 'appearance', a.id, a.label, a.look);
+  }
 
   writeManifest(shots, viewport);
 }
@@ -196,12 +325,16 @@ for (const viewport of ['mobile', 'desktop'] as const) {
     });
 
     test(`capture SoulCap ${viewport} screens`, async ({ page }, testInfo) => {
-      // One viewport per Playwright project — avoid 2×2 duplicate runs.
       test.skip(testInfo.project.name !== viewport, 'matched project only');
-      test.setTimeout(10 * 60 * 1000);
+      test.setTimeout(45 * 60 * 1000);
       for (const f of readdirSync(GALLERY_DIR)) {
-        if (f.endsWith('.png') && f.startsWith(viewport + '-')) {
-          try { unlinkSync(join(GALLERY_DIR, f)); } catch (e) { /* race with other worker */ }
+        if (!f.endsWith('.png')) continue;
+        if (f.startsWith(viewport + '__') || f.startsWith(viewport + '-')) {
+          try {
+            unlinkSync(join(GALLERY_DIR, f));
+          } catch {
+            /* race with other worker */
+          }
         }
       }
       await captureAll(page, viewport);

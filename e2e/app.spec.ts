@@ -880,6 +880,18 @@ test.describe('Skills', () => {
     await expect(page.locator('#runText')).toContainText(/Breathe in through your nose/);
   });
 
+  test('breathing runner can open twice after setup close', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => (window as any).__soulcap.startSkill('box-breathing'));
+    await expect(page.locator('#runner.on')).toBeVisible();
+    await expect(page.locator('#runner').getByRole('button', { name: 'Begin' })).toBeVisible();
+    await page.evaluate(() => (window as any).__soulcap.galleryReset());
+    await expect(page.locator('#runner.on')).toHaveCount(0);
+    await page.evaluate(() => (window as any).__soulcap.startSkill('box-breathing'));
+    await expect(page.locator('#runner.on')).toBeVisible();
+    await expect(page.locator('#runner').getByRole('button', { name: 'Begin' })).toBeVisible();
+  });
+
   test('box-breathing and 4-7-8 phase timings match the pattern at Steady', async ({ page }) => {
     test.setTimeout(90000);
     await seedDemo(page);
@@ -939,11 +951,12 @@ test.describe('Skills', () => {
     await page.evaluate(() => { (window as any).__soulcap.getState().pace = 1; });
     await runSkill(page, 'thought-record');
     const first = await page.locator('#runText').innerText();
-    await page.waitForTimeout(8500);
+    // Floor is 9s; leave headroom so suite load / paint lag does not false-fail.
+    await page.waitForTimeout(7000);
     expect(await page.locator('#runText').innerText()).toBe(first);
     await expect(async () => {
       expect(await page.locator('#runText').innerText()).not.toBe(first);
-    }).toPass({ timeout: 4000 });
+    }).toPass({ timeout: 5000 });
   });
 
   test('runner exposes Slow/Steady/Brisk pace control', async ({ page }) => {

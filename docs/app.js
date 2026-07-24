@@ -1896,6 +1896,8 @@
     var o = $('#runOrb'), r = $('#runOrbRing');
     if (o) { o.classList.remove('paced'); o.classList.remove('orb-css-fallback'); o.style.transition = ''; o.style.transform = ''; }
     if (r) { r.classList.remove('paced'); r.style.transition = ''; r.style.transform = ''; }
+    // Breath setup strips #runOrb ids — restore shell so the next open is safe.
+    if (!$('#runOrb') || !$('#runText')) rebuildStage();
   }
   function finishSkill(helpful) {
     state.skillRuns.push({ t: Date.now(), id: runState.skill.id, helpful: helpful });
@@ -1997,6 +1999,8 @@
 
   function breathSetup(s) {
     clearTimeout(runState && runState.timer);
+    // Prior setup may have stripped #runOrb — restore before touching nodes.
+    if (!$('#runOrb') || !$('#runText')) rebuildStage();
     runState = { skill: s, mode: 'setup', breaths: s.pattern.defaultBreaths, timer: null, ticker: null };
     $('#runStep').textContent = s.name;
     $('#runGuide').style.display = 'none';
@@ -4744,7 +4748,7 @@
       }
     });
   }
-  var APP_VERSION = '5.1.7';
+  var APP_VERSION = '5.1.8';
   function settingsGroup(v, title, kids) {
     v.appendChild(el('p', { class: 'eyebrow settings-eyebrow', text: title }));
     var block = el('div', { class: 'settings-block' });
@@ -5168,7 +5172,7 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '5.1.7',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '5.1.8',
     effectiveMotion: effectiveMotion,
     motionCap: function () { return motionCap; },
     loadGsap: loadGsap,

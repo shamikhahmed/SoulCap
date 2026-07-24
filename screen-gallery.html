@@ -33,7 +33,7 @@
     }
     h1 { margin: 0 0 4px; font-size: 1.35rem; font-weight: 650; }
     .sub { color: var(--muted); font-size: 0.85rem; margin: 0 0 12px; }
-    .toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    .toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 8px; }
     .btn {
       background: var(--surface);
       border: 1px solid var(--border);
@@ -73,6 +73,8 @@
     #lightbox img { max-width: 94vw; max-height: 94vh; border-radius: 8px; }
     .empty { color: var(--muted); padding: 40px; text-align: center; }
     a.back { color: var(--accent); text-decoration: none; font-size: 0.85rem; }
+    label.field { color: var(--muted); font-size: 0.75rem; display: flex; flex-direction: column; gap: 4px; }
+    select.btn { appearance: auto; }
   </style>
 </head>
 <body>
@@ -80,7 +82,9 @@
     <a class="back" href="docs/?demo=1">← Open app</a>
     <h1>SoulCap — Screen Gallery</h1>
     <p class="sub" id="meta">Loading manifest…</p>
-    <div class="toolbar" id="filters"></div>
+    <div class="toolbar" id="filters-viewport"></div>
+    <div class="toolbar" id="filters-pack"></div>
+    <div class="toolbar" id="filters-variant"></div>
   </header>
   <main>
     <div class="grid" id="grid"></div>
@@ -92,23 +96,43 @@
   <script>
     var DIR = 'docs/screenshots/gallery/';
     var grid = document.getElementById('grid');
-    var filters = document.getElementById('filters');
     var meta = document.getElementById('meta');
     var lightbox = document.getElementById('lightbox');
     var lightboxImg = lightbox.querySelector('img');
     var shots = [];
     var viewport = 'all';
+    var pack = 'all';
+    var variant = 'all';
     var query = '';
+
+    function unique(arr) {
+      var out = [];
+      var seen = {};
+      arr.forEach(function (x) {
+        if (!x || seen[x]) return;
+        seen[x] = 1;
+        out.push(x);
+      });
+      return out;
+    }
+
+    function filtered() {
+      var q = query.trim().toLowerCase();
+      return shots.filter(function (s) {
+        if (viewport !== 'all' && s.viewport !== viewport) return false;
+        if (pack !== 'all' && (s.pack || 'default') !== pack) return false;
+        if (variant !== 'all' && (s.variant || 'default') !== variant) return false;
+        if (!q) return true;
+        return (s.label + ' ' + s.route + ' ' + s.file + ' ' + (s.variant || '') + ' ' + (s.pack || ''))
+          .toLowerCase()
+          .indexOf(q) !== -1;
+      });
+    }
 
     function render() {
       grid.className = 'grid' + (viewport === 'desktop' ? ' desktop-view' : '');
       grid.innerHTML = '';
-      var q = query.trim().toLowerCase();
-      var visible = shots.filter(function (s) {
-        if (viewport !== 'all' && s.viewport !== viewport) return false;
-        if (!q) return true;
-        return (s.label + ' ' + s.route + ' ' + s.file).toLowerCase().indexOf(q) !== -1;
-      });
+      var visible = filtered();
       document.getElementById('empty').hidden = visible.length > 0;
       meta.textContent = meta.dataset.base + ' · showing ' + visible.length;
       visible.forEach(function (s) {
@@ -118,7 +142,10 @@
         img.src = DIR + s.file;
         img.alt = s.label;
         var cap = document.createElement('figcaption');
-        cap.innerHTML = '<strong>' + s.label + '</strong><br /><span class="route">' + s.viewport + ' · ' + s.route + '</span>';
+        cap.innerHTML =
+          '<strong>' + s.label + '</strong><br /><span class="route">' +
+          s.viewport + ' · ' + (s.pack || 'default') + ' · ' + (s.variant || 'default') + ' · ' + s.route +
+          '</span>';
         fig.appendChild(img);
         fig.appendChild(cap);
         fig.addEventListener('click', function () {
@@ -129,15 +156,63 @@
       });
     }
 
-    function renderFilters() {
-      filters.innerHTML = '';
-      ['all', 'mobile', 'desktop'].forEach(function (v) {
+    function btnRow(hostId, values, current, setFn, labelFn) {
+      var host = document.getElementById(hostId);
+      host.innerHTML = '';
+      values.forEach(function (v) {
         var btn = document.createElement('button');
-        btn.className = 'btn' + (v === viewport ? ' active' : '');
-        btn.textContent = v.charAt(0).toUpperCase() + v.slice(1);
-        btn.addEventListener('click', function () { viewport = v; renderFilters(); render(); });
-        filters.appendChild(btn);
+        btn.className = 'btn' + (v === current ? ' active' : '');
+        btn.textContent = labelFn ? labelFn(v) : v;
+        btn.addEventListener('click', function () {
+          setFn(v);
+          renderFilters();
+          render();
+        });
+        host.appendChild(btn);
       });
+    }
+
+    function renderFilters() {
+      btnRow('filters-viewport', ['all', 'mobile', 'desktop'], viewport, function (v) { viewport = v; }, function (v) {
+        return v.charAt(0).toUpperCase() + v.slice(1);
+      });
+
+      var packs = ['all'].concat(unique(shots.map(function (s) { return s.pack || 'default'; })));
+      btnRow('filters-pack', packs, pack, function (v) { pack = v; variant = 'all'; }, function (v) {
+        if (v === 'all') return 'All packs';
+        if (v === 'default') return 'Default screens';
+        if (v === 'theme') return 'Themes';
+        if (v === 'appearance') return 'Appearance';
+        return v;
+      });
+
+      var variants = ['all'];
+      shots.forEach(function (s) {
+        if (pack !== 'all' && (s.pack || 'default') !== pack) return;
+        if (s.variant) variants.push(s.variant);
+      });
+      variants = unique(variants);
+      var host = document.getElementById('filters-variant');
+      host.innerHTML = '';
+      var lab = document.createElement('label');
+      lab.className = 'field';
+      lab.textContent = 'Variant';
+      var sel = document.createElement('select');
+      sel.className = 'btn';
+      variants.forEach(function (v) {
+        var opt = document.createElement('option');
+        opt.value = v;
+        opt.textContent = v === 'all' ? 'All variants' : v;
+        if (v === variant) opt.selected = true;
+        sel.appendChild(opt);
+      });
+      sel.addEventListener('change', function () {
+        variant = sel.value;
+        render();
+      });
+      lab.appendChild(sel);
+      host.appendChild(lab);
+
       var search = document.createElement('input');
       search.type = 'search';
       search.placeholder = 'Filter screens…';
@@ -145,7 +220,7 @@
       search.style.minWidth = '180px';
       search.value = query;
       search.addEventListener('input', function () { query = search.value; render(); });
-      filters.appendChild(search);
+      host.appendChild(search);
     }
 
     lightbox.addEventListener('click', function () { lightbox.classList.remove('open'); });
@@ -156,7 +231,11 @@
     fetch(DIR + 'gallery-manifest.json')
       .then(function (r) { return r.json(); })
       .then(function (m) {
-        shots = m.shots || [];
+        shots = (m.shots || []).map(function (s) {
+          if (!s.pack) s.pack = 'default';
+          if (!s.variant) s.variant = 'default';
+          return s;
+        });
         meta.dataset.base = 'v' + m.version + ' · ' + shots.length + ' shots · generated ' + new Date(m.generated).toLocaleString();
         meta.textContent = meta.dataset.base;
         renderFilters();
