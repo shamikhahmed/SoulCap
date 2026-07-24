@@ -4744,7 +4744,7 @@
       }
     });
   }
-  var APP_VERSION = '5.1.3';
+  var APP_VERSION = '5.1.4';
   function settingsGroup(v, title, kids) {
     v.appendChild(el('p', { class: 'eyebrow settings-eyebrow', text: title }));
     var block = el('div', { class: 'settings-block' });
@@ -5031,7 +5031,11 @@
     VIEWS.forEach(function (v) { $('#view-' + v).classList.remove('on'); });
     if (!state.welcomed) { $('#tabs').style.display = 'none'; $('#fab').classList.remove('on'); renderWelcome(); $('#view-welcome').classList.add('on'); return; }
     if (!state.onboarded) { $('#tabs').style.display = 'none'; $('#fab').classList.remove('on'); renderOnboarding(); $('#view-onboarding').classList.add('on'); return; }
-    $('#tabs').style.display = 'flex'; $('#fab').classList.add('on');
+    $('#tabs').style.display = 'flex';
+    // Now + You already expose header Help — hide FAB there so content stays
+    // full-width (v5.1.3 right gutter emptied the layout on iPhone).
+    if (tab === 'now' || tab === 'me') $('#fab').classList.remove('on');
+    else $('#fab').classList.add('on');
     if (tab === 'now') renderNow();
     if (tab === 'calm') renderCalm();
     if (tab === 'journal') renderJournal();
@@ -5165,7 +5169,7 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '5.1.3',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '5.1.4',
     effectiveMotion: effectiveMotion,
     motionCap: function () { return motionCap; },
     loadGsap: loadGsap,

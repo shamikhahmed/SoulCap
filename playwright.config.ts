@@ -15,7 +15,7 @@ export default defineConfig({
   projects: [
     {
       name: 'mobile',
-      use: { ...devices['Desktop Chrome'], viewport: { width: 390, height: 844 }, isMobile: false, hasTouch: true }
+      use: { ...devices['Desktop Chrome'], viewport: { width: 430, height: 932 }, isMobile: false, hasTouch: true }
     },
     { name: 'desktop', use: { ...devices['Desktop Chrome'] } }
   ],

@@ -1,11 +1,21 @@
 ## [Unreleased]
 
+## [5.1.4] — 2026-07-24
+
+### Fixed
+- **Layout regression:** remove `--fab-gutter` (120px right padding emptied the column on
+  iPhone 16 Pro Max). Views use symmetric `var(--space-4)` again. FAB off on Now/You
+  (header Help); icon-only FAB ≤480px on Calm/Journal/Map. Playwright mobile viewport
+  **430×932**. Symmetry + FAB-placement tests.
+- SW `soulcap-v514`. App **5.1.4**. Schema still **v12**.
+
 ## [5.1.3] — 2026-07-24
 
 ### Fixed
 - **v5.1 PR-4 FAB / ship hygiene:** mobile `--fab-gutter` so Help never covers cards/tiles;
   larger `--fab-clearance`; hero→section gap tightened to 48px; `package.json` version synced;
   ship workflow lists `package.json` in AGENTS.md / `.cursorrules`.
+  *(Superseded by 5.1.4 — gutter emptied the layout; replaced by hide-FAB + icon-only.)*
 - SW `soulcap-v513`. App **5.1.3**. Schema still **v12**. **v5.1 complete.**
 
 ## [5.1.2] — 2026-07-24

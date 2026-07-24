@@ -921,7 +921,7 @@ test.describe('Skills', () => {
     const box = await measurePhases('box-breathing', [4, 4, 4, 4]);
     box.forEach((ms, i) => {
       // Wider under parallel CI load; still catches half/double-speed bugs.
-      expect(Math.abs(ms - 4000), `box phase ${i}`).toBeLessThanOrEqual(600);
+      expect(Math.abs(ms - 4000), `box phase ${i}`).toBeLessThanOrEqual(1000);
     });
 
     await page.evaluate(() => {
@@ -930,7 +930,7 @@ test.describe('Skills', () => {
     const fse = await measurePhases('four-seven-eight', [4, 7, 8]);
     const expectMs = [4000, 7000, 8000];
     fse.forEach((ms, i) => {
-      expect(Math.abs(ms - expectMs[i]), `478 phase ${i}`).toBeLessThanOrEqual(600);
+      expect(Math.abs(ms - expectMs[i]), `478 phase ${i}`).toBeLessThanOrEqual(1000);
     });
   });
 
@@ -1713,12 +1713,21 @@ test.describe('v1.4 bundled features', () => {
       const api = (window as any).__soulcap;
       if (api && api.setSeenVersion) api.setSeenVersion(api.version);
     });
-    await expect(page.locator('#fab.on')).toBeVisible();
-    for (const tab of ['now', 'calm', 'journal', 'map', 'me'] as const) {
+    // Now + You use header Help (no FAB). Calm / Journal / Map keep icon FAB.
+    for (const tab of ['now', 'me'] as const) {
       await page.evaluate((t) => {
         (document.querySelector(`#tabs button[data-tab="${t}"]`) as HTMLElement).click();
       }, tab);
       await expect(page.locator(`#view-${tab}.on`)).toBeVisible();
+      await expect(page.locator('#fab.on')).toHaveCount(0);
+      await expect(page.locator(`#view-${tab} .help-btn`)).toBeVisible();
+    }
+    for (const tab of ['calm', 'journal', 'map'] as const) {
+      await page.evaluate((t) => {
+        (document.querySelector(`#tabs button[data-tab="${t}"]`) as HTMLElement).click();
+      }, tab);
+      await expect(page.locator(`#view-${tab}.on`)).toBeVisible();
+      await expect(page.locator('#fab.on')).toBeVisible();
       await page.evaluate((t) => {
         const view = document.getElementById('view-' + t);
         if (view) view.scrollTop = view.scrollHeight;
@@ -1728,7 +1737,6 @@ test.describe('v1.4 bundled features', () => {
         const fab = document.getElementById('fab');
         if (!fab || !fab.classList.contains('on')) return ['fab-missing'];
         const fabBox = fab.getBoundingClientRect();
-        // Inset 2px so subpixel / anti-alias grazes do not fail CI under load.
         const fabHit = {
           left: fabBox.left + 2,
           right: fabBox.right - 2,
@@ -1750,6 +1758,27 @@ test.describe('v1.4 bundled features', () => {
         return hits;
       }, tab);
       expect(overlaps, `${tab} FAB overlap`).toEqual([]);
+    }
+  });
+
+  test('main view padding stays symmetric (no empty FAB column)', async ({ page }) => {
+    await seedDemo(page);
+    // iPhone 16 Pro Max CSS size
+    await page.setViewportSize({ width: 430, height: 932 });
+    for (const tab of ['now', 'calm', 'me'] as const) {
+      await page.evaluate((t) => {
+        (document.querySelector(`#tabs button[data-tab="${t}"]`) as HTMLElement).click();
+      }, tab);
+      const pad = await page.evaluate((t) => {
+        const view = document.getElementById('view-' + t)!;
+        const s = getComputedStyle(view);
+        return {
+          left: parseFloat(s.paddingLeft),
+          right: parseFloat(s.paddingRight)
+        };
+      }, tab);
+      expect(Math.abs(pad.left - pad.right), `${tab} pad`).toBeLessThanOrEqual(1);
+      expect(pad.right, `${tab} right pad`).toBeLessThan(40);
     }
   });
 

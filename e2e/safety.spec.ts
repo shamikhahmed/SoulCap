@@ -231,8 +231,15 @@ test.describe('Help is always reachable', () => {
       await page.evaluate((t) => {
         (document.querySelector(`#tabs button[data-tab="${t}"]`) as HTMLElement).click();
       }, tab);
-      await expect(page.locator('#fab')).toBeVisible();
+      // Now/You: header Help. Other tabs: floating FAB (plus header Help).
+      await expect(page.locator('.view.on .help-btn')).toBeVisible();
+      if (tab === 'now' || tab === 'me') {
+        await expect(page.locator('#fab.on')).toHaveCount(0);
+      } else {
+        await expect(page.locator('#fab.on')).toBeVisible();
+      }
     }
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="calm"]') as HTMLElement).click());
     await page.locator('#fab').click();
     await expect(page.locator('#panic')).toBeVisible();
   });

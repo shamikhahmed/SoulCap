@@ -5,7 +5,7 @@ item and ship it **the same way the rest of the app was built** — read `AGENTS
 rules, conventions, and ship workflow. Every item below lists **what**, **why**, **files to
 touch**, **acceptance criteria (incl. a test)**, and **guardrails**.
 
-**Current release: v5.1.3** · Published app: https://shamikhahmed.github.io/SoulCap/
+**Current release: v5.1.4** · Published app: https://shamikhahmed.github.io/SoulCap/
 
 Philosophy (never drifts): a personalised emotional operating system, **not** an AI therapist.
 Help people understand and regulate; never "fix" them; never diagnose; success = needing the app
@@ -172,6 +172,7 @@ Craft only — **not more features**. Rubric + checklist in the spec.
 - [x] **PR-2 Rhythm legibility** + pace default / in-runner · **5.1.1** / `soulcap-v511`
 - [x] **PR-3 Settings control system** · **5.1.2** / `soulcap-v512`
 - [x] **PR-4 FAB lock + package.json + spacing** · **5.1.3** / `soulcap-v513`
+- [x] **Hotfix layout** — drop `--fab-gutter`; FAB off Now/You; Pro Max viewport · **5.1.4** / `soulcap-v514`
 - **v5.1 complete.**
 
 ### Then — v5.0 Native motion · **[`SPEC-v5.0-native-motion.md`](SPEC-v5.0-native-motion.md)**
