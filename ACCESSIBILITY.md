@@ -1,12 +1,15 @@
 # SoulCap Accessibility Contract
 
-**Version:** 5.1.6 · **Updated:** 2026-07-24
+**Version:** 5.1.7 · **Updated:** 2026-07-24
 
 ## Baseline
 
 - Body and input copy stays at least 15px and browser zoom remains enabled.
-- Compact iPhone chrome and metadata may use 9–14.5px where contrast is strong and the associated
-  tap area remains at least 48px.
+- Secondary / supporting copy uses `--ink-2` at full opacity (not faint `--ink-3` + opacity).
+- Compact iPhone chrome and metadata may use 11–14.5px where contrast is strong and the associated
+  tap area remains at least 48px. Tab labels stay ≥11px.
+- The main tab bar is `position:fixed` at the viewport bottom; views pad with `--tab-clearance`
+  so the last control (Help) never sits under the bar.
 - Interactive controls have visible keyboard focus and semantic names.
 - Dialogs are named, modal, focus-trapped, Escape-dismissable where safe, and restore focus.
 - Colour is never the only carrier of meaning.

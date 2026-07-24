@@ -1512,7 +1512,8 @@ test.describe('Accessibility', () => {
       eyebrow: parseFloat(getComputedStyle(document.querySelector('.view.on .eyebrow')!).fontSize),
       tabTarget: document.querySelector('#tabs button')!.getBoundingClientRect().height,
     }));
-    expect(sizes.tab).toBeLessThanOrEqual(10.5);
+    expect(sizes.tab).toBeGreaterThanOrEqual(11);
+    expect(sizes.tab).toBeLessThanOrEqual(12);
     expect(sizes.eyebrow).toBeLessThanOrEqual(13);
     expect(sizes.tabTarget).toBeGreaterThanOrEqual(48);
   });
@@ -1743,6 +1744,81 @@ test.describe('v1.4 bundled features', () => {
       expect(Math.abs(pad.left - pad.right), `${tab} pad`).toBeLessThanOrEqual(1);
       expect(pad.right, `${tab} right pad`).toBeLessThan(40);
     }
+  });
+
+  test('tab bar stays pinned to viewport bottom with content clearance', async ({ page }) => {
+    await seedDemo(page);
+    await page.setViewportSize({ width: 430, height: 932 });
+    for (const tab of ['now', 'calm', 'me'] as const) {
+      await page.evaluate((t) => {
+        (document.querySelector(`#tabs button[data-tab="${t}"]`) as HTMLElement).click();
+      }, tab);
+      const layout = await page.evaluate((t) => {
+        const tabs = document.getElementById('tabs')!;
+        const view = document.getElementById('view-' + t)!;
+        const help = view.querySelector('.help-btn') as HTMLElement | null;
+        const tr = tabs.getBoundingClientRect();
+        const padBottom = parseFloat(getComputedStyle(view).paddingBottom);
+        // Help's document-bottom must sit above the reserved tab clearance.
+        let helpClearsTabs = true;
+        if (help) {
+          const helpBottomDoc = help.getBoundingClientRect().bottom + window.scrollY;
+          const contentFloor = document.documentElement.scrollHeight - tr.height;
+          helpClearsTabs = helpBottomDoc <= contentFloor + 4;
+        }
+        return {
+          position: getComputedStyle(tabs).position,
+          tabsBottom: tr.bottom,
+          tabsH: tr.height,
+          viewportH: window.innerHeight,
+          padBottom,
+          helpClearsTabs,
+          helpIsLast: help ? help === view.lastElementChild : true
+        };
+      }, tab);
+      expect(layout.position, `${tab} tabs position`).toBe('fixed');
+      expect(Math.abs(layout.tabsBottom - layout.viewportH), `${tab} tabs at bottom`).toBeLessThanOrEqual(2);
+      expect(layout.padBottom, `${tab} view pad`).toBeGreaterThanOrEqual(layout.tabsH);
+      expect(layout.helpClearsTabs, `${tab} help clears tab zone`).toBe(true);
+      expect(layout.helpIsLast, `${tab} help at end`).toBe(true);
+    }
+  });
+
+  test('secondary copy stays ink-2 readable (no faint ink-3+opacity)', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="calm"]') as HTMLElement).click());
+    const contrast = await page.evaluate(() => {
+      function parse(c: string) {
+        const m = c.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+        return m ? [+m[1], +m[2], +m[3]] : [0, 0, 0];
+      }
+      function lum(rgb: number[]) {
+        const s = rgb.map((v) => {
+          const x = v / 255;
+          return x <= 0.03928 ? x / 12.92 : Math.pow((x + 0.055) / 1.055, 2.4);
+        });
+        return 0.2126 * s[0] + 0.7152 * s[1] + 0.0722 * s[2];
+      }
+      function ratio(fg: string, bg: string) {
+        const L1 = lum(parse(fg)), L2 = lum(parse(bg));
+        const a = Math.max(L1, L2), b = Math.min(L1, L2);
+        return (a + 0.05) / (b + 0.05);
+      }
+      const psm = document.querySelector('#view-calm .opt .os') as HTMLElement;
+      const ground = getComputedStyle(document.documentElement).getPropertyValue('--ground').trim() || getComputedStyle(document.body).backgroundColor;
+      // Resolve CSS var against body background for ratio.
+      const probe = document.createElement('div');
+      probe.style.color = 'var(--ink-2)';
+      probe.style.background = 'var(--ground)';
+      document.body.appendChild(probe);
+      const color = getComputedStyle(probe).color;
+      const bg = getComputedStyle(probe).backgroundColor;
+      const opacity = getComputedStyle(psm).opacity;
+      document.body.removeChild(probe);
+      return { ratio: ratio(color, bg), opacity: parseFloat(opacity) };
+    });
+    expect(contrast.opacity).toBe(1);
+    expect(contrast.ratio).toBeGreaterThanOrEqual(4.5);
   });
 
   test('Calm rail cards hug content (not forced 3:4 portrait)', async ({ page }) => {

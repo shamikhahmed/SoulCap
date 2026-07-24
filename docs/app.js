@@ -3108,18 +3108,18 @@
         el('p', { class: 'eyebrow', text: 'Calm' }),
         el('h1', { class: 'h-voice', text: 'Every technique.' })
       ]));
-      v.appendChild(el('button', { class: 'help-btn', text: t('helpNow'), onclick: openPanic }));
       v.appendChild(el('div', { class: 'notice', text: state.locale === 'rui' ? tUi('pattern', 'reviewNote', PATTERN_UI) : CALM_REVIEW_NOTE }));
       v.appendChild(el('button', { class: 'btn ghost', text: tUi('calm', 'backToGuided', { backToGuided: '← Back to guided' }), onclick: function () { calm.browse = false; render(); } }));
       Object.keys(FAMILY_META).forEach(function (fam) {
         var items = SKILLS.filter(function (s) { return s.family === fam; });
         if (!items.length) return;
         v.appendChild(el('div', {}, [
-          el('p', { class: 'domain', style: 'color:var(--ink-3);margin:12px 0 3px', text: FAMILY_META[fam].label }),
+          el('p', { class: 'domain', style: 'color:var(--ink-2);margin:12px 0 3px', text: FAMILY_META[fam].label }),
           el('p', { class: 'p-sm', style: 'margin-bottom:10px', text: FAMILY_META[fam].note })
         ]));
         items.forEach(function (s) { v.appendChild(skillCard(s, true)); });
       });
+      v.appendChild(el('button', { class: 'help-btn', text: t('helpNow'), onclick: openPanic }));
       return;
     }
 
@@ -3136,7 +3136,6 @@
         onclick: function () { calm.need = calm.need === n.key ? null : n.key; buzz(8); render(); } });
     })));
     v.appendChild(hero);
-    v.appendChild(el('button', { class: 'help-btn', text: t('helpNow'), onclick: openPanic }));
 
     if (calm.need) {
       v.appendChild(el('div', {}, [
@@ -3235,6 +3234,7 @@
         ])
       ]));
     }
+    v.appendChild(el('button', { class: 'help-btn', text: t('helpNow'), onclick: openPanic }));
   }
 
   /* ── Journal ───────────────────────────────────────────────────────────── */
@@ -4744,7 +4744,7 @@
       }
     });
   }
-  var APP_VERSION = '5.1.6';
+  var APP_VERSION = '5.1.7';
   function settingsGroup(v, title, kids) {
     v.appendChild(el('p', { class: 'eyebrow settings-eyebrow', text: title }));
     var block = el('div', { class: 'settings-block' });
@@ -5168,7 +5168,7 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '5.1.6',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '5.1.7',
     effectiveMotion: effectiveMotion,
     motionCap: function () { return motionCap; },
     loadGsap: loadGsap,

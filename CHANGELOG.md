@@ -1,5 +1,17 @@
 ## [Unreleased]
 
+## [5.1.7] — 2026-07-24
+
+### Fixed
+- **Tab footer:** fixed to viewport bottom (centered under `#app`); content
+  `--tab-clearance` = tab height + safe-area so Help never sits under the bar.
+  Selected tab = soft accent wash (no detached top hairline).
+- **Readability:** secondary copy (`.p-sm`, opt subs, metas, glances, settings
+  hints, hero metas) uses `--ink-2` at full opacity — dropped faint `--ink-3`
+  + `.88` wash. Tab labels 11px (floor 10.5px on narrow).
+- Calm Help moved to bottom of screen (was mid-stack under needs).
+- SW `soulcap-v517`. App **5.1.7**. Schema still **v12**.
+
 ## [5.1.6] — 2026-07-24
 
 ### Fixed
