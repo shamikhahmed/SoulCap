@@ -3171,7 +3171,7 @@
       } else {
         var fitTiles = list.slice(0, 8).map(function (s) {
           var dm = DOMAIN_META[s.domain];
-          return el('button', { class: 'tile tap ratio-3-4', type: 'button', onclick: function () { skillSheet(s.id); } }, [
+          return el('button', { class: 'tile tap rail-card', type: 'button', onclick: function () { skillSheet(s.id); } }, [
             el('p', { class: 'tile-meta', text: dm.label + ' · ' + s.mins + ' min' }),
             el('h2', { class: 'tile-title', text: s.name }),
             el('p', { class: 'p-sm', text: s.blurb })
@@ -3189,7 +3189,7 @@
       }).slice(0, 6);
       v.appendChild(railBlock('Fitted for you', fitted.map(function (s) {
         var dm = DOMAIN_META[s.domain];
-        return el('button', { class: 'tile tap ratio-3-4', type: 'button', onclick: function () { skillSheet(s.id); } }, [
+        return el('button', { class: 'tile tap rail-card', type: 'button', onclick: function () { skillSheet(s.id); } }, [
           el('p', { class: 'tile-meta', text: dm.label + ' · ' + s.mins + ' min' }),
           el('h2', { class: 'tile-title', text: s.name }),
           el('p', { class: 'p-sm', text: s.blurb })
@@ -3198,7 +3198,7 @@
 
       var expTiles = EXPERIENCES.slice(0, 8).map(function (exp) {
         return el('button', {
-          class: 'tile tap ratio-3-4 experience-card',
+          class: 'tile tap rail-card experience-card',
           type: 'button',
           'data-experience-id': exp.id,
           onclick: function () { experienceSheet(exp.id); }
@@ -3213,7 +3213,7 @@
       }));
 
       var artTiles = ARTICLES.slice(0, 8).map(function (article) {
-        return el('button', { class: 'tile tap ratio-3-4 article-card', type: 'button', onclick: function () { articleSheet(article.id); } }, [
+        return el('button', { class: 'tile tap rail-card article-card', type: 'button', onclick: function () { articleSheet(article.id); } }, [
           el('p', { class: 'tile-meta', text: 'Article' }),
           el('h2', { class: 'tile-title', text: article.title }),
           el('p', { class: 'p-sm', text: article.summary })
@@ -4744,7 +4744,7 @@
       }
     });
   }
-  var APP_VERSION = '5.1.4';
+  var APP_VERSION = '5.1.6';
   function settingsGroup(v, title, kids) {
     v.appendChild(el('p', { class: 'eyebrow settings-eyebrow', text: title }));
     var block = el('div', { class: 'settings-block' });
@@ -5032,10 +5032,9 @@
     if (!state.welcomed) { $('#tabs').style.display = 'none'; $('#fab').classList.remove('on'); renderWelcome(); $('#view-welcome').classList.add('on'); return; }
     if (!state.onboarded) { $('#tabs').style.display = 'none'; $('#fab').classList.remove('on'); renderOnboarding(); $('#view-onboarding').classList.add('on'); return; }
     $('#tabs').style.display = 'flex';
-    // Now + You already expose header Help — hide FAB there so content stays
-    // full-width (v5.1.3 right gutter emptied the layout on iPhone).
-    if (tab === 'now' || tab === 'me') $('#fab').classList.remove('on');
-    else $('#fab').classList.add('on');
+    // Every main tab already has a header Help button — keep FAB off so it
+    // never paints over rails/opts (Calm especially) or empties a column.
+    $('#fab').classList.remove('on');
     if (tab === 'now') renderNow();
     if (tab === 'calm') renderCalm();
     if (tab === 'journal') renderJournal();
@@ -5169,7 +5168,7 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '5.1.4',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '5.1.6',
     effectiveMotion: effectiveMotion,
     motionCap: function () { return motionCap; },
     loadGsap: loadGsap,
@@ -5220,6 +5219,69 @@
       state.notices.seenVersion = v;
       save();
       selectTab('now');
+    },
+    /* Gallery / e2e: open named surfaces without brittle click paths. */
+    galleryReset: function () {
+      while (viewStack.length) popView();
+      if ($('#sheet').classList.contains('on')) closeSheet();
+      if ($('#journalEditor').classList.contains('on')) closeEditor();
+      if ($('#runner').classList.contains('on')) closeRunner();
+      if ($('#panic').classList.contains('on')) closePanic();
+    },
+    galleryOpen: function (kind, arg) {
+      var api = window.__soulcap;
+      if (api && api.galleryReset) api.galleryReset();
+      switch (kind) {
+        case 'tab': selectTab(arg || 'now'); break;
+        case 'calm-library': selectTab('calm'); calm.section = 'library'; libraryFilter = arg || 'all'; calm.browse = false; render(); break;
+        case 'calm-supports': selectTab('calm'); calm.section = 'supports'; calm.browse = false; render(); break;
+        case 'skill': skillSheet(arg || 'box-breathing'); break;
+        case 'runner': startSkill(arg || 'box-breathing'); break;
+        case 'article': articleSheet(arg || (ARTICLES[0] && ARTICLES[0].id)); break;
+        case 'experience': experienceSheet(arg || (EXPERIENCES[0] && EXPERIENCES[0].id)); break;
+        case 'experience-picker': experiencePickerSheet(); break;
+        case 'path': pathSheet(); break;
+        case 'checkin-detail':
+          if (!todayCheckin()) recordCheckin('wired');
+          checkinDetailSheet();
+          break;
+        case 'settings': settingsSheet(); break;
+        case 'about': aboutSheet(); break;
+        case 'safety-plan': safetyPlanSheet(); break;
+        case 'screener-pick': screenerPickSheet(); break;
+        case 'screener-run': screenerRunSheet(arg || (SCREENERS[0] && SCREENERS[0].id), 0, []); break;
+        case 'screener-result':
+          if (arg) screenerResultSheet(arg);
+          else if (SCREENERS[0]) screenerResultSheet(SCREENERS[0].id);
+          break;
+        case 'principles': principlesSheet(); break;
+        case 'manual': manualSheet(); break;
+        case 'patterns': patternsOverviewSheet(); break;
+        case 'weekly': weeklyOverviewSheet(); break;
+        case 'timeline': timelineSheet(); break;
+        case 'profile': profileSheet(); break;
+        case 'story': historySheet(); break;
+        case 'knows': knowsSheet(); break;
+        case 'reset-menu': resetMenuSheet(); break;
+        case 'park-thought': parkThoughtSheet(); break;
+        case 'new-entry': newEntrySheet(); break;
+        case 'journal-editor': openEditor(null, null); break;
+        case 'cover': coverSheet(state.journalCover || {}); break;
+        case 'add-person': addPersonSheet(); break;
+        case 'person':
+          if (arg) personSheet(arg);
+          else if (state.people[0]) personSheet(state.people[0].id);
+          break;
+        case 'drip': dripSheet(); break;
+        case 'help': openPanic(); break;
+        case 'whats-new':
+          state.notices.seenVersion = '0.0.0';
+          save();
+          selectTab('now');
+          render();
+          break;
+        default: break;
+      }
     }
   };
 

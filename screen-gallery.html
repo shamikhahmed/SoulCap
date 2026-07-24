@@ -97,13 +97,20 @@
     var lightbox = document.getElementById('lightbox');
     var lightboxImg = lightbox.querySelector('img');
     var shots = [];
-    var viewport = 'mobile';
+    var viewport = 'all';
+    var query = '';
 
     function render() {
       grid.className = 'grid' + (viewport === 'desktop' ? ' desktop-view' : '');
       grid.innerHTML = '';
-      var visible = shots.filter(function (s) { return s.viewport === viewport; });
+      var q = query.trim().toLowerCase();
+      var visible = shots.filter(function (s) {
+        if (viewport !== 'all' && s.viewport !== viewport) return false;
+        if (!q) return true;
+        return (s.label + ' ' + s.route + ' ' + s.file).toLowerCase().indexOf(q) !== -1;
+      });
       document.getElementById('empty').hidden = visible.length > 0;
+      meta.textContent = meta.dataset.base + ' · showing ' + visible.length;
       visible.forEach(function (s) {
         var fig = document.createElement('figure');
         var img = document.createElement('img');
@@ -111,7 +118,7 @@
         img.src = DIR + s.file;
         img.alt = s.label;
         var cap = document.createElement('figcaption');
-        cap.innerHTML = '<strong>' + s.label + '</strong><br /><span class="route">' + s.route + '</span>';
+        cap.innerHTML = '<strong>' + s.label + '</strong><br /><span class="route">' + s.viewport + ' · ' + s.route + '</span>';
         fig.appendChild(img);
         fig.appendChild(cap);
         fig.addEventListener('click', function () {
@@ -124,13 +131,21 @@
 
     function renderFilters() {
       filters.innerHTML = '';
-      ['mobile', 'desktop'].forEach(function (v) {
+      ['all', 'mobile', 'desktop'].forEach(function (v) {
         var btn = document.createElement('button');
         btn.className = 'btn' + (v === viewport ? ' active' : '');
         btn.textContent = v.charAt(0).toUpperCase() + v.slice(1);
         btn.addEventListener('click', function () { viewport = v; renderFilters(); render(); });
         filters.appendChild(btn);
       });
+      var search = document.createElement('input');
+      search.type = 'search';
+      search.placeholder = 'Filter screens…';
+      search.className = 'btn';
+      search.style.minWidth = '180px';
+      search.value = query;
+      search.addEventListener('input', function () { query = search.value; render(); });
+      filters.appendChild(search);
     }
 
     lightbox.addEventListener('click', function () { lightbox.classList.remove('open'); });
@@ -142,7 +157,8 @@
       .then(function (r) { return r.json(); })
       .then(function (m) {
         shots = m.shots || [];
-        meta.textContent = 'v' + m.version + ' · ' + shots.length + ' shots · generated ' + new Date(m.generated).toLocaleString();
+        meta.dataset.base = 'v' + m.version + ' · ' + shots.length + ' shots · generated ' + new Date(m.generated).toLocaleString();
+        meta.textContent = meta.dataset.base;
         renderFilters();
         render();
       })

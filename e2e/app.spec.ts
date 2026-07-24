@@ -1713,51 +1713,14 @@ test.describe('v1.4 bundled features', () => {
       const api = (window as any).__soulcap;
       if (api && api.setSeenVersion) api.setSeenVersion(api.version);
     });
-    // Now + You use header Help (no FAB). Calm / Journal / Map keep icon FAB.
-    for (const tab of ['now', 'me'] as const) {
+    // Header Help on every tab — floating FAB stays off (no overlap / no gutter).
+    for (const tab of ['now', 'calm', 'journal', 'map', 'me'] as const) {
       await page.evaluate((t) => {
         (document.querySelector(`#tabs button[data-tab="${t}"]`) as HTMLElement).click();
       }, tab);
       await expect(page.locator(`#view-${tab}.on`)).toBeVisible();
       await expect(page.locator('#fab.on')).toHaveCount(0);
       await expect(page.locator(`#view-${tab} .help-btn`)).toBeVisible();
-    }
-    for (const tab of ['calm', 'journal', 'map'] as const) {
-      await page.evaluate((t) => {
-        (document.querySelector(`#tabs button[data-tab="${t}"]`) as HTMLElement).click();
-      }, tab);
-      await expect(page.locator(`#view-${tab}.on`)).toBeVisible();
-      await expect(page.locator('#fab.on')).toBeVisible();
-      await page.evaluate((t) => {
-        const view = document.getElementById('view-' + t);
-        if (view) view.scrollTop = view.scrollHeight;
-        window.scrollTo(0, document.documentElement.scrollHeight);
-      }, tab);
-      const overlaps = await page.evaluate((t) => {
-        const fab = document.getElementById('fab');
-        if (!fab || !fab.classList.contains('on')) return ['fab-missing'];
-        const fabBox = fab.getBoundingClientRect();
-        const fabHit = {
-          left: fabBox.left + 2,
-          right: fabBox.right - 2,
-          top: fabBox.top + 2,
-          bottom: fabBox.bottom - 2
-        };
-        const root = document.getElementById('view-' + t) || document.querySelector('.view.on');
-        if (!root) return ['view-missing'];
-        const sels = ['.card', '.tile', '.hero-tile', '.stat-tile', '.list-row'];
-        const hits: string[] = [];
-        sels.forEach((sel) => {
-          root.querySelectorAll(sel).forEach((node) => {
-            const r = (node as HTMLElement).getBoundingClientRect();
-            if (r.width < 2 || r.height < 2) return;
-            const overlap = !(r.right <= fabHit.left || r.left >= fabHit.right || r.bottom <= fabHit.top || r.top >= fabHit.bottom);
-            if (overlap) hits.push(sel + ':' + ((node as HTMLElement).innerText || '').trim().slice(0, 24));
-          });
-        });
-        return hits;
-      }, tab);
-      expect(overlaps, `${tab} FAB overlap`).toEqual([]);
     }
   });
 
@@ -1780,6 +1743,22 @@ test.describe('v1.4 bundled features', () => {
       expect(Math.abs(pad.left - pad.right), `${tab} pad`).toBeLessThanOrEqual(1);
       expect(pad.right, `${tab} right pad`).toBeLessThan(40);
     }
+  });
+
+  test('Calm rail cards hug content (not forced 3:4 portrait)', async ({ page }) => {
+    await seedDemo(page);
+    await page.setViewportSize({ width: 430, height: 932 });
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="calm"]') as HTMLElement).click());
+    const metrics = await page.evaluate(() => {
+      const card = document.querySelector('#view-calm .rail .tile.rail-card') as HTMLElement | null;
+      if (!card) return null;
+      const r = card.getBoundingClientRect();
+      return { w: r.width, h: r.height, ratio: r.height / Math.max(r.width, 1) };
+    });
+    expect(metrics).not.toBeNull();
+    // Was ~1.33 (3:4). Compact cards should stay shorter than square.
+    expect(metrics!.ratio).toBeLessThan(1.05);
+    expect(metrics!.h).toBeLessThan(220);
   });
 
   test('Settings card opens the settings sheet', async ({ page }) => {

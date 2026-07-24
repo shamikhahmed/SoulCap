@@ -1,102 +1,606 @@
 {
   "app": "SoulCap",
-  "version": "5.1.4",
-  "generated": "2026-07-24T12:13:54.077Z",
+  "version": "5.1.6",
+  "generated": "2026-07-24T14:12:26.189Z",
   "shots": [
     {
-      "file": "desktop-01-now.png",
+      "file": "desktop-01-welcome.png",
+      "label": "Welcome",
+      "route": "welcome",
+      "viewport": "desktop"
+    },
+    {
+      "file": "desktop-02-onboard-age.png",
+      "label": "Onboarding · age",
+      "route": "onboard/age",
+      "viewport": "desktop"
+    },
+    {
+      "file": "desktop-03-under-18.png",
+      "label": "Under 18",
+      "route": "onboard/under-18",
+      "viewport": "desktop"
+    },
+    {
+      "file": "desktop-04-onboard-name.png",
+      "label": "Onboarding · name",
+      "route": "onboard/name",
+      "viewport": "desktop"
+    },
+    {
+      "file": "desktop-05-onboard-consent.png",
+      "label": "Onboarding · consent",
+      "route": "onboard/consent",
+      "viewport": "desktop"
+    },
+    {
+      "file": "desktop-06-onboard-motion.png",
+      "label": "Onboarding · motion",
+      "route": "onboard/motion",
+      "viewport": "desktop"
+    },
+    {
+      "file": "desktop-07-onboard-concerns.png",
+      "label": "Onboarding · concerns",
+      "route": "onboard/concerns",
+      "viewport": "desktop"
+    },
+    {
+      "file": "desktop-08-now.png",
       "label": "Now",
-      "route": "/?demo=1&tab=now",
+      "route": "tab/now",
       "viewport": "desktop"
     },
     {
-      "file": "desktop-02-calm.png",
+      "file": "desktop-09-whats-new.png",
+      "label": "What's new",
+      "route": "now/whats-new",
+      "viewport": "desktop"
+    },
+    {
+      "file": "desktop-10-calm.png",
       "label": "Calm",
-      "route": "/?demo=1&tab=calm",
+      "route": "tab/calm",
       "viewport": "desktop"
     },
     {
-      "file": "desktop-03-journal.png",
+      "file": "desktop-11-journal.png",
       "label": "Journal",
-      "route": "/?demo=1&tab=journal",
+      "route": "tab/journal",
       "viewport": "desktop"
     },
     {
-      "file": "desktop-04-map.png",
+      "file": "desktop-12-map.png",
       "label": "Constellation",
-      "route": "/?demo=1&tab=map",
+      "route": "tab/map",
       "viewport": "desktop"
     },
     {
-      "file": "desktop-05-me.png",
+      "file": "desktop-13-me.png",
       "label": "You",
-      "route": "/?demo=1&tab=me",
+      "route": "tab/me",
       "viewport": "desktop"
     },
     {
-      "file": "desktop-06-guided-path.png",
-      "label": "Guided Path",
-      "route": "now/path",
-      "viewport": "desktop"
-    },
-    {
-      "file": "desktop-07-library.png",
+      "file": "desktop-14-library.png",
       "label": "Emotional library",
       "route": "calm/library",
       "viewport": "desktop"
     },
     {
-      "file": "desktop-08-help.png",
-      "label": "Help now",
-      "route": "/?demo=1&panic=1",
+      "file": "desktop-15-library-experiences.png",
+      "label": "Library · Experiences",
+      "route": "calm/library/experiences",
       "viewport": "desktop"
     },
     {
-      "file": "mobile-01-now.png",
+      "file": "desktop-16-library-articles.png",
+      "label": "Library · Articles",
+      "route": "calm/library/articles",
+      "viewport": "desktop"
+    },
+    {
+      "file": "desktop-17-daily-supports.png",
+      "label": "Daily supports",
+      "route": "calm/supports",
+      "viewport": "desktop"
+    },
+    {
+      "file": "desktop-18-skill-box-breathing.png",
+      "label": "Technique · Box breathing",
+      "route": "skill/box-breathing",
+      "viewport": "desktop"
+    },
+    {
+      "file": "desktop-19-skill-thought-record.png",
+      "label": "Technique · Thought record",
+      "route": "skill/thought-record",
+      "viewport": "desktop"
+    },
+    {
+      "file": "desktop-20-runner-breathing.png",
+      "label": "Runner · Breathing",
+      "route": "runner/box-breathing",
+      "viewport": "desktop"
+    },
+    {
+      "file": "desktop-21-runner-steps.png",
+      "label": "Runner · Steps",
+      "route": "runner/thought-record",
+      "viewport": "desktop"
+    },
+    {
+      "file": "desktop-22-article-alarm.png",
+      "label": "Article · Alarm system",
+      "route": "article/alarm-system",
+      "viewport": "desktop"
+    },
+    {
+      "file": "desktop-23-article-wind-down.png",
+      "label": "Article · Wind-down",
+      "route": "article/wind-down-boundaries",
+      "viewport": "desktop"
+    },
+    {
+      "file": "desktop-24-experience.png",
+      "label": "Experience detail",
+      "route": "experience",
+      "viewport": "desktop"
+    },
+    {
+      "file": "desktop-25-experience-picker.png",
+      "label": "Experience picker",
+      "route": "experience/picker",
+      "viewport": "desktop"
+    },
+    {
+      "file": "desktop-26-guided-path.png",
+      "label": "Guided Path · start",
+      "route": "path/start",
+      "viewport": "desktop"
+    },
+    {
+      "file": "desktop-27-checkin-detail.png",
+      "label": "Check-in detail",
+      "route": "checkin/detail",
+      "viewport": "desktop"
+    },
+    {
+      "file": "desktop-28-drip.png",
+      "label": "Gentle questions",
+      "route": "drip",
+      "viewport": "desktop"
+    },
+    {
+      "file": "desktop-29-settings.png",
+      "label": "Settings",
+      "route": "settings",
+      "viewport": "desktop"
+    },
+    {
+      "file": "desktop-30-about.png",
+      "label": "About SoulCap",
+      "route": "about",
+      "viewport": "desktop"
+    },
+    {
+      "file": "desktop-31-safety-plan.png",
+      "label": "My plan",
+      "route": "me/plan",
+      "viewport": "desktop"
+    },
+    {
+      "file": "desktop-32-screener-pick.png",
+      "label": "Reflection screeners",
+      "route": "screener/pick",
+      "viewport": "desktop"
+    },
+    {
+      "file": "desktop-33-screener-run.png",
+      "label": "Screener · in progress",
+      "route": "screener/run",
+      "viewport": "desktop"
+    },
+    {
+      "file": "desktop-34-principles.png",
+      "label": "Principles",
+      "route": "me/principles",
+      "viewport": "desktop"
+    },
+    {
+      "file": "desktop-35-manual.png",
+      "label": "Personal Manual",
+      "route": "me/manual",
+      "viewport": "desktop"
+    },
+    {
+      "file": "desktop-36-patterns.png",
+      "label": "Patterns",
+      "route": "me/patterns",
+      "viewport": "desktop"
+    },
+    {
+      "file": "desktop-37-weekly.png",
+      "label": "Weekly overview",
+      "route": "me/weekly",
+      "viewport": "desktop"
+    },
+    {
+      "file": "desktop-38-timeline.png",
+      "label": "Timeline",
+      "route": "me/timeline",
+      "viewport": "desktop"
+    },
+    {
+      "file": "desktop-39-profile.png",
+      "label": "Profile",
+      "route": "me/profile",
+      "viewport": "desktop"
+    },
+    {
+      "file": "desktop-40-your-story.png",
+      "label": "Your story",
+      "route": "me/story",
+      "viewport": "desktop"
+    },
+    {
+      "file": "desktop-41-knows.png",
+      "label": "What SoulCap knows",
+      "route": "me/knows",
+      "viewport": "desktop"
+    },
+    {
+      "file": "desktop-42-reset-menu.png",
+      "label": "Reset menu",
+      "route": "reset-menu",
+      "viewport": "desktop"
+    },
+    {
+      "file": "desktop-43-park-thought.png",
+      "label": "Thought parking",
+      "route": "park-thought",
+      "viewport": "desktop"
+    },
+    {
+      "file": "desktop-44-journal-new.png",
+      "label": "New journal entry",
+      "route": "journal/new",
+      "viewport": "desktop"
+    },
+    {
+      "file": "desktop-45-journal-editor.png",
+      "label": "Journal editor",
+      "route": "journal/editor",
+      "viewport": "desktop"
+    },
+    {
+      "file": "desktop-46-journal-cover.png",
+      "label": "Journal cover",
+      "route": "journal/cover",
+      "viewport": "desktop"
+    },
+    {
+      "file": "desktop-47-add-person.png",
+      "label": "Add someone",
+      "route": "map/add",
+      "viewport": "desktop"
+    },
+    {
+      "file": "desktop-48-person.png",
+      "label": "Person detail",
+      "route": "map/person",
+      "viewport": "desktop"
+    },
+    {
+      "file": "desktop-49-help.png",
+      "label": "Help now",
+      "route": "help",
+      "viewport": "desktop"
+    },
+    {
+      "file": "desktop-50-guided-path-result.png",
+      "label": "Guided Path · result",
+      "route": "path/result",
+      "viewport": "desktop"
+    },
+    {
+      "file": "mobile-01-welcome.png",
+      "label": "Welcome",
+      "route": "welcome",
+      "viewport": "mobile"
+    },
+    {
+      "file": "mobile-02-onboard-age.png",
+      "label": "Onboarding · age",
+      "route": "onboard/age",
+      "viewport": "mobile"
+    },
+    {
+      "file": "mobile-03-under-18.png",
+      "label": "Under 18",
+      "route": "onboard/under-18",
+      "viewport": "mobile"
+    },
+    {
+      "file": "mobile-04-onboard-name.png",
+      "label": "Onboarding · name",
+      "route": "onboard/name",
+      "viewport": "mobile"
+    },
+    {
+      "file": "mobile-05-onboard-consent.png",
+      "label": "Onboarding · consent",
+      "route": "onboard/consent",
+      "viewport": "mobile"
+    },
+    {
+      "file": "mobile-06-onboard-motion.png",
+      "label": "Onboarding · motion",
+      "route": "onboard/motion",
+      "viewport": "mobile"
+    },
+    {
+      "file": "mobile-07-onboard-concerns.png",
+      "label": "Onboarding · concerns",
+      "route": "onboard/concerns",
+      "viewport": "mobile"
+    },
+    {
+      "file": "mobile-08-now.png",
       "label": "Now",
-      "route": "/?demo=1&tab=now",
+      "route": "tab/now",
       "viewport": "mobile"
     },
     {
-      "file": "mobile-02-calm.png",
+      "file": "mobile-09-whats-new.png",
+      "label": "What's new",
+      "route": "now/whats-new",
+      "viewport": "mobile"
+    },
+    {
+      "file": "mobile-10-calm.png",
       "label": "Calm",
-      "route": "/?demo=1&tab=calm",
+      "route": "tab/calm",
       "viewport": "mobile"
     },
     {
-      "file": "mobile-03-journal.png",
+      "file": "mobile-11-journal.png",
       "label": "Journal",
-      "route": "/?demo=1&tab=journal",
+      "route": "tab/journal",
       "viewport": "mobile"
     },
     {
-      "file": "mobile-04-map.png",
+      "file": "mobile-12-map.png",
       "label": "Constellation",
-      "route": "/?demo=1&tab=map",
+      "route": "tab/map",
       "viewport": "mobile"
     },
     {
-      "file": "mobile-05-me.png",
+      "file": "mobile-13-me.png",
       "label": "You",
-      "route": "/?demo=1&tab=me",
+      "route": "tab/me",
       "viewport": "mobile"
     },
     {
-      "file": "mobile-06-guided-path.png",
-      "label": "Guided Path",
-      "route": "now/path",
-      "viewport": "mobile"
-    },
-    {
-      "file": "mobile-07-library.png",
+      "file": "mobile-14-library.png",
       "label": "Emotional library",
       "route": "calm/library",
       "viewport": "mobile"
     },
     {
-      "file": "mobile-08-help.png",
+      "file": "mobile-15-library-experiences.png",
+      "label": "Library · Experiences",
+      "route": "calm/library/experiences",
+      "viewport": "mobile"
+    },
+    {
+      "file": "mobile-16-library-articles.png",
+      "label": "Library · Articles",
+      "route": "calm/library/articles",
+      "viewport": "mobile"
+    },
+    {
+      "file": "mobile-17-daily-supports.png",
+      "label": "Daily supports",
+      "route": "calm/supports",
+      "viewport": "mobile"
+    },
+    {
+      "file": "mobile-18-skill-box-breathing.png",
+      "label": "Technique · Box breathing",
+      "route": "skill/box-breathing",
+      "viewport": "mobile"
+    },
+    {
+      "file": "mobile-19-skill-thought-record.png",
+      "label": "Technique · Thought record",
+      "route": "skill/thought-record",
+      "viewport": "mobile"
+    },
+    {
+      "file": "mobile-20-runner-breathing.png",
+      "label": "Runner · Breathing",
+      "route": "runner/box-breathing",
+      "viewport": "mobile"
+    },
+    {
+      "file": "mobile-21-runner-steps.png",
+      "label": "Runner · Steps",
+      "route": "runner/thought-record",
+      "viewport": "mobile"
+    },
+    {
+      "file": "mobile-22-article-alarm.png",
+      "label": "Article · Alarm system",
+      "route": "article/alarm-system",
+      "viewport": "mobile"
+    },
+    {
+      "file": "mobile-23-article-wind-down.png",
+      "label": "Article · Wind-down",
+      "route": "article/wind-down-boundaries",
+      "viewport": "mobile"
+    },
+    {
+      "file": "mobile-24-experience.png",
+      "label": "Experience detail",
+      "route": "experience",
+      "viewport": "mobile"
+    },
+    {
+      "file": "mobile-25-experience-picker.png",
+      "label": "Experience picker",
+      "route": "experience/picker",
+      "viewport": "mobile"
+    },
+    {
+      "file": "mobile-26-guided-path.png",
+      "label": "Guided Path · start",
+      "route": "path/start",
+      "viewport": "mobile"
+    },
+    {
+      "file": "mobile-27-checkin-detail.png",
+      "label": "Check-in detail",
+      "route": "checkin/detail",
+      "viewport": "mobile"
+    },
+    {
+      "file": "mobile-28-drip.png",
+      "label": "Gentle questions",
+      "route": "drip",
+      "viewport": "mobile"
+    },
+    {
+      "file": "mobile-29-settings.png",
+      "label": "Settings",
+      "route": "settings",
+      "viewport": "mobile"
+    },
+    {
+      "file": "mobile-30-about.png",
+      "label": "About SoulCap",
+      "route": "about",
+      "viewport": "mobile"
+    },
+    {
+      "file": "mobile-31-safety-plan.png",
+      "label": "My plan",
+      "route": "me/plan",
+      "viewport": "mobile"
+    },
+    {
+      "file": "mobile-32-screener-pick.png",
+      "label": "Reflection screeners",
+      "route": "screener/pick",
+      "viewport": "mobile"
+    },
+    {
+      "file": "mobile-33-screener-run.png",
+      "label": "Screener · in progress",
+      "route": "screener/run",
+      "viewport": "mobile"
+    },
+    {
+      "file": "mobile-34-principles.png",
+      "label": "Principles",
+      "route": "me/principles",
+      "viewport": "mobile"
+    },
+    {
+      "file": "mobile-35-manual.png",
+      "label": "Personal Manual",
+      "route": "me/manual",
+      "viewport": "mobile"
+    },
+    {
+      "file": "mobile-36-patterns.png",
+      "label": "Patterns",
+      "route": "me/patterns",
+      "viewport": "mobile"
+    },
+    {
+      "file": "mobile-37-weekly.png",
+      "label": "Weekly overview",
+      "route": "me/weekly",
+      "viewport": "mobile"
+    },
+    {
+      "file": "mobile-38-timeline.png",
+      "label": "Timeline",
+      "route": "me/timeline",
+      "viewport": "mobile"
+    },
+    {
+      "file": "mobile-39-profile.png",
+      "label": "Profile",
+      "route": "me/profile",
+      "viewport": "mobile"
+    },
+    {
+      "file": "mobile-40-your-story.png",
+      "label": "Your story",
+      "route": "me/story",
+      "viewport": "mobile"
+    },
+    {
+      "file": "mobile-41-knows.png",
+      "label": "What SoulCap knows",
+      "route": "me/knows",
+      "viewport": "mobile"
+    },
+    {
+      "file": "mobile-42-reset-menu.png",
+      "label": "Reset menu",
+      "route": "reset-menu",
+      "viewport": "mobile"
+    },
+    {
+      "file": "mobile-43-park-thought.png",
+      "label": "Thought parking",
+      "route": "park-thought",
+      "viewport": "mobile"
+    },
+    {
+      "file": "mobile-44-journal-new.png",
+      "label": "New journal entry",
+      "route": "journal/new",
+      "viewport": "mobile"
+    },
+    {
+      "file": "mobile-45-journal-editor.png",
+      "label": "Journal editor",
+      "route": "journal/editor",
+      "viewport": "mobile"
+    },
+    {
+      "file": "mobile-46-journal-cover.png",
+      "label": "Journal cover",
+      "route": "journal/cover",
+      "viewport": "mobile"
+    },
+    {
+      "file": "mobile-47-add-person.png",
+      "label": "Add someone",
+      "route": "map/add",
+      "viewport": "mobile"
+    },
+    {
+      "file": "mobile-48-person.png",
+      "label": "Person detail",
+      "route": "map/person",
+      "viewport": "mobile"
+    },
+    {
+      "file": "mobile-49-help.png",
       "label": "Help now",
-      "route": "/?demo=1&panic=1",
+      "route": "help",
+      "viewport": "mobile"
+    },
+    {
+      "file": "mobile-50-guided-path-result.png",
+      "label": "Guided Path · result",
+      "route": "path/result",
       "viewport": "mobile"
     }
   ]

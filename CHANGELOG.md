@@ -1,5 +1,25 @@
 ## [Unreleased]
 
+## [5.1.6] — 2026-07-24
+
+### Fixed
+- **Compact cards:** Calm/Now/You drop forced 3:4 / 2:1 / equal-height stretch. Rail
+  tiles hug content (3-line clamp); bento + stat tiles `align-items:start`.
+- **Selection:** chips / opts / seg-opt / theme swatches / pace use soft accent wash +
+  rim (no solid invert purple). Selected Calm need gets left accent bar.
+- **FAB:** off on all main tabs (header Help already there) — kills Calm overlap.
+- Smaller bottom clearance (no FAB gutter). Calm rail height regression test.
+- SW `soulcap-v516`. App **5.1.6**. Schema still **v12**.
+
+## [5.1.5] — 2026-07-24
+
+### Added
+- **Full screen gallery:** capture every major surface (welcome/onboarding, all tabs,
+  library filters, techniques, runners, articles, experiences, path, check-in, Settings/
+  About/plan/screeners/manual/story/map sheets, Help). `__soulcap.galleryOpen` /
+  `galleryReset` hooks. Mobile shots at **430×932**.
+- SW `soulcap-v515`. App **5.1.5**. Schema still **v12**.
+
 ## [5.1.4] — 2026-07-24
 
 ### Fixed

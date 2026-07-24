@@ -1,4 +1,4 @@
-**Version:** 5.1.4 · SW `soulcap-v514`
+**Version:** 5.1.6 · SW `soulcap-v516`
 
 # SoulCap — Project Handover
 
@@ -6,15 +6,15 @@
 > first — it is the current truth as of 2026-07-24. The sections further down describe an
 > earlier architecture and are kept for reference only.
 
-## Current state (v5.1.4 — 2026-07-24)
+## Current state (v5.1.6 — 2026-07-24)
 
 **The product is the PWA in `docs/`.** Offline-first, local-only, **no network calls after load**.
-Schema **v12**. **`SPEC-v5.1-fixes.md` complete** (PR-1…4) + **layout hotfix 5.1.4**
-(removed FAB gutter that emptied the right column on iPhone).
+Schema **v12**. Compact rail/bento tiles, soft selection, FAB off on all tabs (header Help).
+Full gallery via `npm run gallery` → `screen-gallery.html`.
 Live: https://shamikhahmed.github.io/SoulCap/
 
 ### Schema & ship
-- State `DEFAULT.v = 12` · SW `soulcap-v514` · app **5.1.4** · `package.json` **5.1.4**
+- State `DEFAULT.v = 12` · SW `soulcap-v516` · app **5.1.6** · `package.json` **5.1.6**
 - Ship workflow: bump CACHE + VERSION.json + APP_VERSION + package.json; CHANGELOG;
   SAFETY/HANDOVER; gallery; `npm run verify`; push `main`.
 

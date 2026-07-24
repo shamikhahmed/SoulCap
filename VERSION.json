@@ -1,8 +1,8 @@
 {
   "name": "SoulCap",
-  "version": "5.1.4",
-  "swCache": "soulcap-v514",
+  "version": "5.1.6",
+  "swCache": "soulcap-v516",
   "schema": 12,
   "released": "2026-07-24",
-  "note": "v5.1.4 layout — remove FAB gutter; symmetric padding; FAB off on Now/You; Pro Max viewport."
+  "note": "v5.1.6 compact tiles + soft selection + FAB off all tabs."
 }
