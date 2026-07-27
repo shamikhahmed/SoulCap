@@ -17,12 +17,12 @@
 <script>
 /* Apply stored presentation choices before first paint so there is no flash. */
 (function(){try{var t=localStorage.getItem('soulcap_theme');
-var themes={light:1,dark:1,night:1,ocean:1,forest:1,rain:1,space:1,sunrise:1,minimal:1,amoled:1};
+var themes={light:1,dark:1,night:1,ocean:1,forest:1,amoled:1};
 if(themes[t])document.documentElement.setAttribute('data-theme',t);
 var a=JSON.parse(localStorage.getItem('soulcap_appearance')||'{}');
 if(a.text==='standard'||a.text==='large')document.documentElement.setAttribute('data-text',a.text);
 if(a.density==='compact'||a.density==='comfortable')document.documentElement.setAttribute('data-density',a.density);
-if(a.accent==='plum'||a.accent==='lilac'||a.accent==='mulberry'||a.accent==='indigo')document.documentElement.setAttribute('data-accent',a.accent);
+if(a.accent==='plum'||a.accent==='lilac'||a.accent==='mulberry')document.documentElement.setAttribute('data-accent',a.accent);
 if(a.contrast==='standard'||a.contrast==='high')document.documentElement.setAttribute('data-contrast',a.contrast);
 if(a.reduceTransparency)document.documentElement.setAttribute('data-transparency','reduced');
 var loc=localStorage.getItem('soulcap_locale');

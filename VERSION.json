@@ -1,8 +1,8 @@
 {
   "name": "SoulCap",
-  "version": "6.0.1",
-  "swCache": "soulcap-v601",
+  "version": "6.0.2",
+  "swCache": "soulcap-v602",
   "schema": 12,
   "released": "2026-07-27",
-  "note": "v6.0.1 Phase B \u2014 code health: function index, section banners, dead tokens, technique naming."
+  "note": "v6.0.2 Phase C \u2014 journal flex, density tokens, theme cull, Accessibility group, single About disclaimer."
 }

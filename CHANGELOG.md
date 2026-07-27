@@ -1,5 +1,16 @@
 ## [Unreleased]
 
+## [6.0.2] — 2026-07-27
+
+### Changed
+- **Phase C layout/density:** journal editor flex (header · body `flex:1` · toolbar safe-area);
+  density tokens `--pad-card` / `--gap-section` / `--tile-min` / `--hero-max`; tighter cards/tiles.
+- **Theme cull:** delete Rain, Space, Sunrise, Minimal (+ indigo accent). Keep Auto/Light/Dark/Night/
+  AMOLED/Ocean/Forest; 3 accents (plum, lilac, mulberry).
+- **Settings:** Appearance stays calm; density/contrast/transparency/motion under **Accessibility**.
+- **Disclaimer:** remove per-sheet “not yet reviewed” banners; single not-medical line in About & Legal.
+- SW `soulcap-v602`. App **6.0.2**. Schema still **v12**.
+
 ## [6.0.1] — 2026-07-27
 
 ### Changed

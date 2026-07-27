@@ -101,7 +101,7 @@
     pathSessions: [],
     pathPrefs: { hide: false }
   };
-  var VALID_THEMES = { light:1, dark:1, night:1, ocean:1, forest:1, rain:1, space:1, sunrise:1, minimal:1, amoled:1 };
+  var VALID_THEMES = { light:1, dark:1, night:1, ocean:1, forest:1, amoled:1 };
   var DRIP_DAY_CAP = 4;
   var state = load();
   var sheetOpener = null;
@@ -124,7 +124,7 @@
       p.appearance = Object.assign(clone(DEFAULT.appearance), p.appearance || {});
       if (['standard','large'].indexOf(p.appearance.text) === -1) p.appearance.text = DEFAULT.appearance.text;
       if (['compact','comfortable'].indexOf(p.appearance.density) === -1) p.appearance.density = DEFAULT.appearance.density;
-      if (['plum','lilac','mulberry','indigo'].indexOf(p.appearance.accent) === -1) p.appearance.accent = DEFAULT.appearance.accent;
+      if (['plum','lilac','mulberry'].indexOf(p.appearance.accent) === -1) p.appearance.accent = DEFAULT.appearance.accent;
       if (['standard','high'].indexOf(p.appearance.contrast) === -1) p.appearance.contrast = DEFAULT.appearance.contrast;
       if (['vivid','balanced','still'].indexOf(p.appearance.motion) === -1) p.appearance.motion = DEFAULT.appearance.motion;
       p.appearance.reduceTransparency = p.appearance.reduceTransparency === true;
@@ -1112,7 +1112,6 @@
     function draw() {
       openSheet(function (p) {
         p.appendChild(el('h2', { class: 'h-sec', text: PATH_UI.cardTitle }));
-        p.appendChild(el('div', { class: 'notice', text: PATH_UI.reviewNote }));
         if (step === 'arrival') {
           p.appendChild(el('p', { class: 'p-voice', text: PATH_UI.arrivalTitle }));
           p.appendChild(el('div', { class: 'chips mt-3', role: 'group', 'aria-label': PATH_UI.arrivalTitle }, PATH_ARRIVALS.map(function (a) {
@@ -2427,7 +2426,6 @@
             '<b>Gentle note.</b> Techniques that turn attention inward can stir things up if your past has been hard. Stop any time, and keep something grounding nearby.' }));
         }
         p.appendChild(el('p', { class: 'p-sm', text: 'Source: ' + s.source }));
-        p.appendChild(el('div', { class: 'notice', text: 'Not yet clinically reviewed.' }));
         p.appendChild(el('button', { class: 'btn', text: 'Begin', onclick: function () { closeSubview(); startSkill(s.id); } }));
         var fav = state.favourites.indexOf(s.id) !== -1;
         p.appendChild(el('button', { class: 'btn ghost', text: fav ? 'Saved — remove' : 'Save to my shortlist',
@@ -2556,7 +2554,6 @@
         p.appendChild(el('p', { class: 'eyebrow', text: LIBRARY_UI.label }));
         var bookmarked = isLibraryBookmarked(article.id);
         p.appendChild(el('p', { class: 'p-voice', text: article.summary }));
-        p.appendChild(el('div', { class: 'notice', text: LIBRARY_UI.reviewNote }));
         article.sections.forEach(function (section) {
           p.appendChild(el('h3', { class: 'card-title article-heading', text: section.title }));
           p.appendChild(el('p', { class: 'p', text: section.body }));
@@ -2614,7 +2611,6 @@
         if (exp.aka && exp.aka.length) {
           p.appendChild(el('p', { class: 'p-sm', text: LIBRARY_UI.akaPrefix + ': ' + exp.aka.join(', ') }));
         }
-        p.appendChild(el('div', { class: 'notice', text: LIBRARY_UI.reviewNote }));
         p.appendChild(el('p', { class: 'eyebrow article-label', text: LIBRARY_UI.whatItIs }));
         p.appendChild(el('p', { class: 'p', text: exp.whatItis }));
         p.appendChild(el('p', { class: 'eyebrow article-label', text: LIBRARY_UI.why }));
@@ -2658,7 +2654,6 @@
     openSheet(function (p) {
       p.appendChild(el('h2', { class: 'h-sec', text: EXPERIENCE_PICKER_UI.title }));
       p.appendChild(el('p', { class: 'p-sm', text: EXPERIENCE_PICKER_UI.intro }));
-      p.appendChild(el('div', { class: 'notice', text: LIBRARY_UI.reviewNote }));
       var search = el('input', {
         type: 'search',
         placeholder: EXPERIENCE_PICKER_UI.searchPlaceholder,
@@ -2989,7 +2984,7 @@
       settingsGroup(p, tUi('common', 'appearance', { appearance: 'Appearance' }), [
         themeSwatchGrid(THEME_OPTIONS,
           function (o) { return state.theme === o.k; }, function (o) { setTheme(o.k); }, function (o) { return themeChipLabel(o.k, o.l); }),
-        el('p', { class: 'p-sm', text: tUi('presentation', 'themeNote', { themeNote: 'Night is dimmer than dark. AMOLED is near-black. Mood themes keep contrast and reduced-motion intact.' }) }),
+        el('p', { class: 'p-sm', text: tUi('presentation', 'themeNote', PRESENTATION_UI) }),
         el('p', { class: 'eyebrow mt-2', text: tUi('locale', 'language', LOCALE_UI) }),
         settingChips(LOCALE_OPTIONS,
           function (o) { return state.locale === o.k; }, function (o) { setLocale(o.k); }),
@@ -2998,15 +2993,17 @@
           el('p', { class: 'p-sm', text: tUi('locale', 'clinicalNotice', LOCALE_UI) }),
           el('button', { class: 'btn ghost', text: tUi('locale', 'clinicalDismiss', LOCALE_UI), onclick: dismissClinicalNotice })
         ]) : null,
-        el('p', { class: 'eyebrow mt-2', text: tUi('presentation', 'motion', PRESENTATION_UI) }),
+        el('p', { class: 'eyebrow mt-2', text: tUi('presentation', 'accent', PRESENTATION_UI) }),
+        settingChips(ACCENT_OPTIONS,
+          function (o) { return state.appearance.accent === o.k; }, function (o) { setAppearance('accent', o.k); }, function (o) { return presentationChipLabel(o.k, o.l); })
+      ]);
+      settingsGroup(p, tUi('presentation', 'accessibility', PRESENTATION_UI), [
+        el('p', { class: 'eyebrow', text: tUi('presentation', 'motion', PRESENTATION_UI) }),
         settingChips(MOTION_OPTIONS,
           function (o) { return state.appearance.motion === o.k; },
           function (o) { setAppearance('motion', o.k); },
           function (o) { return presentationChipLabel(o.k, o.l); }),
         el('p', { class: 'p-sm', text: tUi('presentation', 'motionHint', PRESENTATION_UI) }),
-        el('p', { class: 'eyebrow mt-2', text: tUi('presentation', 'accent', PRESENTATION_UI) }),
-        settingChips(ACCENT_OPTIONS,
-          function (o) { return state.appearance.accent === o.k; }, function (o) { setAppearance('accent', o.k); }, function (o) { return presentationChipLabel(o.k, o.l); }),
         el('p', { class: 'eyebrow mt-2', text: tUi('presentation', 'text', PRESENTATION_UI) }),
         settingChips(TEXT_OPTIONS,
           function (o) { return state.appearance.text === o.k; }, function (o) { setAppearance('text', o.k); }, function (o) { return presentationChipLabel(o.k, o.l); }),
@@ -3134,7 +3131,6 @@
         el('p', { class: 'eyebrow', text: 'Calm' }),
         el('h1', { class: 'h-voice', text: 'Every technique.' })
       ]));
-      v.appendChild(el('div', { class: 'notice', text: state.locale === 'rui' ? tUi('pattern', 'reviewNote', PATTERN_UI) : CALM_REVIEW_NOTE }));
       v.appendChild(el('button', { class: 'btn ghost', text: tUi('calm', 'backToGuided', { backToGuided: '← Back to guided' }), onclick: function () { calm.browse = false; render(); } }));
       Object.keys(FAMILY_META).forEach(function (fam) {
         var items = SKILLS.filter(function (s) { return s.family === fam; });
@@ -3152,7 +3148,6 @@
     var hero = el('div', { class: 'hero-band' });
     hero.appendChild(el('p', { class: 'eyebrow', text: 'Calm' }));
     hero.appendChild(el('h1', { class: 'h-voice', text: 'What do you need\nright now?' }));
-    hero.appendChild(el('div', { class: 'notice', style: 'margin-top:var(--space-3)', text: state.locale === 'rui' ? tUi('pattern', 'reviewNote', PATTERN_UI) : CALM_REVIEW_NOTE }));
     if (!calm.need) {
       hero.appendChild(el('p', { class: 'p-sm calm-empty', style: 'margin-top:var(--space-3)', text: tUi('empty', 'calm', EMPTY_UI) }));
     }
@@ -4770,7 +4765,7 @@
       }
     });
   }
-  var APP_VERSION = '6.0.1';
+  var APP_VERSION = '6.0.2';
   function settingsGroup(v, title, kids) {
     v.appendChild(el('p', { class: 'eyebrow settings-eyebrow', text: title }));
     var block = el('div', { class: 'settings-block' });
@@ -5194,7 +5189,7 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '6.0.1',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '6.0.2',
     effectiveMotion: effectiveMotion,
     motionCap: function () { return motionCap; },
     loadGsap: loadGsap,

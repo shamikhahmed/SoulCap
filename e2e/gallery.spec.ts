@@ -102,13 +102,9 @@ const THEMES: { id: string; theme: string | null; label: string }[] = [
   { id: 'light', theme: 'light', label: 'Light' },
   { id: 'dark', theme: 'dark', label: 'Dark' },
   { id: 'night', theme: 'night', label: 'Night' },
+  { id: 'amoled', theme: 'amoled', label: 'AMOLED' },
   { id: 'ocean', theme: 'ocean', label: 'Ocean' },
   { id: 'forest', theme: 'forest', label: 'Forest' },
-  { id: 'rain', theme: 'rain', label: 'Rain' },
-  { id: 'space', theme: 'space', label: 'Space' },
-  { id: 'sunrise', theme: 'sunrise', label: 'Sunrise' },
-  { id: 'minimal', theme: 'minimal', label: 'Minimal' },
-  { id: 'amoled', theme: 'amoled', label: 'AMOLED' },
 ];
 
 /** One axis change at a time (plus defaults already covered by theme pack). */
@@ -119,7 +115,6 @@ const APPEARANCE_LOOKS: { id: string; label: string; look: Look }[] = [
   { id: 'transparency-reduced', label: 'Transparency · Reduced', look: { theme: 'dark', appearance: { reduceTransparency: true } } },
   { id: 'accent-lilac', label: 'Accent · Lilac', look: { theme: 'light', appearance: { accent: 'lilac' } } },
   { id: 'accent-mulberry', label: 'Accent · Mulberry', look: { theme: 'light', appearance: { accent: 'mulberry' } } },
-  { id: 'accent-indigo', label: 'Accent · Indigo', look: { theme: 'light', appearance: { accent: 'indigo' } } },
   { id: 'motion-vivid', label: 'Motion · Vivid', look: { theme: 'light', appearance: { motion: 'vivid' } } },
   { id: 'motion-still', label: 'Motion · Still', look: { theme: 'light', appearance: { motion: 'still' } } },
   {

@@ -25,8 +25,8 @@
 
 Theme and presentation are independent:
 
-- Auto, light, dark, night, and mood themes (ocean, forest, rain, space, sunrise, minimal, amoled)
-- Plum, lilac, mulberry, and indigo accents
+- Auto, light, dark, night, AMOLED, and ambient themes (ocean, forest)
+- Plum, lilac, and mulberry accents (3)
 - Standard and large text
 - Compact and comfortable spacing
 - Standard and higher contrast

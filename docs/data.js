@@ -114,6 +114,8 @@ var PRESENTATION_UI = {
   motionStill:'Still',
   patternLearning:'Local pattern observations',
   patternHint:'When off, SoulCap stops deriving new pattern cards. Your check-ins and existing data stay unchanged.',
+  themeNote:'Primary: Auto, Light, Dark, Night, AMOLED. Ocean and Forest are calm ambient looks.',
+  accessibility:'Accessibility',
   saveFailedTitle:'That setting did not save',
   saveFailedBody:'Your previous settings are still in place. This phone may be low on local storage.'
 };
@@ -127,8 +129,7 @@ var MOTION_OPTIONS = [
 var ACCENT_OPTIONS = [
   { k:'plum', l:'Plum' },
   { k:'lilac', l:'Lilac' },
-  { k:'mulberry', l:'Mulberry' },
-  { k:'indigo', l:'Indigo' }
+  { k:'mulberry', l:'Mulberry' }
 ];
 
 var TEXT_OPTIONS = [{ k:'standard', l:'Standard' }, { k:'large', l:'Large' }];
@@ -139,13 +140,9 @@ var THEME_OPTIONS = [
   { k:'light', l:'Light' },
   { k:'dark', l:'Dark' },
   { k:'night', l:'Night' },
+  { k:'amoled', l:'AMOLED' },
   { k:'ocean', l:'Ocean' },
-  { k:'forest', l:'Forest' },
-  { k:'rain', l:'Rain' },
-  { k:'space', l:'Space' },
-  { k:'sunrise', l:'Sunrise' },
-  { k:'minimal', l:'Minimal' },
-  { k:'amoled', l:'AMOLED' }
+  { k:'forest', l:'Forest' }
 ];
 
 var LOCALE_OPTIONS = [
@@ -411,11 +408,11 @@ var PROGRESS_UI = {
 };
 
 var ABOUT_UI = {
-  title:'About SoulCap',
+  title:'About & Legal',
   purpose:'A calm, private place for self-regulation techniques, a journal, and the people around you.',
-  honesty:'Not therapy. Not a diagnosis tool. Not a crisis service. Nothing leaves this device.',
-  credits:'Built by Capricorn Systems. Techniques are evidence-informed and not yet clinically reviewed.',
-  open:'About SoulCap',
+  honesty:'SoulCap is a self-guided wellness companion — not therapy, diagnosis, or medical advice.',
+  credits:'Built by Capricorn Systems. Everything stays on this device.',
+  open:'About & Legal',
   close:'Close'
 };
 
@@ -712,8 +709,7 @@ var STRINGS = {
       clinicalDismiss:'Got it'
     },
     themes:{
-      auto:'Auto', light:'Light', dark:'Dark', night:'Night', ocean:'Ocean', forest:'Forest',
-      rain:'Rain', space:'Space', sunrise:'Sunrise', minimal:'Minimal', amoled:'AMOLED'
+      auto:'Auto', light:'Light', dark:'Dark', night:'Night', amoled:'AMOLED', ocean:'Ocean', forest:'Forest'
     },
     presentation:{
       accent:'Accent colour', text:'Text size', density:'Layout spacing', contrast:'Higher contrast',
@@ -722,9 +718,10 @@ var STRINGS = {
       vivid:'Vivid', balanced:'Balanced', still:'Still',
       patternLearning:'Local pattern observations',
       patternHint:'When off, SoulCap stops deriving new pattern cards. Your check-ins and existing data stay unchanged.',
-      themeNote:'Night is dimmer than dark. AMOLED is near-black. Mood themes keep contrast and reduced-motion intact.',
+      themeNote:'Primary: Auto, Light, Dark, Night, AMOLED. Ocean and Forest are calm ambient looks. Accessibility options live below.',
+      accessibility:'Accessibility',
       standard:'Standard', large:'Large', compact:'Compact', comfortable:'Comfortable',
-      plum:'Plum', lilac:'Lilac', mulberry:'Mulberry', indigo:'Indigo'
+      plum:'Plum', lilac:'Lilac', mulberry:'Mulberry'
     },
     empty:{
       now:'No check-ins yet. When you tap how you are arriving, a quiet picture of your days can build here — no streaks, no score.',
@@ -870,16 +867,16 @@ var STRINGS = {
       clinicalDismiss:'Samajh gaya'
     },
     themes:{
-      auto:'Khud', light:'Roshan', dark:'Andhera', night:'Raat', ocean:'Samandar', forest:'Jungle',
-      rain:'Barish', space:'Khala', sunrise:'Tulu-e-aftaab', minimal:'Sada', amoled:'AMOLED'
+      auto:'Khud', light:'Roshan', dark:'Andhera', night:'Raat', amoled:'AMOLED', ocean:'Samandar', forest:'Jungle'
     },
     presentation:{
       accent:'Rang', text:'Matn ka size', density:'Fasaail', contrast:'Ziyada contrast',
       transparency:'Shefafiat kam karein', patternLearning:'Local pattern observations',
       patternHint:'Band karne par naye pattern cards nahi banenge. Purana data waisa hi rahega.',
-      themeNote:'Raat andhere se bhi halki hai. AMOLED qareeb siyah hai. Mood themes contrast aur reduced-motion ko sambhalte hain.',
+      themeNote:'Asli: Auto, Roshan, Andhera, Raat, AMOLED. Samandar aur Jungle halkay ambient looks hain.',
+      accessibility:'Accessibility',
       standard:'Aam', large:'Barha', compact:'Squeeze', comfortable:'Aram se',
-      plum:'Baingani', lilac:'Lilac', mulberry:'Shahtoot', indigo:'Neela'
+      plum:'Baingani', lilac:'Lilac', mulberry:'Shahtoot'
     },
     empty:{
       now:'Abhi koi check-in nahi. Jab aap batayenge ke aap kaisay aa rahe hain, dinon ki halki tasveer yahan ban sakti hai — na streak, na score.',
@@ -972,7 +969,7 @@ var EXPERIENCE_PICKER_UI = {
   cardTitle:'Notice what’s happening',
   cardHint:'Optional. Body or mind sensations → something that may help.',
   calmHint:'Pick a sensation. Never required.',
-  intro:'Choose anything that fits. This is reflection, not a diagnosis.',
+  intro:'Not a diagnosis. Choose anything that fits — reflection only.',
   searchLabel:'Search experiences',
   searchPlaceholder:'heart, fog, rumination…',
   back:'Close'
