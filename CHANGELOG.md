@@ -1,5 +1,12 @@
 ## [Unreleased]
 
+## [6.0.0] — 2026-07-27
+
+### Added
+- **AUDIT-v6.md** (Phase A): full `app.js` map, defects, dead-token suspects, theme cull
+  plan, top risks. No product behaviour change.
+- SW `soulcap-v600`. App **6.0.0**. Schema still **v12**.
+
 ## [5.1.9] — 2026-07-27
 
 ### Changed

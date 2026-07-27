@@ -1,8 +1,8 @@
 {
   "name": "SoulCap",
-  "version": "5.1.9",
-  "swCache": "soulcap-v519",
+  "version": "6.0.0",
+  "swCache": "soulcap-v600",
   "schema": 12,
   "released": "2026-07-27",
-  "note": "v5.1.9 docs sync + full gallery regen (themes/appearance matrix)."
+  "note": "v6.0.0 Phase A — AUDIT-v6.md only (no behaviour change)."
 }
