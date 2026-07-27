@@ -202,6 +202,9 @@ async function captureFreshFlow(page: Page, viewport: keyof typeof VIEWPORTS, sh
   await page.evaluate(() => localStorage.clear());
   await page.goto('/');
   await page.waitForFunction(() => Boolean((window as any).__soulcap));
+  // Quiet Depth V1 — capture splash before dismiss (must not match v6 mark+tag splash)
+  await expect(page.locator('#splash .splash-living')).toBeVisible();
+  await snap(page, shots, viewport, 'default', 'default', 'splash', 'Splash · Quiet Depth', 'splash');
   await dismissSplash(page);
   await snap(page, shots, viewport, 'default', 'default', 'welcome', 'Welcome', 'welcome');
 

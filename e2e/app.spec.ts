@@ -698,7 +698,7 @@ test.describe('v2.0 IA restructure', () => {
     await expect(page.locator('#sheetPanel')).toContainText(
       'SoulCap is a self-guided wellness companion — not therapy, diagnosis, or medical advice.',
     );
-    await expect(page.locator('#sheetPanel')).toContainText(/Version 6\./);
+    await expect(page.locator('#sheetPanel')).toContainText(/Version 7\./);
     await page.locator('#sheetPanel').getByRole('button', { name: 'Close' }).click();
     await page.evaluate(() => (window as any).__soulcap.setSeenVersion('1.9.3'));
     await expect(page.locator('#view-now .whats-new')).toContainText(/What.s new/);
@@ -2382,5 +2382,20 @@ test.describe('Phase J — final QA stress', () => {
     await expect(page.locator('#panic.on')).toBeVisible();
     await expect(page.locator('#panicLinks')).toBeVisible();
     await context.setOffline(false);
+  });
+});
+
+test.describe('Quiet Depth V1 — splash', () => {
+  test('splash is living light + wordmark only (no mark/tag)', async ({ page }) => {
+    await page.goto('/');
+    await page.waitForFunction(() => !!(window as any).__soulcap);
+    // Structure must exist even after auto-dismiss adds .gone
+    await expect(page.locator('#splash .splash-living')).toHaveCount(1);
+    await expect(page.locator('#splash .splash-word')).toHaveText('SoulCap');
+    await expect(page.locator('#splash .mark')).toHaveCount(0);
+    await expect(page.locator('#splash .tag')).toHaveCount(0);
+    await expect(page.locator('#splash img')).toHaveCount(0);
+    const bg = await page.locator('#splash').evaluate((el) => getComputedStyle(el).backgroundColor);
+    expect(bg).not.toMatch(/rgb\(\s*245,\s*243,\s*248\s*\)/);
   });
 });

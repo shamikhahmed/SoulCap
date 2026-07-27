@@ -1,7 +1,7 @@
 {
   "app": "SoulCap",
-  "version": "6.0.10",
-  "generated": "2026-07-27T12:40:05.355Z",
+  "version": "7.0.0",
+  "generated": "2026-07-27T13:02:07.566Z",
   "shots": [
     {
       "file": "desktop__accent-lilac__calm.png",
@@ -607,6 +607,14 @@
       "file": "desktop__default__skill-thought-record.png",
       "label": "Technique · Thought record",
       "route": "skill/thought-record",
+      "viewport": "desktop",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "desktop__default__splash.png",
+      "label": "Splash · Quiet Depth",
+      "route": "splash",
       "viewport": "desktop",
       "pack": "default",
       "variant": "default"
@@ -2031,6 +2039,14 @@
       "file": "mobile__default__skill-thought-record.png",
       "label": "Technique · Thought record",
       "route": "skill/thought-record",
+      "viewport": "mobile",
+      "pack": "default",
+      "variant": "default"
+    },
+    {
+      "file": "mobile__default__splash.png",
+      "label": "Splash · Quiet Depth",
+      "route": "splash",
       "viewport": "mobile",
       "pack": "default",
       "variant": "default"

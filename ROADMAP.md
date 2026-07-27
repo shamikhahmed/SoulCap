@@ -5,7 +5,7 @@ item and ship it **the same way the rest of the app was built** — read `AGENTS
 rules, conventions, and ship workflow. Every item below lists **what**, **why**, **files to
 touch**, **acceptance criteria (incl. a test)**, and **guardrails**.
 
-**Current release: v6.0.10** · schema v13 · SPEC-v6.0 A→J **shipped** · Published app: https://shamikhahmed.github.io/SoulCap/
+**Current release: v7.0.0** · schema v13 · SPEC-v6.0 A→J **shipped** · Published app: https://shamikhahmed.github.io/SoulCap/
 
 Philosophy (never drifts): a personalised emotional operating system, **not** an AI therapist.
 Help people understand and regulate; never "fix" them; never diagnose; success = needing the app

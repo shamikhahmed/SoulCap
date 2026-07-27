@@ -1,5 +1,13 @@
 ## [Unreleased]
 
+## [7.0.0] — 2026-07-27
+
+### Changed
+- **Quiet Depth V1 — Splash:** dark room, single soft radial light (one 2.5s breath), low-contrast
+  wordmark only; View Transition dismiss. No logo mark, tagline, spinner. Foundation `--layer-0..3`
+  + `--living` + `--ease-quiet` tokens on all themes. Still / reduced-motion = static light.
+- SW `soulcap-v700`. App **7.0.0**. Schema **v13**.
+
 ## [6.0.10] — 2026-07-27
 
 ### Changed

@@ -570,16 +570,7 @@
     return effectiveMotion() === 'still';
   }
   function signatureSplash() {
-    if (motionIsQuiet()) return;
-    loadGsap(function (g) {
-      if (!g) return;
-      var mark = $('#splash .mark');
-      var halo = $('#splash .halo');
-      if (mark) g.fromTo(mark, { scale: 0.86, opacity: 0.6 }, { scale: 1, opacity: 1, duration: 1.1, ease: 'power2.out' });
-      if (halo && effectiveMotion() === 'vivid') {
-        g.to(halo, { scale: 1.08, opacity: 0.85, duration: 1.6, yoyo: true, repeat: 1, ease: 'sine.inOut' });
-      }
-    });
+    /* Quiet Depth v7 — breath + wordmark are CSS-only (.splash-living, .splash-word). */
   }
   function signatureCheckin(chipEl, arrivalKey) {
     var band = document.querySelector('#view-now .hero-band');
@@ -5263,7 +5254,7 @@
       }
     });
   }
-  var APP_VERSION = '6.0.10';
+  var APP_VERSION = '7.0.0';
   function settingsGroup(v, title, kids) {
     v.appendChild(el('p', { class: 'eyebrow settings-eyebrow', text: title }));
     var block = el('div', { class: 'settings-block' });
@@ -5713,10 +5704,22 @@
       setTimeout(function () { newEntrySheet(); }, 400);
     }
 
-    var splash = $('#splash'), dismiss = function () { splash.classList.add('gone'); };
+    var splash = $('#splash');
+    function dismissSplash() {
+      if (!splash || splash.classList.contains('gone')) return;
+      function hide() { splash.classList.add('gone'); }
+      if (document.startViewTransition) {
+        try {
+          document.startViewTransition(hide);
+          return;
+        } catch (e) {}
+      }
+      splash.classList.add('splash-exit');
+      setTimeout(hide, 480);
+    }
     signatureSplash();
-    setTimeout(dismiss, state.onboarded ? 1500 : 2300);
-    splash.addEventListener('click', dismiss);
+    setTimeout(dismissSplash, state.onboarded ? 1600 : 2600);
+    splash.addEventListener('click', dismissSplash);
 
     if ('serviceWorker' in navigator) window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
   }
@@ -5724,7 +5727,7 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '6.0.10',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '7.0.0',
     effectiveMotion: effectiveMotion,
     motionCap: function () { return motionCap; },
     loadGsap: loadGsap,
