@@ -1,8 +1,8 @@
 {
   "name": "SoulCap",
-  "version": "6.0.5",
-  "swCache": "soulcap-v605",
+  "version": "6.0.6",
+  "swCache": "soulcap-v606",
   "schema": 12,
   "released": "2026-07-27",
-  "note": "v6.0.5 Phase F \u2014 ink-safe contrast for breath/panic/safety."
+  "note": "v6.0.6 Phase G — a11y labels, 200% text tests, ink-safe panic countdown."
 }

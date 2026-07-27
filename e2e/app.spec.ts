@@ -1947,6 +1947,52 @@ test.describe('v1.4 bundled features', () => {
     expect(parked.some((p: any) => p.title === 'Tomorrow worry')).toBe(true);
   });
 
+
+  test('Phase G: sheet and journal editor keep dialog semantics at 200% text', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="journal"]') as HTMLElement).click());
+    await openBlankJournalEntry(page);
+    const je = page.locator('#journalEditor');
+    await expect(je).toHaveAttribute('role', 'dialog');
+    await expect(je).toHaveAttribute('aria-modal', 'true');
+    await expect(je).toHaveAttribute('aria-label', 'Journal entry');
+    await page.evaluate(() => {
+      document.documentElement.setAttribute('data-text', 'large');
+      (document.documentElement as HTMLElement).style.fontSize = '200%';
+    });
+    await expect(page.locator('#jeBody')).toBeVisible();
+    await expect(page.locator('#jeSave')).toBeVisible();
+    const ok = await page.evaluate(() => {
+      const done = document.getElementById('jeSave')!;
+      const r = done.getBoundingClientRect();
+      return r.height >= 40 && r.width >= 48;
+    });
+    expect(ok).toBe(true);
+    await page.locator('#jeSave').click();
+    await page.evaluate(() => {
+      (document.documentElement as HTMLElement).style.fontSize = '';
+      document.documentElement.setAttribute('data-text', 'standard');
+    });
+    await openSettings(page);
+    const sheet = page.locator('#sheet');
+    await expect(sheet).toHaveAttribute('role', 'dialog');
+    await expect(sheet).toHaveAttribute('aria-modal', 'true');
+  });
+
+  test('Phase G: reduced motion flag and focusable main tabs', async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await seedDemo(page);
+    const tabs = page.locator('#tabs [role="tab"]');
+    await expect(tabs).toHaveCount(5);
+    for (let i = 0; i < 5; i++) {
+      await expect(tabs.nth(i)).toBeVisible();
+      const box = await tabs.nth(i).boundingBox();
+      expect(box && box.height >= 44).toBeTruthy();
+    }
+    await page.getByRole('tab', { name: 'Calm' }).focus();
+    await expect(page.getByRole('tab', { name: 'Calm' })).toBeFocused();
+  });
+
   test('Phase D: journal and park autofocus; path and settings do not open text fields', async ({ page }) => {
     await seedDemo(page);
     await page.evaluate(() => (document.querySelector('#tabs button[data-tab="journal"]') as HTMLElement).click());

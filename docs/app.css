@@ -567,7 +567,7 @@ input[type="range"]{width:100%;min-height:48px;accent-color:var(--accent)}
   border:2px solid var(--accent);opacity:.5;
   transform:scale(.7);transition:transform 4s var(--ease-soft);
 }
-.pacer-count{font-size:56px;font-weight:400;color:var(--ink);font-variant-numeric:tabular-nums;letter-spacing:-.03em}
+.pacer-count{font-size:56px;font-weight:400;color:var(--ink-safe);font-variant-numeric:tabular-nums;letter-spacing:-.03em}
 .panic-sub{font-family:var(--voice);font-size:17px;line-height:1.5;color:var(--ink-2);margin:0}
 .voice-row{display:flex;flex-direction:column;align-items:center;gap:5px}
 .voice-toggle{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:var(--ink-2);background:var(--sunken);border:1px solid var(--line-strong);border-radius:999px;padding:9px 16px;min-height:48px}

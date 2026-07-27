@@ -1,5 +1,13 @@
 ## [Unreleased]
 
+## [6.0.6] — 2026-07-27
+
+### Changed
+- **Phase G accessibility:** panic countdown uses `--ink-safe`; runner spoken-guidance control
+  labelled; Playwright covers journal/sheet dialog semantics at 200% text and tab targets under
+  `prefers-reduced-motion`.
+- SW `soulcap-v606`. App **6.0.6**. Schema still **v12**.
+
 ## [6.0.5] — 2026-07-27
 
 ### Changed
