@@ -190,9 +190,11 @@ J (QA).** For each phase (break big phases into shippable PRs):
 ## 13. Guardrails (unbreakable, every PR)
 Offline/vendored only, no network, ES5, tokens, `el()`. **Never diagnose**; new pattern/self-concept
 modules output tendencies + "not a diagnosis," user-correctable, global off. Tier-3 Help + PHQ
-item-9 routing intact; red-flag + not-reviewed banners stay. **No addiction mechanics** — no streaks,
-variable rewards, guilt, or engagement-timed pings. Panic stays the plainest, gesture-free surface.
-Nothing marked clinically reviewed.
+item-9 routing intact; red-flag panels stay. **Per-sheet "not yet reviewed" banners are REMOVED**
+and consolidated into one honest not-medical line in **About / Legal** (owner decision 2026-07-27,
+see `ROADMAP-v6-flagship.md` §0/P3) — the line always stays; nothing may imply clinical review or
+diagnosis. **No addiction mechanics** — no streaks, variable rewards, guilt, or engagement-timed
+pings. Panic stays the plainest, gesture-free surface. Nothing marked clinically reviewed.
 
 ## 14. Definition of done
 A therapist opens it and sees something considered, safe, and genuinely useful — not a toy, not a
