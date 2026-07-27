@@ -1,5 +1,14 @@
 ## [Unreleased]
 
+## [6.0.3] — 2026-07-27
+
+### Changed
+- **Phase D keyboard/focus:** sheets autofocus text fields only when dedicated entry
+  (`autofocusField` — park, reflection, add person); chip/settings/path focus first button.
+  Journal still autofocuses body. `--kb-inset` from visualViewport lifts journal toolbar + sheet
+  padding; focused fields scroll into view.
+- SW `soulcap-v603`. App **6.0.3**. Schema still **v12**.
+
 ## [6.0.2] — 2026-07-27
 
 ### Changed

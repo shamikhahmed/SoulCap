@@ -1947,6 +1947,36 @@ test.describe('v1.4 bundled features', () => {
     expect(parked.some((p: any) => p.title === 'Tomorrow worry')).toBe(true);
   });
 
+  test('Phase D: journal and park autofocus; path and settings do not open text fields', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="journal"]') as HTMLElement).click());
+    await openBlankJournalEntry(page);
+    await expect(page.locator('#journalEditor.on')).toBeVisible();
+    await expect(page.locator('#jeBody')).toBeFocused({ timeout: 2000 });
+    await page.locator('#jeCancel').click();
+
+    await page.getByRole('button', { name: 'Park a thought' }).click();
+    await expect(page.getByLabel('What is it about?')).toBeFocused({ timeout: 2000 });
+    await page.getByRole('button', { name: 'Cancel' }).click();
+
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="now"]') as HTMLElement).click());
+    await page.locator('#view-now .path-card').click();
+    await expect(page.locator('#sheet.on')).toBeVisible();
+    await page.waitForTimeout(80);
+    expect(await page.evaluate(() => {
+      const el = document.activeElement as HTMLElement | null;
+      return !el || (el.tagName !== 'INPUT' && el.tagName !== 'TEXTAREA');
+    })).toBeTruthy();
+
+    await page.keyboard.press('Escape');
+    await openSettings(page);
+    await page.waitForTimeout(80);
+    expect(await page.evaluate(() => {
+      const el = document.activeElement as HTMLElement | null;
+      return !el || (el.tagName !== 'INPUT' && el.tagName !== 'TEXTAREA');
+    })).toBeTruthy();
+  });
+
   test('v8 ur locale migrates to rui on v9', async ({ page }) => {
     await page.addInitScript(() => {
       localStorage.setItem('soulcap_v1', JSON.stringify({

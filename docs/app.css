@@ -163,6 +163,7 @@ html[dir="rtl"] .article-list,html[dir="rtl"] .opt .os{text-align:right}
 :root[data-theme="night"][data-accent="mulberry"]{--accent:#A56D98;--accent-press:#88587C;--accent-soft:rgba(165,109,152,.12);--accent-glow:rgba(165,109,152,.14);--accent-grad:linear-gradient(135deg,#B888AC,#88587C)}
 
 :root{
+  --kb-inset:0px;
   --voice:ui-serif,"New York",Georgia,"Iowan Old Style","Palatino Linotype",serif;
   --ui:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",system-ui,sans-serif;
   /* Type scale (SPEC v4 §2) — body never below 15 */
@@ -633,8 +634,8 @@ input[type="range"]{width:100%;min-height:48px;accent-color:var(--accent)}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 #sheet .panel{
   position:relative;background:var(--surface-2,var(--raise));width:100%;max-width:580px;
-  border-radius:var(--r-sheet) var(--r-sheet) 0 0;padding:var(--space-3) var(--space-4) calc(var(--sab) + var(--space-5));
-  max-height:88vh;overflow-y:auto;display:flex;flex-direction:column;gap:var(--space-3);
+  border-radius:var(--r-sheet) var(--r-sheet) 0 0;padding:var(--space-3) var(--space-4) calc(var(--sab) + var(--space-5) + var(--kb-inset,0px));
+  max-height:88vh;overflow-y:auto;-webkit-overflow-scrolling:touch;display:flex;flex-direction:column;gap:var(--space-3);
   box-shadow:var(--shadow-2);animation:sheetUp var(--dur-sheet) var(--ease-out) both;
   border:1px solid var(--line);border-bottom:none;
   backdrop-filter:blur(20px);
@@ -877,7 +878,7 @@ input[type="range"]{width:100%;min-height:48px;accent-color:var(--accent)}
 .je-photos .ph{position:relative}
 .je-photos img{width:88px;height:88px;object-fit:cover;border-radius:10px;border:1px solid var(--line-strong)}
 .je-photos .rm{position:absolute;top:-12px;right:-12px;width:48px;height:48px;border-radius:50%;background:var(--ink);color:var(--ground);border:none;font-size:18px;line-height:1;display:flex;align-items:center;justify-content:center}
-.je-tools{flex:none;display:flex;align-items:center;gap:10px;padding:11px 16px calc(var(--sab) + 12px);border-top:1px solid var(--line);background:var(--ground);overflow-x:auto;scrollbar-width:none}
+.je-tools{flex:none;display:flex;align-items:center;gap:10px;padding:11px 16px calc(var(--sab) + 12px + var(--kb-inset,0px));border-top:1px solid var(--line);background:var(--ground);overflow-x:auto;scrollbar-width:none}
 .je-tools::-webkit-scrollbar{display:none}
 .je-tool{width:48px;height:48px;border-radius:12px;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink-2);display:flex;align-items:center;justify-content:center;flex:none}
 .je-tool:active{transform:scale(.94)}

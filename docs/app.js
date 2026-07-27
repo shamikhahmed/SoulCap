@@ -2297,7 +2297,23 @@
     setSheetBackgroundInert(true);
     document.body.style.overflow = 'hidden';
     haptic('tick');
-    var f = panel.querySelector('button, input, select, textarea, a'); if (f) f.focus();
+    /* Phase D focus: open keyboard only for dedicated text entry (opts.autofocusField).
+     * Chip / settings / browse sheets focus first button so the keyboard stays down. */
+    setTimeout(function () {
+      var field = null;
+      if (opts.autofocusField === true) {
+        field = panel.querySelector('input:not([type="hidden"]):not([type="file"]):not([type="range"]), textarea');
+      } else if (typeof opts.autofocusField === 'string') {
+        field = panel.querySelector(opts.autofocusField);
+      }
+      if (field) { field.focus(); return; }
+      var btn = panel.querySelector('button, [href]');
+      if (btn) btn.focus();
+      else {
+        var any = panel.querySelector('input, select, textarea, a');
+        if (any) any.focus();
+      }
+    }, 40);
   }
   function closeSheet() {
     coverImageRequest++;
@@ -2906,7 +2922,7 @@
         if (risk === 3) openPanic();
       } }));
       p.appendChild(el('button', { class: 'btn quiet', text: tUi('park', 'cancel', PARK_UI), onclick: closeSheet }));
-    });
+    }, { autofocusField: true });
   }
   var timelineOffset = 0;
   function timelineSheet() {
@@ -2964,7 +2980,7 @@
         openPanicIfTier3(text);
       } }));
       p.appendChild(el('button', { class: 'btn quiet', text: REFLECTION_UI.cancel, onclick: closeSheet }));
-    });
+    }, { autofocusField: true });
   }
   function skipReflection() {
     state.reflectionPrefs.lastShown = Date.now();
@@ -4138,7 +4154,7 @@
         save(); closeSheet(); render();
       } }));
       panel.appendChild(el('button', { class: 'btn quiet', text: 'Cancel', onclick: closeSheet }));
-    });
+    }, { autofocusField: true });
   }
   function renderMap() {
     var v = $('#view-map'); clear(v);
@@ -4765,7 +4781,7 @@
       }
     });
   }
-  var APP_VERSION = '6.0.2';
+  var APP_VERSION = '6.0.3';
   function settingsGroup(v, title, kids) {
     v.appendChild(el('p', { class: 'eyebrow settings-eyebrow', text: title }));
     var block = el('div', { class: 'settings-block' });
@@ -5105,6 +5121,41 @@
     save();
   }
 
+  /* ── Keyboard / viewport safety (Phase D) ──────────────────────────────── */
+  function syncKeyboardInset() {
+    var vv = window.visualViewport;
+    var inset = 0;
+    if (vv) inset = Math.max(0, Math.round(window.innerHeight - vv.height - vv.offsetTop));
+    document.documentElement.style.setProperty('--kb-inset', inset + 'px');
+  }
+  function wireKeyboardSafety() {
+    syncKeyboardInset();
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', syncKeyboardInset);
+      window.visualViewport.addEventListener('scroll', syncKeyboardInset);
+    }
+    window.addEventListener('resize', syncKeyboardInset);
+    document.addEventListener('focusin', function (e) {
+      var t = e.target;
+      if (!t || !t.tagName) return;
+      var tag = t.tagName;
+      if (tag !== 'INPUT' && tag !== 'TEXTAREA' && tag !== 'SELECT') return;
+      if (t.type === 'range' || t.type === 'checkbox' || t.type === 'radio' || t.type === 'file' || t.type === 'hidden') return;
+      setTimeout(function () {
+        var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        try {
+          t.scrollIntoView({ block: 'center', inline: 'nearest', behavior: reduce ? 'auto' : 'smooth' });
+        } catch (err) {
+          t.scrollIntoView(true);
+        }
+        syncKeyboardInset();
+      }, 120);
+    });
+    document.addEventListener('focusout', function () {
+      setTimeout(syncKeyboardInset, 80);
+    });
+  }
+
   /* ── Boot ──────────────────────────────────────────────────────────────── */
   function queryValue(name) {
     var match = location.search.match(new RegExp('[?&]' + name + '=([^&]*)'));
@@ -5124,6 +5175,7 @@
     $('#fab').addEventListener('click', function () { haptic('done'); openPanic(); });
     bindGestures();
     pauseOrbsForVisibility();
+    wireKeyboardSafety();
 
     // Journal editor
     $('#jeCancel').addEventListener('click', closeEditor);
@@ -5189,7 +5241,7 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '6.0.2',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '6.0.3',
     effectiveMotion: effectiveMotion,
     motionCap: function () { return motionCap; },
     loadGsap: loadGsap,

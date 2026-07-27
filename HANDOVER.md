@@ -1,4 +1,4 @@
-**Version:** 6.0.2 · SW `soulcap-v602`
+**Version:** 6.0.3 · SW `soulcap-v603`
 
 # SoulCap — Project Handover
 
@@ -6,7 +6,7 @@
 > first — it is the current truth as of 2026-07-27. The sections further down describe an
 > earlier architecture and are kept for reference only.
 
-## Current state (v6.0.2 — 2026-07-27)
+## Current state (v6.0.3 — 2026-07-27)
 
 **The product is the PWA in `docs/`.** Offline-first, local-only, **no network calls after load**.
 Schema **v12**. Phase B: navigable `app.js` index/banners; dead CSS tokens culled; technique
@@ -18,7 +18,7 @@ appearance axes). Viewer: `screen-gallery.html` (`npm run gallery:view`).
 Live: https://shamikhahmed.github.io/SoulCap/
 
 ### Schema & ship
-- State `DEFAULT.v = 12` · SW `soulcap-v602` · app **6.0.2** · `package.json` **6.0.2**
+- State `DEFAULT.v = 12` · SW `soulcap-v603` · app **6.0.3** · `package.json` **6.0.3**
 - Ship workflow: bump CACHE + VERSION.json + APP_VERSION + package.json; CHANGELOG;
   SAFETY/HANDOVER (+ README/FEATURES when they drift); gallery; `npm run verify`; push `main`.
 

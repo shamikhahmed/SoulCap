@@ -1,8 +1,8 @@
 {
   "name": "SoulCap",
-  "version": "6.0.2",
-  "swCache": "soulcap-v602",
+  "version": "6.0.3",
+  "swCache": "soulcap-v603",
   "schema": 12,
   "released": "2026-07-27",
-  "note": "v6.0.2 Phase C \u2014 journal flex, density tokens, theme cull, Accessibility group, single About disclaimer."
+  "note": "v6.0.3 Phase D \u2014 keyboard focus policy, visualViewport --kb-inset, scroll-into-view."
 }
