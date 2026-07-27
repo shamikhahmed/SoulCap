@@ -1,5 +1,12 @@
 ## [Unreleased]
 
+## [6.0.4] — 2026-07-27
+
+### Changed
+- **Phase E design system:** theme swatch previews use tokens / kept-theme hex only; deleted Rain/
+  Space/Sunrise/Minimal preview classes. Component focus/press/selected already token-driven.
+- SW `soulcap-v604`. App **6.0.4**. Schema still **v12**.
+
 ## [6.0.3] — 2026-07-27
 
 ### Changed
