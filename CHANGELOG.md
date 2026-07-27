@@ -1,5 +1,14 @@
 ## [Unreleased]
 
+## [7.0.2] — 2026-07-27
+
+### Changed
+- **Quiet Depth V6:** Journal book hero + ruled entries; You profile hero + hairline insights;
+  People spatial map with editorial living head — distinct compositions per tab.
+- **Quiet Depth V7:** thinner blurred tab bar, depth-ramp nav-header/sheets.
+- **Quiet Depth V8:** `--ease-quiet` press scale; View Transitions on `selectTab`; living freeze on Still.
+- SW `soulcap-v702`. App **7.0.2**. Schema **v13**.
+
 ## [7.0.1] — 2026-07-27
 
 ### Changed

@@ -39,10 +39,23 @@ async function openBlankJournalEntry(page: Page) {
 }
 
 async function openSettings(page: Page) {
-  await page.evaluate(() => (document.querySelector('#tabs button[data-tab="me"]') as HTMLElement).click());
+  await clickTab(page, 'me');
   await page.locator('.settings-card').click();
   await expect(page.locator('#sheet.on')).toBeVisible();
 }
+
+/** Switch main tab and wait until the target view is active (View Transition-safe). */
+async function clickTab(page: Page, tab: string) {
+  await page.evaluate((t) => {
+    const btn = document.querySelector('#tabs button[data-tab="' + t + '"]') as HTMLElement | null;
+    if (btn) btn.click();
+  }, tab);
+  await page.waitForFunction((t) => {
+    const v = document.querySelector('#view-' + t);
+    return !!(v && v.classList.contains('on'));
+  }, tab);
+}
+
 
 /** Wait until CSS transitions/animations under selector are idle (avoids mid-transition flaky reads). */
 async function waitForAnimationsIdle(page: Page, selector = 'body') {
@@ -228,7 +241,7 @@ test.describe('v0.9 local model', () => {
     expect(attrs.bodySize).toBeGreaterThanOrEqual(19);
     await page.evaluate(() => history.replaceState({}, '', '/'));
     await page.reload();
-    await page.waitForFunction(() => Boolean((window as any).__soulcap));
+    await page.waitForFunction(() => Boolean((window as any).__soulcap), null, { timeout: 15000 });
     expect(await page.evaluate(() => document.documentElement.getAttribute('data-accent'))).toBe('mulberry');
     await dismissSplash(page);
     await openSettings(page);
@@ -1407,7 +1420,8 @@ test.describe('Constellation', () => {
 
   test('the map rotates on its own, and labels stay upright', async ({ page }) => {
     await seedDemo(page);
-    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="map"]') as HTMLElement).click());
+    await clickTab(page, 'map');
+    await page.waitForSelector('#map .node circle');
     const sample = () => page.evaluate(() => {
       const c = document.querySelector('#map .node circle')!;
       return parseFloat(c.getAttribute('cx')!);
@@ -1469,7 +1483,8 @@ test.describe('Constellation', () => {
 
   test('long-press rename sheet opens for a ring label', async ({ page }) => {
     await seedDemo(page);
-    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="map"]') as HTMLElement).click());
+    await clickTab(page, 'map');
+    await page.waitForSelector('#map .orbit-lab');
     await page.evaluate(() => {
       const lab = document.querySelector('#map .orbit-lab') as any;
       lab.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, cancelable: true, pointerType: 'touch', clientX: 10, clientY: 10 }));
@@ -1830,7 +1845,8 @@ test.describe('v1.4 bundled features', () => {
 
   test('secondary copy stays ink-2 readable (no faint ink-3+opacity)', async ({ page }) => {
     await seedDemo(page);
-    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="calm"]') as HTMLElement).click());
+    await clickTab(page, 'calm');
+    await page.waitForSelector('#view-calm .opt .os');
     const contrast = await page.evaluate(() => {
       function parse(c: string) {
         const m = c.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
@@ -1868,7 +1884,8 @@ test.describe('v1.4 bundled features', () => {
   test('Calm browse rows are compact editorial list (not portrait tiles)', async ({ page }) => {
     await seedDemo(page);
     await page.setViewportSize({ width: 430, height: 932 });
-    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="calm"]') as HTMLElement).click());
+    await clickTab(page, 'calm');
+    await page.waitForSelector('#view-calm .calm-section .list-row');
     const metrics = await page.evaluate(() => {
       const row = document.querySelector('#view-calm .calm-section .list-row') as HTMLElement | null;
       if (!row) return null;

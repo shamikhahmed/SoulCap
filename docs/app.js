@@ -2432,11 +2432,21 @@
       update();
       return;
     }
-    try {
-      document.startViewTransition(function () { update(); });
-    } catch (e) {
+    var applied = false;
+    function apply() {
+      if (applied) return;
+      applied = true;
       update();
     }
+    try {
+      document.startViewTransition(apply);
+    } catch (e) {
+      apply();
+      return;
+    }
+    // Some engines schedule the update callback as a microtask. Apply in this
+    // turn so tab clicks / tests see the new DOM immediately; second call is no-op.
+    if (!applied) apply();
   }
   function setSubviewBackgroundInert(on) {
     ['#app', '#fab'].forEach(function (selector) {
@@ -3602,9 +3612,12 @@
   }
   function renderJournal() {
     var v = $('#view-journal'); clear(v);
+    v.className = 'view view-qd';
     var cov = state.journalCover, cc = coverColors(), coverPhoto = localImageSource(cov.photo);
 
-    var cover = el('button', { class: 'book-cover book-cover-bleed',
+    var hero = el('div', { class: 'qd-hero journal-hero' });
+    hero.appendChild(el('div', { class: 'living-field', 'aria-hidden': 'true' }));
+    hero.appendChild(el('button', { class: 'book-cover book-cover-bleed',
       style: '--bc-a:' + cc[0] + ';--bc-b:' + cc[1], onclick: coverSheet }, [
       el('span', { class: 'bc-spine', 'aria-hidden': 'true' }),
       el('span', { class: 'bc-edge', 'aria-hidden': 'true' }),
@@ -3614,8 +3627,8 @@
       cov.sticker ? el('span', { class: 'bc-sticker', text: cov.sticker }) : null,
       el('h1', { class: 'bc-title', text: cov.title || 'My Journal' }),
       el('p', { class: 'bc-sub', text: cov.subtitle || (state.journal.length + (state.journal.length === 1 ? ' entry' : ' entries')) })
-    ]);
-    v.appendChild(cover);
+    ]));
+    v.appendChild(hero);
     v.appendChild(el('button', { class: 'btn journal-new-row', text: '＋  New entry', onclick: newEntrySheet }));
     v.appendChild(el('button', { class: 'btn ghost', text: tUi('park', 'button', PARK_UI), onclick: function () { parkThoughtSheet(); } }));
 
@@ -3646,7 +3659,8 @@
         onclick: newEntrySheet
       }));
     } else {
-      v.appendChild(el('p', { class: 'eyebrow', style: 'margin-top:4px', text: 'Contents' }));
+      var contentsBlock = el('div', { class: 'qd-ruled journal-contents-block' });
+      contentsBlock.appendChild(el('p', { class: 'section-label', text: 'Contents' }));
       var search = el('input', { class: 'journal-search', type: 'search', value: journalQuery,
         placeholder: JOURNAL_UI.searchPlaceholder, 'aria-label': JOURNAL_UI.searchLabel });
       if (journalQuery) search.setAttribute('aria-describedby', 'journalSearchClear');
@@ -3656,12 +3670,12 @@
           type: 'button', 'aria-label': JOURNAL_UI.searchClear, text: 'Clear',
           onclick: function () { journalQuery = ''; render(); } }));
       }
-      var contents = el('div', { class: 'journal-contents journal-timeline' });
+      var contents = el('div', { class: 'journal-contents qd-list-group' });
       search.addEventListener('input', function () {
         journalQuery = search.value;
         renderJournalContents(contents);
       });
-      v.appendChild(searchRow);
+      contentsBlock.appendChild(searchRow);
 
       var sorted = state.journal.slice().sort(function (a, b) { return b.t - a.t; });
       var seenMonths = {};
@@ -3681,9 +3695,10 @@
           if (target) target.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
           jump.value = '';
         });
-        v.appendChild(jump);
+        contentsBlock.appendChild(jump);
       }
-      v.appendChild(contents);
+      contentsBlock.appendChild(contents);
+      v.appendChild(contentsBlock);
       renderJournalContents(contents);
     }
     v.appendChild(el('button', { class: 'help-btn', text: t('helpNow'), onclick: openPanic }));
@@ -3710,18 +3725,26 @@
       }
       var d = new Date(e.t);
       var hasPhotos = e.photos && e.photos.length;
-      wrap.appendChild(el('button', {
-        class: 'j-entry paper-slip' + (hasPhotos ? ' j-entry-tall' : '') + (e.decor ? ' decor-' + e.decor : ''),
-        onclick: function () { openEditor(e.id); }
-      }, [
-        el('p', { class: 'jd', text: d.toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' }) + ' · ' + d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) + (e.mood ? '  ' + e.mood : '') }),
-        e.title ? el('p', { class: 'jt', text: e.title }) : null,
-        el('p', { class: 'jx', text: e.body || '…' }),
-        hasPhotos ? el('div', { class: 'jphotos' }, e.photos.slice(0, 4).map(function (src) {
+      var meta = d.toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' }) + ' · ' + d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) + (e.mood ? '  ' + e.mood : '');
+      var bodyKids = [
+        el('p', { class: 'lr-meta jd', text: meta }),
+        e.title ? el('p', { class: 'lr-title jt', text: e.title }) : null,
+        el('p', { class: 'jx', text: e.body || '…' })
+      ];
+      if (hasPhotos) {
+        bodyKids.push(el('div', { class: 'jphotos' }, e.photos.slice(0, 4).map(function (src) {
           src = localImageSource(src);
           if (!src) return null;
           return el('img', { src: src, alt: '', loading: 'lazy' });
-        })) : null
+        })));
+      }
+      wrap.appendChild(el('button', {
+        class: 'qd-row j-entry' + (hasPhotos ? ' j-entry-tall' : '') + (e.decor ? ' decor-' + e.decor : ''),
+        type: 'button',
+        onclick: function () { openEditor(e.id); }
+      }, [
+        el('span', { class: 'lr-body' }, bodyKids),
+        iconChevron()
       ]));
     });
   }
@@ -4455,10 +4478,12 @@
   }
   function renderMap() {
     var v = $('#view-map'); clear(v);
-    v.appendChild(el('div', { class: 'hero-band map-hero' }, [
-      el('p', { class: 'eyebrow', text: 'Constellation' }),
-      el('h1', { class: 'h-voice', text: 'The people around you.' })
-    ]));
+    v.className = 'view view-qd';
+    var hero = el('div', { class: 'qd-hero map-hero-head' });
+    hero.appendChild(el('div', { class: 'living-field', 'aria-hidden': 'true' }));
+    hero.appendChild(el('p', { class: 'eyebrow', text: 'Constellation' }));
+    hero.appendChild(el('h1', { class: 'h-voice', text: 'The people around you.' }));
+    v.appendChild(hero);
     if (!state.people.length) {
       v.appendChild(emptyState({
         body: tUi('empty', 'map', EMPTY_UI),
@@ -4467,6 +4492,8 @@
         onclick: addPersonSheet
       }));
     } else {
+      var stage = el('div', { class: 'map-stage' });
+      stage.appendChild(el('div', { class: 'living-field map-living', 'aria-hidden': 'true' }));
       var wrap = el('div', { class: 'map-wrap map-edge' });
       wrap.appendChild(el('div', { html: '<svg id="map" viewBox="0 0 400 400" role="img" aria-label="Your constellation"></svg>' }));
       var pills = el('div', { class: 'map-pills', role: 'toolbar', 'aria-label': 'Map controls' });
@@ -4482,7 +4509,8 @@
       RELATIONSHIP_TYPES.forEach(function (t) { if (state.people.some(function (p) { return p.type === t.code; })) legend.appendChild(el('span', { html: '<i style="background:var(' + t.cssVar + ')"></i>' + t.label })); });
       if (state.people.some(function (p) { return p.hard; })) legend.appendChild(el('span', { html: '<i style="border:1.5px dashed var(--ink-3)"></i>Hard right now' }));
       wrap.appendChild(legend);
-      v.appendChild(wrap);
+      stage.appendChild(wrap);
+      v.appendChild(stage);
       v.appendChild(el('div', { class: 'chips map-ring-chips', role: 'group', 'aria-label': 'Ring count' }, [3, 4, 5, 6, 7].map(function (n) {
         return el('button', { class: 'chip', 'aria-pressed': state.rings === n ? 'true' : 'false', text: '' + n, onclick: function () {
           if (!setRingCount(n)) return;
@@ -4491,6 +4519,24 @@
       })));
       v.appendChild(el('button', { class: 'btn ghost', text: 'Add someone', onclick: addPersonSheet }));
       v.appendChild(el('button', { class: 'btn ghost', text: 'Name the rings', onclick: ringNameSheet }));
+      var peopleList = el('div', { class: 'qd-ruled map-people' });
+      peopleList.appendChild(el('p', { class: 'section-label', text: 'People' }));
+      var peopleGroup = el('div', { class: 'list-group qd-list-group' });
+      state.people.slice().sort(function (a, b) {
+        var ar = parseInt((a.ring || 'r0').replace('r', ''), 10);
+        var br = parseInt((b.ring || 'r0').replace('r', ''), 10);
+        if (ar !== br) return ar - br;
+        return a.name.localeCompare(b.name);
+      }).forEach(function (p) {
+        var tm = typeMeta(p.type);
+        peopleGroup.appendChild(listRow({
+          title: p.name,
+          meta: tm.label + (p.hard ? ' · hard right now' : ''),
+          onclick: function () { personSheet(p.id); }
+        }));
+      });
+      peopleList.appendChild(peopleGroup);
+      v.appendChild(peopleList);
       v.appendChild(el('p', { class: 'p-sm', text: 'Pinch the map to add or remove a ring (3–7). Long-press a ring label to rename. Drag anyone in or out. Tap a person to open them. Change map pace in Settings.' }));
       if (state.trackContact) {
         v.appendChild(el('p', { class: 'p-sm', text: 'Larger dots reflect how often you’ve logged speaking lately — not how important anyone is.' }));
@@ -4764,12 +4810,14 @@
   }
   function renderMe() {
     var v = $('#view-me'); clear(v);
+    v.className = 'view view-qd';
     var name = (state.profile.name || '').trim();
     var dayN = soulcapDayCount();
-    var hero = el('div', { class: 'hero-band me-hero' });
+    var hero = el('div', { class: 'qd-hero me-hero' });
+    hero.appendChild(el('div', { class: 'living-field', 'aria-hidden': 'true' }));
     hero.appendChild(el('p', { class: 'eyebrow', text: tUi('me', 'eyebrow', { eyebrow: 'You' }) }));
-    hero.appendChild(el('h1', { class: 'h-voice', text: name || tUi('me', 'yourSpace', { yourSpace: 'Your space.' }) }));
-    hero.appendChild(el('p', { class: 'p-sm', text: dayN
+    hero.appendChild(el('h1', { class: 'h-voice type-display', text: name || tUi('me', 'yourSpace', { yourSpace: 'Your space.' }) }));
+    hero.appendChild(el('p', { class: 'p-voice', text: dayN
       ? (dayN === 1 ? 'Day 1 with SoulCap.' : ('Day ' + dayN + ' with SoulCap.'))
       : 'A quiet place for what you notice.' }));
     v.appendChild(hero);
@@ -4793,49 +4841,55 @@
       : PROGRESS_UI.weekEmpty;
     var runs = state.skillRuns.length, helped = state.skillRuns.filter(function (r) { return r.helpful; }).length;
     var pathN = (state.pathSessions || []).length;
-    insights.appendChild(el('div', { class: 'hero-tile progress-dash' + (progN ? ' week-bloom' : '') }, [
-      el('p', { class: 'ht-meta', text: PROGRESS_UI.title }),
-      el('p', { class: 'glance-label', text: PROGRESS_UI.weekLabel }),
-      el('div', { class: 'progress-dots', role: 'img', 'aria-label': weekLine }, progDots.map(function (d) {
-        return el('i', { class: d.on ? 'on' : '' });
-      })),
-      el('p', { class: 'glance-sub', text: weekLine }),
-      (runs || state.checkins.length || state.journal.length || pathN)
-        ? el('div', { class: 'progress-stats' }, [
-            el('p', { class: 'p-sm', text: PROGRESS_UI.techniques + ' · ' + runs + (helped ? ' (' + helped + ' felt helpful)' : '') }),
-            el('p', { class: 'p-sm', text: PROGRESS_UI.checkins + ' · ' + state.checkins.length }),
-            el('p', { class: 'p-sm', text: PROGRESS_UI.journals + ' · ' + state.journal.length }),
-            pathN ? el('p', { class: 'p-sm', text: PROGRESS_UI.paths + ' · ' + pathN }) : null
-          ])
-        : el('p', { class: 'p-sm', text: PROGRESS_UI.empty }),
-      el('p', { class: 'reason', text: PROGRESS_UI.gentle })
-    ]));
+    var progress = el('div', { class: 'progress-dash qd-ruled qd-progress' + (progN ? ' week-bloom' : '') });
+    progress.appendChild(el('p', { class: 'section-label', text: PROGRESS_UI.title }));
+    progress.appendChild(el('p', { class: 'glance-label', text: PROGRESS_UI.weekLabel }));
+    progress.appendChild(el('div', { class: 'progress-dots', role: 'img', 'aria-label': weekLine }, progDots.map(function (d) {
+      return el('i', { class: d.on ? 'on' : '' });
+    })));
+    progress.appendChild(el('p', { class: 'glance-sub', text: weekLine }));
+    if (runs || state.checkins.length || state.journal.length || pathN) {
+      var statsWrap = el('div', { class: 'progress-stats' });
+      statsWrap.appendChild(el('p', { class: 'p-sm', text: PROGRESS_UI.techniques + ' · ' + runs + (helped ? ' (' + helped + ' felt helpful)' : '') }));
+      statsWrap.appendChild(el('p', { class: 'p-sm', text: PROGRESS_UI.checkins + ' · ' + state.checkins.length }));
+      statsWrap.appendChild(el('p', { class: 'p-sm', text: PROGRESS_UI.journals + ' · ' + state.journal.length }));
+      if (pathN) statsWrap.appendChild(el('p', { class: 'p-sm', text: PROGRESS_UI.paths + ' · ' + pathN }));
+      progress.appendChild(statsWrap);
+    } else {
+      progress.appendChild(el('p', { class: 'p-sm', text: PROGRESS_UI.empty }));
+    }
+    progress.appendChild(el('p', { class: 'reason', text: PROGRESS_UI.gentle }));
+    insights.appendChild(progress);
+    signatureProgressIn(progress);
 
     var patternN = derivePatterns().length;
     var week = weeklySummary();
-    insights.appendChild(el('div', { class: 'bento-3 me-stats' }, [
-      el('button', { class: 'stat-tile tap', type: 'button', onclick: patternsOverviewSheet }, [
-        el('p', { class: 'st-label', text: 'Patterns' }),
-        el('p', { class: 'st-value', text: patternN ? ('' + patternN) : '—' }),
-        el('p', { class: 'p-sm', text: patternN ? PATTERN_UI.heading : PATTERN_UI.noWeekly })
-      ]),
-      el('button', { class: 'stat-tile tap' + (week ? ' week-bloom' : ''), type: 'button', onclick: weeklyOverviewSheet }, [
-        el('p', { class: 'st-label', text: 'Weekly' }),
-        el('p', { class: 'st-value', text: week ? ('' + week.days) : '—' }),
-        el('p', { class: 'p-sm', text: week ? (week.common + ' · ' + PATTERN_UI.weeklyCommon) : PATTERN_UI.noWeekly })
-      ]),
-      el('button', { class: 'stat-tile tap timeline-card', type: 'button', onclick: timelineSheet }, [
-        el('p', { class: 'st-label', text: 'Timeline' }),
-        el('p', { class: 'st-value', text: TIMELINE_UI.title }),
-        el('p', { class: 'p-sm', text: TIMELINE_UI.cardHint })
-      ])
-    ]));
+    var stats = el('div', { class: 'qd-ruled me-stats qd-list-group' });
+    stats.appendChild(qdRow({
+      className: 'stat-tile timeline-card',
+      title: TIMELINE_UI.title,
+      sub: TIMELINE_UI.cardHint,
+      onclick: timelineSheet
+    }));
+    stats.appendChild(qdRow({
+      className: 'stat-tile',
+      title: 'Patterns',
+      sub: patternN ? PATTERN_UI.heading : PATTERN_UI.noWeekly,
+      onclick: patternsOverviewSheet
+    }));
+    stats.appendChild(qdRow({
+      className: 'stat-tile' + (week ? ' week-bloom' : ''),
+      title: 'Weekly',
+      sub: week ? (week.common + ' · ' + PATTERN_UI.weeklyCommon) : PATTERN_UI.noWeekly,
+      onclick: weeklyOverviewSheet
+    }));
+    insights.appendChild(stats);
     v.appendChild(insights);
 
-    var tools = el('div', { class: 'section-block me-tools' }, [
+    var tools = el('div', { class: 'section-block me-tools qd-ruled' }, [
       el('p', { class: 'section-label', text: tUi('me', 'sectionTools', { sectionTools: 'Your tools' }) })
     ]);
-    var toolsGroup = el('div', { class: 'list-group' });
+    var toolsGroup = el('div', { class: 'list-group qd-list-group' });
     var filled = planFilled();
     toolsGroup.appendChild(listRow({
       className: 'self-concept-card',
@@ -4874,10 +4928,10 @@
     tools.appendChild(toolsGroup);
     v.appendChild(tools);
 
-    var about = el('div', { class: 'section-block me-about' }, [
+    var about = el('div', { class: 'section-block me-about qd-ruled' }, [
       el('p', { class: 'section-label', text: tUi('me', 'sectionAbout', { sectionAbout: 'About you' }) })
     ]);
-    var aboutGroup = el('div', { class: 'list-group' });
+    var aboutGroup = el('div', { class: 'list-group qd-list-group' });
     aboutGroup.appendChild(listRow({
       title: name ? tUi('me', 'profile', { profile: 'Profile' }) : tUi('me', 'setupProfile', { setupProfile: 'Set up your profile' }),
       meta: name
@@ -4906,7 +4960,7 @@
       ]));
     }
 
-    v.appendChild(el('div', { class: 'list-group' }, [
+    v.appendChild(el('div', { class: 'qd-ruled me-settings' }, [
       listRow({
         className: 'settings-card',
         title: tUi('settingsCard', 'title', { title: 'Settings' }),
@@ -5308,7 +5362,7 @@
       }
     });
   }
-  var APP_VERSION = '7.0.0';
+  var APP_VERSION = '7.0.2';
   function settingsGroup(v, title, kids) {
     v.appendChild(el('p', { class: 'eyebrow settings-eyebrow', text: title }));
     var block = el('div', { class: 'settings-block' });
@@ -5586,7 +5640,14 @@
 
   /* ── Router ────────────────────────────────────────────────────────────── */
   var tab = 'now';
-  function selectTab(t) { closeSubview(); tab = t; render(); window.scrollTo(0, 0); }
+  function selectTab(t) {
+    closeSubviewImmediate();
+    tab = t;
+    withViewTransition(function () {
+      render();
+      window.scrollTo(0, 0);
+    });
+  }
   // Re-render in place without jumping to the top — for toggles/pickers inside a
   // scrolled view (theme, vibration, etc). Rebuilding the view otherwise resets
   // scroll to 0, which read as an unwanted auto-scroll.
@@ -5784,7 +5845,7 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '7.0.1',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '7.0.2',
     effectiveMotion: effectiveMotion,
     motionCap: function () { return motionCap; },
     loadGsap: loadGsap,
