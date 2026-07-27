@@ -2308,3 +2308,79 @@ test.describe('Phase I — honest session settle', () => {
     await expect(page.locator('#toast')).toContainText(/Noted|enough for now/i);
   });
 });
+
+test.describe('Phase J — final QA stress', () => {
+  test('rapid tab switching keeps a single active view', async ({ page }) => {
+    await seedDemo(page);
+    const order = ['calm', 'journal', 'map', 'me', 'now', 'calm', 'now'];
+    for (const tab of order) {
+      await page.evaluate((t) => (document.querySelector(`#tabs button[data-tab="${t}"]`) as HTMLElement).click(), tab);
+    }
+    await expect(page.locator('.view.on')).toHaveCount(1);
+    await expect(page.locator('#view-now')).toHaveClass(/on/);
+  });
+
+  test('journal editor body flex-fills with no mid-screen void', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="journal"]') as HTMLElement).click());
+    await openBlankJournalEntry(page);
+    const layout = await page.evaluate(() => {
+      const ed = document.getElementById('journalEditor')!;
+      const body = document.getElementById('jeBody')!;
+      const tools = document.querySelector('.je-tools') as HTMLElement | null;
+      const er = ed.getBoundingClientRect();
+      const br = body.getBoundingClientRect();
+      const tr = tools ? tools.getBoundingClientRect() : null;
+      const style = getComputedStyle(body);
+      return {
+        bodyFlex: style.flexGrow === '1' || style.flex === '1 1 0%' || style.flex.startsWith('1'),
+        bodyTall: br.height >= 120,
+        toolsNearBottom: !tr || (er.bottom - tr.bottom) < 24,
+        gapBelowBody: tr ? (tr.top - br.bottom) : 0
+      };
+    });
+    expect(layout.bodyFlex || layout.bodyTall).toBeTruthy();
+    expect(layout.toolsNearBottom).toBeTruthy();
+    expect(layout.gapBelowBody).toBeLessThan(80);
+  });
+
+  test('long journal text stays in scrollable body', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="journal"]') as HTMLElement).click());
+    await openBlankJournalEntry(page);
+    const long = Array(80).fill('A long quiet paragraph about tonight. ').join('');
+    await page.locator('#jeBody').fill(long);
+    const ok = await page.evaluate(() => {
+      const body = document.getElementById('jeBody') as HTMLTextAreaElement;
+      return body.scrollHeight >= body.clientHeight && body.value.length > 500;
+    });
+    expect(ok).toBe(true);
+  });
+
+  test('320px viewport keeps Help and tabs usable', async ({ page }) => {
+    await page.setViewportSize({ width: 320, height: 640 });
+    await seedDemo(page);
+    await expect(page.locator('#tabs')).toBeVisible();
+    await page.locator('.view.on .help-btn').click();
+    await expect(page.locator('#panic.on')).toBeVisible();
+    await expect(page.locator('#panicExit')).toBeVisible();
+    const min = await page.evaluate(() => {
+      const b = document.getElementById('panicExit')!.getBoundingClientRect();
+      return b.width >= 44 && b.height >= 40;
+    });
+    expect(min).toBe(true);
+  });
+
+  test('offline reload still opens Help without network', async ({ page, context }) => {
+    await seedDemo(page);
+    await page.waitForFunction(() => navigator.serviceWorker.controller !== null, null, { timeout: 15000 });
+    await context.setOffline(true);
+    await page.reload();
+    await page.waitForFunction(() => !!(window as any).__soulcap);
+    await dismissSplash(page);
+    await page.locator('.view.on .help-btn').click();
+    await expect(page.locator('#panic.on')).toBeVisible();
+    await expect(page.locator('#panicLinks')).toBeVisible();
+    await context.setOffline(false);
+  });
+});

@@ -7,7 +7,7 @@
  *
  * Bump CACHE on every asset change or users get a stale build.
  */
-var CACHE = 'soulcap-v608';
+var CACHE = 'soulcap-v609';
 
 var ASSETS = [
   './',

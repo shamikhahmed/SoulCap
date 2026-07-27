@@ -1,5 +1,12 @@
 ## [Unreleased]
 
+## [6.0.9] — 2026-07-27
+
+### Changed
+- **Phase J final QA:** stress tests for rapid tabs, journal flex fill, 320px width, long
+  journal body, offline Help; full suite green. SPEC-v6.0 A→J complete.
+- SW `soulcap-v609`. App **6.0.9**. Schema **v13**.
+
 ## [6.0.8] — 2026-07-27
 
 ### Changed

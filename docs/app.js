@@ -5263,7 +5263,7 @@
       }
     });
   }
-  var APP_VERSION = '6.0.8';
+  var APP_VERSION = '6.0.9';
   function settingsGroup(v, title, kids) {
     v.appendChild(el('p', { class: 'eyebrow settings-eyebrow', text: title }));
     var block = el('div', { class: 'settings-block' });
@@ -5724,7 +5724,7 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '6.0.8',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '6.0.9',
     effectiveMotion: effectiveMotion,
     motionCap: function () { return motionCap; },
     loadGsap: loadGsap,
