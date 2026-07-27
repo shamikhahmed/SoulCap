@@ -5,6 +5,12 @@
 > as a **continuous loop** (see §12) — implement a phase fully, verify, bump, doc, gallery, commit,
 > push, then move to the next phase without stopping until all phases are done.
 
+**Owner-confirmed 2026-07-24:** (1) **Delete** the weakest themes (do not just hide them) — keep
+**Auto · Light · Dark · Night · AMOLED · Ocean · Forest**; **remove Rain, Space, Sunrise, Minimal**.
+Accents → **3**. (2) Build **worth-returning-to, NOT addictive** — the anti-addiction guardrail in
+§9/§13 is final and non-negotiable. (3) Build **all** the new depth: self-concept (H1), pattern
+engine (H2), habits (H3). Run every phase to completion in one loop; **stop only when J is done.**
+
 Current: **v5.1.9** (schema v12). Vanilla offline PWA in `docs/` (`index.html`, `app.css`,
 `data.js`, `app.js`, `vendor/`, `sw.js`). All `AGENTS.md` rules hold. This spec supersedes the
 open items in v2.3/v3.x specs where they conflict.
@@ -32,8 +38,8 @@ and the new depth features.** Do those to a world-class standard.
    not 1½.
 3. **Too many themes/accents — overwhelming.** 11 themes × 4 accents + text/density/contrast/
    transparency/motion is a lot for someone in distress. **Fix:** collapse to a curated set:
-   **Auto · Light · Dark · Night** as the primary choice; move Ocean/Forest/Rain/Space/Sunrise/
-   Minimal/AMOLED into an "More themes" disclosure (or cut the weakest 3–4). Accents → 3 max.
+   **Auto · Light · Dark · Night** as the primary choice; KEEP Auto/Light/Dark/Night/AMOLED + Ocean + Forest; **DELETE Rain, Space, Sunrise, Minimal** and their
+   tokens/gallery variants. Accents → 3.
    Everything else (density, contrast, transparency, motion) grouped under "Accessibility" so the
    main Appearance screen is calm and short.
 
@@ -156,8 +162,8 @@ keyboard-focus rules, and the new modules' safety routing.
 
 ## 11. Settings, finalised (the concrete "how many themes/colours" answer)
 
-- **Appearance (primary):** Auto · Light · Dark · Night. Accent: 3 curated. "More themes ▸"
-  discloses the ambient set (or cut to the best 3). Nothing else on the top level.
+- **Appearance (primary):** Auto · Light · Dark · Night. Accent: 3 curated. Ambient set is just **Ocean · Forest** (a small "Ambient" row). Rain/Space/Sunrise/Minimal are deleted.
+  Nothing else on the top level.
 - **Accessibility (own group):** text size · higher contrast · reduce transparency · reduce motion.
 - **Guided exercises:** spoken guidance · voice & accent · pace · vibration.
 - **Constellation · Personalisation · Your data · About.** Each row explained in one line.
