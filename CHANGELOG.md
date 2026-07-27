@@ -1,5 +1,12 @@
 ## [Unreleased]
 
+## [6.0.8] — 2026-07-27
+
+### Changed
+- **Phase I visual polish:** soft hero ambient drift (Still / reduced-motion off); weekly insight
+  bloom; session-end settle + calm toast (“enough for now”) — no streaks or reward loops.
+- SW `soulcap-v608`. App **6.0.8**. Schema **v13**.
+
 ## [6.0.7] — 2026-07-27
 
 ### Added

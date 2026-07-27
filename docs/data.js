@@ -494,6 +494,14 @@ var PROGRESS_UI = {
   empty:'As you check in and try techniques, a quiet picture of the weeks builds here.'
 };
 
+var SESSION_UI = {
+  donePrompt:'That’s it. Did that help at all?',
+  enough:'That’s enough for now.',
+  enoughHelped:'Noted — take what worked with you.',
+  enoughNot:'That’s useful information too. Rest if you need.',
+  enoughSkip:'Session closed. No score kept.'
+};
+
 var ABOUT_UI = {
   title:'About & Legal',
   purpose:'A calm, private place for self-regulation techniques, a journal, and the people around you.',

@@ -2292,3 +2292,19 @@ test.describe('Phase H — self-concept, habits, patterns', () => {
     await expect(page.locator('#subview')).toContainText('not a diagnosis');
   });
 });
+
+test.describe('Phase I — honest session settle', () => {
+  test('finishing a technique shows a calm settle toast', async ({ page }) => {
+    await seedDemo(page);
+    await runSkill(page, 'thought-record');
+    for (let i = 0; i < 12; i++) {
+      const next = page.locator('#runActions button', { hasText: /^(Next|Finish)$/ });
+      if (await next.count() === 0) break;
+      await next.first().click();
+    }
+    await expect(page.locator('#runText')).toContainText('Did that help');
+    await page.getByRole('button', { name: 'It helped' }).click();
+    await expect(page.locator('#toast')).toBeVisible();
+    await expect(page.locator('#toast')).toContainText(/Noted|enough for now/i);
+  });
+});

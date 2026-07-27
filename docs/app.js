@@ -885,7 +885,7 @@
     document.body.style.overflow = ''; stopPacer(); hushVoice(); panicSaveWarning = false;
     destroyOrb('panic');
     var hold = $('.pacer-hold');
-    if (hold) hold.classList.remove('has-webgl-orb');
+    if (hold) { hold.classList.remove('has-webgl-orb'); hold.classList.remove('session-settle'); }
     var css = $('#pacer');
     if (css) css.classList.remove('orb-css-fallback');
   }
@@ -2157,7 +2157,7 @@
     document.body.style.overflow = ''; runState = null; hushVoice();
     destroyOrb('run');
     var hold = $('.run-orb-hold');
-    if (hold) hold.classList.remove('has-webgl-orb');
+    if (hold) { hold.classList.remove('has-webgl-orb'); hold.classList.remove('session-settle'); }
     // Setup mode may have replaced the orb markup, so guard before touching it.
     var o = $('#runOrb'), r = $('#runOrbRing');
     if (o) { o.classList.remove('paced'); o.classList.remove('orb-css-fallback'); o.style.transition = ''; o.style.transform = ''; }
@@ -2168,6 +2168,11 @@
   function finishSkill(helpful) {
     state.skillRuns.push({ t: Date.now(), id: runState.skill.id, helpful: helpful });
     save(); closeRunner(); render();
+    var msg = SESSION_UI.enough;
+    if (helpful === true) msg = SESSION_UI.enoughHelped;
+    else if (helpful === false) msg = SESSION_UI.enoughNot;
+    else if (helpful === null) msg = SESSION_UI.enoughSkip;
+    toast(msg);
   }
   function startSkill(id) {
     var s = SKILLS.filter(function (x) { return x.id === id; })[0];
@@ -2190,7 +2195,9 @@
     $('#runOrb').classList.remove('paced'); $('#runOrb').style.transition = 'transform 1s var(--ease-soft)';
     $('#runOrb').style.transform = 'scale(.82)'; $('#runOrbRing').style.transform = 'scale(.82)';
     $('#runOrbCount').textContent = '';
-    $('#runText').textContent = 'That’s it. Did that help at all?';
+    $('#runText').textContent = SESSION_UI.donePrompt;
+    var hold = $('.run-orb-hold');
+    if (hold) hold.classList.add('session-settle');
     $('#runMeta').textContent = ''; $('#runWhy').style.display = 'none';
     var actions = $('#runActions'); clear(actions);
     actions.appendChild(el('button', { class: 'btn', text: 'It helped', onclick: function () { finishSkill(true); } }));
@@ -4741,7 +4748,7 @@
       : PROGRESS_UI.weekEmpty;
     var runs = state.skillRuns.length, helped = state.skillRuns.filter(function (r) { return r.helpful; }).length;
     var pathN = (state.pathSessions || []).length;
-    insights.appendChild(el('div', { class: 'hero-tile progress-dash' }, [
+    insights.appendChild(el('div', { class: 'hero-tile progress-dash' + (progN ? ' week-bloom' : '') }, [
       el('p', { class: 'ht-meta', text: PROGRESS_UI.title }),
       el('p', { class: 'glance-label', text: PROGRESS_UI.weekLabel }),
       el('div', { class: 'progress-dots', role: 'img', 'aria-label': weekLine }, progDots.map(function (d) {
@@ -4767,7 +4774,7 @@
         el('p', { class: 'st-value', text: patternN ? ('' + patternN) : '—' }),
         el('p', { class: 'p-sm', text: patternN ? PATTERN_UI.heading : PATTERN_UI.noWeekly })
       ]),
-      el('button', { class: 'stat-tile tap', type: 'button', onclick: weeklyOverviewSheet }, [
+      el('button', { class: 'stat-tile tap' + (week ? ' week-bloom' : ''), type: 'button', onclick: weeklyOverviewSheet }, [
         el('p', { class: 'st-label', text: 'Weekly' }),
         el('p', { class: 'st-value', text: week ? ('' + week.days) : '—' }),
         el('p', { class: 'p-sm', text: week ? (week.common + ' · ' + PATTERN_UI.weeklyCommon) : PATTERN_UI.noWeekly })
@@ -5256,7 +5263,7 @@
       }
     });
   }
-  var APP_VERSION = '6.0.7';
+  var APP_VERSION = '6.0.8';
   function settingsGroup(v, title, kids) {
     v.appendChild(el('p', { class: 'eyebrow settings-eyebrow', text: title }));
     var block = el('div', { class: 'settings-block' });
@@ -5717,7 +5724,7 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '6.0.7',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '6.0.8',
     effectiveMotion: effectiveMotion,
     motionCap: function () { return motionCap; },
     loadGsap: loadGsap,

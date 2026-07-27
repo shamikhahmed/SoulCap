@@ -1356,3 +1356,30 @@ hr.sep{border:none;border-top:1px solid var(--line);margin:2px 0}
   opacity:calc(.85 * var(--motion-glow,1));
 }
 .rail-wrap{content-visibility:auto;contain-intrinsic-size:1px 140px}
+
+/* Phase I — honest visual polish (still-safe; no reward loops) */
+@keyframes ambientDrift{
+  0%{transform:translate3d(0,0,0) scale(1)}
+  50%{transform:translate3d(0,-6px,0) scale(1.02)}
+  100%{transform:translate3d(0,0,0) scale(1)}
+}
+.hero-band::before{
+  content:'';position:absolute;inset:-20% -10% auto;height:70%;pointer-events:none;z-index:0;
+  background:radial-gradient(ellipse at 50% 0%,var(--accent-soft),transparent 70%);
+  opacity:.55;animation:ambientDrift 18s var(--ease-soft) infinite;
+}
+.hero-band > *{position:relative;z-index:1}
+:root[data-motion="still"] .hero-band::before{animation:none}
+@media (prefers-reduced-motion: reduce){
+  .hero-band::before{animation:none}
+}
+.week-bloom{
+  box-shadow:var(--shadow-1),0 0 0 1px var(--accent-soft);
+  background:linear-gradient(180deg,var(--accent-soft),var(--surface-2));
+}
+.session-settle .run-orb,
+.session-settle .run-orb-ring{
+  transition:transform 1.2s var(--ease-soft),opacity 1.2s var(--ease-soft);
+  opacity:.88;
+}
+.chip:active,.bs-opt:active,.list-row:active{transform:scale(.985)}
