@@ -132,3 +132,42 @@ restraint, Things 3 density, Stripe's clarity.
 STOP only when P1→P21 are all implemented, verified (`npm run verify` green), versioned (package.json
 + sw.js CACHE + VERSION.json + APP_VERSION all match), documented (CHANGELOG/SAFETY/HANDOVER),
 gallery regenerated, committed and pushed. Then print a per-phase report + final version, and stop.
+
+---
+
+## 5. v6.1 — "In-therapy" companion track (owner request 2026-07-27)
+
+Onboarding gains a private, changeable question: **"Are you currently working with a therapist or
+counsellor?"** (Yes / No / Prefer not to say). It sets a local `careContext` flag only — no account,
+no network, never shared, fully reversible in Settings. When Yes, unlock a **Therapy Companion** set.
+All of it stays non-diagnostic, no crisis numbers, no addiction mechanics; SoulCap positions itself as
+the *space between sessions*, never a replacement for the clinician.
+
+- **P22 — Care-context flag + gentle fork.** The onboarding question + Settings toggle. Copy adapts:
+  in-therapy users see "a place to work between sessions"; others see the standard companion framing.
+- **P23 — Between-sessions journal.** A dedicated log the user can bring to a session: what happened,
+  moods, triggers, wins, questions-for-my-therapist. One-tap "Prepare for my session" view that
+  gathers the last N days into a calm, readable summary the user can read aloud or screenshot. Local
+  only; export is user-initiated share via OS, never automatic.
+- **P24 — Homework / practice tracker.** Therapists assign between-session practice (thought records,
+  exposure steps, behavioural-activation tasks). Let the user add their OWN practice items (free text
+  or from the existing technique library), mark done gently — NO streak pressure, NO adherence score,
+  NO nagging. "Did you get to it?" not "you broke your streak."
+- **P25 — Thought records (CBT worksheet).** Structured situation → automatic thought → evidence for/
+  against → balanced thought → mood re-rating. The single most-assigned CBT tool; pairs with the
+  existing safety kernel on free text. Non-diagnostic, saved locally, addable to the session summary.
+- **P26 — Questions-for-my-therapist parking lot.** Quick capture of things to raise next session, so
+  they aren't forgotten. Surfaces in the "Prepare for my session" view.
+- **P27 — Session rhythm (opt-in, pressure-free).** User can note their session cadence (e.g. weekly)
+  purely to time the "prepare" prompt — a quiet, dismissible nudge the day before, never guilt, never
+  a reminder they "missed" anything. Off by default.
+- **P28 — Coping-plan / safety-plan bridge.** Let the user record, in their own words, the plan they
+  built WITH their therapist (warning signs, coping steps, people/places that help). Lives beside the
+  existing hard-coded Help so it's reachable in a hard moment. Never replaces Help; augments it.
+- **P29 — Boundaries copy pass.** Everywhere the companion track appears, the app is explicit: it does
+  not talk to the therapist, send anything anywhere, or give clinical advice; it holds the user's own
+  material between sessions. About/Legal states this plainly.
+
+Guardrails unchanged (section 3). `careContext` is local, optional, reversible; all new surfaces are
+user-authored content assessed by the existing keyword kernel; nothing is diagnosis; no data leaves
+the device.
