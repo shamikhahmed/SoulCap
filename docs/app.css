@@ -1065,6 +1065,13 @@ hr.sep{border:none;border-top:1px solid var(--line);margin:2px 0}
 .hero-tile .ht-meta{font-size:var(--type-label);letter-spacing:var(--type-label-track);text-transform:uppercase;color:var(--ink-2);font-weight:600;margin:0}
 .hero-tile .ht-title{font-family:var(--voice);font-size:var(--type-heading);line-height:var(--type-heading-lh);font-weight:500;margin:0}
 .hero-tile .ht-reason{font-size:var(--type-callout);line-height:var(--type-callout-lh);color:var(--ink-2);margin:0}
+
+.self-concept-area{margin-bottom:var(--space-3)}
+.self-concept-area textarea{width:100%;min-height:72px;resize:vertical;font:inherit}
+.self-concept-insight{margin-top:var(--space-3)}
+.habit-card{}.habit-loop{display:flex;flex-direction:column;gap:var(--space-2)}
+.habit-effort,.self-concept-effort{width:100%}
+
 .hero-tile.now-suggest{aspect-ratio:auto;min-height:0;justify-content:flex-start;gap:var(--space-2);padding:var(--pad-card)}
 .tile.progress-glance{box-shadow:var(--shadow-1);gap:var(--space-2);justify-content:flex-start;min-height:0}
 .now-micro{margin-top:0}

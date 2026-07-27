@@ -1,4 +1,4 @@
-**Version:** 6.0.6 · SW `soulcap-v606`
+**Version:** 6.0.7 · SW `soulcap-v607`
 
 # SoulCap — Project Handover
 
@@ -6,10 +6,10 @@
 > first — it is the current truth as of 2026-07-27. The sections further down describe an
 > earlier architecture and are kept for reference only.
 
-## Current state (v6.0.6 — 2026-07-27)
+## Current state (v6.0.7 — 2026-07-27)
 
 **The product is the PWA in `docs/`.** Offline-first, local-only, **no network calls after load**.
-Schema **v12**. Phase G: dialog a11y + 200% text / reduced-motion Playwright coverage; panic
+Schema **v13**. Phase H: self-concept, patterns, habits. Prior Phase G: dialog a11y + 200% text / reduced-motion Playwright coverage; panic
 countdown uses `--ink-safe`. FAB off (header Help).
 
 **Gallery:** `npm run gallery` → `docs/screenshots/gallery/` (~436 shots: default + every theme +
@@ -17,7 +17,7 @@ appearance axes). Viewer: `screen-gallery.html` (`npm run gallery:view`).
 Live: https://shamikhahmed.github.io/SoulCap/
 
 ### Schema & ship
-- State `DEFAULT.v = 12` · SW `soulcap-v606` · app **6.0.6** · `package.json` **6.0.6**
+- State `DEFAULT.v = 13` · SW `soulcap-v607` · app **6.0.7** · `package.json` **6.0.7**
 - Ship workflow: bump CACHE + VERSION.json + APP_VERSION + package.json; CHANGELOG;
   SAFETY/HANDOVER (+ README/FEATURES when they drift); gallery; `npm run verify`; push `main`.
 

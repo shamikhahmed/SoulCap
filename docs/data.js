@@ -96,9 +96,96 @@ var PATTERN_UI = {
   weeklyCommon:'appeared most often',
   weeklyNote:'A factual summary of what you recorded — not a score or interpretation.',
   dayBasis:'distinct days',
+  timesBasis:'times marked helpful',
+  viewsBasis:'views',
+  urgesBasis:'urges logged',
+  areasBasis:'areas noted',
+  entriesBasis:'journal entries',
   evidenceNote:'This is a repeated correlation, not a cause or diagnosis. It was calculated only on this device.',
   done:'Done',
-  noWeekly:'Not enough recent check-ins for a summary yet.'
+  noWeekly:'Not enough recent check-ins for a summary yet.',
+  eveningTitle:'Evenings may weigh more',
+  eveningSummary:'Several recent check-ins happened in the evening or late at night.',
+  lowEnergyTitle:'Energy may run lower lately',
+  lowEnergySummary:'You marked energy toward the low end on several check-ins.',
+  helpfulSuffix:' seems to help you',
+  helpfulSummary:'You marked {name} as helpful more than once.',
+  moveCalmTitle:'Movement may settle the next day',
+  moveCalmSummary:'After activation techniques you marked helpful, the next check-in often looked steadier.',
+  experienceTitle:'You keep returning to one experience',
+  experienceSummary:'You opened {name} several times — worth noticing what it names for you.',
+  maskEffortTitle:'Keeping up a front may cost energy',
+  maskEffortSummary:'You rated mask effort high in: {areas}. That is your rating, not a judgement.',
+  habitUrgeTitle:'Urges may cluster around a habit',
+  habitUrgeSummary:'You logged several urges for {name} — noticing the cue is often the useful part.',
+  journalMoodTitle:'A mood may be repeating in your journal',
+  journalMoodSummary:'The same mood showed up in several recent entries.',
+  socialTitle:'Social days may feel heavier',
+  socialSummary:'Check-ins on days you tagged social context often looked harder.',
+  notDiagnosis:'A tendency from your own data — not a diagnosis.'
+};
+
+var SELF_CONCEPT_AREAS = [
+  { key:'work', label:'Work' },
+  { key:'family', label:'Family' },
+  { key:'friends', label:'Friends' },
+  { key:'online', label:'Online' }
+];
+
+var SELF_CONCEPT_UI = {
+  cardTitle:'Two versions of you',
+  cardHint:'How you feel inside vs how you come across — reflective, not a test.',
+  title:'Two versions of you',
+  intro:'A gentle look at self-concept and self-presentation. Write in your own words. Nothing here is scored or judged.',
+  insideLabel:'How I feel inside',
+  outsideLabel:'How I think I come across',
+  insidePlaceholder:'In your own words…',
+  outsidePlaceholder:'In your own words…',
+  effortLabel:'Mask effort',
+  effortHint:'How much energy does keeping that up take? Your rating, 1–5.',
+  effortLow:'Little effort',
+  effortHigh:'A lot of effort',
+  insightHeading:'What you noticed',
+  insightOverlap:'Some overlap in {areas}.',
+  insightDiverge:'A gap in {areas}.',
+  insightEffort:'High mask effort in {areas}.',
+  insightClosing:'Many people carry a gap between the two. Noticing is the point — not closing it.',
+  insightEmpty:'Fill in an area when it feels useful. Skip the rest.',
+  compassionLink:'Self-compassion break',
+  valuesLink:'Values check',
+  saveNote:'Saved on this device only.',
+  notDiagnosis:'Reflection only — not a diagnosis or score.'
+};
+
+var HABIT_UI = {
+  cardTitle:'Habit support',
+  cardHint:'Map a loop, log urges without judgement — no streaks.',
+  title:'Habit support',
+  intro:'Optional habit-loop mapping and urge-surfing. Slips are data, not failure. Nothing is tracked as a score.',
+  empty:'Name a habit you are working with — doom-scrolling, late nights, or anything else.',
+  add:'Add a habit',
+  remove:'Remove habit',
+  nameLabel:'Habit name',
+  namePlaceholder:'e.g. late-night scrolling',
+  cueLabel:'Cue (what triggers it)',
+  cuePlaceholder:'Boredom, stress, alone in bed…',
+  routineLabel:'Routine (what you do)',
+  routinePlaceholder:'Open the app, reach for…',
+  rewardLabel:'Reward (what you get from it)',
+  rewardPlaceholder:'Relief, numbness, connection…',
+  replacementLabel:'Replacement (optional)',
+  replacementPlaceholder:'A kinder option when the urge hits…',
+  loopHeading:'Your habit loop',
+  logUrge:'Log an urge',
+  logSlip:'Log a slip',
+  logNotePlaceholder:'Optional note — one line',
+  logSaved:'Noted — no judgement.',
+  recentLogs:'Recent notes',
+  noLogs:'No urges or slips logged yet.',
+  urgeSurf:'Try urge surfing',
+  urgeSurfHint:'Ride the wave without acting — about five minutes.',
+  slipNote:'A slip is information, not a verdict.',
+  notDiagnosis:'Supportive mapping only — not therapy or a treatment plan.'
 };
 
 var PRESENTATION_UI = {
@@ -1716,7 +1803,15 @@ var SKILLS = [
     mechanism:'Comparing how you spend your time against what you say matters surfaces gaps that low mood usually explains as personal failure.',
     blurb:'For steadier days. What matters, versus where you are spending yourself.',
     steps:['Name three things that matter to you. Not goals — directions.','For each, how much of last week went toward it?','Where is the biggest gap?','One small thing this week that closes it slightly?','Small. This is not a life overhaul.'],
-    source:'Values clarification — ACT' }
+    source:'Values clarification — ACT' },
+
+  { id:'urge-surfing', name:'Urge surfing', domain:'clarity', family:'load',
+    mins:5, capacity:'low', needs:'none', discreet:true,
+    indication:['urge','habit','restless'], contraindication:['acute'],
+    mechanism:'Urges rise, peak, and fall like waves. Observing without acting weakens the habit loop over time.',
+    blurb:'Ride the urge without acting on it.',
+    steps:['Notice where the urge lives in your body.','Name it gently: "There is an urge."','Breathe and watch it — does it shift or spread?','Remind yourself: you do not have to obey it.','Stay with the wave until it eases, even a little.'],
+    source:'Urge surfing — mindfulness-based habit change' }
 ];
 
 var DOMAIN_META = {

@@ -10,6 +10,8 @@
  *  Check-in … recordCheckin, checkinDetailSheet
  *  Path ……… pathSheet, scorePathFamilies, suggestPathSkills
  *  Patterns … derivePatterns, patternSheet, patternsOverviewSheet
+ *  Self-concept … selfConceptSheet, selfConceptInsight
+ *  Habits … habitsOverviewSheet, habitDetailSheet
  *  Screener … screenerPick/Run/ResultSheet
  *  Runner …… startSkill, breathSetup, breathRun, startSteps, closeRunner
  *  Sheets …… openSheet, skillSheet, articleSheet, experienceSheet, settingsSheet
@@ -76,7 +78,7 @@
   /* ── State ─────────────────────────────────────────────────────────────── */
   var KEY = 'soulcap_v1';
   var DEFAULT = {
-    v: 12, onboarded: false, welcomed: false, ageOk: null, consent: false,
+    v: 13, onboarded: false, welcomed: false, ageOk: null, consent: false,
     profile: { name: '', age: '', pronouns: '' },
     history: {},
     concerns: [], checkins: [], skillRuns: [], people: [], links: [],
@@ -99,7 +101,10 @@
     screenerResults: {},
     notices: { clinicalEnglishDismissed: false, seenVersion: null },
     pathSessions: [],
-    pathPrefs: { hide: false }
+    pathPrefs: { hide: false },
+    selfConcept: { areas: {}, updatedAt: null },
+    habits: [],
+    experienceViews: {}
   };
   var VALID_THEMES = { light:1, dark:1, night:1, ocean:1, forest:1, amoled:1 };
   var DRIP_DAY_CAP = 4;
@@ -166,6 +171,10 @@
       p.pathSessions = Array.isArray(p.pathSessions) ? p.pathSessions : [];
       p.pathPrefs = Object.assign(clone(DEFAULT.pathPrefs), p.pathPrefs || {});
       p.pathPrefs.hide = p.pathPrefs.hide === true;
+      p.selfConcept = normalizeSelfConcept(p.selfConcept);
+      p.habits = (Array.isArray(p.habits) ? p.habits : []).map(normalizeHabit);
+      p.experienceViews = p.experienceViews && typeof p.experienceViews === 'object' && !Array.isArray(p.experienceViews)
+        ? p.experienceViews : {};
       p.people = (Array.isArray(p.people) ? p.people : []).map(normalizePerson);
       if (p.locale === 'ur') p.locale = 'rui';
       if (p.locale !== 'en' && p.locale !== 'rui') p.locale = 'en';
@@ -242,7 +251,89 @@
       p.pathPrefs.hide = p.pathPrefs.hide === true;
       p.v = 12; changed = true;
     }
+    if (version < 13) {
+      p.selfConcept = normalizeSelfConcept(p.selfConcept);
+      p.habits = (Array.isArray(p.habits) ? p.habits : []).map(normalizeHabit);
+      p.experienceViews = p.experienceViews && typeof p.experienceViews === 'object' && !Array.isArray(p.experienceViews)
+        ? p.experienceViews : {};
+      p.v = 13; changed = true;
+    }
     return { value: p, changed: changed };
+  }
+  function normalizeSelfConcept(sc) {
+    sc = sc && typeof sc === 'object' ? sc : { areas: {}, updatedAt: null };
+    sc.areas = sc.areas && typeof sc.areas === 'object' ? sc.areas : {};
+    SELF_CONCEPT_AREAS.forEach(function (area) {
+      var item = sc.areas[area.key] && typeof sc.areas[area.key] === 'object' ? sc.areas[area.key] : {};
+      var effort = typeof item.effort === 'number' ? Math.floor(item.effort) : 0;
+      sc.areas[area.key] = {
+        inside: typeof item.inside === 'string' ? item.inside : '',
+        outside: typeof item.outside === 'string' ? item.outside : '',
+        effort: effort >= 1 && effort <= 5 ? effort : 0
+      };
+    });
+    sc.updatedAt = typeof sc.updatedAt === 'number' ? sc.updatedAt : null;
+    return sc;
+  }
+  function normalizeHabit(h) {
+    h = h || {};
+    var logs = Array.isArray(h.logs) ? h.logs : [];
+    return {
+      id: h.id || uid(),
+      name: typeof h.name === 'string' ? h.name : '',
+      cue: typeof h.cue === 'string' ? h.cue : '',
+      routine: typeof h.routine === 'string' ? h.routine : '',
+      reward: typeof h.reward === 'string' ? h.reward : '',
+      replacement: typeof h.replacement === 'string' ? h.replacement : '',
+      logs: logs.map(function (log) {
+        log = log || {};
+        return {
+          t: typeof log.t === 'number' ? log.t : Date.now(),
+          kind: log.kind === 'slip' ? 'slip' : 'urge',
+          note: typeof log.note === 'string' ? log.note : ''
+        };
+      })
+    };
+  }
+  function selfConceptFilledCount() {
+    var n = 0;
+    SELF_CONCEPT_AREAS.forEach(function (area) {
+      var item = (state.selfConcept.areas || {})[area.key] || {};
+      if ((item.inside || '').trim() || (item.outside || '').trim() || item.effort) n++;
+    });
+    return n;
+  }
+  function sharedWordCount(a, b) {
+    var words = {}, count = 0;
+    a.toLowerCase().split(/\s+/).forEach(function (w) {
+      if (w.length > 2) words[w] = true;
+    });
+    b.toLowerCase().split(/\s+/).forEach(function (w) {
+      if (w.length > 2 && words[w]) { count++; delete words[w]; }
+    });
+    return count;
+  }
+  function selfConceptInsight() {
+    var overlap = [], diverge = [], highEffort = [];
+    SELF_CONCEPT_AREAS.forEach(function (area) {
+      var item = (state.selfConcept.areas || {})[area.key] || {};
+      var inside = (item.inside || '').trim();
+      var outside = (item.outside || '').trim();
+      if (item.effort >= 4) highEffort.push(area.label);
+      if (inside && outside) {
+        if (inside.toLowerCase() === outside.toLowerCase() || sharedWordCount(inside, outside) >= 2) {
+          overlap.push(area.label);
+        } else {
+          diverge.push(area.label);
+        }
+      }
+    });
+    return { overlap: overlap, diverge: diverge, highEffort: highEffort };
+  }
+  function trackExperienceView(id) {
+    if (!id) return;
+    state.experienceViews[id] = (state.experienceViews[id] || 0) + 1;
+    save();
   }
   function normalizePerson(p) {
     p = p || {};
@@ -1263,6 +1354,10 @@
     var item = CHECKIN_TRIGGERS.filter(function (trigger) { return trigger.key === key; })[0];
     return item ? item.label : key;
   }
+  function patternCountLabel(pattern) {
+    var basis = pattern.basis || PATTERN_UI.dayBasis;
+    return pattern.count + ' ' + basis;
+  }
   function patternConfidenceLabel(count) {
     if (count >= 15) return 'High confidence';
     if (count >= 8) return 'Medium confidence';
@@ -1391,12 +1486,43 @@
           dates:late.map(function (c) { return c.t; }) });
       }
 
+      var evening = checkins.filter(function (c) {
+        var hour = new Date(c.t).getHours();
+        return hour >= 18 && hour <= 23;
+      });
+      var eveningHard = evening.filter(function (c) {
+        return c.state === 'Heavy' || c.state === 'Wired';
+      });
+      if (distinctDays(evening) >= 4 && distinctDays(eveningHard) >= 3) {
+        patterns.push({ id:'evening-weight', title:PATTERN_UI.eveningTitle, summary:PATTERN_UI.eveningSummary,
+          count:distinctDays(eveningHard), evidence:eveningHard.map(function (c) { return c.id; }),
+          dates:eveningHard.map(function (c) { return c.t; }) });
+      }
+
       var noiseRated = checkins.filter(function (c) { return typeof (c.dims || {}).noise === 'number'; });
       var highNoise = noiseRated.filter(function (c) { return c.dims.noise >= 4; });
       if (distinctDays(noiseRated) >= 5 && distinctDays(highNoise) >= 3) {
         patterns.push({ id:'high-noise', title:PATTERN_UI.noiseTitle, summary:PATTERN_UI.noiseSummary,
           count:distinctDays(highNoise), evidence:highNoise.map(function (c) { return c.id; }),
           dates:highNoise.map(function (c) { return c.t; }) });
+      }
+
+      var energyRated = checkins.filter(function (c) { return typeof (c.dims || {}).energy === 'number'; });
+      var lowEnergy = energyRated.filter(function (c) { return c.dims.energy <= 2; });
+      if (distinctDays(energyRated) >= 5 && distinctDays(lowEnergy) >= 3) {
+        patterns.push({ id:'low-energy', title:PATTERN_UI.lowEnergyTitle, summary:PATTERN_UI.lowEnergySummary,
+          count:distinctDays(lowEnergy), evidence:lowEnergy.map(function (c) { return c.id; }),
+          dates:lowEnergy.map(function (c) { return c.t; }) });
+      }
+
+      var socialTagged = checkins.filter(function (c) {
+        return (c.triggers || []).indexOf('relationship') !== -1 || (c.triggers || []).indexOf('family') !== -1
+          || (typeof (c.dims || {}).social === 'number' && c.dims.social <= 2);
+      });
+      if (distinctDays(socialTagged) >= 3) {
+        patterns.push({ id:'social-weight', title:PATTERN_UI.socialTitle, summary:PATTERN_UI.socialSummary,
+          count:distinctDays(socialTagged), evidence:socialTagged.map(function (c) { return c.id; }),
+          dates:socialTagged.map(function (c) { return c.t; }) });
       }
 
       var triggerDays = {};
@@ -1415,6 +1541,123 @@
           dates:records.map(function (c) { return c.t; }) });
       });
     }
+
+    var helpfulCounts = {};
+    state.skillRuns.forEach(function (r) {
+      if (r.helpful === true) helpfulCounts[r.id] = (helpfulCounts[r.id] || 0) + 1;
+    });
+    Object.keys(helpfulCounts).forEach(function (id) {
+      if (helpfulCounts[id] < 2) return;
+      var skill = SKILLS.filter(function (s) { return s.id === id; })[0];
+      if (!skill) return;
+      var runs = state.skillRuns.filter(function (r) { return r.id === id && r.helpful === true; });
+      patterns.push({
+        id:'helpful-' + id,
+        title:skill.name + PATTERN_UI.helpfulSuffix,
+        summary:PATTERN_UI.helpfulSummary.replace('{name}', skill.name.toLowerCase()),
+        count:helpfulCounts[id],
+        basis:PATTERN_UI.timesBasis,
+        evidence:runs.map(function (r) { return r.t; }),
+        dates:runs.map(function (r) { return r.t; })
+      });
+    });
+
+    var activationRuns = state.skillRuns.filter(function (r) {
+      if (r.helpful !== true) return false;
+      var skill = SKILLS.filter(function (s) { return s.id === r.id; })[0];
+      return skill && skill.family === 'activation';
+    });
+    if (activationRuns.length >= 2) {
+      var calmAfter = [], calmDates = [];
+      activationRuns.forEach(function (r) {
+        var next = null, i;
+        for (i = 0; i < checkins.length; i++) {
+          if (checkins[i].t > r.t && checkins[i].t - r.t < 86400000) { next = checkins[i]; break; }
+        }
+        if (next && (next.state === 'Steady' || ((next.dims || {}).noise || 5) <= 2)) {
+          calmAfter.push(next.id);
+          calmDates.push(next.t);
+        }
+      });
+      if (calmAfter.length >= 2) {
+        patterns.push({
+          id:'move-calmer',
+          title:PATTERN_UI.moveCalmTitle,
+          summary:PATTERN_UI.moveCalmSummary,
+          count:calmAfter.length,
+          evidence:calmAfter,
+          dates:calmDates
+        });
+      }
+    }
+
+    Object.keys(state.experienceViews || {}).forEach(function (expId) {
+      var views = state.experienceViews[expId];
+      if (views < 3) return;
+      var exp = experienceById(expId);
+      if (!exp) return;
+      patterns.push({
+        id:'experience-' + expId,
+        title:PATTERN_UI.experienceTitle,
+        summary:PATTERN_UI.experienceSummary.replace('{name}', exp.name.toLowerCase()),
+        count:views,
+        basis:PATTERN_UI.viewsBasis,
+        evidence:[expId],
+        dates:[Date.now()]
+      });
+    });
+
+    var moodCounts = {};
+    state.journal.slice(-12).forEach(function (entry) {
+      if (!entry.mood) return;
+      moodCounts[entry.mood] = (moodCounts[entry.mood] || 0) + 1;
+    });
+    Object.keys(moodCounts).forEach(function (mood) {
+      if (moodCounts[mood] < 3) return;
+      patterns.push({
+        id:'journal-mood-' + mood,
+        title:PATTERN_UI.journalMoodTitle,
+        summary:PATTERN_UI.journalMoodSummary,
+        count:moodCounts[mood],
+        basis:PATTERN_UI.entriesBasis,
+        evidence:state.journal.filter(function (e) { return e.mood === mood; }).map(function (e) { return e.id; }),
+        dates:state.journal.filter(function (e) { return e.mood === mood; }).map(function (e) { return e.t; })
+      });
+    });
+
+    var highMask = [];
+    SELF_CONCEPT_AREAS.forEach(function (area) {
+      var item = (state.selfConcept.areas || {})[area.key] || {};
+      if (item.effort >= 4) highMask.push(area.label);
+    });
+    if (highMask.length) {
+      patterns.push({
+        id:'self-concept-effort',
+        title:PATTERN_UI.maskEffortTitle,
+        summary:PATTERN_UI.maskEffortSummary.replace('{areas}', highMask.join(', ')),
+        count:highMask.length,
+        basis:PATTERN_UI.areasBasis,
+        evidence:['self-concept'],
+        dates:[state.selfConcept.updatedAt || Date.now()],
+        tier:'declared'
+      });
+    }
+
+    (state.habits || []).forEach(function (habit) {
+      var urges = (habit.logs || []).filter(function (log) { return log.kind === 'urge'; });
+      if (urges.length < 3) return;
+      patterns.push({
+        id:'habit-urge-' + habit.id,
+        title:PATTERN_UI.habitUrgeTitle,
+        summary:PATTERN_UI.habitUrgeSummary.replace('{name}', (habit.name || 'a habit').toLowerCase()),
+        count:urges.length,
+        basis:PATTERN_UI.urgesBasis,
+        evidence:urges.map(function (log) { return log.t; }),
+        dates:urges.map(function (log) { return log.t; }),
+        tier:'declared'
+      });
+    });
+
     return patterns.filter(function (pattern) {
       var decision = state.patternPrefs.decisions[pattern.id];
       return decision !== 'rejected' && decision !== 'hidden';
@@ -1434,13 +1677,14 @@
       build: function (p) {
         p.appendChild(el('p', { class: 'p', text: pattern.summary }));
         var conf = patternConfidenceLabel(pattern.count);
-        p.appendChild(el('p', { class: 'meta', text: pattern.count + ' ' + PATTERN_UI.dayBasis + (conf ? ' · ' + conf : '') }));
+        p.appendChild(el('p', { class: 'meta', text: patternCountLabel(pattern) + (conf ? ' · ' + conf : '') }));
         var dates = {};
         pattern.dates.forEach(function (t) { dates[localDayKey(t)] = t; });
         Object.keys(dates).sort().reverse().forEach(function (key) {
           p.appendChild(el('p', { class: 'p-sm', text: new Date(dates[key]).toLocaleDateString(undefined, { weekday:'short', day:'numeric', month:'short', year:'numeric' }) }));
         });
         p.appendChild(el('p', { class: 'notice', text: PATTERN_UI.evidenceNote }));
+        p.appendChild(el('p', { class: 'reason', text: PATTERN_UI.notDiagnosis }));
         p.appendChild(el('button', { class: 'btn', text: tUi('pattern', 'done', PATTERN_UI), onclick: function () { popView(); } }));
       }
     });
@@ -1451,14 +1695,16 @@
       title: PATTERN_UI.heading,
       build: function (p) {
         p.appendChild(el('p', { class: 'p-sm', text: PATTERN_UI.intro }));
+        p.appendChild(el('p', { class: 'reason', text: PATTERN_UI.notDiagnosis }));
         var any = false;
         derivePatterns().forEach(function (pattern) {
           any = true;
           var decision = state.patternPrefs.decisions[pattern.id];
+          var isDeclared = pattern.tier === 'declared';
           var actions = [
             el('button', { class: 'chip', text: tUi('pattern', 'evidence', PATTERN_UI), onclick: function () { patternSheet(pattern); } })
           ];
-          if (decision !== 'confirmed') {
+          if (decision !== 'confirmed' && !isDeclared) {
             actions.push(el('button', { class: 'chip', text: tUi('pattern', 'confirm', PATTERN_UI), onclick: function () { setPatternDecision(pattern.id, 'confirmed'); patternsOverviewSheet(); } }));
             actions.push(el('button', { class: 'chip', text: tUi('pattern', 'reject', PATTERN_UI), onclick: function () { setPatternDecision(pattern.id, 'rejected'); patternsOverviewSheet(); } }));
           }
@@ -1466,10 +1712,10 @@
           p.appendChild(el('div', { class: 'row pattern-row' }, [
             el('div', {}, [
               el('div', { class: 'lab', text: pattern.title }),
-              el('div', { class: 'sub', text: pattern.summary + ' Based on ' + pattern.count + ' ' + PATTERN_UI.dayBasis + '.' + (patternConfidenceLabel(pattern.count) ? ' ' + patternConfidenceLabel(pattern.count) + '.' : '') }),
+              el('div', { class: 'sub', text: pattern.summary + ' Based on ' + patternCountLabel(pattern) + '.' + (patternConfidenceLabel(pattern.count) ? ' ' + patternConfidenceLabel(pattern.count) + '.' : '') }),
               el('div', { class: 'chips pattern-actions' }, actions)
             ]),
-            el('span', { class: decision === 'confirmed' ? 'tier declared' : 'tier guess', text: decision === 'confirmed' ? tUi('pattern', 'confirmed', PATTERN_UI) : tUi('pattern', 'guess', PATTERN_UI) })
+            el('span', { class: isDeclared || decision === 'confirmed' ? 'tier declared' : 'tier guess', text: isDeclared ? 'You said' : (decision === 'confirmed' ? tUi('pattern', 'confirmed', PATTERN_UI) : tUi('pattern', 'guess', PATTERN_UI)) })
           ]));
         });
         if (!any) {
@@ -2617,6 +2863,7 @@
   function experienceSheet(id) {
     var exp = experienceById(id);
     if (!exp) return;
+    trackExperienceView(id);
     pushView({
       id: 'exp-' + exp.id,
       title: exp.name,
@@ -3263,6 +3510,7 @@
       v.appendChild(el('div', { class: 'calm-more section-block' }, [
         el('p', { class: 'section-label', text: tUi('me', 'calmMore', { calmMore: 'Also here' }) }),
         el('div', { class: 'list-group' }, [
+          listRow({ className: 'habit-card', title: HABIT_UI.cardTitle, meta: HABIT_UI.cardHint, onclick: habitsOverviewSheet }),
           listRow({ className: 'path-card', title: PATH_UI.cardTitle, meta: PATH_UI.calmHint, onclick: pathSheet }),
           listRow({ title: LIBRARY_UI.title, meta: LIBRARY_UI.homeHint, onclick: function () { calm.section = 'library'; calm.browse = false; render(); } }),
           listRow({ title: EXPERIENCE_PICKER_UI.cardTitle, meta: EXPERIENCE_PICKER_UI.calmHint, onclick: experiencePickerSheet }),
@@ -4538,6 +4786,18 @@
     var toolsGroup = el('div', { class: 'list-group' });
     var filled = planFilled();
     toolsGroup.appendChild(listRow({
+      className: 'self-concept-card',
+      title: SELF_CONCEPT_UI.cardTitle,
+      meta: selfConceptFilledCount() ? (selfConceptFilledCount() + ' area' + (selfConceptFilledCount() === 1 ? '' : 's') + ' noted') : SELF_CONCEPT_UI.cardHint,
+      onclick: selfConceptSheet
+    }));
+    toolsGroup.appendChild(listRow({
+      className: 'habit-card',
+      title: HABIT_UI.cardTitle,
+      meta: state.habits.length ? (state.habits.length + ' habit' + (state.habits.length === 1 ? '' : 's')) : HABIT_UI.cardHint,
+      onclick: habitsOverviewSheet
+    }));
+    toolsGroup.appendChild(listRow({
       title: tUi('me', 'myPlan', { myPlan: 'My plan' }),
       meta: filled ? (filled + '/' + SAFETY_PLAN_STEPS.length + ' filled') : 'Write it while you’re steady',
       onclick: safetyPlanSheet
@@ -4681,6 +4941,205 @@
       }
     });
   }
+  function selfConceptSheet() {
+    pushOrReplaceView({
+      id: 'self-concept',
+      title: SELF_CONCEPT_UI.title,
+      build: function (p) {
+        state.selfConcept = normalizeSelfConcept(state.selfConcept);
+        p.appendChild(el('p', { class: 'p-sm', text: SELF_CONCEPT_UI.intro }));
+        p.appendChild(el('p', { class: 'reason', text: SELF_CONCEPT_UI.notDiagnosis }));
+        SELF_CONCEPT_AREAS.forEach(function (area) {
+          var item = state.selfConcept.areas[area.key];
+          var inside = el('textarea', {
+            rows: 2,
+            maxlength: 280,
+            placeholder: SELF_CONCEPT_UI.insidePlaceholder,
+            'aria-label': area.label + ' — ' + SELF_CONCEPT_UI.insideLabel,
+            value: item.inside || ''
+          });
+          var outside = el('textarea', {
+            rows: 2,
+            maxlength: 280,
+            placeholder: SELF_CONCEPT_UI.outsidePlaceholder,
+            'aria-label': area.label + ' — ' + SELF_CONCEPT_UI.outsideLabel,
+            value: item.outside || ''
+          });
+          var effortVal = el('span', { class: 'meta', text: item.effort ? (item.effort + ' / 5') : 'Not set' });
+          var effort = el('input', {
+            type: 'range', min: 0, max: 5, step: 1, value: item.effort || 0,
+            'aria-label': area.label + ' — ' + SELF_CONCEPT_UI.effortLabel,
+            'aria-valuetext': item.effort ? (item.effort + ' of 5') : 'Not set'
+          });
+          function persistArea() {
+            item.inside = inside.value.trim().slice(0, 280);
+            item.outside = outside.value.trim().slice(0, 280);
+            state.selfConcept.updatedAt = Date.now();
+            save();
+            renderInsight();
+          }
+          inside.addEventListener('change', persistArea);
+          outside.addEventListener('change', persistArea);
+          wireSafetyText(inside, persistArea);
+          wireSafetyText(outside, persistArea);
+          effort.addEventListener('input', function () {
+            var n = parseInt(effort.value, 10);
+            item.effort = n >= 1 && n <= 5 ? n : 0;
+            effortVal.textContent = n ? (n + ' / 5') : 'Not set';
+            effort.setAttribute('aria-valuetext', n ? (n + ' of 5') : 'Not set');
+          });
+          effort.addEventListener('change', function () {
+            state.selfConcept.updatedAt = Date.now();
+            save();
+            renderInsight();
+          });
+          p.appendChild(el('div', { class: 'self-concept-area stack' }, [
+            el('p', { class: 'eyebrow', text: area.label }),
+            el('p', { class: 'lab', text: SELF_CONCEPT_UI.insideLabel }),
+            inside,
+            el('p', { class: 'lab', text: SELF_CONCEPT_UI.outsideLabel }),
+            outside,
+            el('div', { class: 'dimension-head' }, [
+              el('span', { class: 'lab', text: SELF_CONCEPT_UI.effortLabel }),
+              effortVal
+            ]),
+            el('p', { class: 'p-sm', text: SELF_CONCEPT_UI.effortHint }),
+            effort,
+            el('div', { class: 'dimension-ends' }, [
+              el('span', { text: SELF_CONCEPT_UI.effortLow }),
+              el('span', { text: SELF_CONCEPT_UI.effortHigh })
+            ])
+          ]));
+        });
+        var insightBox = el('div', { class: 'notice self-concept-insight' });
+        p.appendChild(insightBox);
+        function renderInsight() {
+          clear(insightBox);
+          var insight = selfConceptInsight();
+          var lines = [];
+          if (insight.overlap.length) lines.push(SELF_CONCEPT_UI.insightOverlap.replace('{areas}', insight.overlap.join(', ')));
+          if (insight.diverge.length) lines.push(SELF_CONCEPT_UI.insightDiverge.replace('{areas}', insight.diverge.join(', ')));
+          if (insight.highEffort.length) lines.push(SELF_CONCEPT_UI.insightEffort.replace('{areas}', insight.highEffort.join(', ')));
+          if (lines.length) {
+            insightBox.appendChild(el('p', { class: 'eyebrow', text: SELF_CONCEPT_UI.insightHeading }));
+            lines.forEach(function (line) { insightBox.appendChild(el('p', { class: 'p-sm', text: line })); });
+            insightBox.appendChild(el('p', { class: 'p-voice', text: SELF_CONCEPT_UI.insightClosing }));
+          } else {
+            insightBox.appendChild(el('p', { class: 'p-sm', text: SELF_CONCEPT_UI.insightEmpty }));
+          }
+        }
+        renderInsight();
+        p.appendChild(el('p', { class: 'eyebrow mt-2', text: 'Techniques that may fit' }));
+        p.appendChild(el('div', { class: 'chips' }, [
+          el('button', { class: 'chip', text: SELF_CONCEPT_UI.compassionLink, onclick: function () { closeSubview(); skillSheet('self-compassion-break'); } }),
+          el('button', { class: 'chip', text: SELF_CONCEPT_UI.valuesLink, onclick: function () { closeSubview(); skillSheet('values-check'); } })
+        ]));
+        p.appendChild(el('p', { class: 'meta', text: SELF_CONCEPT_UI.saveNote }));
+      }
+    });
+  }
+  function habitsOverviewSheet() {
+    pushOrReplaceView({
+      id: 'habits',
+      title: HABIT_UI.title,
+      build: function (p) {
+        p.appendChild(el('p', { class: 'p-sm', text: HABIT_UI.intro }));
+        p.appendChild(el('p', { class: 'reason', text: HABIT_UI.notDiagnosis }));
+        if (!state.habits.length) p.appendChild(el('p', { class: 'p-sm', text: HABIT_UI.empty }));
+        state.habits.forEach(function (habit) {
+          var urgeN = (habit.logs || []).filter(function (log) { return log.kind === 'urge'; }).length;
+          p.appendChild(listRow({
+            title: habit.name || HABIT_UI.namePlaceholder,
+            meta: [habit.cue, urgeN ? (urgeN + ' urge' + (urgeN === 1 ? '' : 's') + ' logged') : ''].filter(Boolean).join(' · ') || HABIT_UI.loopHeading,
+            onclick: function () { habitDetailSheet(habit.id); }
+          }));
+        });
+        p.appendChild(el('button', { class: 'btn ghost', text: HABIT_UI.add, onclick: function () {
+          var h = normalizeHabit({ id: uid(), name: '' });
+          state.habits.push(h);
+          save();
+          habitDetailSheet(h.id);
+        } }));
+      }
+    });
+  }
+  function habitById(id) {
+    for (var i = 0; i < state.habits.length; i++) {
+      if (state.habits[i].id === id) return state.habits[i];
+    }
+    return null;
+  }
+  function habitDetailSheet(id) {
+    var habit = habitById(id);
+    if (!habit) return;
+    pushOrReplaceView({
+      id: 'habit-' + id,
+      title: habit.name || HABIT_UI.title,
+      build: function (p) {
+        function field(label, key, placeholder) {
+          var inp = el('input', {
+            type: 'text',
+            maxlength: 160,
+            placeholder: placeholder,
+            'aria-label': label,
+            value: habit[key] || ''
+          });
+          inp.addEventListener('change', function () {
+            habit[key] = inp.value.trim().slice(0, 160);
+            save();
+          });
+          wireSafetyText(inp, function () {
+            habit[key] = inp.value.trim().slice(0, 160);
+            save();
+          });
+          return el('div', { class: 'stack' }, [el('p', { class: 'lab', text: label }), inp]);
+        }
+        p.appendChild(field(HABIT_UI.nameLabel, 'name', HABIT_UI.namePlaceholder));
+        p.appendChild(el('p', { class: 'eyebrow mt-2', text: HABIT_UI.loopHeading }));
+        p.appendChild(field(HABIT_UI.cueLabel, 'cue', HABIT_UI.cuePlaceholder));
+        p.appendChild(field(HABIT_UI.routineLabel, 'routine', HABIT_UI.routinePlaceholder));
+        p.appendChild(field(HABIT_UI.rewardLabel, 'reward', HABIT_UI.rewardPlaceholder));
+        p.appendChild(field(HABIT_UI.replacementLabel, 'replacement', HABIT_UI.replacementPlaceholder));
+        p.appendChild(el('div', { class: 'chips mt-2' }, [
+          el('button', { class: 'chip', text: HABIT_UI.logUrge, onclick: function () { habitLogSheet(id, 'urge'); } }),
+          el('button', { class: 'chip', text: HABIT_UI.logSlip, onclick: function () { habitLogSheet(id, 'slip'); } }),
+          el('button', { class: 'chip', text: HABIT_UI.urgeSurf, onclick: function () { closeSubview(); startSkill('urge-surfing'); } })
+        ]));
+        p.appendChild(el('p', { class: 'p-sm', text: HABIT_UI.urgeSurfHint }));
+        p.appendChild(el('p', { class: 'eyebrow mt-2', text: HABIT_UI.recentLogs }));
+        var logs = (habit.logs || []).slice().sort(function (a, b) { return b.t - a.t; }).slice(0, 8);
+        if (!logs.length) p.appendChild(el('p', { class: 'p-sm', text: HABIT_UI.noLogs }));
+        logs.forEach(function (log) {
+          var when = new Date(log.t).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' });
+          p.appendChild(el('p', { class: 'p-sm', text: when + ' · ' + (log.kind === 'slip' ? HABIT_UI.logSlip : HABIT_UI.logUrge) + (log.note ? (' — ' + log.note) : '') }));
+        });
+        p.appendChild(el('button', { class: 'btn quiet', text: HABIT_UI.remove, onclick: function () {
+          state.habits = state.habits.filter(function (h) { return h.id !== id; });
+          save();
+          habitsOverviewSheet();
+        } }));
+      }
+    });
+  }
+  function habitLogSheet(id, kind) {
+    var habit = habitById(id);
+    if (!habit) return;
+    openSheet(function (p) {
+      p.appendChild(el('h2', { class: 'h-sec', text: kind === 'slip' ? HABIT_UI.logSlip : HABIT_UI.logUrge }));
+      if (kind === 'slip') p.appendChild(el('p', { class: 'p-sm', text: HABIT_UI.slipNote }));
+      var note = el('input', { type: 'text', maxlength: 120, placeholder: HABIT_UI.logNotePlaceholder, 'aria-label': HABIT_UI.logNotePlaceholder });
+      wireSafetyText(note);
+      p.appendChild(note);
+      p.appendChild(el('button', { class: 'btn', text: 'Save', onclick: function () {
+        habit.logs = habit.logs || [];
+        habit.logs.push({ t: Date.now(), kind: kind === 'slip' ? 'slip' : 'urge', note: note.value.trim().slice(0, 120) });
+        save();
+        closeSheet();
+        habitDetailSheet(id);
+      } }));
+      p.appendChild(el('button', { class: 'btn quiet', text: CHECKIN_UI.cancel, onclick: closeSheet }));
+    });
+  }
   function principlesSheet() {
     pushOrReplaceView({
       id: 'principles',
@@ -4777,11 +5236,27 @@
             el('span', { class: 'tier observed', text: 'You tried' })
           ]));
         });
+        if (selfConceptFilledCount()) {
+          anyKnow = true;
+          var scInsight = selfConceptInsight();
+          p.appendChild(el('div', { class: 'row pattern-row' }, [
+            el('div', {}, [
+              el('div', { class: 'lab', text: SELF_CONCEPT_UI.cardTitle }),
+              el('div', { class: 'sub', text: scInsight.diverge.length
+                ? SELF_CONCEPT_UI.insightDiverge.replace('{areas}', scInsight.diverge.join(', '))
+                : SELF_CONCEPT_UI.cardHint }),
+              el('div', { class: 'chips pattern-actions' }, [
+                el('button', { class: 'chip', text: 'Open', onclick: selfConceptSheet })
+              ])
+            ]),
+            el('span', { class: 'tier declared', text: 'You said' })
+          ]));
+        }
         if (!anyKnow) p.appendChild(emptyState({ body: tUi('empty', 'knows', EMPTY_UI) }));
       }
     });
   }
-  var APP_VERSION = '6.0.6';
+  var APP_VERSION = '6.0.7';
   function settingsGroup(v, title, kids) {
     v.appendChild(el('p', { class: 'eyebrow settings-eyebrow', text: title }));
     var block = el('div', { class: 'settings-block' });
@@ -5118,6 +5593,7 @@
       { id: uid(), name: 'Usman', type: 'COLLEAGUE', ring: 'r2', supportive: .3, drain: .6, hard: false, suggestible: true, lastContact: null },
       { id: uid(), name: 'Dad', type: 'FAMILY', ring: 'r2', supportive: .3, drain: .8, hard: true, suggestible: true, lastContact: null }
     ];
+    state.selfConcept = normalizeSelfConcept(state.selfConcept);
     save();
   }
 
@@ -5241,7 +5717,7 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '6.0.6',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '6.0.7',
     effectiveMotion: effectiveMotion,
     motionCap: function () { return motionCap; },
     loadGsap: loadGsap,
@@ -5328,6 +5804,8 @@
           else if (SCREENERS[0]) screenerResultSheet(SCREENERS[0].id);
           break;
         case 'principles': principlesSheet(); break;
+        case 'self-concept': selfConceptSheet(); break;
+        case 'habits': habitsOverviewSheet(); break;
         case 'manual': manualSheet(); break;
         case 'patterns': patternsOverviewSheet(); break;
         case 'weekly': weeklyOverviewSheet(); break;

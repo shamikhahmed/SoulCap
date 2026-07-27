@@ -105,7 +105,7 @@ test.describe('v0.9 local model', () => {
       const stored = JSON.parse(localStorage.getItem('soulcap_v1')!);
       return { state, stored };
     });
-    expect(result.state.v).toBe(12);
+    expect(result.state.v).toBe(13);
     expect(result.state.checkins[0]).toMatchObject({
       id: 'checkin-1700000000000-0',
       state: 'Wired',
@@ -116,7 +116,7 @@ test.describe('v0.9 local model', () => {
     expect(result.state.drip.answers).toEqual({});
     expect(result.state.drip.skipped).toEqual({});
     expect(result.state.drip.askedToday).toEqual([]);
-    expect(result.stored.v).toBe(12);
+    expect(result.stored.v).toBe(13);
     expect(result.stored.profile.name).toBe('Migration test');
   });
 
@@ -135,7 +135,7 @@ test.describe('v0.9 local model', () => {
       memory: (window as any).__soulcap.getState(),
       stored: JSON.parse(localStorage.getItem('soulcap_v1')!)
     }));
-    expect(result.memory.v).toBe(12);
+    expect(result.memory.v).toBe(13);
     expect(result.memory.checkins[0]).toMatchObject({ state: 'Flat', dims: {}, triggers: [] });
     expect(result.stored.v).toBe(5);
     expect(result.stored.checkins[0]).toEqual({ t: 1700000000000, state: 'Flat' });
@@ -259,7 +259,7 @@ test.describe('v1.0 offline library and daily supports', () => {
       state: (window as any).__soulcap.getState(),
       stored: JSON.parse(localStorage.getItem('soulcap_v1')!)
     }));
-    expect(result.state.v).toBe(12);
+    expect(result.state.v).toBe(13);
     expect(result.state.profile.name).toBe('Version six');
     expect(result.state.checkins[0].id).toBe('kept');
     expect(result.state.dailySupports).toEqual({ selected: [], days: {} });
@@ -268,7 +268,7 @@ test.describe('v1.0 offline library and daily supports', () => {
     expect(result.state.drip.askedToday).toEqual([]);
     expect(result.state.userModel).toEqual({});
     expect(result.state.locale).toBe('en');
-    expect(result.stored.v).toBe(12);
+    expect(result.stored.v).toBe(13);
   });
 
   test('library search announces result count for assistive tech', async ({ page }) => {
@@ -509,7 +509,7 @@ test.describe('v1.9.3 reflection screeners', () => {
     await page.goto('/');
     await page.waitForFunction(() => Boolean((window as any).__soulcap));
     const v = await page.evaluate(() => (window as any).__soulcap.getState().v);
-    expect(v).toBe(12);
+    expect(v).toBe(13);
     const results = await page.evaluate(() => (window as any).__soulcap.getState().screenerResults);
     expect(results).toEqual({});
   });
@@ -527,10 +527,31 @@ test.describe('v1.9.3 reflection screeners', () => {
       const s = (window as any).__soulcap.getState();
       return { v: s.v, pathSessions: s.pathSessions, pathPrefs: s.pathPrefs };
     });
-    expect(result.v).toBe(12);
+    expect(result.v).toBe(13);
     expect(result.pathSessions).toEqual([]);
     expect(result.pathPrefs).toEqual({ hide: false });
   });
+
+  test('schema migrates to v13 with selfConcept and habits', async ({ page }) => {
+    await page.addInitScript(() => {
+      localStorage.setItem('soulcap_v1', JSON.stringify({
+        v: 12, welcomed: true, onboarded: true, ageOk: true, consent: true,
+        profile: { name: 'Twelve' }, pathSessions: [], pathPrefs: { hide: false }
+      }));
+    });
+    await page.goto('/');
+    await page.waitForFunction(() => Boolean((window as any).__soulcap));
+    const result = await page.evaluate(() => {
+      const s = (window as any).__soulcap.getState();
+      return { v: s.v, selfConcept: s.selfConcept, habits: s.habits, experienceViews: s.experienceViews };
+    });
+    expect(result.v).toBe(13);
+    expect(result.selfConcept.updatedAt).toBeNull();
+    expect(Object.keys(result.selfConcept.areas).sort()).toEqual(['family', 'friends', 'online', 'work']);
+    expect(result.habits).toEqual([]);
+    expect(result.experienceViews).toEqual({});
+  });
+
 });
 
 test.describe('v2.1 Guided Path', () => {
@@ -701,7 +722,7 @@ test.describe('v1.1 adaptive drip, themes, locale', () => {
       state: (window as any).__soulcap.getState(),
       stored: JSON.parse(localStorage.getItem('soulcap_v1')!)
     }));
-    expect(result.state.v).toBe(12);
+    expect(result.state.v).toBe(13);
     expect(result.state.profile.name).toBe('Version seven');
     expect(result.state.dailySupports.selected).toEqual(['water']);
     expect(result.state.drip.answers).toEqual({});
@@ -709,7 +730,7 @@ test.describe('v1.1 adaptive drip, themes, locale', () => {
     expect(result.state.drip.askedToday).toEqual([]);
     expect(result.state.userModel).toEqual({});
     expect(result.state.locale).toBe('en');
-    expect(result.stored.v).toBe(12);
+    expect(result.stored.v).toBe(13);
   });
 
   test('drip answers update estimates and stop after four asks today', async ({ page }) => {
@@ -2036,7 +2057,7 @@ test.describe('v1.4 bundled features', () => {
       state: (window as any).__soulcap.getState(),
       stored: JSON.parse(localStorage.getItem('soulcap_v1')!)
     }));
-    expect(result.state.v).toBe(12);
+    expect(result.state.v).toBe(13);
     expect(result.state.locale).toBe('rui');
     expect(result.stored.locale).toBe('rui');
     expect(result.state.mapPace).toBe('drift');
@@ -2061,13 +2082,13 @@ test.describe('v1.6 bundled features', () => {
       state: (window as any).__soulcap.getState(),
       stored: JSON.parse(localStorage.getItem('soulcap_v1')!)
     }));
-    expect(result.state.v).toBe(12);
+    expect(result.state.v).toBe(13);
     expect(result.state.manual.lines).toEqual([]);
     expect(result.state.libraryBookmarks).toEqual([]);
     expect(result.state.people[0].notes).toBe('');
     expect(result.state.people[0].events).toEqual([]);
     expect(result.state.people[0].ringHistory).toEqual([]);
-    expect(result.stored.v).toBe(12);
+    expect(result.stored.v).toBe(13);
   });
 
   test('manual refresh adds from principle and preserves edited user line', async ({ page }) => {
@@ -2221,5 +2242,53 @@ test.describe('Offline', () => {
     expect(await page.locator('#panicLinks a').count()).toBeGreaterThan(0);
 
     await context.setOffline(false);
+  });
+});
+
+test.describe('Phase H — self-concept, habits, patterns', () => {
+  test('self-concept sheet saves reflective notes', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => (window as any).__soulcap.galleryOpen('self-concept'));
+    await expect(page.locator('#subview')).toContainText('not a diagnosis');
+    const workArea = page.locator('#subview .self-concept-area').first();
+    await workArea.locator('textarea').nth(0).fill('Tired and unsure');
+    await workArea.locator('textarea').nth(1).fill('Calm and competent');
+    await workArea.locator('input[type="range"]').evaluate((el) => {
+      (el as HTMLInputElement).value = '4';
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+    await workArea.locator('textarea').nth(1).blur();
+    await expect(page.locator('#subview')).toContainText('Noticing is the point');
+    const saved = await page.evaluate(() => {
+      const sc = (window as any).__soulcap.getState().selfConcept;
+      return sc.areas.work;
+    });
+    expect(saved.inside).toBe('Tired and unsure');
+    expect(saved.outside).toBe('Calm and competent');
+    expect(saved.effort).toBe(4);
+  });
+
+  test('habit support sheet adds a habit and logs an urge', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => (window as any).__soulcap.galleryOpen('habits'));
+    await expect(page.locator('#subview')).toContainText('Slips are data');
+    await page.getByRole('button', { name: 'Add a habit' }).click();
+    await page.getByLabel('Habit name').fill('Late-night scrolling');
+    await page.getByLabel('Habit name').blur();
+    await page.getByRole('button', { name: 'Log an urge' }).click();
+    await page.getByRole('button', { name: 'Save' }).click();
+    const habits = await page.evaluate(() => (window as any).__soulcap.getState().habits);
+    expect(habits.length).toBe(1);
+    expect(habits[0].name).toBe('Late-night scrolling');
+    expect(habits[0].logs.length).toBe(1);
+    expect(habits[0].logs[0].kind).toBe('urge');
+  });
+
+  test('pattern observations appear from demo check-ins', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => (window as any).__soulcap.galleryOpen('patterns'));
+    await expect(page.locator('#subview .pattern-row').filter({ hasText: 'Work or study may be showing up often' })).toBeVisible();
+    await expect(page.locator('#subview')).toContainText('not a diagnosis');
   });
 });

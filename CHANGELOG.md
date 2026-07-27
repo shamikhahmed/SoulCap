@@ -1,5 +1,13 @@
 ## [Unreleased]
 
+## [6.0.7] — 2026-07-27
+
+### Added
+- **Phase H depth:** “Two versions of you” self-concept reflection (inside vs outside, user-rated
+  mask effort); richer local pattern observations with confidence + correction; habit-loop +
+  urge logging + urge-surfing technique. Schema **v13** (`selfConcept`, `habits`, `experienceViews`).
+- SW `soulcap-v607`. App **6.0.7**.
+
 ## [6.0.6] — 2026-07-27
 
 ### Changed
