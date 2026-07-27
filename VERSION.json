@@ -1,8 +1,8 @@
 {
   "name": "SoulCap",
-  "version": "6.0.4",
-  "swCache": "soulcap-v604",
+  "version": "6.0.5",
+  "swCache": "soulcap-v605",
   "schema": 12,
   "released": "2026-07-27",
-  "note": "v6.0.4 Phase E \u2014 theme preview tokens; culled theme swatches gone."
+  "note": "v6.0.5 Phase F \u2014 ink-safe contrast for breath/panic/safety."
 }

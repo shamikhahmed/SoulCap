@@ -1,5 +1,12 @@
 ## [Unreleased]
 
+## [6.0.5] — 2026-07-27
+
+### Changed
+- **Phase F contrast:** `--ink-safe` for breathing countdown, runner phase text, and Panic/Help
+  copy; brighter on Night/AMOLED; high-contrast mode forces `--ink-safe` to `--ink`.
+- SW `soulcap-v605`. App **6.0.5**. Schema still **v12**.
+
 ## [6.0.4] — 2026-07-27
 
 ### Changed
