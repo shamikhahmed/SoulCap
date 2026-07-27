@@ -1,6 +1,6 @@
 # SoulCap Evaluation Contract
 
-**Version:** 3.0.1 · **Updated:** 2026-07-23
+**Version:** 5.1.9 · **Updated:** 2026-07-27
 
 ## Purpose
 
@@ -11,14 +11,16 @@ status.
 ## Release gates
 
 1. JavaScript syntax check for every shipped script.
-2. Playwright mobile and desktop suite (`npm run verify`) — currently **~260** listed tests.
+2. Playwright mobile and desktop suite (`npm run verify`) — currently **~280+** listed tests.
 3. Safety suite for risk tiers, Help reachability, age gate, number-free routing, local-only voice,
    check-in tier-3 routing, free-text tier-3 Help (journal / Your story at minimum), and Guided Path
    Help offer / no-diagnosis lexicon.
 4. Migration fixtures for prior state versions (through **v12**) and forced persistence failure.
 5. Zero unexpected external requests during representative journeys.
-6. Version/cache/documentation consistency (`APP_VERSION`, `CACHE`, `VERSION.json`).
+6. Version/cache/documentation consistency (`APP_VERSION`, `CACHE`, `VERSION.json`, `package.json`).
 7. Human mobile, accessibility, copy, and visual checks listed in `ACCESSIBILITY.md`.
+8. Screen gallery regen when UI chrome changes (`npm run gallery`) — default screens + theme +
+   appearance matrix; viewer `screen-gallery.html`.
 
 ## Deterministic recommendation checks
 

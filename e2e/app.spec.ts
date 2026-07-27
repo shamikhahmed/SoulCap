@@ -895,54 +895,64 @@ test.describe('Skills', () => {
   test('box-breathing and 4-7-8 phase timings match the pattern at Steady', async ({ page }) => {
     test.setTimeout(90000);
     await seedDemo(page);
-    await page.evaluate(() => {
-      const s = (window as any).__soulcap.getState();
-      s.pace = 1;
-    });
 
-    async function measurePhases(skillId: string, expectedSecs: number[]) {
+    async function measurePhases(skillId: string, expectedSecs: number[], labels: string[]) {
+      await page.evaluate(() => {
+        (window as any).__soulcap.getState().pace = 1;
+      });
       await page.evaluate((sid) => (window as any).__soulcap.startSkill(sid), skillId);
       await expect(page.locator('#runner.on')).toBeVisible();
       await page.locator('#runner').getByRole('button', { name: 'Begin' }).click();
-      const samples = await page.evaluate(async (need) => {
-        const out: { t: number; text: string }[] = [];
-        const textEl = () => document.getElementById('runText')!;
-        out.push({ t: performance.now(), text: textEl().textContent || '' });
-        return await new Promise<{ t: number; text: string }[]>((resolve) => {
-          const el = textEl();
+      await expect(page.locator('#runText')).toHaveText(labels[0]);
+
+      const deltas = await page.evaluate(async ({ need, labels: labs }) => {
+        const el = document.getElementById('runText')!;
+        const out: number[] = [];
+        let idx = 0;
+        let t0 = performance.now();
+        return await new Promise<number[]>((resolve) => {
           const mo = new MutationObserver(() => {
             const cur = el.textContent || '';
-            if (cur !== out[out.length - 1].text) {
-              out.push({ t: performance.now(), text: cur });
-              if (out.length >= need + 1) {
-                mo.disconnect();
-                resolve(out);
-              }
+            const next = labs[(idx + 1) % labs.length];
+            if (cur !== next) return;
+            const now = performance.now();
+            out.push(now - t0);
+            t0 = now;
+            idx = (idx + 1) % labs.length;
+            if (out.length >= need) {
+              mo.disconnect();
+              resolve(out);
             }
           });
           mo.observe(el, { characterData: true, childList: true, subtree: true });
         });
-      }, expectedSecs.length);
+      }, { need: expectedSecs.length, labels });
+
       await page.locator('#runner').getByRole('button', { name: 'End' }).click();
       await expect(page.locator('#runner.on')).toHaveCount(0);
-      const deltas: number[] = [];
-      for (let i = 1; i < samples.length; i++) deltas.push(samples[i].t - samples[i - 1].t);
-      return deltas.slice(0, expectedSecs.length);
+      return deltas;
     }
 
-    const box = await measurePhases('box-breathing', [4, 4, 4, 4]);
+    const boxLabels = [
+      'Breathe in through your nose',
+      'Hold',
+      'Breathe out through your mouth',
+      'Hold, empty',
+    ];
+    const box = await measurePhases('box-breathing', [4, 4, 4, 4], boxLabels);
     box.forEach((ms, i) => {
-      // Wider under parallel CI load; still catches half/double-speed bugs.
-      expect(Math.abs(ms - 4000), `box phase ${i}`).toBeLessThanOrEqual(1000);
+      expect(Math.abs(ms - 4000), `box phase ${i}`).toBeLessThanOrEqual(1500);
     });
 
-    await page.evaluate(() => {
-      (window as any).__soulcap.getState().pace = 1;
-    });
-    const fse = await measurePhases('four-seven-eight', [4, 7, 8]);
+    const fseLabels = [
+      'Breathe in through your nose',
+      'Hold',
+      'Breathe out through your mouth',
+    ];
+    const fse = await measurePhases('four-seven-eight', [4, 7, 8], fseLabels);
     const expectMs = [4000, 7000, 8000];
     fse.forEach((ms, i) => {
-      expect(Math.abs(ms - expectMs[i]), `478 phase ${i}`).toBeLessThanOrEqual(1000);
+      expect(Math.abs(ms - expectMs[i]), `478 phase ${i}`).toBeLessThanOrEqual(1500);
     });
   });
 

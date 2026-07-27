@@ -1,8 +1,8 @@
 {
   "name": "SoulCap",
-  "version": "5.1.8",
-  "swCache": "soulcap-v518",
+  "version": "5.1.9",
+  "swCache": "soulcap-v519",
   "schema": 12,
-  "released": "2026-07-24",
-  "note": "v5.1.8 gallery matrix (all themes/appearance) + runner reopen fix."
+  "released": "2026-07-27",
+  "note": "v5.1.9 docs sync + full gallery regen (themes/appearance matrix)."
 }

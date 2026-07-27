@@ -1,6 +1,6 @@
 # SoulCap Architecture
 
-**Version:** 3.0.1 · **Product boundary:** `docs/` · **SW:** `soulcap-v301` · **Schema:** v12
+**Version:** 5.1.9 · **Product boundary:** `docs/` · **SW:** `soulcap-v519` · **Schema:** v12
 
 ## System shape
 
@@ -34,6 +34,13 @@ depend on their availability.
 4. Preference and content writes attempt `save()` first; failures roll back in-memory state and
    show a calm notice. Settings toggles often use `reRender()` to keep scroll.
 5. The service worker precaches the complete shell and never fetches third-party assets.
+
+## Screen gallery
+
+Playwright harness (`e2e/gallery.spec.ts`, `CAPTURE_GALLERY=1` / `npm run gallery`) writes PNGs +
+`docs/screenshots/gallery/gallery-manifest.json`. Packs: **default** (all surfaces), **theme**
+(every theme × hero surfaces), **appearance** (text/density/contrast/transparency/accent/motion).
+Local viewer: root `screen-gallery.html` (`npm run gallery:view`). Marketing mirror: `assets/gallery/`.
 
 ## Personalisation model
 

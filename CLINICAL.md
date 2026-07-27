@@ -1,6 +1,6 @@
-# SoulCap — Clinical Readiness Gaps (v3.0.1)
+# SoulCap — Clinical Readiness Gaps (v5.1.9)
 
-**Updated:** 2026-07-23
+**Updated:** 2026-07-27
 **Status:** Self-guided wellness companion; clinical work is undeployed lab source only.
 **Not** a cleared SaMD / medical device. **Not** a substitute for licensed care.
 

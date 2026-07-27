@@ -1,5 +1,15 @@
 ## [Unreleased]
 
+## [5.1.9] — 2026-07-27
+
+### Changed
+- **Docs sync:** README, FEATURES, PRESENTATION, INVESTOR_DECK, ARCHITECTURE, DATA_MODEL,
+  PRIVACY, EVALUATION, CLINICAL, AGENTS ship workflow, HANDOVER — all point at **5.1.9**
+  (were stuck on v3/v4 in places).
+- **Screen gallery regen:** full default + theme + appearance matrix (~436 shots);
+  `assets/gallery/` mirrored from `docs/screenshots/gallery/`.
+- SW `soulcap-v519`. App **5.1.9**. Schema still **v12**.
+
 ## [5.1.8] — 2026-07-24
 
 ### Fixed

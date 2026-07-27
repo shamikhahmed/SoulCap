@@ -172,16 +172,21 @@ behaviour **must** have a test — it gates the deploy.
    (`soulcap-vNNN`), `swCache` + `version` in `VERSION.json`, `APP_VERSION`/`version` in
    `app.js`, and `version` in `package.json`. All must match. Stale cache = users stuck on
    the old build.
-3. Update `CHANGELOG.md` (keep-a-changelog style) and bump the version in `SAFETY.md` + `HANDOVER.md`.
-4. Run the tests locally: `npm run verify` (or `npx playwright test`). Chromium only, two projects
+3. Update `CHANGELOG.md` (keep-a-changelog style) and bump the version in `SAFETY.md` +
+   `HANDOVER.md` (+ `ACCESSIBILITY.md` / `README.md` / `FEATURES.md` when they drift).
+4. If UI chrome / themes / appearance changed: `npm run gallery` (regenerates
+   `docs/screenshots/gallery/*` + manifest; viewer is root `screen-gallery.html`). Sync
+   `assets/gallery/` from that folder when marketing mirrors are kept.
+5. Run the tests locally: `npm run verify` (or `npx playwright test`). Chromium only, two projects
    (mobile + desktop). **All green before you push.**
-5. Commit (clear message, `Co-Authored-By` if an agent), push to `main`.
-6. CI (`.github/workflows/deploy.yml`) runs `npm run verify`; if green it deploys `docs/` to
+6. Commit (clear message, `Co-Authored-By` if an agent), push to `main`.
+7. CI (`.github/workflows/deploy.yml`) runs `npm run verify`; if green it deploys `docs/` to
    GitHub Pages. Confirm live at `https://shamikhahmed.github.io/SoulCap/` and that the served
    `sw.js` shows the new `CACHE`.
 
-Local preview: `npm run dev` (python http.server on 8788) then open `/?demo=1`. To see a code
-change after the SW cached the old build, unregister SW + clear caches in DevTools, or bump CACHE.
+Local preview: `npm run dev` (python http.server on 8788) then open `/?demo=1`. Gallery viewer:
+`npm run gallery:view` → `http://127.0.0.1:8790/screen-gallery.html`. To see a code change after
+the SW cached the old build, unregister SW + clear caches in DevTools, or bump CACHE.
 
 ---
 

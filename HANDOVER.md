@@ -1,28 +1,31 @@
-**Version:** 5.1.8 · SW `soulcap-v518`
+**Version:** 5.1.9 · SW `soulcap-v519`
 
 # SoulCap — Project Handover
 
 > **⚠️ This document below the divider is historical (v0.3.0).** Read this header block
-> first — it is the current truth as of 2026-07-24. The sections further down describe an
+> first — it is the current truth as of 2026-07-27. The sections further down describe an
 > earlier architecture and are kept for reference only.
 
-## Current state (v5.1.8 — 2026-07-24)
+## Current state (v5.1.9 — 2026-07-27)
 
 **The product is the PWA in `docs/`.** Offline-first, local-only, **no network calls after load**.
 Schema **v12**. Fixed tab footer + readable secondary text; compact tiles; soft selection;
-FAB off (header Help). Gallery: `npm run gallery` → `screen-gallery.html`.
+FAB off (header Help). Docs + screen gallery refreshed to current chrome.
+
+**Gallery:** `npm run gallery` → `docs/screenshots/gallery/` (~436 shots: default + every theme +
+appearance axes). Viewer: `screen-gallery.html` (`npm run gallery:view`).
 Live: https://shamikhahmed.github.io/SoulCap/
 
 ### Schema & ship
-- State `DEFAULT.v = 12` · SW `soulcap-v518` · app **5.1.8** · `package.json` **5.1.8**
+- State `DEFAULT.v = 12` · SW `soulcap-v519` · app **5.1.9** · `package.json` **5.1.9**
 - Ship workflow: bump CACHE + VERSION.json + APP_VERSION + package.json; CHANGELOG;
-  SAFETY/HANDOVER; gallery; `npm run verify`; push `main`.
+  SAFETY/HANDOVER (+ README/FEATURES when they drift); gallery; `npm run verify`; push `main`.
 
 ### Backend / mobile
 `backend/` Nest lab (not deployed). `mobile/` Expo lab only.
 
 ### Tests & CI
-~**260** Playwright checks (mobile + desktop Chromium; gallery gated by `CAPTURE_GALLERY=1`).
+~**280+** Playwright checks (mobile + desktop Chromium; gallery gated by `CAPTURE_GALLERY=1`).
 `.github/workflows/deploy.yml` runs `npm run verify` then deploys `docs/`.
 
 ### Open blockers (not code)

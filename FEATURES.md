@@ -1,12 +1,14 @@
 # SoulCap — Features (S/W/L/R)
 
-**Updated:** 2026-07-23 · Self-guided wellness companion · **v3.0.1**
+**Updated:** 2026-07-27 · Self-guided wellness companion · **v5.1.9**
 **Codes:** S = shipped · W = next wave · L = later · R = rejected
 
 ## S
 - Offline-first PWA in `docs/`: no account, server, analytics, CDN, LLM, or post-load network calls
-- **Design System v3 Amethyst** (dark-first elevation, grain, glow heroes, raised cards)
-- Five tabs: Now · Calm · Journal · People · You; Settings sheet off You; About + What’s new
+- Design system with light/dark/night/AMOLED + mood themes (Ocean/Forest/Rain/Space/Sunrise/Minimal),
+  grain, glow heroes, compact tiles, soft selection, fixed tab footer with `--tab-clearance`
+- Five tabs: Now · Calm · Journal · Map · You; Settings sheet off You; About + What’s new; FAB off
+  (header Help on every main tab)
 - 37 techniques with mechanisms, contraindications, context filtering, timed guidance, breathing
   sessions, device speech synthesis, optional haptics, and public-safe auto-quieting
 - **Guided Path:** arrival → symptom chips → educational **approach pack** (CBT/DBT/ACT/BA ideas) →
@@ -36,11 +38,12 @@
   confidence — never diagnoses
 - Constellation polish: pinch rings, long-press rename, opt-in frequency sizing (not importance),
   safety-plan pull from supportive people
-- Auto/Light/Dark/Night plus Ocean/Forest/Rain/Space/Sunrise/Minimal/AMOLED themes; purple-family
-  accents; text, density, contrast, transparency, and reduced-motion controls; Roman Urdu LTR
-  preview (English remains default safety language); welcome/onboarding/Calm/Me chrome in rui;
-  local export and delete
-- Playwright coverage across mobile + desktop (~260); CI gates GitHub Pages deploy
+- Appearance controls: text (standard/large), density (compact/comfortable), contrast, transparency,
+  motion (vivid/balanced/still), purple-family accents; Roman Urdu LTR preview (English remains
+  default safety language); local export and delete
+- **Screen gallery:** `npm run gallery` captures default screens + every theme + appearance axes
+  (~436 shots); view via `screen-gallery.html` / `npm run gallery:view`
+- Playwright coverage across mobile + desktop (~280+); CI gates GitHub Pages deploy
 - Nest backend and Expo mobile **source labs only**; neither is wired to the PWA
 
 ## W

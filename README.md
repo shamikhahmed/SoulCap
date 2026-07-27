@@ -1,7 +1,8 @@
 # SoulCap
 
-**v4.0.1 — offline-first wellness PWA.** Master design foundations (Amethyst + composition kit);
-Guided Path + approach packs; 37 techniques; journal; Constellation. **Not** therapy · not diagnosis · not crisis service.
+**v5.1.9 — offline-first wellness PWA.** Fixed tab footer, readable secondary text, compact
+tiles, soft selection, full theme/appearance screen gallery. Guided Path + approach packs;
+37 techniques; journal; Constellation. **Not** therapy · not diagnosis · not crisis service.
 See [`SAFETY.md`](SAFETY.md).
 
 > **New here? Read [`AGENTS.md`](AGENTS.md)** (build guide + rules) and [`ROADMAP.md`](ROADMAP.md)
@@ -13,9 +14,10 @@ See [`SAFETY.md`](SAFETY.md).
 
 | Surface | URL / path | Reality |
 |---|---|---|
-| **PWA** | [shamikhahmed.github.io/SoulCap](https://shamikhahmed.github.io/SoulCap/) · `docs/` | The product (**4.0.1** / schema v12). Amethyst + v4 kit, five tabs, Guided Path, Settings + About, Personal Manual, Thought Parking, optional detailed check-ins, inspectable local patterns, 37 exercises, offline library (articles + 24 experiences), no-streak daily supports, book-style journal, Constellation, Roman Urdu chrome preview, Help on free-text, themes, voice + haptics. **Zero network calls — localStorage only.** |
+| **PWA** | [shamikhahmed.github.io/SoulCap](https://shamikhahmed.github.io/SoulCap/) · `docs/` | The product (**5.1.9** / schema v12). Five tabs, Guided Path, Settings + About, Personal Manual, Thought Parking, optional detailed check-ins, inspectable local patterns, 37 exercises, offline library (articles + experiences), no-streak daily supports, book-style journal, Constellation, Roman Urdu chrome preview, Help on free-text, themes + appearance controls, voice + haptics. **Zero network calls — localStorage only.** |
 | Nest API | `backend/` | Full module **source** (LMM, safety gate). Builds clean, **not deployed**; PWA does not call it. |
 | Expo | `mobile/` | Thin client source. Lab only. |
+| **Screen gallery** | [`screen-gallery.html`](screen-gallery.html) · `docs/screenshots/gallery/` | ~436 shots: every major screen + every theme + appearance axes (text, density, contrast, transparency, accents, motion). `npm run gallery` → `npm run gallery:view`. |
 
 Demo walkthrough → `?demo=1`.
 
@@ -39,9 +41,11 @@ model providers exist only in undeployed `backend/` source.
 ```
 SoulCap/
 ├── docs/             # ← live product (GitHub Pages)
+│   └── screenshots/gallery/   # Playwright screen gallery assets
+├── screen-gallery.html        # local viewer (pack + variant filters)
 ├── backend/          # NestJS source lab (not production)
 ├── mobile/           # Expo source lab
-├── icons/
+├── e2e/              # Playwright (verify gates deploy; gallery opt-in)
 ├── ARCHITECTURE.md · DATA_MODEL.md · PRIVACY.md
 ├── ACCESSIBILITY.md · EVALUATION.md · SAFETY.md
 ├── CLINICAL.md · FEATURES.md
@@ -53,8 +57,12 @@ SoulCap/
 ## Local PWA
 
 ```bash
-cd docs && python3 -m http.server 8080
-# open http://localhost:8080/?demo=1
+npm run dev
+# open http://localhost:8788/?demo=1
+
+npm run gallery          # regenerate screenshots (CAPTURE_GALLERY=1)
+npm run gallery:view     # http://127.0.0.1:8790/screen-gallery.html
+npm run verify           # full Playwright suite before ship
 ```
 
 Backend / Expo: see `backend/README` and `mobile/` — require Postgres, Redis, API keys. Not required for the live Cap.
