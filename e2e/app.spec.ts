@@ -460,7 +460,7 @@ test.describe('v1.9.2 articles and wind-down', () => {
     await page.goto('/');
     await page.waitForFunction(() => Boolean((window as any).__soulcap));
     await dismissSplash(page);
-    await expect(page.getByRole('heading', { name: 'Wind-down window' })).toBeVisible();
+    await expect(page.locator('.wind-down-card')).toContainText('Wind-down window');
     await expect(page.locator('.wind-down-card')).toContainText('No guilt');
   });
 });
@@ -1295,11 +1295,11 @@ test.describe('Journal', () => {
 test.describe('Check-ins', () => {
   test('tapping a mood twice in one day does not stack entries', async ({ page }) => {
     await seedDemo(page);
-    const chip = page.locator('#view-now .chips .chip').filter({ hasText: 'Wired' });
+    const chip = page.locator('#view-now .qd-checkin .qd-row').filter({ hasText: 'Wired' });
     await chip.click();
     const afterFirst = await page.evaluate(() => (window as any).__soulcap.getState().checkins.length);
-    await page.locator('#view-now .chips .chip').filter({ hasText: 'Flat' }).click();
-    await page.locator('#view-now .chips .chip').filter({ hasText: 'Steady' }).click();
+    await page.locator('#view-now .qd-checkin .qd-row').filter({ hasText: 'Flat' }).click();
+    await page.locator('#view-now .qd-checkin .qd-row').filter({ hasText: 'Steady' }).click();
     const afterMore = await page.evaluate(() => (window as any).__soulcap.getState().checkins.length);
     // Same calendar day → the latest entry is updated, not appended.
     expect(afterMore).toBe(afterFirst);
@@ -1307,14 +1307,14 @@ test.describe('Check-ins', () => {
 
   test('same-day check-in keeps original timestamp and updates updatedAt', async ({ page }) => {
     await seedDemo(page);
-    await page.locator('#view-now .chips .chip').filter({ hasText: 'Steady' }).click();
+    await page.locator('#view-now .qd-checkin .qd-row').filter({ hasText: 'Steady' }).click();
     const before = await page.evaluate(() => {
       const list = (window as any).__soulcap.getState().checkins;
       const c = list[list.length - 1];
       return { id: c.id, t: c.t, state: c.state };
     });
     await page.waitForTimeout(20);
-    await page.locator('#view-now .chips .chip').filter({ hasText: 'Wired' }).click();
+    await page.locator('#view-now .qd-checkin .qd-row').filter({ hasText: 'Wired' }).click();
     const after = await page.evaluate(() => {
       const list = (window as any).__soulcap.getState().checkins;
       const c = list[list.length - 1];
@@ -1331,7 +1331,7 @@ test.describe('Check-ins', () => {
     const states = ['Steady', 'Wired', 'Flat', 'Heavy', 'Not sure'];
     const results: { state: string; title: string; reason: string }[] = [];
     for (const state of states) {
-      await page.locator('#view-now .chips .chip').filter({ hasText: state }).click();
+      await page.locator('#view-now .qd-checkin .qd-row').filter({ hasText: state }).click();
       const skillCard = page.locator('#view-now .now-suggest').first();
       results.push({
         state,
@@ -1865,20 +1865,19 @@ test.describe('v1.4 bundled features', () => {
     expect(contrast.ratio).toBeGreaterThanOrEqual(4.5);
   });
 
-  test('Calm rail cards hug content (not forced 3:4 portrait)', async ({ page }) => {
+  test('Calm browse rows are compact editorial list (not portrait tiles)', async ({ page }) => {
     await seedDemo(page);
     await page.setViewportSize({ width: 430, height: 932 });
     await page.evaluate(() => (document.querySelector('#tabs button[data-tab="calm"]') as HTMLElement).click());
     const metrics = await page.evaluate(() => {
-      const card = document.querySelector('#view-calm .rail .tile.rail-card') as HTMLElement | null;
-      if (!card) return null;
-      const r = card.getBoundingClientRect();
+      const row = document.querySelector('#view-calm .calm-section .list-row') as HTMLElement | null;
+      if (!row) return null;
+      const r = row.getBoundingClientRect();
       return { w: r.width, h: r.height, ratio: r.height / Math.max(r.width, 1) };
     });
     expect(metrics).not.toBeNull();
-    // Was ~1.33 (3:4). Compact cards should stay shorter than square.
-    expect(metrics!.ratio).toBeLessThan(1.05);
-    expect(metrics!.h).toBeLessThan(220);
+    expect(metrics!.ratio).toBeLessThan(0.35);
+    expect(metrics!.h).toBeLessThan(120);
   });
 
   test('Settings card opens the settings sheet', async ({ page }) => {
@@ -2397,5 +2396,32 @@ test.describe('Quiet Depth V1 — splash', () => {
     await expect(page.locator('#splash img')).toHaveCount(0);
     const bg = await page.locator('#splash').evaluate((el) => getComputedStyle(el).backgroundColor);
     expect(bg).not.toMatch(/rgb\(\s*245,\s*243,\s*248\s*\)/);
+  });
+});
+
+test.describe('Quiet Depth V2 — welcome/onboarding', () => {
+  test('welcome uses full-bleed Quiet Depth shell not mark-centered hero card', async ({ page }) => {
+    await page.goto('/');
+    await page.waitForFunction(() => !!(window as any).__soulcap);
+    await page.evaluate(() => document.getElementById('splash')?.classList.add('gone'));
+    const welcome = page.locator('#view-welcome');
+    await expect(welcome).toHaveClass(/view-qd/);
+    await expect(welcome.locator('.living-field')).toHaveCount(1);
+    await expect(welcome.locator('.qd-prompt')).toBeVisible();
+    await expect(welcome.locator('.qd-thumb')).toBeVisible();
+    await expect(welcome.locator('.welcome-mark')).toHaveCount(0);
+    await expect(page.getByRole('button', { name: 'Begin' })).toBeVisible();
+  });
+
+  test('onboarding age step uses hairline progress and ruled rows', async ({ page }) => {
+    await page.goto('/');
+    await page.waitForFunction(() => !!(window as any).__soulcap);
+    await page.evaluate(() => document.getElementById('splash')?.classList.add('gone'));
+    await page.getByRole('button', { name: 'Begin' }).click();
+    const ob = page.locator('#view-onboarding');
+    await expect(ob).toHaveClass(/view-qd/);
+    await expect(ob.locator('.qd-hairline')).toHaveCount(1);
+    await expect(ob.locator('.qd-row').first()).toBeVisible();
+    await expect(ob.locator('.living-field')).toHaveCount(1);
   });
 });

@@ -405,6 +405,32 @@
       onclick: opts.onclick || null
     }, kids);
   }
+  function qdRow(opts) {
+    var bodyKids = [el('p', { class: 'lr-title', text: opts.title })];
+    if (opts.sub) {
+      bodyKids.push(el('p', {
+        class: 'lr-meta' + (opts.subClass ? ' ' + opts.subClass : ''),
+        text: opts.sub
+      }));
+    }
+    var kids = [el('span', { class: 'lr-body' }, bodyKids)];
+    if (opts.chevron !== false) kids.push(iconChevron());
+    var attrs = {
+      class: 'qd-row' + (opts.className ? ' ' + opts.className : ''),
+      type: 'button',
+      onclick: opts.onclick || null
+    };
+    if (opts.pressed !== undefined) attrs['aria-pressed'] = opts.pressed ? 'true' : 'false';
+    return el('button', attrs, kids);
+  }
+  function calmSkillRow(s) {
+    var dm = DOMAIN_META[s.domain];
+    return listRow({
+      title: s.name,
+      meta: dm.label + ' · ' + s.mins + ' min',
+      onclick: function () { skillSheet(s.id); }
+    });
+  }
   function navHeader(title, onBack, actionEl) {
     return el('div', { class: 'nav-header' }, [
       el('button', {
@@ -3383,6 +3409,16 @@
     state.notices.seenVersion = APP_VERSION;
     save(); render();
   }
+  function calmSectionBlock(title, rows, seeAllFn) {
+    var headKids = [el('p', { class: 'section-label', text: title, style: 'margin:0' })];
+    if (seeAllFn) {
+      headKids.push(el('button', { class: 'see-all', type: 'button', text: 'See all', onclick: seeAllFn }));
+    }
+    return el('div', { class: 'calm-section qd-ruled' }, [
+      el('div', { class: 'rail-head' }, headKids),
+      el('div', { class: 'list-group qd-list-group' }, rows)
+    ]);
+  }
   function renderCalm() {
     var v = $('#view-calm'); clear(v);
     if (calm.section === 'library') { renderLibrary(v); return; }
@@ -3406,17 +3442,25 @@
       return;
     }
 
-    var hero = el('div', { class: 'hero-band' });
+    var hero = el('div', { class: 'qd-hero calm-hero' });
+    hero.appendChild(el('div', { class: 'living-field', 'aria-hidden': 'true' }));
     hero.appendChild(el('p', { class: 'eyebrow', text: 'Calm' }));
     hero.appendChild(el('h1', { class: 'h-voice', text: 'What do you need\nright now?' }));
     if (!calm.need) {
       hero.appendChild(el('p', { class: 'p-sm calm-empty', style: 'margin-top:var(--space-3)', text: tUi('empty', 'calm', EMPTY_UI) }));
     }
-    hero.appendChild(el('div', { class: 'stack', style: 'margin-top:var(--space-3)' }, CALM_NEEDS.map(function (n) {
-      return el('button', { class: 'opt', 'aria-pressed': calm.need === n.key ? 'true' : 'false',
-        html: n.label + '<span class="os">' + n.sub + '</span>',
-        onclick: function () { calm.need = calm.need === n.key ? null : n.key; buzz(8); render(); } });
-    })));
+    var needsList = el('div', { class: 'qd-ruled calm-needs', role: 'group', 'aria-label': 'What you need' });
+    CALM_NEEDS.forEach(function (n) {
+      needsList.appendChild(qdRow({
+        className: 'opt',
+        title: n.label,
+        sub: n.sub,
+        subClass: 'os',
+        pressed: calm.need === n.key,
+        onclick: function () { calm.need = calm.need === n.key ? null : n.key; buzz(8); render(); }
+      }));
+    });
+    hero.appendChild(needsList);
     v.appendChild(hero);
 
     if (calm.need) {
@@ -3467,47 +3511,54 @@
         var fa = state.favourites.indexOf(a.id) !== -1 ? 2 : 0;
         var fb = state.favourites.indexOf(b.id) !== -1 ? 2 : 0;
         return (fb + helpfulScore(b.id)) - (fa + helpfulScore(a.id));
-      }).slice(0, 6);
-      v.appendChild(railBlock('Fitted for you', fitted.map(function (s) {
-        var dm = DOMAIN_META[s.domain];
-        return el('button', { class: 'tile tap rail-card', type: 'button', onclick: function () { skillSheet(s.id); } }, [
-          el('p', { class: 'tile-meta', text: dm.label + ' · ' + s.mins + ' min' }),
-          el('h2', { class: 'tile-title', text: s.name }),
-          el('p', { class: 'p-sm', text: s.blurb })
-        ]);
-      }), function () { calm.browse = true; render(); }));
-
-      var expTiles = EXPERIENCES.slice(0, 8).map(function (exp) {
-        return el('button', {
-          class: 'tile tap rail-card experience-card',
-          type: 'button',
-          'data-experience-id': exp.id,
-          onclick: function () { experienceSheet(exp.id); }
-        }, [
-          el('p', { class: 'tile-meta', text: 'Experience' }),
-          el('h2', { class: 'tile-title', text: exp.name }),
-          el('p', { class: 'p-sm', text: exp.whatItis })
-        ]);
       });
-      v.appendChild(railBlock(LIBRARY_UI.title, expTiles, function () {
+      var featured = fitted[0];
+      if (featured) {
+        var fdm = DOMAIN_META[featured.domain];
+        var featHero = el('div', { class: 'qd-hero calm-featured' });
+        featHero.appendChild(el('div', { class: 'living-field', 'aria-hidden': 'true' }));
+        featHero.appendChild(el('p', { class: 'ht-meta', text: 'Featured · ' + fdm.label + ' · ' + featured.mins + ' min' }));
+        featHero.appendChild(el('h2', { class: 'ht-title', text: featured.name }));
+        featHero.appendChild(el('p', { class: 'p-sm', text: featured.blurb }));
+        featHero.appendChild(el('div', { class: 'qd-action' }, [
+          el('button', { class: 'btn', text: 'Begin', onclick: function () { startSkill(featured.id); } }),
+          el('button', { class: 'btn quiet', text: 'Browse all', onclick: function () { calm.browse = true; render(); } })
+        ]));
+        v.appendChild(featHero);
+      }
+      var fittedRows = fitted.slice(1, 6).map(calmSkillRow);
+      if (fittedRows.length) {
+        v.appendChild(calmSectionBlock('Fitted for you', fittedRows, function () { calm.browse = true; render(); }));
+      }
+
+      var expRows = EXPERIENCES.slice(0, 6).map(function (exp) {
+        return listRow({
+          className: 'experience-card',
+          title: exp.name,
+          meta: exp.whatItis,
+          onclick: function () { experienceSheet(exp.id); }
+        });
+      });
+      v.appendChild(calmSectionBlock(LIBRARY_UI.title, expRows, function () {
         calm.section = 'library'; libraryFilter = 'experiences'; calm.browse = false; render();
       }));
 
-      var artTiles = ARTICLES.slice(0, 8).map(function (article) {
-        return el('button', { class: 'tile tap rail-card article-card', type: 'button', onclick: function () { articleSheet(article.id); } }, [
-          el('p', { class: 'tile-meta', text: 'Article' }),
-          el('h2', { class: 'tile-title', text: article.title }),
-          el('p', { class: 'p-sm', text: article.summary })
-        ]);
+      var artRows = ARTICLES.slice(0, 6).map(function (article) {
+        return listRow({
+          className: 'article-card',
+          title: article.title,
+          meta: article.summary,
+          onclick: function () { articleSheet(article.id); }
+        });
       });
-      v.appendChild(railBlock('Read', artTiles, function () {
+      v.appendChild(calmSectionBlock('Read', artRows, function () {
         calm.section = 'library'; libraryFilter = 'articles'; calm.browse = false; render();
       }));
 
       v.appendChild(el('button', { class: 'btn quiet', text: tUi('calm', 'showEverything', { showEverything: 'Just show me everything' }), onclick: function () { calm.browse = true; render(); } }));
       v.appendChild(el('div', { class: 'calm-more section-block' }, [
         el('p', { class: 'section-label', text: tUi('me', 'calmMore', { calmMore: 'Also here' }) }),
-        el('div', { class: 'list-group' }, [
+        el('div', { class: 'list-group qd-list-group' }, [
           listRow({ className: 'habit-card', title: HABIT_UI.cardTitle, meta: HABIT_UI.cardHint, onclick: habitsOverviewSheet }),
           listRow({ className: 'path-card', title: PATH_UI.cardTitle, meta: PATH_UI.calmHint, onclick: pathSheet }),
           listRow({ title: LIBRARY_UI.title, meta: LIBRARY_UI.homeHint, onclick: function () { calm.section = 'library'; calm.browse = false; render(); } }),
@@ -4511,28 +4562,37 @@
     var pick = suggestSkill(), dm = DOMAIN_META[pick.skill.domain];
     var dots = weekActivityDots();
 
-    var hero = el('div', { class: 'hero-band' });
+    var hero = el('div', { class: 'qd-hero now-hero' });
+    if (today) hero.setAttribute('data-arrival', today);
+    hero.appendChild(el('div', { class: 'living-field', 'aria-hidden': 'true' }));
     hero.appendChild(el('p', { class: 'eyebrow', text: new Date().toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' }) }));
     hero.appendChild(el('h1', { class: 'h-voice', text: greeting() }));
     hero.appendChild(el('p', { class: 'p-voice', style: 'margin-top:var(--space-3)', text: tUi('checkin', 'arrival', { arrival: 'How are you arriving right now?' }) }));
-    hero.appendChild(el('div', { class: 'chips', style: 'margin-top:var(--space-3)' }, states.map(function (s) {
-      return el('button', { class: 'chip', 'aria-pressed': today === s ? 'true' : 'false', text: checkinStateLabel(s),
+    var checkin = el('div', { class: 'qd-ruled qd-checkin', role: 'group', 'aria-label': 'How you are arriving' });
+    states.forEach(function (s) {
+      checkin.appendChild(el('button', {
+        class: 'qd-row',
+        type: 'button',
+        'aria-pressed': today === s ? 'true' : 'false',
+        text: checkinStateLabel(s),
         onclick: function () {
           var chip = this;
           if (!recordCheckin(s)) { showCheckinSaveFailed(); return; }
           signatureCheckin(chip, s);
           haptic('select'); render();
-        } });
-    })));
+        }
+      }));
+    });
+    hero.appendChild(checkin);
     if (rc) {
       var hasDetail = Object.keys(rc.dims || {}).length || (rc.triggers || []).length || rc.need || rc.feeling;
-      hero.appendChild(el('button', { class: 'btn ghost', style: 'margin-top:var(--space-2)', text: hasDetail ? tUi('checkin', 'editDetail', CHECKIN_UI) : tUi('checkin', 'addDetail', CHECKIN_UI), onclick: checkinDetailSheet }));
+      hero.appendChild(el('button', { class: 'btn ghost qd-detail-btn', text: hasDetail ? tUi('checkin', 'editDetail', CHECKIN_UI) : tUi('checkin', 'addDetail', CHECKIN_UI), onclick: checkinDetailSheet }));
     }
     v.appendChild(hero);
 
     if (state.pendingReflection && !state.reflectionPrefs.dismissedForever) {
       var pr = REFLECTION_PROMPTS[state.pendingReflection.trigger] || REFLECTION_PROMPTS.journal;
-      v.appendChild(el('div', { class: 'card' }, [
+      v.appendChild(el('div', { class: 'qd-note' }, [
         el('h2', { class: 'card-title', text: REFLECTION_UI.cardTitle }),
         el('p', { class: 'p-sm', text: pr }),
         el('button', { class: 'btn', text: REFLECTION_UI.answer, onclick: reflectionAnswerSheet }),
@@ -4543,7 +4603,7 @@
       ]));
     }
     if (shouldShowWhatsNew()) {
-      v.appendChild(el('div', { class: 'card whats-new' }, [
+      v.appendChild(el('div', { class: 'qd-note whats-new' }, [
         el('h2', { class: 'card-title', text: WHATS_NEW_UI.title }),
         el('p', { class: 'p-sm', text: WHATS_NEW_UI.body }),
         el('button', { class: 'btn ghost', text: WHATS_NEW_UI.dismiss, onclick: dismissWhatsNew })
@@ -4556,57 +4616,50 @@
     }
 
     var primary = el('div', { class: 'now-primary' });
-    primary.appendChild(el('div', { class: 'hero-tile now-suggest' }, [
-      el('p', { class: 'ht-meta', text: dm.label + ' · ' + pick.skill.mins + ' min · offline' }),
-      el('h2', { class: 'ht-title', text: pick.skill.name }),
-      el('p', { class: 'ht-reason reason', text: reasonText(pick) }),
+    var suggest = el('div', { class: 'qd-hero qd-suggest now-suggest' });
+    suggest.appendChild(el('div', { class: 'living-field', 'aria-hidden': 'true' }));
+    suggest.appendChild(el('p', { class: 'ht-meta', text: dm.label + ' · ' + pick.skill.mins + ' min · offline' }));
+    suggest.appendChild(el('h2', { class: 'ht-title', text: pick.skill.name }));
+    suggest.appendChild(el('p', { class: 'ht-reason reason', text: reasonText(pick) }));
+    suggest.appendChild(el('div', { class: 'qd-action' }, [
       el('button', { class: 'btn', text: 'Begin', onclick: function () { startSkill(pick.skill.id); } }),
       el('button', { class: 'btn quiet', text: 'Something else', onclick: function () { calm.browse = false; selectTab('calm'); } })
     ]));
+    primary.appendChild(suggest);
 
-    var utilKids = [
-      el('div', { class: 'tile progress-glance', 'aria-label': 'This week' }, [
-        el('p', { class: 'tile-meta glance-label', text: 'This week' }),
-        el('div', { class: 'progress-dots', role: 'img', 'aria-label': weekActivityLabel(dots) }, dots.map(function (d) {
-          return el('i', { class: d.on ? 'on' : '', title: d.key });
-        })),
-        el('p', { class: 'glance-sub', text: weekActivityLabel(dots) })
-      ])
-    ];
+    var progress = el('div', { class: 'progress-glance qd-ruled qd-progress' });
+    progress.appendChild(el('p', { class: 'section-label', text: 'This week' }));
+    progress.appendChild(el('div', { class: 'progress-dots', role: 'img', 'aria-label': weekActivityLabel(dots) }, dots.map(function (d) {
+      return el('i', { class: d.on ? 'on' : '', title: d.key });
+    })));
+    progress.appendChild(el('p', { class: 'glance-sub', text: weekActivityLabel(dots) }));
+    primary.appendChild(progress);
+    signatureProgressIn(progress);
+
+    var moreKids = [];
     if (!state.pathPrefs || !state.pathPrefs.hide) {
-      utilKids.push(el('button', { class: 'tile tap path-card', onclick: pathSheet }, [
-        el('p', { class: 'tile-meta', text: 'Optional' }),
-        el('h2', { class: 'tile-title', text: PATH_UI.cardTitle }),
-        el('p', { class: 'p-sm', text: PATH_UI.cardHint })
-      ]));
+      moreKids.push(listRow({ className: 'path-card', title: PATH_UI.cardTitle, meta: PATH_UI.cardHint, onclick: pathSheet }));
+      moreKids.push(listRow({ className: 'experience-picker-card', title: EXPERIENCE_PICKER_UI.cardTitle, meta: EXPERIENCE_PICKER_UI.cardHint, onclick: experiencePickerSheet }));
     } else {
-      utilKids.push(el('button', { class: 'tile tap experience-picker-card', onclick: experiencePickerSheet }, [
-        el('p', { class: 'tile-meta', text: 'Library' }),
-        el('h2', { class: 'tile-title', text: EXPERIENCE_PICKER_UI.cardTitle }),
-        el('p', { class: 'p-sm', text: EXPERIENCE_PICKER_UI.cardHint })
-      ]));
-    }
-    primary.appendChild(el('div', { class: 'bento-2' }, utilKids));
-    signatureProgressIn(utilKids[0]);
-
-    var micro = el('div', { class: 'bento-2 now-micro' });
-    if (!state.pathPrefs || !state.pathPrefs.hide) {
-      micro.appendChild(el('button', { class: 'tile tap experience-picker-card', onclick: experiencePickerSheet }, [
-        el('h2', { class: 'tile-title', text: EXPERIENCE_PICKER_UI.cardTitle }),
-        el('p', { class: 'p-sm', text: EXPERIENCE_PICKER_UI.cardHint })
-      ]));
+      moreKids.push(listRow({ className: 'experience-picker-card', title: EXPERIENCE_PICKER_UI.cardTitle, meta: EXPERIENCE_PICKER_UI.cardHint, onclick: experiencePickerSheet }));
     }
     if (typeof state.windDownHour === 'number' && new Date().getHours() >= state.windDownHour) {
-      micro.appendChild(el('div', { class: 'tile wind-down-card' }, [
-        el('h2', { class: 'tile-title', text: WIND_DOWN_UI.nowTitle }),
-        el('p', { class: 'p-sm', text: WIND_DOWN_UI.nowHint }),
-        el('button', { class: 'btn ghost', text: WIND_DOWN_UI.openArticle, onclick: function () {
+      moreKids.push(listRow({
+        className: 'wind-down-card',
+        title: WIND_DOWN_UI.nowTitle,
+        meta: WIND_DOWN_UI.nowHint,
+        onclick: function () {
           selectTab('calm'); calm.section = 'library'; libraryQuery = 'winding'; libraryFilter = 'articles'; render();
           setTimeout(function () { articleSheet('wind-down-boundaries'); }, 0);
-        } })
+        }
+      }));
+    }
+    if (moreKids.length) {
+      primary.appendChild(el('div', { class: 'qd-ruled now-more' }, [
+        el('p', { class: 'section-label', text: 'More' }),
+        el('div', { class: 'list-group qd-list-group' }, moreKids)
       ]));
     }
-    if (micro.childNodes.length) primary.appendChild(micro);
     v.appendChild(primary);
 
     v.appendChild(el('button', {
@@ -4623,13 +4676,14 @@
 
     var quiet = el('div', { class: 'now-quiet' });
     var dripQ = nextDripQuestion();
-    quiet.appendChild(el('button', { class: 'card tap', onclick: dripSheet }, [
-      el('h2', { class: 'card-title', text: DRIP_UI.cardTitle }),
-      el('p', { class: 'p-sm', text: dripQ ? DRIP_UI.cardHint : DRIP_UI.doneToday })
-    ]));
+    quiet.appendChild(listRow({
+      title: DRIP_UI.cardTitle,
+      meta: dripQ ? DRIP_UI.cardHint : DRIP_UI.doneToday,
+      onclick: dripSheet
+    }));
     var person = suggestPerson();
     if (person) {
-      quiet.appendChild(el('div', { class: 'card' }, [
+      quiet.appendChild(el('div', { class: 'qd-note' }, [
         el('div', { class: 'card-head' }, [el('h2', { class: 'card-title', text: 'Message ' + person.name + '?' }), el('span', { class: 'domain', style: 'color:var(--connect)', text: 'Connect' })]),
         el('p', { class: 'reason', text: 'You said ' + person.name + ' usually helps when things are hard.' }),
         el('p', { class: 'p-sm', text: 'SoulCap never sends anything. This just opens your own messages.' }),
@@ -5440,64 +5494,66 @@
   /* ── Welcome & onboarding ──────────────────────────────────────────────── */
   function renderWelcome() {
     var v = $('#view-welcome'); clear(v);
-    v.appendChild(el('div', { class: 'welcome-hero' }, [
-      el('img', { class: 'welcome-mark', src: 'icons/mark.svg', alt: '', width: '104', height: '104' }),
-      el('h1', { class: 'h-voice type-display', text: tUi('welcome', 'title', { title: 'A quiet place to steady yourself.' }) }),
-      el('p', { class: 'p-voice', text: tUi('welcome', 'subtitle', { subtitle: 'Techniques that work in a few minutes. A private journal. A map of the people around you. Everything stays on your phone.' }) }),
-      el('p', { class: 'p-sm', text: tUi('welcome', 'tagline', { tagline: 'Not therapy. Not a crisis service. Just something that helps.' }) })
-    ]));
-    v.appendChild(el('div', { class: 'welcome-actions' }, [
+    v.className = 'view view-qd';
+    v.appendChild(el('div', { class: 'living-field', 'aria-hidden': 'true' }));
+    v.appendChild(el('img', { class: 'qd-mark', src: 'icons/mark.svg', alt: '', width: '48', height: '48' }));
+    v.appendChild(el('h1', { class: 'qd-prompt type-display', text: tUi('welcome', 'title', { title: 'A quiet place to steady yourself.' }) }));
+    v.appendChild(el('p', { class: 'qd-lede p-voice', text: tUi('welcome', 'subtitle', { subtitle: 'Techniques that work in a few minutes. A private journal. A map of the people around you. Everything stays on your phone.' }) }));
+    v.appendChild(el('p', { class: 'qd-lede type-callout', text: tUi('welcome', 'tagline', { tagline: 'Not therapy. Not a crisis service. Just something that helps.' }) }));
+    v.appendChild(el('div', { class: 'qd-thumb' }, [
       el('button', { class: 'btn', text: tUi('welcome', 'begin', { begin: 'Begin' }), onclick: function () { state.welcomed = true; save(); render(); } }),
-      el('button', { class: 'help-btn welcome-help', text: t('helpNow'), onclick: openPanic })
+      el('button', { class: 'help-btn qd-help', text: t('helpNow'), onclick: openPanic })
     ]));
   }
   var obStep = 0;
   function renderOnboarding() {
     var v = $('#view-onboarding'); clear(v);
+    v.className = 'view view-qd';
+    v.setAttribute('data-step', String(obStep));
+    v.appendChild(el('div', { class: 'living-field', 'aria-hidden': 'true' }));
     var totalSteps = 5;
     var pct = Math.round(((obStep + 1) / totalSteps) * 100);
-    v.appendChild(el('div', { class: 'onboard-top' }, [
+    v.appendChild(el('div', { class: 'qd-top' }, [
       el('div', {
-        class: 'onboard-progress',
+        class: 'qd-hairline',
         role: 'progressbar',
         'aria-valuemin': '1',
         'aria-valuemax': String(totalSteps),
         'aria-valuenow': String(obStep + 1),
         'aria-label': 'Onboarding step ' + (obStep + 1) + ' of ' + totalSteps
       }, [
-        el('div', { class: 'onboard-progress-fill', style: 'width:' + pct + '%' })
+        el('div', { class: 'qd-hairline-fill', style: 'width:' + pct + '%' })
       ]),
       el('button', { class: 'help-btn onboard-help', text: t('helpNow'), onclick: openPanic })
     ]));
-    var body = el('div', { class: 'onboard-body' });
+    var head = el('div', { class: 'qd-head' });
+    var thumb = el('div', { class: 'qd-thumb' });
     if (obStep === 0) {
-      body.appendChild(el('h1', { class: 'h-voice', text: tUi('onboarding', 'ageTitle', { ageTitle: 'First — how old are you?' }) }));
-      body.appendChild(el('p', { class: 'p', text: tUi('onboarding', 'ageBody', { ageBody: 'SoulCap is built for adults. We ask because the right support for someone under 18 looks different, and we’d rather point you somewhere better than get it wrong.' }) }));
-      body.appendChild(el('div', { class: 'stack' }, [
-        el('button', { class: 'opt', html: tUi('onboarding', 'over18', { over18: '18 or older' }), onclick: function () { state.ageOk = true; save(); obStep = 1; render(); } }),
-        el('button', { class: 'opt', html: tUi('onboarding', 'under18', { under18: 'Under 18' }) + '<span class="os">' + tUi('onboarding', 'under18Hint', { under18Hint: 'This isn’t built for you yet — please talk to a trusted adult or a service for young people' }) + '</span>', onclick: function () { state.ageOk = false; save(); render(); } })
-      ]));
-      if (state.ageOk === false) body.appendChild(el('div', { class: 'card' }, [el('p', { class: 'p-voice', text: tUi('onboarding', 'under18Body', { under18Body: 'SoulCap isn’t the right fit yet. Please reach out to a trusted adult, or a support service made for young people where you are.' }) })]));
+      head.appendChild(el('h1', { class: 'qd-prompt', text: tUi('onboarding', 'ageTitle', { ageTitle: 'First — how old are you?' }) }));
+      head.appendChild(el('p', { class: 'qd-lede', text: tUi('onboarding', 'ageBody', { ageBody: 'SoulCap is built for adults. We ask because the right support for someone under 18 looks different, and we’d rather point you somewhere better than get it wrong.' }) }));
+      if (state.ageOk === false) head.appendChild(el('div', { class: 'qd-note' }, [el('p', { class: 'p-voice', text: tUi('onboarding', 'under18Body', { under18Body: 'SoulCap isn’t the right fit yet. Please reach out to a trusted adult, or a support service made for young people where you are.' }) })]));
+      thumb.appendChild(el('button', { class: 'opt qd-row', html: tUi('onboarding', 'over18', { over18: '18 or older' }), onclick: function () { state.ageOk = true; save(); obStep = 1; render(); } }));
+      thumb.appendChild(el('button', { class: 'opt qd-row', html: tUi('onboarding', 'under18', { under18: 'Under 18' }) + '<span class="os">' + tUi('onboarding', 'under18Hint', { under18Hint: 'This isn’t built for you yet — please talk to a trusted adult or a service for young people' }) + '</span>', onclick: function () { state.ageOk = false; save(); render(); } }));
     } else if (obStep === 1) {
-      body.appendChild(el('h1', { class: 'h-voice', text: tUi('onboarding', 'nameTitle', { nameTitle: 'What should we call you?' }) }));
-      body.appendChild(el('p', { class: 'p', text: tUi('onboarding', 'nameBody', { nameBody: 'So this feels like yours. Skip it if you’d rather not.' }) }));
+      head.appendChild(el('h1', { class: 'qd-prompt', text: tUi('onboarding', 'nameTitle', { nameTitle: 'What should we call you?' }) }));
+      head.appendChild(el('p', { class: 'qd-lede', text: tUi('onboarding', 'nameBody', { nameBody: 'So this feels like yours. Skip it if you’d rather not.' }) }));
       var name = el('input', { type: 'text', placeholder: tUi('onboarding', 'namePlaceholder', { namePlaceholder: 'Your name or a nickname' }), 'aria-label': 'Name', value: state.profile.name });
-      body.appendChild(name);
-      body.appendChild(el('button', { class: 'btn', text: tUi('onboarding', 'continue', { continue: 'Continue' }), onclick: function () { state.profile.name = name.value.trim().slice(0, 40); save(); obStep = 2; render(); } }));
-      body.appendChild(el('button', { class: 'btn quiet', text: t('common.skip', 'Skip'), onclick: function () { obStep = 2; render(); } }));
+      thumb.appendChild(name);
+      thumb.appendChild(el('button', { class: 'btn', text: tUi('onboarding', 'continue', { continue: 'Continue' }), onclick: function () { state.profile.name = name.value.trim().slice(0, 40); save(); obStep = 2; render(); } }));
+      thumb.appendChild(el('button', { class: 'btn quiet', text: t('common.skip', 'Skip'), onclick: function () { obStep = 2; render(); } }));
     } else if (obStep === 2) {
-      body.appendChild(el('h1', { class: 'h-voice', text: tUi('onboarding', 'consentTitle', { consentTitle: 'What this is, plainly.' }) }));
-      body.appendChild(el('div', { class: 'notice', html: '<b>SoulCap is not therapy</b>, not a doctor, and not a crisis service. It teaches techniques and helps you notice patterns.<ul style="margin:9px 0 0;padding-left:17px"><li>Everything stays on your phone. No account, no server.</li><li>We never sell your data or train on it.</li><li>You can export or delete all of it, any time.</li><li>If you ever feel unsafe, please reach out to someone you trust or your local emergency services.</li></ul>' }));
-      body.appendChild(el('button', { class: 'btn', text: tUi('onboarding', 'understand', { understand: 'I understand' }), onclick: function () { state.consent = true; save(); obStep = 3; render(); } }));
+      head.appendChild(el('h1', { class: 'qd-prompt', text: tUi('onboarding', 'consentTitle', { consentTitle: 'What this is, plainly.' }) }));
+      head.appendChild(el('div', { class: 'notice qd-consent', html: '<b>SoulCap is not therapy</b>, not a doctor, and not a crisis service. It teaches techniques and helps you notice patterns.<ul style="margin:9px 0 0;padding-left:17px"><li>Everything stays on your phone. No account, no server.</li><li>We never sell your data or train on it.</li><li>You can export or delete all of it, any time.</li><li>If you ever feel unsafe, please reach out to someone you trust or your local emergency services.</li></ul>' }));
+      thumb.appendChild(el('button', { class: 'btn', text: tUi('onboarding', 'understand', { understand: 'I understand' }), onclick: function () { state.consent = true; save(); obStep = 3; render(); } }));
     } else if (obStep === 3) {
-      body.appendChild(el('h1', { class: 'h-voice', text: tUi('onboarding', 'motionTitle', { motionTitle: 'How much movement feels right?' }) }));
-      body.appendChild(el('p', { class: 'p', text: tUi('onboarding', 'motionBody', { motionBody: 'You can change this anytime in Settings. If your device asks for less motion, SoulCap stays Still.' }) }));
-      body.appendChild(el('div', { class: 'stack' }, MOTION_OPTIONS.map(function (o) {
+      head.appendChild(el('h1', { class: 'qd-prompt', text: tUi('onboarding', 'motionTitle', { motionTitle: 'How much movement feels right?' }) }));
+      head.appendChild(el('p', { class: 'qd-lede', text: tUi('onboarding', 'motionBody', { motionBody: 'You can change this anytime in Settings. If your device asks for less motion, SoulCap stays Still.' }) }));
+      MOTION_OPTIONS.forEach(function (o) {
         var hint = o.k === 'vivid' ? tUi('onboarding', 'motionVividHint', { motionVividHint: 'Full signature moments and depth.' })
           : o.k === 'still' ? tUi('onboarding', 'motionStillHint', { motionStillHint: 'Opacity only. Quietest.' })
           : tUi('onboarding', 'motionBalancedHint', { motionBalancedHint: 'Gentle transitions. Default.' });
-        return el('button', {
-          class: 'opt',
+        thumb.appendChild(el('button', {
+          class: 'opt qd-row',
           'aria-pressed': state.appearance.motion === o.k ? 'true' : 'false',
           html: presentationChipLabel(o.k, o.l) + '<span class="os">' + hint + '</span>',
           onclick: function () {
@@ -5507,19 +5563,20 @@
             obStep = 4;
             render();
           }
-        });
-      })));
-      body.appendChild(el('button', { class: 'btn quiet', text: t('common.skip', 'Skip'), onclick: function () { obStep = 4; render(); } }));
+        }));
+      });
+      thumb.appendChild(el('button', { class: 'btn quiet', text: t('common.skip', 'Skip'), onclick: function () { obStep = 4; render(); } }));
     } else {
-      body.appendChild(el('h1', { class: 'h-voice', text: tUi('onboarding', 'concernsTitle', { concernsTitle: 'What’s been hard lately?' }) }));
-      body.appendChild(el('p', { class: 'p', text: tUi('onboarding', 'concernsBody', { concernsBody: 'Pick any, or none. You can change this whenever — skipping doesn’t break anything.' }) }));
-      body.appendChild(el('div', { class: 'chips' }, CONCERNS.map(function (c) {
+      head.appendChild(el('h1', { class: 'qd-prompt', text: tUi('onboarding', 'concernsTitle', { concernsTitle: 'What’s been hard lately?' }) }));
+      head.appendChild(el('p', { class: 'qd-lede', text: tUi('onboarding', 'concernsBody', { concernsBody: 'Pick any, or none. You can change this whenever — skipping doesn’t break anything.' }) }));
+      thumb.appendChild(el('div', { class: 'chips qd-chips' }, CONCERNS.map(function (c) {
         return el('button', { class: 'chip', 'aria-pressed': state.concerns.indexOf(c) !== -1 ? 'true' : 'false', text: concernLabel(c), onclick: function () { var i = state.concerns.indexOf(c); if (i === -1) state.concerns.push(c); else state.concerns.splice(i, 1); save(); render(); } });
       })));
-      body.appendChild(el('button', { class: 'btn', text: tUi('onboarding', 'start', { start: 'Start' }), onclick: finishOnboarding }));
-      body.appendChild(el('button', { class: 'btn quiet', text: tUi('onboarding', 'skipIn', { skipIn: 'Skip — just let me in' }), onclick: finishOnboarding }));
+      thumb.appendChild(el('button', { class: 'btn', text: tUi('onboarding', 'start', { start: 'Start' }), onclick: finishOnboarding }));
+      thumb.appendChild(el('button', { class: 'btn quiet', text: tUi('onboarding', 'skipIn', { skipIn: 'Skip — just let me in' }), onclick: finishOnboarding }));
     }
-    v.appendChild(body);
+    v.appendChild(head);
+    v.appendChild(thumb);
   }
   function finishOnboarding() {
     if (!state.notices) state.notices = clone(DEFAULT.notices);
@@ -5727,7 +5784,7 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '7.0.0',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '7.0.1',
     effectiveMotion: effectiveMotion,
     motionCap: function () { return motionCap; },
     loadGsap: loadGsap,

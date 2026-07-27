@@ -80,7 +80,7 @@ test.describe('Synthetic user journeys', () => {
 
   test('low-energy returning user gets a fitted skill without engagement penalty', async ({ page }) => {
     await seedDemo(page);
-    await page.locator('#view-now .chip').filter({ hasText: 'Heavy' }).click();
+    await page.locator('#view-now .qd-row').filter({ hasText: 'Heavy' }).click();
     await selectTab(page, 'calm');
     await page.getByRole('button', { name: /Lift a low mood/ }).click();
     await page.getByRole('button', { name: 'On my own' }).click();

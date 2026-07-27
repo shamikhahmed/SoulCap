@@ -1,5 +1,14 @@
 ## [Unreleased]
 
+## [7.0.1] — 2026-07-27
+
+### Changed
+- **Quiet Depth V2 — Welcome/onboarding:** full-bleed one-idea screens; living field; hairline
+  progress; ruled thumb-zone rows (not card stack).
+- **Quiet Depth V3–V5:** retire boxed-card default (`qd-hero` / `qd-ruled` / elevation ramp);
+  Now arrival as ruled rows + living focal suggestion; Calm editorial featured hero + ruled browse.
+- SW `soulcap-v701`. App **7.0.1**. Schema **v13**.
+
 ## [7.0.0] — 2026-07-27
 
 ### Changed
