@@ -1,8 +1,8 @@
 # SoulCap
 
-**v7.0.2 — offline-first wellness PWA.** SPEC-v6.0 production pass complete: journal flex,
-density, theme cull, a11y, self-concept / local patterns / habit support, honest polish.
-**Not** therapy · not diagnosis · not crisis service. See [`SAFETY.md`](SAFETY.md).
+**v7.0.3 — offline-first wellness PWA.** Quiet Depth visual identity (SPEC-v7) complete —
+see [`REDESIGN-DIFF.md`](REDESIGN-DIFF.md). **Not** therapy · not diagnosis · not crisis service.
+See [`SAFETY.md`](SAFETY.md).
 
 > **New here? Read [`AGENTS.md`](AGENTS.md)** (build guide + rules) and [`ROADMAP.md`](ROADMAP.md)
 > (what's next). [`.cursorrules`](.cursorrules) is the short version for Cursor.
@@ -13,7 +13,7 @@ density, theme cull, a11y, self-concept / local patterns / habit support, honest
 
 | Surface | URL / path | Reality |
 |---|---|---|
-| **PWA** | [shamikhahmed.github.io/SoulCap](https://shamikhahmed.github.io/SoulCap/) · `docs/` | The product (**7.0.2** / schema **v13**). Five tabs, Guided Path, Settings + About & Legal, Personal Manual, Thought Parking, optional detailed check-ins, inspectable local patterns, self-concept reflection, habit-loop / urge surfing, 38 techniques (incl. urge-surfing), offline library, no-streak daily supports, book-style journal, Constellation, Roman Urdu chrome preview, Help on free-text, curated themes + Accessibility group, voice + haptics. **Zero network calls — localStorage only.** |
+| **PWA** | [shamikhahmed.github.io/SoulCap](https://shamikhahmed.github.io/SoulCap/) · `docs/` | The product (**7.0.3** / schema **v13**). Five tabs, Guided Path, Settings + About & Legal, Personal Manual, Thought Parking, optional detailed check-ins, inspectable local patterns, self-concept reflection, habit-loop / urge surfing, 38 techniques (incl. urge-surfing), offline library, no-streak daily supports, book-style journal, Constellation, Roman Urdu chrome preview, Help on free-text, curated themes + Accessibility group, voice + haptics. **Zero network calls — localStorage only.** |
 | Nest API | `backend/` | Full module **source** (LMM, safety gate). Builds clean, **not deployed**; PWA does not call it. |
 | Expo | `mobile/` | Thin client source. Lab only. |
 | **Screen gallery** | [`screen-gallery.html`](screen-gallery.html) · `docs/screenshots/gallery/` | Every major screen + kept themes + appearance axes. `npm run gallery` → `npm run gallery:view`. |
@@ -58,7 +58,7 @@ npm run dev
 # open http://localhost:8788/?demo=1
 
 npm run gallery          # regenerate screenshots (CAPTURE_GALLERY=1)
-npm run gallery:view     # http://127.0.2.1:8790/screen-gallery.html
+npm run gallery:view     # http://127.0.3.1:8790/screen-gallery.html
 npm run verify           # full Playwright suite before ship
 ```
 

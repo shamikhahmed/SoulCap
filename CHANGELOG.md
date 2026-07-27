@@ -1,5 +1,12 @@
 ## [Unreleased]
 
+## [7.0.3] — 2026-07-27
+
+### Changed
+- **Quiet Depth V9:** full gallery regen; `REDESIGN-DIFF.md` anti-lookalike pass vs v6.0.10 baseline
+  (splash, welcome/onboard, Now, Calm, Journal, Map, You, Help, runner, settings).
+- SW `soulcap-v703`. App **7.0.3**. Schema **v13**.
+
 ## [7.0.2] — 2026-07-27
 
 ### Changed

@@ -1,8 +1,8 @@
 {
   "name": "SoulCap",
-  "version": "7.0.2",
-  "swCache": "soulcap-v702",
+  "version": "7.0.3",
+  "swCache": "soulcap-v703",
   "schema": 13,
   "released": "2026-07-27",
-  "note": "v7.0.2 Quiet Depth V6\u2013V8 \u2014 Journal/You/People compositions, chrome, motion."
+  "note": "v7.0.3 Quiet Depth V9 \u2014 redesign QA + REDESIGN-DIFF.md"
 }
