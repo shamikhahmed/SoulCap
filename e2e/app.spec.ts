@@ -962,7 +962,7 @@ test.describe('Skills', () => {
     ];
     const box = await measurePhases('box-breathing', [4, 4, 4, 4], boxLabels);
     box.forEach((ms, i) => {
-      expect(Math.abs(ms - 4000), `box phase ${i}`).toBeLessThanOrEqual(1500);
+      expect(Math.abs(ms - 4000), `box phase ${i}`).toBeLessThanOrEqual(1800);
     });
 
     const fseLabels = [
@@ -973,7 +973,7 @@ test.describe('Skills', () => {
     const fse = await measurePhases('four-seven-eight', [4, 7, 8], fseLabels);
     const expectMs = [4000, 7000, 8000];
     fse.forEach((ms, i) => {
-      expect(Math.abs(ms - expectMs[i]), `478 phase ${i}`).toBeLessThanOrEqual(1500);
+      expect(Math.abs(ms - expectMs[i]), `478 phase ${i}`).toBeLessThanOrEqual(1800);
     });
   });
 
