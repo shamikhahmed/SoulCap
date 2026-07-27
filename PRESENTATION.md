@@ -1,6 +1,6 @@
 # SoulCap — Platform Presentation
 
-> **Honesty (shipped product · v5.1.9):** The live PWA at [`docs/`](./docs/) / GitHub Pages is a
+> **Honesty (shipped product · v6.0.10):** The live PWA at [`docs/`](./docs/) / GitHub Pages is a
 > private, self-guided wellness tool: theme + appearance system, deterministic suggestions, Guided
 > Path with educational approach packs, guided skills, journal, Constellation, Personal Manual,
 > Progress glance, and keyword safety on free-text surfaces. It has no chat surface or live LLM.

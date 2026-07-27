@@ -5,7 +5,7 @@ item and ship it **the same way the rest of the app was built** — read `AGENTS
 rules, conventions, and ship workflow. Every item below lists **what**, **why**, **files to
 touch**, **acceptance criteria (incl. a test)**, and **guardrails**.
 
-**Current release: v6.0.0** · Published app: https://shamikhahmed.github.io/SoulCap/
+**Current release: v6.0.10** · schema v13 · SPEC-v6.0 A→J **shipped** · Published app: https://shamikhahmed.github.io/SoulCap/
 
 Philosophy (never drifts): a personalised emotional operating system, **not** an AI therapist.
 Help people understand and regulate; never "fix" them; never diagnose; success = needing the app
@@ -75,7 +75,7 @@ less. See `AGENTS.md §2` for the hard rules — every item inherits them.
   Viewable/correctable in “What SoulCap knows”; never diagnoses.
 
 ### 1.1.2 — Themes & modes · **SHIPPED**
-- Ocean / Forest / Rain / Space / Sunrise / Minimal / AMOLED plus Auto/Light/Dark/Night.
+- Auto / Light / Dark / Night / AMOLED + Ocean / Forest (Rain/Space/Sunrise/Minimal deleted in v6).
 
 ### 1.1.3 — Accessibility audit · **SHIPPED (automated slice)**
 - Panic + runner dialog semantics and 200% zoom smoke tests. Reduced-motion and token contrast

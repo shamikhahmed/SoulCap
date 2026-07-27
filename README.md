@@ -1,12 +1,11 @@
 # SoulCap
 
-**v5.1.9 — offline-first wellness PWA.** Fixed tab footer, readable secondary text, compact
-tiles, soft selection, full theme/appearance screen gallery. Guided Path + approach packs;
-37 techniques; journal; Constellation. **Not** therapy · not diagnosis · not crisis service.
-See [`SAFETY.md`](SAFETY.md).
+**v6.0.10 — offline-first wellness PWA.** SPEC-v6.0 production pass complete: journal flex,
+density, theme cull, a11y, self-concept / local patterns / habit support, honest polish.
+**Not** therapy · not diagnosis · not crisis service. See [`SAFETY.md`](SAFETY.md).
 
 > **New here? Read [`AGENTS.md`](AGENTS.md)** (build guide + rules) and [`ROADMAP.md`](ROADMAP.md)
-> (what's next, in detail). [`.cursorrules`](.cursorrules) is the short version for Cursor.
+> (what's next). [`.cursorrules`](.cursorrules) is the short version for Cursor.
 
 ---
 
@@ -14,25 +13,23 @@ See [`SAFETY.md`](SAFETY.md).
 
 | Surface | URL / path | Reality |
 |---|---|---|
-| **PWA** | [shamikhahmed.github.io/SoulCap](https://shamikhahmed.github.io/SoulCap/) · `docs/` | The product (**5.1.9** / schema v12). Five tabs, Guided Path, Settings + About, Personal Manual, Thought Parking, optional detailed check-ins, inspectable local patterns, 37 exercises, offline library (articles + experiences), no-streak daily supports, book-style journal, Constellation, Roman Urdu chrome preview, Help on free-text, themes + appearance controls, voice + haptics. **Zero network calls — localStorage only.** |
+| **PWA** | [shamikhahmed.github.io/SoulCap](https://shamikhahmed.github.io/SoulCap/) · `docs/` | The product (**6.0.10** / schema **v13**). Five tabs, Guided Path, Settings + About & Legal, Personal Manual, Thought Parking, optional detailed check-ins, inspectable local patterns, self-concept reflection, habit-loop / urge surfing, 38 techniques (incl. urge-surfing), offline library, no-streak daily supports, book-style journal, Constellation, Roman Urdu chrome preview, Help on free-text, curated themes + Accessibility group, voice + haptics. **Zero network calls — localStorage only.** |
 | Nest API | `backend/` | Full module **source** (LMM, safety gate). Builds clean, **not deployed**; PWA does not call it. |
 | Expo | `mobile/` | Thin client source. Lab only. |
-| **Screen gallery** | [`screen-gallery.html`](screen-gallery.html) · `docs/screenshots/gallery/` | ~436 shots: every major screen + every theme + appearance axes (text, density, contrast, transparency, accents, motion). `npm run gallery` → `npm run gallery:view`. |
+| **Screen gallery** | [`screen-gallery.html`](screen-gallery.html) · `docs/screenshots/gallery/` | Every major screen + kept themes + appearance axes. `npm run gallery` → `npm run gallery:view`. |
 
 Demo walkthrough → `?demo=1`.
 
-**No crisis phone numbers or country selection ship** (owner decision — we can't promise any line
-is reachable). Help is gentle, number-free guidance: reach out to someone you trust; contact local
-emergency services if in danger.
+**No crisis phone numbers or country selection ship** (owner decision). Help is gentle,
+number-free guidance only.
 
 ---
 
 ## Personalisation honesty
 
-The PWA uses deterministic check-ins, explicit direct needs, Calm context filters, and local
-history to fit suggestions. Pattern cards require repeated evidence across distinct days, show
-the evidence, and can be corrected or hidden. It has no chat surface and no live LLM. Nest +
-model providers exist only in undeployed `backend/` source.
+Deterministic check-ins, direct needs, Calm context filters, and local history fit suggestions.
+Pattern cards need repeated evidence, show confidence, and can be corrected or hidden. Self-concept
+mask effort is the user's rating, never the app's. No chat surface, no live LLM.
 
 ---
 
@@ -65,7 +62,7 @@ npm run gallery:view     # http://127.0.0.1:8790/screen-gallery.html
 npm run verify           # full Playwright suite before ship
 ```
 
-Backend / Expo: see `backend/README` and `mobile/` — require Postgres, Redis, API keys. Not required for the live Cap.
+Backend / Expo: see `backend/README` and `mobile/` — not required for the live Cap.
 
 ---
 

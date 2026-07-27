@@ -1,5 +1,13 @@
 ## [Unreleased]
 
+## [6.0.10] — 2026-07-27
+
+### Changed
+- **Docs + gallery sync:** README / FEATURES / PRESENTATION / ROADMAP / AGENTS / DATA_MODEL /
+  ACCESSIBILITY / investor surfaces aligned to **6.0.10** · schema **v13** · SPEC-v6.0 complete.
+  Fresh screen gallery + `assets/gallery` mirror.
+- SW `soulcap-v610`. App **6.0.10**.
+
 ## [6.0.9] — 2026-07-27
 
 ### Changed

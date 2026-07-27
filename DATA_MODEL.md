@@ -137,6 +137,7 @@ Path content tables live in `data.js`: `PATH_UI`, `PATH_ARRIVALS`, `PATH_CHIPS`,
 - v9 → v10: manual, libraryBookmarks; person notes/events/ringHistory normalization
 - v10 → v11: screenerResults; windDownHour default null
 - v11 → v12: pathSessions []; pathPrefs { hide: false }
+- v12 → v13: selfConcept { areas, updatedAt }; habits []; experienceViews {}
 
 Additive and sequential. Playwright fixtures cover prior schema and forced storage failure.
 Unknown future fields must not be discarded on downgrade.

@@ -1,4 +1,4 @@
-**Version:** 6.0.9 · SW `soulcap-v609`
+**Version:** 6.0.10 · SW `soulcap-v610`
 
 # SoulCap — Project Handover
 
@@ -6,7 +6,7 @@
 > first — it is the current truth as of 2026-07-27. The sections further down describe an
 > earlier architecture and are kept for reference only.
 
-## Current state (v6.0.9 — 2026-07-27)
+## Current state (v6.0.10 — 2026-07-27)
 
 **The product is the PWA in `docs/`.** Offline-first, local-only, **no network calls after load**.
 Schema **v13**. Phase H: self-concept, patterns, habits. Prior Phase G: dialog a11y + 200% text / reduced-motion Playwright coverage; panic
@@ -17,7 +17,7 @@ appearance axes). Viewer: `screen-gallery.html` (`npm run gallery:view`).
 Live: https://shamikhahmed.github.io/SoulCap/
 
 ### Schema & ship
-- State `DEFAULT.v = 13` · SW `soulcap-v609` · app **6.0.9** · `package.json` **6.0.9**
+- State `DEFAULT.v = 13` · SW `soulcap-v610` · app **6.0.10** · `package.json` **6.0.10**
 - Ship workflow: bump CACHE + VERSION.json + APP_VERSION + package.json; CHANGELOG;
   SAFETY/HANDOVER (+ README/FEATURES when they drift); gallery; `npm run verify`; push `main`.
 
@@ -29,14 +29,13 @@ Live: https://shamikhahmed.github.io/SoulCap/
 `.github/workflows/deploy.yml` runs `npm run verify` then deploys `docs/`.
 
 ### Open blockers (not code)
-1. No clinician has signed off techniques/articles/path copy — banners stay.
+1. No clinician has signed off techniques/articles/path copy — About honesty line stays; no clinical-claim banners.
 2. Roman Urdu clinical-copy review not done — safety/clinical English stays.
 3. Keyword kernel misses oblique risk — needs Kernel v2 / eval harness before any generative text.
 4. Nest Prisma enums still lab-only; no production DB.
 
 ### For the next developer / AI agent
-Read **`AGENTS.md`** then **`ROADMAP.md`** (NEXT = v2.2 approach packs). Specs:
-`SPEC-v2.1-guided-path.md` (shipped), `SPEC-v2.2-approach-packs.md`, `SPEC-v2.3-regulation-depth.md`.
+Read **`AGENTS.md`** then **`ROADMAP.md`**. SPEC-v6.0 A→J **shipped** (see `CHANGELOG.md`).
 Vault: `~/Capricorn-Brain/01 Projects/SoulCap-Therapy-App.md`, `AI/Cursor/SoulCap-Guided-Path.md`.
 
 ---

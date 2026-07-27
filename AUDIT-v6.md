@@ -1,6 +1,6 @@
 # AUDIT-v6 — SoulCap production audit (Phase A)
 
-**Date:** 2026-07-27 · **App:** v5.1.9 / `soulcap-v519` · **Schema:** v12  
+**Status:** SPEC-v6.0 A→J complete · **Date:** 2026-07-27 · **App (audit baseline):** v5.1.9 · **Shipped now:** v6.0.10 / `soulcap-v610` · **Schema:** v13  
 **Scope:** read-only. No code changes in this phase. Sources: `docs/app.js` (~5294 lines),
 `docs/app.css` (~1410), `docs/data.js` (~1899), `docs/index.html`, `docs/sw.js`, e2e.
 
