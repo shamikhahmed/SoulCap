@@ -1,5 +1,24 @@
 /* SoulCap — application logic
  * Local-first. Zero network calls. No account, no server, no LLM, no analytics.
+ *
+ * FUNCTION INDEX (Phase B — keep navigable; one file, no build step)
+ *  Safety …… assessRisk, openPanicIfTier3, wireSafetyText
+ *  State ……… load, migrateState, save, DEFAULT
+ *  DOM ……… el, $, clear, composition helpers
+ *  Theme …… applyTheme, setTheme, setAppearance, motion/haptics
+ *  Voice …… speak, loadVoices, hushVoice
+ *  Check-in … recordCheckin, checkinDetailSheet
+ *  Path ……… pathSheet, scorePathFamilies, suggestPathSkills
+ *  Patterns … derivePatterns, patternSheet, patternsOverviewSheet
+ *  Screener … screenerPick/Run/ResultSheet
+ *  Runner …… startSkill, breathSetup, breathRun, startSteps, closeRunner
+ *  Sheets …… openSheet, skillSheet, articleSheet, experienceSheet, settingsSheet
+ *  Calm ……… renderCalm, renderLibrary, renderDailySupports
+ *  Journal …… renderJournal, openEditor, saveDraft, coverSheet
+ *  Map ……… renderMap, personSheet, suggestPerson
+ *  Now/You …… renderNow, renderMe, knowsSheet, manualSheet
+ *  Onboard … renderWelcome, renderOnboarding
+ *  Router …… render, selectTab, boot · window.__soulcap
  */
 (function () {
   'use strict';
@@ -1002,6 +1021,7 @@
     return 'Because ' + uniq.join(', and ') + '.';
   }
 
+  /* ── Guided Path (feeling → chips → family → technique) ─────────────────── */
   function pathChipById(id) {
     var i;
     for (i = 0; i < PATH_CHIPS.length; i++) if (PATH_CHIPS[i].id === id) return PATH_CHIPS[i];
@@ -1210,7 +1230,7 @@
         if (skills.length > 1) {
           p.appendChild(el('p', { class: 'eyebrow mt-3', text: PATH_UI.approachMore }));
           skills.slice(1, 4).forEach(function (alt) {
-            p.appendChild(el('button', { class: 'btn ghost', text: PATH_UI.tryExercise + ' · ' + alt.name, onclick: function () {
+            p.appendChild(el('button', { class: 'btn ghost', text: PATH_UI.tryTechnique + ' · ' + alt.name, onclick: function () {
               savePathSession({
                 id: uid(), t: Date.now(), arrival: arrival.key, chips: chips,
                 family: family, approachId: approach ? approach.id : null, skillId: alt.id
@@ -1357,6 +1377,7 @@
     }
     return days;
   }
+  /* ── Local patterns (inspectable; never diagnostic) ─────────────────────── */
   function derivePatterns() {
     if (!state.patternPrefs.enabled) return [];
     var patterns = [], checkins = state.checkins || [];
@@ -1539,6 +1560,7 @@
       p.appendChild(el('button', { class: 'btn', text: CHECKIN_UI.ok, onclick: closeSheet }));
     });
   }
+  /* ── Screeners (optional; local score bands only — never diagnosis) ─────── */
   function screenerById(id) {
     return SCREENERS.filter(function (s) { return s.id === id; })[0];
   }
@@ -1875,10 +1897,9 @@
     return m ? (m + ':' + (s < 10 ? '0' : '') + s + ' min') : (s + ' sec');
   }
 
-  /* ══ RUNNER ═══════════════════════════════════════════════════════════════
-   * Branches: paced breathing session (Apple-Watch style) for skills with a
-   * `pattern`, or a guided step walk-through for everything else. Either way
-   * it moves through the WHOLE technique, spoken and paced. */
+  /* ── Runner (guided technique session) ────────────────────────────────────
+   * Branches: paced breathing (Apple-Watch style) when technique has `pattern`,
+   * or step walk-through. Speaks + paces the whole technique. */
   var runState = null;
 
   function openRunnerShell() {
@@ -2611,7 +2632,7 @@
               el('h3', { class: 'card-title', text: skill.name }),
               el('span', { class: 'domain', style: 'color:var(' + dm.cssVar + ')', text: dm.label })
             ]),
-            el('p', { class: 'meta', text: LIBRARY_UI.tryExercise + ' · ' + skill.mins + ' min' })
+            el('p', { class: 'meta', text: LIBRARY_UI.tryTechnique + ' · ' + skill.mins + ' min' })
           ]));
         });
         p.appendChild(el('p', { class: 'eyebrow article-label', text: LIBRARY_UI.selfCare }));
@@ -2961,6 +2982,7 @@
     state.pendingReflection = null;
     save(); render();
   }
+  /* ── Settings sheets ────────────────────────────────────────────────────── */
   function settingsSheet() {
     openSheet(function (p) {
       p.appendChild(el('h2', { class: 'h-sec', text: tUi('common', 'settings', { settings: 'Settings' }) }));
@@ -3029,7 +3051,7 @@
           if (!save()) { state.haptics = before; showPreferenceSaveFailed(); return; }
           haptic('done'); reRender();
         }),
-        el('p', { class: 'eyebrow mt-2', text: SETTINGS_UI.exercisePace }),
+        el('p', { class: 'eyebrow mt-2', text: SETTINGS_UI.techniquePace }),
         settingChips([{ v: 1.35, l: SETTINGS_UI.slow }, { v: 1, l: SETTINGS_UI.steady }, { v: 0.8, l: SETTINGS_UI.brisk }],
           function (o) { return paceMult() === o.v; }, function (o) {
             var before = state.pace; state.pace = o.v;
@@ -4469,7 +4491,7 @@
       el('p', { class: 'glance-sub', text: weekLine }),
       (runs || state.checkins.length || state.journal.length || pathN)
         ? el('div', { class: 'progress-stats' }, [
-            el('p', { class: 'p-sm', text: PROGRESS_UI.exercises + ' · ' + runs + (helped ? ' (' + helped + ' felt helpful)' : '') }),
+            el('p', { class: 'p-sm', text: PROGRESS_UI.techniques + ' · ' + runs + (helped ? ' (' + helped + ' felt helpful)' : '') }),
             el('p', { class: 'p-sm', text: PROGRESS_UI.checkins + ' · ' + state.checkins.length }),
             el('p', { class: 'p-sm', text: PROGRESS_UI.journals + ' · ' + state.journal.length }),
             pathN ? el('p', { class: 'p-sm', text: PROGRESS_UI.paths + ' · ' + pathN }) : null
@@ -4748,7 +4770,7 @@
       }
     });
   }
-  var APP_VERSION = '6.0.0';
+  var APP_VERSION = '6.0.1';
   function settingsGroup(v, title, kids) {
     v.appendChild(el('p', { class: 'eyebrow settings-eyebrow', text: title }));
     var block = el('div', { class: 'settings-block' });
@@ -5172,7 +5194,7 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '6.0.0',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '6.0.1',
     effectiveMotion: effectiveMotion,
     motionCap: function () { return motionCap; },
     loadGsap: loadGsap,

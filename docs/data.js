@@ -4,6 +4,9 @@
  * The UI states this. Do not remove that banner until a named reviewer has signed
  * each card. See SAFETY.md.
  *
+ * Naming: user-facing word = **technique**. `SKILLS` / `skillIds` / `skills` keys are
+ * the stable local data identifiers (rename = migrate all saved state).
+ *
  * Card fields
  *   mechanism        why it works, in one plain sentence — this is the documentation
  *   indication       states it suits
@@ -305,7 +308,7 @@ var PATH_UI = {
   familyLabel:'Starting place',
   approachLabel:'An approach you could try',
   approachMore:'Other techniques in this approach',
-  tryExercise:'Try'
+  tryTechnique:'Try'
 };
 
 var PATH_ARRIVALS = [
@@ -399,7 +402,7 @@ var PROGRESS_UI = {
   weekLabel:'This week',
   weekEmpty:'This week is still open — no pressure.',
   weekDays:'{n} day{s} with a check-in or technique · not a streak.',
-  exercises:'Techniques completed',
+  techniques:'Techniques completed',
   checkins:'Check-ins',
   journals:'Journal entries',
   paths:'Short paths tried',
@@ -431,7 +434,7 @@ var SETTINGS_UI = {
   spoken:'Spoken guidance',
   voiceAccent:'Voice & accent',
   vibration:'Vibration',
-  exercisePace:'Technique pace',
+  techniquePace:'Technique pace',
   paceHint:'How long each step of a guided technique stays on screen. Slow gives more time to read.',
   mapPace:'Map pace',
   mapPaceHint:'Still keeps the map fixed. Drift is gentle. Live moves faster. Reduced-motion always uses Still.',
@@ -955,7 +958,7 @@ var LIBRARY_UI = {
   reflect:'A question to consider',
   source:'Source note',
   akaPrefix:'Also called',
-  tryExercise:'Try',
+  tryTechnique:'Try',
   back:'← Back to Calm',
   practical:'Things that may help',
   support:'When professional support may help',

@@ -1,8 +1,8 @@
 {
   "name": "SoulCap",
-  "version": "6.0.0",
-  "swCache": "soulcap-v600",
+  "version": "6.0.1",
+  "swCache": "soulcap-v601",
   "schema": 12,
   "released": "2026-07-27",
-  "note": "v6.0.0 Phase A — AUDIT-v6.md only (no behaviour change)."
+  "note": "v6.0.1 Phase B \u2014 code health: function index, section banners, dead tokens, technique naming."
 }

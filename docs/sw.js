@@ -1,5 +1,5 @@
 /* SoulCap service worker.
- * Offline is not a nice-to-have here — the skills and the help screen must work
+ * Offline is not a nice-to-have here — techniques and the help screen must work
  * with no connection at all. Everything needed for that is precached.
  *
  * Paths are relative so they resolve against the SW scope, which works both on
@@ -7,7 +7,7 @@
  *
  * Bump CACHE on every asset change or users get a stale build.
  */
-var CACHE = 'soulcap-v600';
+var CACHE = 'soulcap-v601';
 
 var ASSETS = [
   './',

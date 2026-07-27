@@ -1,5 +1,14 @@
 ## [Unreleased]
 
+## [6.0.1] — 2026-07-27
+
+### Changed
+- **Phase B code health:** function index + section banners in `app.js`; remove unused CSS
+  tokens (`caution-ink`, `cover-edit`, `data`, `dur-screen`, `space-4b`, `space-7`); UI keys
+  use **technique** naming (`tryTechnique`, `techniquePace`, `techniques`). Internal `SKILLS`
+  ids unchanged (saved-state stability). Offline SW ASSETS already match dynamic vendor loads.
+- SW `soulcap-v601`. App **6.0.1**. Schema still **v12**.
+
 ## [6.0.0] — 2026-07-27
 
 ### Added
