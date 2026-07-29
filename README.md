@@ -1,6 +1,6 @@
 # SoulCap
 
- **v7.0.7 — offline-first wellness PWA.** Quiet Depth visual identity (SPEC-v7) complete —
+**v7.0.7 — offline-first wellness PWA.** Quiet Depth visual identity (SPEC-v7) complete —
 see [`REDESIGN-DIFF.md`](REDESIGN-DIFF.md). **Not** therapy · not diagnosis · not crisis service.
 See [`SAFETY.md`](SAFETY.md).
 
