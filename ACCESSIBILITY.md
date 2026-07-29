@@ -1,6 +1,6 @@
 # SoulCap Accessibility Contract
 
-**Version:** 7.0.4 · **Updated:** 2026-07-29
+**Version:** 7.0.5 · **Updated:** 2026-07-29
 
 ## Baseline
 

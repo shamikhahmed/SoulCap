@@ -1,5 +1,11 @@
 ## [Unreleased]
 
+## [7.0.5] — 2026-07-29
+
+### Changed
+- **Journal editor flex-chain regression (V10):** fix `.je-body` flex chain + add height guard (0/1/20 lines).
+- SW `soulcap-v705`. App **7.0.5**. Schema **v13**.
+
 ## [7.0.4] — 2026-07-29
 
 ### Changed

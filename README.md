@@ -1,6 +1,6 @@
 # SoulCap
 
-**v7.0.4 — offline-first wellness PWA.** Quiet Depth visual identity (SPEC-v7) complete —
+**v7.0.5 — offline-first wellness PWA.** Quiet Depth visual identity (SPEC-v7) complete —
 see [`REDESIGN-DIFF.md`](REDESIGN-DIFF.md). **Not** therapy · not diagnosis · not crisis service.
 See [`SAFETY.md`](SAFETY.md).
 
@@ -13,7 +13,7 @@ See [`SAFETY.md`](SAFETY.md).
 
 | Surface | URL / path | Reality |
 |---|---|---|
-| **PWA** | [shamikhahmed.github.io/SoulCap](https://shamikhahmed.github.io/SoulCap/) · `docs/` | The product (**7.0.4** / schema **v13**). Quiet Depth identity. Five tabs, Guided Path, Settings + About & Legal, Personal Manual, Thought Parking, optional detailed check-ins, inspectable local patterns, self-concept reflection, habit-loop / urge surfing, 38 techniques (incl. urge-surfing), offline library, no-streak daily supports, book-style journal, Constellation, Roman Urdu chrome preview, Help on free-text, curated themes + Accessibility group, voice + haptics. **Zero network calls — localStorage only.** |
+| **PWA** | [shamikhahmed.github.io/SoulCap](https://shamikhahmed.github.io/SoulCap/) · `docs/` | The product (**7.0.5** / schema **v13**). Quiet Depth identity. Five tabs, Guided Path, Settings + About & Legal, Personal Manual, Thought Parking, optional detailed check-ins, inspectable local patterns, self-concept reflection, habit-loop / urge surfing, 38 techniques (incl. urge-surfing), offline library, no-streak daily supports, book-style journal, Constellation, Roman Urdu chrome preview, Help on free-text, curated themes + Accessibility group, voice + haptics. **Zero network calls — localStorage only.** |
 | Nest API | `backend/` | Full module **source** (LMM, safety gate). Builds clean, **not deployed**; PWA does not call it. |
 | Expo | `mobile/` | Thin client source. Lab only. |
 | **Screen gallery** | [`screen-gallery.html`](screen-gallery.html) · `docs/screenshots/gallery/` | Every major screen + kept themes + appearance axes. `npm run gallery` → `npm run gallery:view`. |

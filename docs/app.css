@@ -896,13 +896,14 @@ input[type="range"]{width:100%;min-height:48px;accent-color:var(--accent)}
 
 #journalEditor{
   position:fixed;inset:0;z-index:95;background:var(--ground);display:none;flex-direction:column;
+  height:100%;
   padding:calc(var(--sat) + 12px) 0 0;
 }
-#journalEditor.on{display:flex;animation:viewIn var(--dur-normal) var(--ease-quiet) both}
+#journalEditor.on{display:flex;animation:viewIn var(--dur-normal) var(--ease-quiet) both;height:100%}
 .je-top{flex:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 16px 12px;border-bottom:1px solid var(--line)}
 .je-date{font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;font-weight:600;color:var(--ink-3);font-variant-numeric:tabular-nums}
 .je-paper{
-  flex:1 1 auto;min-height:0;overflow:hidden;padding:18px 22px 12px;display:flex;flex-direction:column;gap:10px;
+  flex:1 1 0;min-height:0;overflow:hidden;padding:18px 22px 12px;display:flex;flex-direction:column;gap:10px;
   background:var(--surface);
 }
 .je-title{
@@ -919,7 +920,7 @@ input[type="range"]{width:100%;min-height:48px;accent-color:var(--accent)}
 .je-voice-status:empty{display:none}
 /* Ruled lines on writing surface; body fills remaining editor height — no void. */
 .je-body{
-  flex:1 1 auto;min-height:0;width:100%;
+  flex:1 1 0;min-height:0;height:100%;width:100%;
   font-family:var(--voice);font-size:18px;line-height:34px;letter-spacing:-.003em;color:var(--ink);
   border:none;padding:0 0 6px;resize:none;overflow-y:auto;
   background-image:repeating-linear-gradient(transparent 0 33px, var(--line) 33px 34px);
@@ -932,7 +933,13 @@ input[type="range"]{width:100%;min-height:48px;accent-color:var(--accent)}
 .je-photos .ph{position:relative}
 .je-photos img{width:88px;height:88px;object-fit:cover;border-radius:10px;border:1px solid var(--line-strong)}
 .je-photos .rm{position:absolute;top:-12px;right:-12px;width:48px;height:48px;border-radius:50%;background:var(--ink);color:var(--ground);border:none;font-size:18px;line-height:1;display:flex;align-items:center;justify-content:center}
-.je-tools{flex:none;display:flex;align-items:center;gap:10px;padding:11px 16px calc(var(--sab) + 12px + var(--kb-inset,0px));border-top:1px solid var(--line);background:var(--ground);overflow-x:auto;scrollbar-width:none}
+.je-tools{
+  flex:none;display:flex;align-items:center;gap:10px;
+  padding:11px 16px calc(var(--sab) + 12px + var(--kb-inset,0px));
+  border-top:1px solid var(--line);background:var(--ground);
+  overflow-x:auto;overflow-y:auto;scrollbar-width:none;
+  max-height:40vh;
+}
 .je-tools::-webkit-scrollbar{display:none}
 .je-tool{width:48px;height:48px;border-radius:12px;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink-2);display:flex;align-items:center;justify-content:center;flex:none}
 .je-tool:active{transform:scale(.94)}

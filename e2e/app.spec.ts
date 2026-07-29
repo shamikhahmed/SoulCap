@@ -2360,6 +2360,37 @@ test.describe('Phase J — final QA stress', () => {
     expect(layout.gapBelowBody).toBeLessThan(80);
   });
 
+  test.describe('V10 journal editor guard', () => {
+    test.use({ serviceWorkers: 'block' });
+
+    test('V10 regression: journal editor .je-body height >= 55% (0/1/20 lines)', async ({ page }, testInfo) => {
+      if (testInfo.project.name !== 'mobile') return;
+      await seedDemo(page);
+      await page.evaluate(() => (document.querySelector('#tabs button[data-tab="journal"]') as HTMLElement).click());
+      await openBlankJournalEntry(page);
+      await waitForAnimationsIdle(page, '#journalEditor');
+
+      async function assertRatio(value: string, label: string) {
+        await page.locator('#jeBody').fill(value);
+        await page.waitForTimeout(60);
+        const ok = await page.evaluate(() => {
+          const ed = document.getElementById('journalEditor')!;
+          const body = document.getElementById('jeBody')!;
+          const paper = ed.querySelector('.je-paper') as HTMLElement | null;
+          const er = ed.getBoundingClientRect();
+          const br = body.getBoundingClientRect();
+          const pr = paper ? paper.getBoundingClientRect() : er;
+          return { ratio: br.height / pr.height, editorH: pr.height, bodyH: br.height };
+        });
+        expect(ok.ratio, `${label}: bodyH=${ok.bodyH} editorH=${ok.editorH}`).toBeGreaterThanOrEqual(0.55);
+      }
+
+      await assertRatio('', '0 lines');
+      await assertRatio('Line 1', '1 line');
+      await assertRatio(Array(20).fill('Line').join('\n'), '20 lines');
+    });
+  });
+
   test('long journal text stays in scrollable body', async ({ page }) => {
     await seedDemo(page);
     await page.evaluate(() => (document.querySelector('#tabs button[data-tab="journal"]') as HTMLElement).click());

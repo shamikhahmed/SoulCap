@@ -1,4 +1,4 @@
-**Version:** 7.0.4 · SW `soulcap-v704`
+**Version:** 7.0.5 · SW `soulcap-v705`
 
 # SoulCap — Project Handover
 
@@ -6,7 +6,7 @@
 > first — it is the current truth as of 2026-07-29. The sections further down describe an
 > earlier architecture and are kept for reference only.
 
-## Current state (v7.0.4 — 2026-07-29)
+## Current state (v7.0.5 — 2026-07-29)
 
 **Quiet Depth (SPEC-v7) complete** — V1–V9 shipped. Docs + gallery synced. See `REDESIGN-DIFF.md`
 (anti-lookalike vs v6.0.10).
@@ -20,7 +20,7 @@ appearance axes). Viewer: `screen-gallery.html` (`npm run gallery:view`).
 Live: https://shamikhahmed.github.io/SoulCap/
 
 ### Schema & ship
-- State `DEFAULT.v = 13` · SW `soulcap-v704` · app **7.0.4** · `package.json` **7.0.4**
+- State `DEFAULT.v = 13` · SW `soulcap-v705` · app **7.0.5** · `package.json` **7.0.5**
 - Ship workflow: bump CACHE + VERSION.json + APP_VERSION + package.json; CHANGELOG;
   SAFETY/HANDOVER (+ README/FEATURES when they drift); gallery; `npm run verify`; push `main`.
 

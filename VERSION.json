@@ -1,8 +1,8 @@
 {
   "name": "SoulCap",
-  "version": "7.0.4",
-  "swCache": "soulcap-v704",
+  "version": "7.0.5",
+  "swCache": "soulcap-v705",
   "schema": 13,
   "released": "2026-07-29",
-  "note": "v7.0.4 Quiet Depth docs + gallery sync"
+  "note": "v7.0.5 Quiet Depth journal flex regression fix + V10 guard"
 }
