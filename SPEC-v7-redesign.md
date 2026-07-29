@@ -122,3 +122,40 @@ Opening a Blank-page entry, the writing area collapses and the void returns. Mea
 
 Same loop protocol: fix → the guard test goes green → bump all 4 version fields → doc → gallery →
 commit → push.
+
+---
+
+## V11 — journal void: TRUE root cause (v7.0.5 fix missed it, still voids)
+
+The v7.0.5 flex-chain fix is correct but does NOT fix the void. Live measurement on a fresh blank
+entry (SW + caches cleared, real build):
+- `#journalEditor` (flex column, 812px) children: `.je-top` 69px · `.je-paper` **30px** · `.je-tools`
+  **1040px** · hidden input 0.
+- `.je-tools` children: five `.je-tool` 48px, `.je-mood` 48px, and **`.je-emotion-wrap` = 1016px,
+  `display:block`** — a feeling/emotion picker rendered INLINE and expanded inside the toolbar.
+- `.je-tools` is `flex:0 0 auto` (won't shrink) and computed **`max-height:none`** — the v7.0.5
+  `max-height:40vh` rule is being overridden, so it never clamps. Even if it clamped, `flex:none` +
+  a 1016px inline panel still starves `.je-paper` (→30px → `.je-body` 6px, placeholder sliced).
+
+**Root cause:** the emotion/feeling picker (`.je-emotion-wrap`) lives as a tall inline sibling in the
+toolbar flex column instead of being an on-demand overlay. It consumes the editor's vertical space.
+
+**Fix:**
+1. `.je-emotion-wrap` must NOT be an inline flex sibling of `.je-body`/`.je-paper`. Render it as a
+   **popover/overlay** (`position:absolute` or `fixed`, above the toolbar), `display:none` when closed,
+   shown only when the feeling tool is tapped. Closed state contributes ZERO height to the column.
+2. `.je-tools` = a single fixed-height row (~64px incl. safe-area), `flex:none`, `overflow-x:auto`
+   for the icon row only. Remove the ineffective `max-height:40vh` (computed `none` anyway) and find
+   the rule overriding it.
+3. Re-confirm live: on a blank entry with the feeling picker CLOSED, `.je-body` height / editor height
+   ≥ 0.55. Measured target, not assumed.
+
+**Guard test is FALSE-GREEN — rewrite it.** 314 passed but live ratio is 0.2. The test must:
+- open a real blank entry through the actual New-entry → Blank-page path (the same DOM that mounts
+  `.je-emotion-wrap`),
+- assert `.je-emotion-wrap` is `display:none` / zero-height while closed,
+- assert `.je-tools` bounding height ≤ ~72px while closed,
+- assert `#jeBody` height / `#journalEditor` height ≥ 0.55 at 0/1/20 lines.
+It must reproduce ratio≈0.2 on today's build (fail), and pass only after the overlay fix.
+
+Same loop: fix → test truly fails-then-passes → bump 4 version fields → doc → gallery → commit → push.
