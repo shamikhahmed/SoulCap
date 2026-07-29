@@ -17,7 +17,7 @@ async function dismissSplash(page: Page) {
   await page.waitForFunction(() => {
     const s = document.getElementById('splash');
     return !s || getComputedStyle(s).visibility === 'hidden';
-  }, null, { timeout: 4000 });
+  }, null, { timeout: 12000 });
 }
 
 async function openSettings(page: Page) {

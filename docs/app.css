@@ -933,12 +933,13 @@ input[type="range"]{width:100%;min-height:48px;accent-color:var(--accent)}
 .je-photos .ph{position:relative}
 .je-photos img{width:88px;height:88px;object-fit:cover;border-radius:10px;border:1px solid var(--line-strong)}
 .je-photos .rm{position:absolute;top:-12px;right:-12px;width:48px;height:48px;border-radius:50%;background:var(--ink);color:var(--ground);border:none;font-size:18px;line-height:1;display:flex;align-items:center;justify-content:center}
+/* Toolbar = single ~64px icon row. Feeling picker is an overlay (V11) — never inline. */
 .je-tools{
   flex:none;display:flex;align-items:center;gap:10px;
-  padding:11px 16px calc(var(--sab) + 12px + var(--kb-inset,0px));
+  min-height:48px;
+  padding:8px 16px calc(var(--sab) + 8px + var(--kb-inset,0px));
   border-top:1px solid var(--line);background:var(--ground);
-  overflow-x:auto;overflow-y:auto;scrollbar-width:none;
-  max-height:40vh;
+  overflow-x:auto;overflow-y:hidden;scrollbar-width:none;
 }
 .je-tools::-webkit-scrollbar{display:none}
 .je-tool{width:48px;height:48px;border-radius:12px;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink-2);display:flex;align-items:center;justify-content:center;flex:none}
@@ -948,6 +949,16 @@ input[type="range"]{width:100%;min-height:48px;accent-color:var(--accent)}
 .je-mood{display:flex;gap:6px;flex:none}
 .je-mood button{font-size:19px;width:48px;height:48px;border-radius:10px;border:1px solid var(--line-strong);background:var(--surface);flex:none;transition:border-color var(--dur-fast) var(--ease)}
 .je-mood button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
+/* Closed: display:none → ZERO height in the editor column. Open: popover above toolbar. */
+.je-emotion-wrap{
+  display:none;position:absolute;z-index:6;
+  left:12px;right:12px;
+  bottom:calc(64px + var(--sab) + var(--kb-inset,0px));
+  max-height:min(42vh, 320px);overflow-y:auto;-webkit-overflow-scrolling:touch;
+  padding:14px 16px;background:var(--surface);border:1px solid var(--line-strong);
+  border-radius:var(--r-md);box-shadow:var(--shadow-2);
+}
+.je-emotion-wrap.on{display:block}
 
 /* Persistent floating Help — above tab bar. Icon-only on phone widths so it
    does not steal a content column (v5.1.3 gutter caused empty-right layout).

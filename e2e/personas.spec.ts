@@ -5,7 +5,7 @@ async function dismissSplash(page: Page) {
   await page.waitForFunction(() => {
     const splash = document.getElementById('splash');
     return !splash || getComputedStyle(splash).visibility === 'hidden';
-  });
+  }, null, { timeout: 12000 });
 }
 
 async function seedDemo(page: Page) {

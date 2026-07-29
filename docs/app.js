@@ -3857,15 +3857,15 @@
       moodWrap.appendChild(el('button', { text: m, 'aria-label': 'Mood ' + m, 'aria-pressed': draft.mood === m ? 'true' : 'false',
         onclick: function () { draft.mood = draft.mood === m ? '' : m; Array.prototype.forEach.call(moodWrap.children, function (b) { b.setAttribute('aria-pressed', b.textContent === draft.mood ? 'true' : 'false'); }); } }));
     });
-    var moodParent = $('#jeMoodWrap').parentNode;
-    var oldEmo = moodParent.querySelector('.je-emotion-wrap');
-    if (oldEmo) oldEmo.parentNode.removeChild(oldEmo);
-    var emoWrap = el('div', { class: 'je-emotion-wrap' });
-    emoWrap.appendChild(el('p', { class: 'eyebrow mt-2', text: CHECKIN_UI.feeling }));
-    emoWrap.appendChild(buildEmotionChips(draft.feelingWord || '', function (word) {
+    // Feeling picker = overlay host (#jeEmotionOverlay). Never mount inline in .je-tools (V11 void).
+    setFeelingOverlayOpen(false);
+    var emoHost = $('#jeEmotionOverlay');
+    clear(emoHost);
+    emoHost.appendChild(el('p', { class: 'eyebrow', text: CHECKIN_UI.feeling }));
+    emoHost.appendChild(buildEmotionChips(draft.feelingWord || '', function (word) {
       draft.feelingWord = word;
+      setFeelingOverlayOpen(false);
     }));
-    moodParent.insertBefore(emoWrap, $('#jeMoodWrap').nextSibling);
     renderDraftPhotos();
 
     // Delete control only for existing entries.
@@ -3883,6 +3883,17 @@
 
     $('#jeSave').onclick = function () { saveDraft(isNew); };
   }
+  function setFeelingOverlayOpen(open) {
+    var host = $('#jeEmotionOverlay');
+    var btn = $('#jeFeelingBtn');
+    if (!host) return;
+    if (open) host.classList.add('on'); else host.classList.remove('on');
+    host.setAttribute('aria-hidden', open ? 'false' : 'true');
+    if (btn) {
+      btn.setAttribute('aria-pressed', open ? 'true' : 'false');
+      btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }
+  }
   function renderDraftPhotos() {
     var wrap = $('#jePhotos'); clear(wrap);
     draft.photos.forEach(function (src, idx) {
@@ -3897,6 +3908,7 @@
   }
   function closeEditor() {
     stopJournalRecognition(false);
+    setFeelingOverlayOpen(false);
     $('#journalEditor').classList.remove('on'); $('#journalEditor').setAttribute('aria-hidden', 'true');
     document.body.style.overflow = ''; draft = null;
   }
@@ -5362,7 +5374,7 @@
       }
     });
   }
-  var APP_VERSION = '7.0.5';
+  var APP_VERSION = '7.0.6';
   function settingsGroup(v, title, kids) {
     v.appendChild(el('p', { class: 'eyebrow settings-eyebrow', text: title }));
     var block = el('div', { class: 'settings-block' });
@@ -5775,6 +5787,10 @@
     $('#jeFile').addEventListener('change', function (e) { var f = e.target.files && e.target.files[0]; if (f) addPhotoFromFile(f); e.target.value = ''; });
     $('#jeDecorBtn').addEventListener('click', decorateDraftSheet);
     $('#jeMicBtn').addEventListener('click', startJournalTranscription);
+    $('#jeFeelingBtn').addEventListener('click', function () {
+      var host = $('#jeEmotionOverlay');
+      setFeelingOverlayOpen(!(host && host.classList.contains('on')));
+    });
     $('#jeStickerBtn').addEventListener('click', function () {
       openSheet(function (p) {
         p.appendChild(el('h2', { class: 'h-sec', text: 'Add a sticker' }));
@@ -5845,7 +5861,7 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '7.0.5',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '7.0.6',
     effectiveMotion: effectiveMotion,
     motionCap: function () { return motionCap; },
     loadGsap: loadGsap,

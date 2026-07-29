@@ -1,5 +1,16 @@
 ## [Unreleased]
 
+## [7.0.6] — 2026-07-29
+
+### Fixed
+- **Journal void (SPEC-v7 V11):** `.je-emotion-wrap` was an inline ~1016px sibling inside `.je-tools`,
+  starving `.je-paper` / `#jeBody` (live ratio body/editor ≈0.40; false-green V10 guard measured
+  body/paper). Feeling picker is now an on-demand absolute overlay (`display:none` when closed →
+  zero column height). `.je-tools` is a single ~64px icon row; dead `max-height:40vh` removed.
+- **Guard rewrite:** V11 test opens New entry → Blank page; asserts closed overlay zero-height,
+  tools ≤72px, `#jeBody`/`#journalEditor` ≥0.55 at 0/1/20 lines. Failed on 7.0.5, passes on 7.0.6.
+- SW `soulcap-v706`. App **7.0.6**. Schema **v13**.
+
 ## [7.0.5] — 2026-07-29
 
 ### Changed

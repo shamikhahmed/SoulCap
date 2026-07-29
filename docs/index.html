@@ -170,8 +170,13 @@ else{document.documentElement.setAttribute('lang','en');document.documentElement
     <button id="jeMicBtn" class="je-tool" aria-label="Transcribe with microphone" aria-pressed="false">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M9 21h6"/></svg>
     </button>
+    <button id="jeFeelingBtn" class="je-tool" aria-label="Add a feeling word" aria-pressed="false" aria-expanded="false" aria-controls="jeEmotionOverlay">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.5 10.5h.01M15.5 10.5h.01M8.8 15c1.2 1.2 2.4 1.8 3.2 1.8s2-.6 3.2-1.8"/></svg>
+    </button>
     <div id="jeMoodWrap" class="je-mood"></div>
   </div>
+  <!-- Feeling picker: overlay only. Closed = display:none → zero column height (SPEC-v7 V11). -->
+  <div id="jeEmotionOverlay" class="je-emotion-wrap" aria-hidden="true"></div>
   <input id="jeFile" type="file" accept="image/*" hidden/>
 </div>
 
