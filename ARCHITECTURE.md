@@ -1,10 +1,12 @@
 # SoulCap Architecture
 
-**Version:** 5.1.9 · **Product boundary:** `docs/` · **SW:** `soulcap-v519` · **Schema:** v12
+**Version:** 7.0.4 · **Product boundary:** `docs/` · **SW:** `soulcap-v704` · **Schema:** v13
 
 ## System shape
 
 SoulCap is a static, offline-first PWA with no runtime dependency graph and no build step.
+Visual identity: **Quiet Depth** (editorial surface + one living ambient layer + depth ramp).
+See `SPEC-v7-redesign.md` and `REDESIGN-DIFF.md`.
 
 ```text
 GitHub Pages
@@ -12,11 +14,11 @@ GitHub Pages
       ├─ index.html  static shell and dialogs
       ├─ data.js     user-visible content and deterministic catalogues (incl. PATH_*)
       ├─ app.js      state, routing, safety, ranking, path engine, patterns, rendering
-      ├─ app.css     theme-aware design system (motion + spacing tokens)
+      ├─ app.css     theme-aware design system (Quiet Depth tokens + motion)
       └─ sw.js       same-origin precache and offline shell
 
 Browser
-  ├─ localStorage['soulcap_v1']              canonical user state (v12)
+  ├─ localStorage['soulcap_v1']              canonical user state (v13)
   ├─ localStorage['soulcap_theme']           pre-paint theme mirror
   ├─ localStorage['soulcap_appearance']      pre-paint display mirror
   ├─ localStorage['soulcap_locale']          en | rui
@@ -29,11 +31,23 @@ depend on their availability.
 ## Runtime flow
 
 1. `index.html` applies validated theme, appearance, and locale (`dir` always `ltr`) before CSS.
-2. `app.js` loads `soulcap_v1`, runs sequential migrations through **v12**, and merges nested defaults.
+2. `app.js` loads `soulcap_v1`, runs sequential migrations through **v13**, and merges nested defaults.
 3. `render()` rebuilds the active view with `el()`; user content uses `textContent`, not `innerHTML`.
 4. Preference and content writes attempt `save()` first; failures roll back in-memory state and
    show a calm notice. Settings toggles often use `reRender()` to keep scroll.
 5. The service worker precaches the complete shell and never fetches third-party assets.
+
+## Quiet Depth containers
+
+| Class | Role |
+|---|---|
+| `.qd-hero` / `.living-field` | Full-bleed section on living ambient layer |
+| `.qd-ruled` / `.qd-row` | Editorial hairline lists (check-in, Calm needs, contents) |
+| `.qd-action` | One accent CTA + quiet secondary |
+| `--layer-0..3` / `--living` / `--ease-quiet` | Depth + ambient + motion tokens |
+
+Tabs: `now · calm · journal · map · me`. Sheets / subviews / runner / panic / journal editor are
+dialogs in `index.html`. Help is header buttons + panic sheet (number-free). FAB stays off.
 
 ## Screen gallery
 
@@ -41,6 +55,7 @@ Playwright harness (`e2e/gallery.spec.ts`, `CAPTURE_GALLERY=1` / `npm run galler
 `docs/screenshots/gallery/gallery-manifest.json`. Packs: **default** (all surfaces), **theme**
 (every theme × hero surfaces), **appearance** (text/density/contrast/transparency/accent/motion).
 Local viewer: root `screen-gallery.html` (`npm run gallery:view`). Marketing mirror: `assets/gallery/`.
+v6.0.10 anti-lookalike baseline: `docs/screenshots/v6-baseline/`.
 
 ## Personalisation model
 

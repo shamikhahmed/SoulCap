@@ -1,5 +1,13 @@
 ## [Unreleased]
 
+## [7.0.4] — 2026-07-29
+
+### Changed
+- **Docs + gallery sync:** README / ROADMAP / FEATURES / PRESENTATION / INVESTOR_DECK / AGENTS /
+  ARCHITECTURE / CLINICAL / HANDOVER / SAFETY / ACCESSIBILITY aligned to Quiet Depth **7.0.4**;
+  fresh screen gallery + `assets/gallery` mirror.
+- SW `soulcap-v704`. App **7.0.4**. Schema **v13**.
+
 ## [7.0.3] — 2026-07-27
 
 ### Changed

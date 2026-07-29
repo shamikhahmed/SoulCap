@@ -1,11 +1,12 @@
 # SoulCap — Platform Presentation
 
-> **Honesty (shipped product · v7.0.0):** The live PWA at [`docs/`](./docs/) / GitHub Pages is a
-> private, self-guided wellness tool: theme + appearance system, deterministic suggestions, Guided
-> Path with educational approach packs, guided skills, journal, Constellation, Personal Manual,
-> Progress glance, and keyword safety on free-text surfaces. It has no chat surface or live LLM.
+> **Honesty (shipped product · v7.0.4):** The live PWA at [`docs/`](./docs/) / GitHub Pages is a
+> private, self-guided wellness tool with the **Quiet Depth** visual identity (editorial surface,
+> one living ambient layer, depth ramp). Theme + appearance system, deterministic suggestions,
+> Guided Path with educational approach packs, guided skills, journal, Constellation, Personal
+> Manual, Progress glance, and keyword safety on free-text surfaces. No chat surface or live LLM.
 > NestJS + model providers in `backend/` are an undeployed lab. Screen gallery:
-> `npm run gallery` → `screen-gallery.html`. See `README.md` + `SAFETY.md`.
+> `npm run gallery` → `screen-gallery.html`. See `README.md`, `REDESIGN-DIFF.md`, `SAFETY.md`.
 
 ---
 

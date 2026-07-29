@@ -1,14 +1,15 @@
-**Version:** 7.0.3 · SW `soulcap-v703`
+**Version:** 7.0.4 · SW `soulcap-v704`
 
 # SoulCap — Project Handover
 
 > **⚠️ This document below the divider is historical (v0.3.0).** Read this header block
-> first — it is the current truth as of 2026-07-27. The sections further down describe an
+> first — it is the current truth as of 2026-07-29. The sections further down describe an
 > earlier architecture and are kept for reference only.
 
-## Current state (v7.0.3 — 2026-07-27)
+## Current state (v7.0.4 — 2026-07-29)
 
-**Quiet Depth (SPEC-v7) complete** — V1–V9 shipped. See `REDESIGN-DIFF.md` (anti-lookalike vs v6.0.10).
+**Quiet Depth (SPEC-v7) complete** — V1–V9 shipped. Docs + gallery synced. See `REDESIGN-DIFF.md`
+(anti-lookalike vs v6.0.10).
 
 **The product is the PWA in `docs/`.** Offline-first, local-only, **no network calls after load**.
 Schema **v13**. Phase H: self-concept, patterns, habits. Prior Phase G: dialog a11y + 200% text / reduced-motion Playwright coverage; panic
@@ -19,7 +20,7 @@ appearance axes). Viewer: `screen-gallery.html` (`npm run gallery:view`).
 Live: https://shamikhahmed.github.io/SoulCap/
 
 ### Schema & ship
-- State `DEFAULT.v = 13` · SW `soulcap-v703` · app **7.0.3** · `package.json` **7.0.3**
+- State `DEFAULT.v = 13` · SW `soulcap-v704` · app **7.0.4** · `package.json` **7.0.4**
 - Ship workflow: bump CACHE + VERSION.json + APP_VERSION + package.json; CHANGELOG;
   SAFETY/HANDOVER (+ README/FEATURES when they drift); gallery; `npm run verify`; push `main`.
 
@@ -37,7 +38,7 @@ Live: https://shamikhahmed.github.io/SoulCap/
 4. Nest Prisma enums still lab-only; no production DB.
 
 ### For the next developer / AI agent
-Read **`AGENTS.md`** then **`ROADMAP.md`**. SPEC-v6.0 A→J **shipped** (see `CHANGELOG.md`).
+Read **`AGENTS.md`** then **`ROADMAP.md`**. Quiet Depth (SPEC-v7) + SPEC-v6.0 A→J **shipped** (see `CHANGELOG.md`, `REDESIGN-DIFF.md`).
 Vault: `~/Capricorn-Brain/01 Projects/SoulCap-Therapy-App.md`, `AI/Cursor/SoulCap-Guided-Path.md`.
 
 ---

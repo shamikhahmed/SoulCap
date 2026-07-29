@@ -38,7 +38,7 @@ Desktop twins: same filenames with `desktop__` prefix. Spot-check `desktop__defa
 
 ## Versions
 
-- Shipped identity loop: **7.0.0** (V1) → **7.0.1** (V2–V5) → **7.0.2** (V6–V8) → **7.0.3** (V9 QA + this doc)
-- SW `soulcap-v703` · schema **v13**
+- Shipped identity loop: **7.0.0** (V1) → **7.0.1** (V2–V5) → **7.0.2** (V6–V8) → **7.0.3** (V9 QA) → **7.0.4** (docs + gallery sync)
+- SW `soulcap-v704` · schema **v13**
 
 *Generated 2026-07-27 as SPEC-v7 phase V9.*

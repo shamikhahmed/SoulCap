@@ -4,8 +4,9 @@ Read this first. It tells you what SoulCap is, the rules you must never break, h
 laid out, the exact conventions to write in, and the workflow to ship a change. If you follow it,
 your changes will look like they were written by the same hand as the rest of the app.
 
-Companion docs: `ROADMAP.md` (what to build next) · **`SPEC-v6.0-production.md`** (**shipped**
-through **6.0.10** / schema v13 — production pass complete) · `AUDIT-v6.md` · older specs
+Companion docs: `ROADMAP.md` (what to build next) · **`SPEC-v7-redesign.md`** / **`REDESIGN-DIFF.md`**
+(**Quiet Depth** visual identity — **shipped through 7.0.4**) · **`SPEC-v6.0-production.md`**
+(**shipped** through **6.0.10** / schema v13) · `AUDIT-v6.md` · older specs
 (`SPEC-v5.1-fixes.md`, `SPEC-v5.0-native-motion.md`, `SPEC-v4.0-master-design.md`) are reference ·
 `SPEC-v3.1-screen-layouts.md` (absorbed into v4.0) · **`SPEC-v3.0-redesign.md`** (Amethyst redesign —
 **shipped through 3.0.1**; keep as design reference) · `SPEC-v2.3-regulation-depth.md` (next build

@@ -1,6 +1,6 @@
 # SoulCap Evaluation Contract
 
-**Version:** 5.1.9 · **Updated:** 2026-07-27
+**Version:** 7.0.4 · **Updated:** 2026-07-29
 
 ## Purpose
 
@@ -15,7 +15,7 @@ status.
 3. Safety suite for risk tiers, Help reachability, age gate, number-free routing, local-only voice,
    check-in tier-3 routing, free-text tier-3 Help (journal / Your story at minimum), and Guided Path
    Help offer / no-diagnosis lexicon.
-4. Migration fixtures for prior state versions (through **v12**) and forced persistence failure.
+4. Migration fixtures for prior state versions (through **v13**) and forced persistence failure.
 5. Zero unexpected external requests during representative journeys.
 6. Version/cache/documentation consistency (`APP_VERSION`, `CACHE`, `VERSION.json`, `package.json`).
 7. Human mobile, accessibility, copy, and visual checks listed in `ACCESSIBILITY.md`.
@@ -53,7 +53,7 @@ reviewed together.
 
 - Article search works after the initial load with no external request.
 - Every article carries review-status honesty, support guidance, source notes, and valid skill IDs.
-- Sequential schema migration preserves prior data through **v12**.
+- Sequential schema migration preserves prior data through **v13**.
 - Current-day completion survives reload and no streak, score, badge, or reminder state exists.
 - Failed choice or completion persistence restores the previous in-memory state visibly.
 - Drip asks at most four questions per local day; estimates show confidence and are correctable;

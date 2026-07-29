@@ -1,6 +1,6 @@
 # SoulCap Data Model
 
-**Schema:** 12 · **Storage key:** `localStorage['soulcap_v1']` · **App:** 5.1.9
+**Schema:** 13 · **Storage key:** `localStorage['soulcap_v1']` · **App:** 7.0.4
 
 ## State contract
 

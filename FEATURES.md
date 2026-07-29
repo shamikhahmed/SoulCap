@@ -1,15 +1,17 @@
 # SoulCap — Features (S/W/L/R)
 
-**Updated:** 2026-07-27 · Self-guided wellness companion · **v7.0.0**
+**Updated:** 2026-07-29 · Self-guided wellness companion · **v7.0.4**
 **Codes:** S = shipped · W = next wave · L = later · R = rejected
 
 ## S
 - Offline-first PWA in `docs/`: no account, server, analytics, CDN, LLM, or post-load network calls
+- **Quiet Depth** identity (SPEC-v7): editorial surface (serif voice, hairline rows), one living
+  ambient layer, `--layer-0..3` depth ramp, `--ease-quiet` + View Transitions; see `REDESIGN-DIFF.md`
 - Design system with Auto/Light/Dark/Night/AMOLED + Ocean/Forest (Rain/Space/Sunrise/Minimal culled),
-  grain, glow heroes, compact tiles, soft selection, fixed tab footer with `--tab-clearance`
+  soft selection, thinner blurred tab bar with `--tab-clearance`
 - Five tabs: Now · Calm · Journal · Map · You; Settings sheet off You; About + What’s new; FAB off
   (header Help on every main tab)
-- 37 techniques with mechanisms, contraindications, context filtering, timed guidance, breathing
+- 38 techniques with mechanisms, contraindications, context filtering, timed guidance, breathing
   sessions, device speech synthesis, optional haptics, and public-safe auto-quieting
 - **Guided Path:** arrival → symptom chips → educational **approach pack** (CBT/DBT/ACT/BA ideas) →
   exercise Begin (rule-based; never diagnoses or modality prescriptions). Panic-like clusters offer
