@@ -614,8 +614,8 @@ var SCREENER_UI = {
   back:'Back',
   finish:'See reflection',
   resultTitle:'Your reflection',
-  resultLead:'Your answers over the last two weeks are in a range some people describe as ',
-  resultMid:'. This is not a diagnosis — only a professional can give one — but a level around here often means it is worth talking to someone you trust or a professional. Here are some things that may help in the meantime.',
+  resultLead:'Looking at the last two weeks together, this check lands with ',
+  resultMid:'. That is not a diagnosis — only a professional can give one — and SoulCap never grades how “bad” you are. If it feels heavy, talking with someone you trust or a professional is often wise. Here are some things that may help in the meantime.',
   topBandNudge:'This range is often a signal to seek professional support soon, alongside anything that helps day to day.',
   notDiagnosis:'Not a diagnosis.',
   lowConfidence:'Stored as a low-confidence local signal — never a label like a diagnosis.',
@@ -625,7 +625,7 @@ var SCREENER_UI = {
   progress:'Question {n} of {total}',
   knowsLabel:'Reflection check',
   knowsSub:'Local signal only · low confidence · not a diagnosis',
-  historyLine:'Last score {score} · {band}'
+  historyLine:'Last reflection · {band}'
 };
 
 var SCREENERS = [
@@ -643,12 +643,13 @@ var SCREENERS = [
       'Moving or speaking so slowly that other people could have noticed — or being so fidgety or restless that you have been moving around a lot more than usual',
       'Thoughts that you would be better off dead, or of hurting yourself'
     ],
+    /* Band ids stay for logic; labels must never read as clinical severity verdicts. */
     bands:[
-      { id:'minimal', min:0, max:4, label:'minimal' },
-      { id:'mild', min:5, max:9, label:'mild' },
-      { id:'moderate', min:10, max:14, label:'moderate' },
-      { id:'moderately_severe', min:15, max:19, label:'moderately severe' },
-      { id:'severe', min:20, max:27, label:'severe' }
+      { id:'minimal', min:0, max:4, label:'quieter days' },
+      { id:'mild', min:5, max:9, label:'some harder days' },
+      { id:'moderate', min:10, max:14, label:'a heavier stretch' },
+      { id:'moderately_severe', min:15, max:19, label:'a very heavy stretch' },
+      { id:'severe', min:20, max:27, label:'an especially heavy stretch' }
     ],
     topBand:'severe',
     helpSkills:['self-compassion-break','behavioural-activation','hand-on-heart'],
@@ -667,10 +668,10 @@ var SCREENERS = [
       'Feeling afraid as if something awful might happen'
     ],
     bands:[
-      { id:'minimal', min:0, max:4, label:'minimal' },
-      { id:'mild', min:5, max:9, label:'mild' },
-      { id:'moderate', min:10, max:14, label:'moderate' },
-      { id:'severe', min:15, max:21, label:'severe' }
+      { id:'minimal', min:0, max:4, label:'quieter days' },
+      { id:'mild', min:5, max:9, label:'some harder days' },
+      { id:'moderate', min:10, max:14, label:'a heavier stretch' },
+      { id:'severe', min:15, max:21, label:'an especially heavy stretch' }
     ],
     topBand:'severe',
     helpSkills:['box-breathing','worry-postponement','grounding-54321'],

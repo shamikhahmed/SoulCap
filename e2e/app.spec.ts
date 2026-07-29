@@ -506,10 +506,53 @@ test.describe('v1.9.3 reflection screeners', () => {
     });
     await expect(page.locator('#sheet')).toContainText('not a diagnosis');
     await expect(page.locator('#sheet')).toContainText('Professional support');
-    await expect(page.locator('#sheet')).toContainText('severe');
+    await expect(page.locator('#sheet')).toContainText(/especially heavy stretch/i);
+    await expect(page.locator('#sheet')).not.toContainText(/\bsevere\b/i);
+    await expect(page.locator('#sheet')).not.toContainText(/\bmild\b|\bmoderate\b|\bminimal\b/i);
     const stored = await page.evaluate(() => (window as any).__soulcap.getState().screenerResults.gad7);
     expect(stored.band).toBe('severe');
     expect(stored.score).toBe(21);
+    expect(stored.bandLabel).toMatch(/heavy stretch/i);
+  });
+
+  test('V13: PHQ-9 and GAD-7 live UI — reflection only, item-9 → Help, no severity verdict', async ({ page }, testInfo) => {
+    if (testInfo.project.name !== 'mobile') return;
+    test.setTimeout(90000);
+    await seedDemo(page);
+    await clickTab(page, 'me');
+    await page.locator('.screener-card').click();
+    await expect(page.locator('#sheet.on')).toBeVisible();
+    await expect(page.locator('#sheet')).toContainText(/not a diagnosis|Reflection/i);
+    await page.getByRole('button', { name: /Mood reflection \(PHQ-9\)/ }).click();
+    // Answer items 1–8 with 0, item 9 with 1 → Help
+    for (let i = 0; i < 8; i++) {
+      await page.getByRole('button', { name: 'Not at all' }).click();
+      await page.waitForTimeout(40);
+    }
+    await page.getByRole('button', { name: 'Several days' }).click();
+    await expect(page.locator('#panic.on')).toBeVisible({ timeout: 5000 });
+    const panicText = await page.locator('#panic').innerText();
+    expect(panicText.toLowerCase()).not.toMatch(/\bsevere\b|\bmild\b|\bmoderate\b|\bminimal\b/);
+    expect(panicText).toMatch(/not therapy|self-guided wellness/i);
+    expect(panicText).not.toMatch(/\b\d{3}[-.\s]?\d{3}\b/);
+    await page.locator('#panicExit').click();
+
+    await clickTab(page, 'me');
+    await page.locator('.screener-card').click();
+    await page.getByRole('button', { name: /Worry reflection \(GAD-7\)/ }).click();
+    for (let i = 0; i < 7; i++) {
+      await page.getByRole('button', { name: 'Nearly every day' }).click();
+      await page.waitForTimeout(40);
+    }
+    await expect(page.locator('#sheet.on')).toBeVisible();
+    const sheet = await page.locator('#sheet').innerText();
+    expect(sheet).toMatch(/not a diagnosis/i);
+    expect(sheet).toMatch(/Professional support/i);
+    expect(sheet).not.toMatch(/\bsevere\b|\bmild\b|\bmoderate\b|\bminimal\b/i);
+    expect(sheet).not.toMatch(/\bdiagnosed\b|\bdisorder\b/i);
+    const stored = await page.evaluate(() => (window as any).__soulcap.getState().screenerResults.gad7);
+    expect(stored.band).toBe('severe');
+    expect(stored.bandLabel).not.toMatch(/severe|mild|moderate|minimal/i);
   });
 
   test('schema migrates to v11 with screenerResults', async ({ page }) => {

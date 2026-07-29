@@ -1,5 +1,14 @@
 ## [Unreleased]
 
+## [7.0.11] — 2026-07-29
+
+### Fixed
+- **Screeners (SPEC-v7 V13 §3):** PHQ-9/GAD-7 band labels no longer use clinical severity
+  words (minimal/mild/moderate/severe → quiet reflection phrasing). Result copy drops score
+  verdict tone. Live UI: item-9 → Help; GAD top band → professional nudge + not-a-diagnosis;
+  no severity words in sheet.
+- SW `soulcap-v711`. App **7.0.11**. Schema **v13**.
+
 ## [7.0.10] — 2026-07-29
 
 ### Fixed
