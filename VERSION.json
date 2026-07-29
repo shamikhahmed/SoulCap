@@ -1,8 +1,8 @@
 {
   "name": "SoulCap",
-  "version": "7.0.11",
-  "swCache": "soulcap-v711",
+  "version": "7.0.12",
+  "swCache": "soulcap-v712",
   "schema": 13,
   "released": "2026-07-29",
-  "note": "v7.0.11 Quiet Depth V12 true fixed overlay for feeling picker — never in-flow flex column"
+  "note": "v7.0.12 Quiet Depth V12 true fixed overlay for feeling picker — never in-flow flex column"
 }

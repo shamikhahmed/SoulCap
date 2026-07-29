@@ -1,5 +1,13 @@
 ## [Unreleased]
 
+## [7.0.12] — 2026-07-29
+
+### Added
+- **V13 §4–7 live guards:** breath Pause freezes countdown / Resume advances; Still reopen;
+  depth engines (self-concept/habits/patterns) reachable non-diagnostic; dialog roles;
+  zero external HTTP after load. Pause no-op probe fails the guard.
+- SW `soulcap-v712`. App **7.0.12**. Schema **v13**.
+
 ## [7.0.11] — 2026-07-29
 
 ### Fixed

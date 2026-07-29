@@ -2743,6 +2743,107 @@ test.describe('Phase 1–4 live invariants (Fable QA)', () => {
   });
 });
 
+test.describe('V13 breadth live guards (runner / engines / offline / a11y)', () => {
+  test.use({ serviceWorkers: 'block' });
+
+  test('V13 §4: breath pause/resume freezes countdown; Still reopen; contrast ≥7', async ({ page }, testInfo) => {
+    if (testInfo.project.name !== 'mobile') return;
+    await seedDemo(page);
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await page.evaluate(() => {
+      document.documentElement.setAttribute('data-motion', 'still');
+      (window as any).__soulcap.startSkill('box-breathing');
+    });
+    await expect(page.locator('#runner.on')).toBeVisible();
+    await page.locator('#runner').getByRole('button', { name: 'Begin' }).click();
+    await expect(page.locator('#runOrbCount')).toBeVisible();
+    await page.waitForTimeout(400);
+    await page.locator('#runner').getByRole('button', { name: 'Pause' }).click();
+    const frozenA = await page.locator('#runOrbCount').innerText();
+    await page.waitForTimeout(900);
+    const frozenB = await page.locator('#runOrbCount').innerText();
+    expect(frozenB, 'pause must freeze countdown').toBe(frozenA);
+    await page.locator('#runner').getByRole('button', { name: 'Resume' }).click();
+    await page.waitForTimeout(1100);
+    const after = await page.locator('#runOrbCount').innerText();
+    expect(after === frozenB, 'resume should advance countdown').toBe(false);
+    const contrast = await page.evaluate(() => {
+      function lum(rgb: string) {
+        const m = rgb.match(/\d+/g)!.map(Number);
+        const [r, g, b] = m.map((v) => {
+          const s = v / 255;
+          return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
+        });
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      }
+      function ratio(a: string, b: string) {
+        const x = lum(a), y = lum(b);
+        return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
+      }
+      return ratio(
+        getComputedStyle(document.getElementById('runOrbCount')!).color,
+        getComputedStyle(document.body).backgroundColor
+      );
+    });
+    expect(contrast).toBeGreaterThanOrEqual(7);
+    await page.locator('#runner').getByRole('button', { name: 'End' }).click();
+    await page.evaluate(() => (window as any).__soulcap.startSkill('box-breathing'));
+    await expect(page.locator('#runner.on')).toBeVisible();
+    await expect(page.locator('#runner').getByRole('button', { name: 'Begin' })).toBeVisible();
+  });
+
+  test('V13 §5–7: depth engines local + dialog roles + no external fetch after load', async ({ page }, testInfo) => {
+    if (testInfo.project.name !== 'mobile') return;
+    const external: string[] = [];
+    page.on('request', (req) => {
+      const u = req.url();
+      if (/^https?:/i.test(u) && !/localhost|127\.0\.0\.1/.test(u)) external.push(u);
+    });
+    await seedDemo(page);
+    await page.evaluate(() => (window as any).__soulcap.galleryOpen('self-concept'));
+    await expect(page.locator('#subview.on')).toBeVisible();
+    let body = await page.locator('#subview').innerText();
+    expect(body).toMatch(/not a diagnosis|reflective|inside|outside|version/i);
+    expect(body.toLowerCase()).not.toMatch(/\bdisorder\b|\bdiagnosed\b/);
+    await page.locator('#subview .nav-back').click();
+    await page.evaluate(() => (window as any).__soulcap.galleryOpen('habits'));
+    await expect(page.locator('#subview.on')).toBeVisible();
+    body = await page.locator('#subview').innerText();
+    expect(body).toMatch(/habit|urge|slip/i);
+    expect(body.toLowerCase()).not.toMatch(/\bdisorder\b|\bdiagnosed\b/);
+    await page.locator('#subview .nav-back').click();
+    await clickTab(page, 'me');
+    await page.locator('.me-stats .qd-row').filter({ hasText: 'Patterns' }).click();
+    await expect(page.locator('#subview.on')).toBeVisible();
+    body = await page.locator('#subview').innerText();
+    expect(body.toLowerCase()).toMatch(/pattern|possibility|correlation|not a cause|not a diagnosis/);
+    expect(body.toLowerCase()).not.toMatch(/\bdisorder\b|\bdiagnosed\b/);
+    await page.locator('#subview .nav-back').click();
+
+    await page.evaluate(() => (document.querySelector('.help-btn') as HTMLElement).click());
+    await expect(page.locator('#panic.on')).toBeVisible();
+    const roles = await page.evaluate(() => ({
+      panic: {
+        role: document.getElementById('panic')!.getAttribute('role'),
+        modal: document.getElementById('panic')!.getAttribute('aria-modal')
+      },
+      runner: {
+        role: document.getElementById('runner')!.getAttribute('role'),
+        modal: document.getElementById('runner')!.getAttribute('aria-modal')
+      },
+      sheet: {
+        role: document.getElementById('sheet')!.getAttribute('role'),
+        modal: document.getElementById('sheet')!.getAttribute('aria-modal')
+      }
+    }));
+    expect(roles.panic.role).toBe('dialog');
+    expect(roles.panic.modal).toBe('true');
+    expect(roles.runner.role).toBe('dialog');
+    expect(roles.sheet.role).toBe('dialog');
+    expect(external, `external requests after load: ${external.join(', ')}`).toEqual([]);
+  });
+});
+
 test.describe('V13 You insights + empty middle (SPEC-v7)', () => {
   test.use({ serviceWorkers: 'block' });
 
