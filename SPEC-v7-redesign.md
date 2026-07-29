@@ -190,3 +190,36 @@ closed, `#jeBody` height / `#journalEditor` height ≥ 0.55, and opening the pic
 `#jeBody` height (overlay, not inline). The guard test is STILL false-green (passes at 0.25 reality) —
 it must assert the picker is `display:none` on open AND that `#jeBody` ratio ≥ 0.55 with picker closed,
 must FAIL on today's 7.0.7 build, and pass only after the overlay is built.
+
+---
+
+## V13 — breadth QA sweep + two nits (journal void is FIXED at 7.0.8, verified live)
+
+Journal void confirmed fixed live (closed body 564px, ratio 0.695 ≥0.55; emotion picker default-closed,
+position:fixed overlay; open→close delta 0). Remaining before an Apple/clinician-grade pass:
+
+Two nits (found live, verify + fix):
+1. You tab: "YOUR INSIGHTS" section header renders with NOTHING beneath it — empty/unfinished. Either
+   populate it (real, non-diagnostic insights from local data) or hide the header until there is
+   content.
+2. Empty states (People, You middle) leave large dead vertical space — give the middle a quiet purpose
+   (living layer / supporting line) or tighten composition. Calm, not bare.
+
+Breadth sweep — VERIFY EACH LIVE (measure/screenshot, never trust green), fix what fails:
+- Light mode + all 7 themes (Auto/Light/Dark/Night/AMOLED/Ocean/Forest): nothing blends, text/icons AA,
+  ≥7:1 on safety + breath countdown, in every theme.
+- Screeners (PHQ-9/GAD-7): run end to end; reflection-not-diagnosis; item-9 → hard-coded Help; no
+  severity verdict.
+- Runner + breath orb: timers correct, orb visible (ink ≥7:1, ring visible), pause/resume/reopen,
+  reduced-motion + Still preset parity.
+- Depth engines: self-concept (H1), pattern engine (H2), habits (H3) — actually reachable and working,
+  non-diagnostic, user-correctable, data never leaves device.
+- Keyboard/scroll/focus: autofocus only where the user came to type; active field stays visible; no
+  jump on blur; toolbar above keyboard.
+- Accessibility: VoiceOver labels/roles/focus order on Panic/Runner/Screener/Journal/sheets; Dynamic
+  Type to 200% no clipping; ≥48px targets; visible focus.
+- Offline: after load zero network; SW cache bumped; unregister/reinstall serves the new build.
+- Performance: cold start, scroll/motion smoothness, no memory leak; WebGL degrades on weak devices.
+
+Each item: reproduce a failing state where possible, fix, prove live, add/repair a test that fails on
+the broken state and passes after. Then bump 4 version fields, doc, gallery, commit, push.
