@@ -1,4 +1,4 @@
-# SoulCap — Clinical Readiness Gaps (v7.0.8 — techniques still not clinician-signed)
+# SoulCap — Clinical Readiness Gaps (v7.0.9 — techniques still not clinician-signed)
 
 **Updated:** 2026-07-27
 **Status:** Self-guided wellness companion; clinical work is undeployed lab source only.

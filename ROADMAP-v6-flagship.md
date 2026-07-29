@@ -5,7 +5,7 @@
 > spec) — this file is the **north star + full phase map**. Cursor executes; run as a loop, one
 > phase fully, verify, bump, doc, gallery, commit, push, next.
 
-**Current:** v7.0.8 · Quiet Depth (SPEC-v7) + SPEC-v6.0 shipped · Vanilla ES5 offline PWA in `docs/` · localStorage only · ZERO network after load.
+**Current:** v7.0.9 · Quiet Depth (SPEC-v7) + SPEC-v6.0 shipped · Vanilla ES5 offline PWA in `docs/` · localStorage only · ZERO network after load.
 **Bar:** a therapist/psychiatrist sees it and is impressed, not merely tolerant. An App Store reviewer
 approves without a rejection round.
 

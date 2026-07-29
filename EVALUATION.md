@@ -1,6 +1,6 @@
 # SoulCap Evaluation Contract
 
-**Version:** 7.0.8 · **Updated:** 2026-07-29
+**Version:** 7.0.9 · **Updated:** 2026-07-29
 
 ## Purpose
 

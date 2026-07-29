@@ -195,7 +195,7 @@ test.describe('v0.9 local model', () => {
   test('pattern evidence is inspectable and a rejection persists', async ({ page }) => {
     await seedDemo(page);
     await page.evaluate(() => (document.querySelector('#tabs button[data-tab="me"]') as HTMLElement).click());
-    await page.locator('.me-stats .stat-tile').filter({ hasText: 'Patterns' }).click();
+    await page.locator('.me-stats .qd-row').filter({ hasText: 'Patterns' }).click();
     const row = page.locator('#subview .pattern-row').filter({ hasText: 'Work or study may be showing up often' });
     await expect(row).toContainText('3 distinct days');
     await expect(row).toContainText('A possibility');
@@ -210,7 +210,7 @@ test.describe('v0.9 local model', () => {
     await page.waitForFunction(() => Boolean((window as any).__soulcap));
     await dismissSplash(page);
     await page.evaluate(() => (document.querySelector('#tabs button[data-tab="me"]') as HTMLElement).click());
-    await page.locator('.me-stats .stat-tile').filter({ hasText: 'Patterns' }).click();
+    await page.locator('.me-stats .qd-row').filter({ hasText: 'Patterns' }).click();
     await expect(page.locator('#subview .pattern-row').filter({ hasText: 'Work or study may be showing up often' })).toHaveCount(0);
     expect(await page.evaluate(() => (window as any).__soulcap.getState().patternPrefs.decisions['trigger-work'])).toBe('rejected');
   });
@@ -2622,5 +2622,93 @@ test.describe('Phase 1–4 live invariants (Fable QA)', () => {
       return { ok: !hit, fabBottom: fr.bottom, tabsTop: tr.top };
     });
     expect(overlap.ok, JSON.stringify(overlap)).toBe(true);
+  });
+});
+
+test.describe('V13 You insights + empty middle (SPEC-v7)', () => {
+  test.use({ serviceWorkers: 'block' });
+
+  test('V13: no orphan Your insights header; map empty fills middle', async ({ page }, testInfo) => {
+    if (testInfo.project.name !== 'mobile') return;
+    await freshThrough(page);
+
+    await clickTab(page, 'me');
+    const me = await page.evaluate(() => {
+      const v = document.getElementById('view-me')!;
+      const insights = v.querySelector('.me-insights');
+      const labels = insights
+        ? Array.from(insights.querySelectorAll(':scope > .section-label')).map((el) => (el.textContent || '').trim())
+        : [];
+      const insightLines = insights
+        ? Array.from(insights.querySelectorAll('.me-insight-line')).map((el) => (el.textContent || '').trim())
+        : [];
+      const orphan = labels.some((t) => /your insights/i.test(t)) && insightLines.length === 0;
+      const stage = v.querySelector('.me-empty-stage');
+      const purpose = v.querySelector('.me-empty-purpose');
+      return {
+        orphan,
+        labels,
+        insightLines,
+        insightApi: (window as any).__soulcap.buildLocalInsights().map((x: any) => x.id),
+        hasEmptyStage: !!stage,
+        purposeText: purpose ? (purpose.textContent || '').trim() : '',
+        stageH: stage ? Math.round(stage.getBoundingClientRect().height) : 0
+      };
+    });
+    expect(me.orphan, `orphan Your insights header with no lines: ${JSON.stringify(me)}`).toBe(false);
+    if (me.labels.some((t) => /your insights/i.test(t))) {
+      expect(me.insightLines.length, 'header present → must have insight lines').toBeGreaterThan(0);
+    }
+    expect(me.hasEmptyStage, 'fresh You must show living empty stage').toBe(true);
+    expect(me.purposeText.length, 'You empty needs quiet purpose line').toBeGreaterThan(8);
+    expect(me.stageH, `You empty stage too short (got ${me.stageH})`).toBeGreaterThan(160);
+
+    await clickTab(page, 'map');
+    const map = await page.evaluate(() => {
+      const v = document.getElementById('view-map')!;
+      const tabs = document.getElementById('tabs')!;
+      const stage = v.querySelector('.map-empty-stage') as HTMLElement | null;
+      const purpose = v.querySelector('.map-empty-purpose');
+      const empty = v.querySelector('.empty-state');
+      const living = v.querySelector('.map-empty-living');
+      if (!stage || !empty || !tabs) {
+        return { ok: false, reason: 'missing-stage', dead: null as number | null };
+      }
+      const sr = stage.getBoundingClientRect();
+      const tr = tabs.getBoundingClientRect();
+      // Bare gap below stage to tabs — living stage should reach near chrome.
+      const dead = Math.round(tr.top - sr.bottom);
+      return {
+        ok: true,
+        dead,
+        stageH: Math.round(sr.height),
+        purpose: (purpose && purpose.textContent || '').trim(),
+        hasLiving: !!living && getComputedStyle(living).display !== 'none',
+        insightForbidden: /diagnos|disorder|severity|clinical severity/i.test(v.innerText)
+      };
+    });
+    expect(map.ok, JSON.stringify(map)).toBe(true);
+    expect(map.hasLiving, 'map empty needs living field').toBe(true);
+    expect(map.purpose.length, 'map empty needs quiet purpose').toBeGreaterThan(8);
+    expect(map.dead!, `map empty dead space below stage (got ${map.dead})`).toBeLessThanOrEqual(96);
+    expect(map.insightForbidden).toBe(false);
+
+    await seedDemo(page);
+    await clickTab(page, 'me');
+    const demo = await page.evaluate(() => {
+      const lines = Array.from(document.querySelectorAll('#view-me .me-insight-line')).map((el) => (el.textContent || '').trim());
+      const label = document.querySelector('#view-me .me-insights > .section-label');
+      const api = (window as any).__soulcap.buildLocalInsights();
+      return {
+        lines,
+        hasLabel: !!(label && /your insights/i.test(label.textContent || '')),
+        apiN: api.length,
+        banned: lines.some((t) => /diagnos|disorder|severity|you have\b/i.test(t))
+      };
+    });
+    expect(demo.apiN, 'demo data must yield local insights').toBeGreaterThan(0);
+    expect(demo.hasLabel, 'demo must show Your insights header').toBe(true);
+    expect(demo.lines.length, 'demo header must have lines under it').toBeGreaterThan(0);
+    expect(demo.banned, 'insights must stay non-diagnostic').toBe(false);
   });
 });

@@ -195,6 +195,10 @@ must FAIL on today's 7.0.7 build, and pass only after the overlay is built.
 
 ## V13 — breadth QA sweep + two nits (journal void is FIXED at 7.0.8, verified live)
 
+**Item 1 shipped in 7.0.9** (`soulcap-v709`): insights header hidden until local lines exist;
+empty People/You stages fill middle with living field + purpose. Live: orphan=false,
+map dead≤0, demo insights populated. Remaining breadth items 2–7 still open.
+
 Journal void confirmed fixed live (closed body 564px, ratio 0.695 ≥0.55; emotion picker default-closed,
 position:fixed overlay; open→close delta 0). Remaining before an Apple/clinician-grade pass:
 

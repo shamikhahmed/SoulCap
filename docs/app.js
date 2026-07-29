@@ -472,7 +472,68 @@
     if (opts.action && opts.onclick) {
       kids.push(el('button', { class: opts.primary === false ? 'btn ghost' : 'btn', text: opts.action, onclick: opts.onclick }));
     }
-    return el('div', { class: 'empty-state', role: 'status' }, kids);
+    return el('div', {
+      class: 'empty-state' + (opts.className ? ' ' + opts.className : ''),
+      role: 'status'
+    }, kids);
+  }
+  /* Non-diagnostic lines from localStorage only. Hide "Your insights" when empty. */
+  function buildLocalInsights() {
+    var out = [];
+    var patterns = derivePatterns();
+    var i, skill, bestId, bestN, helped, week, dayN, n;
+    for (i = 0; i < patterns.length && out.length < 2; i++) {
+      out.push({
+        id: 'pat-' + patterns[i].id,
+        text: patterns[i].title + ' — ' + patterns[i].summary
+      });
+    }
+    week = weeklySummary();
+    if (week && week.common && out.length < 3) {
+      out.push({
+        id: 'week-common',
+        text: INSIGHTS_UI.weekCommon.replace('{state}', week.common)
+      });
+    }
+    helped = {};
+    state.skillRuns.forEach(function (r) {
+      if (r.helpful) helped[r.id] = (helped[r.id] || 0) + 1;
+    });
+    bestId = null;
+    bestN = 0;
+    Object.keys(helped).forEach(function (id) {
+      if (helped[id] > bestN) { bestN = helped[id]; bestId = id; }
+    });
+    if (bestId && out.length < 3) {
+      skill = SKILLS.filter(function (s) { return s.id === bestId; })[0];
+      if (skill) {
+        out.push({
+          id: 'helped-' + bestId,
+          text: INSIGHTS_UI.helpedOnce.replace('{name}', skill.name)
+        });
+      }
+    }
+    n = state.journal.length;
+    if (n >= 1 && out.length < 3) {
+      out.push({
+        id: 'journal-n',
+        text: n === 1 ? INSIGHTS_UI.journalOne : INSIGHTS_UI.journalMany.replace('{n}', '' + n)
+      });
+    }
+    if (state.checkins.length >= 3 && out.length < 3) {
+      out.push({
+        id: 'checkin-n',
+        text: INSIGHTS_UI.checkinGlance.replace('{n}', '' + state.checkins.length)
+      });
+    }
+    dayN = soulcapDayCount();
+    if (dayN >= 3 && out.length === 0) {
+      out.push({
+        id: 'day-count',
+        text: INSIGHTS_UI.dayCount.replace('{n}', '' + dayN)
+      });
+    }
+    return out.slice(0, 3);
   }
   function heroTile(opts) {
     return el(opts.onclick ? 'button' : 'div', {
@@ -4518,14 +4579,24 @@
     hero.appendChild(el('h1', { class: 'h-voice', text: 'The people around you.' }));
     v.appendChild(hero);
     if (!state.people.length) {
-      v.appendChild(emptyState({
+      var mapEmpty = el('div', { class: 'map-empty-stage' });
+      mapEmpty.appendChild(el('div', { class: 'living-field map-empty-living', 'aria-hidden': 'true' }));
+      mapEmpty.appendChild(emptyState({
+        className: 'empty-tight',
         body: tUi('empty', 'map', EMPTY_UI),
         hint: tUi('empty', 'mapHint', EMPTY_UI),
         action: EMPTY_UI.mapAction,
         onclick: addPersonSheet
       }));
-    } else {
-      var stage = el('div', { class: 'map-stage' });
+      mapEmpty.appendChild(el('p', {
+        class: 'p-voice map-empty-purpose',
+        text: tUi('empty', 'mapPurpose', EMPTY_UI)
+      }));
+      mapEmpty.appendChild(el('button', { class: 'help-btn', text: t('helpNow'), onclick: openPanic }));
+      v.appendChild(mapEmpty);
+      return;
+    }
+    var stage = el('div', { class: 'map-stage' });
       stage.appendChild(el('div', { class: 'living-field map-living', 'aria-hidden': 'true' }));
       var wrap = el('div', { class: 'map-wrap map-edge' });
       wrap.appendChild(el('div', { html: '<svg id="map" viewBox="0 0 400 400" role="img" aria-label="Your constellation"></svg>' }));
@@ -4574,7 +4645,6 @@
       if (state.trackContact) {
         v.appendChild(el('p', { class: 'p-sm', text: 'Larger dots reflect how often you’ve logged speaking lately — not how important anyone is.' }));
       }
-    }
     v.appendChild(el('button', { class: 'help-btn', text: t('helpNow'), onclick: openPanic }));
   }
   function ringNameSheet() {
@@ -4858,17 +4928,45 @@
     v.appendChild(hero);
 
     if (!name && !historyFilled() && !state.principles.length && !state.manual.lines.length && !planFilled()) {
-      v.appendChild(emptyState({
+      var meEmpty = el('div', { class: 'me-empty-stage' });
+      meEmpty.appendChild(el('div', { class: 'living-field me-empty-living', 'aria-hidden': 'true' }));
+      meEmpty.appendChild(emptyState({
+        className: 'empty-tight',
         body: tUi('empty', 'me', EMPTY_UI),
         action: EMPTY_UI.meAction,
         primary: false,
         onclick: profileSheet
       }));
+      meEmpty.appendChild(el('p', {
+        class: 'p-voice me-empty-purpose',
+        text: tUi('empty', 'mePurpose', EMPTY_UI)
+      }));
+      v.appendChild(meEmpty);
     }
 
-    var insights = el('div', { class: 'section-block me-insights' }, [
-      el('p', { class: 'section-label', text: tUi('me', 'sectionInsights', { sectionInsights: 'Your insights' }) })
-    ]);
+    var localInsights = buildLocalInsights();
+    var insights = el('div', { class: 'section-block me-insights' });
+    /* SPEC-v7 V13: never show "Your insights" with nothing beneath it. */
+    if (localInsights.length) {
+      insights.appendChild(el('p', {
+        class: 'section-label',
+        text: tUi('me', 'sectionInsights', { sectionInsights: INSIGHTS_UI.section })
+      }));
+      var insightList = el('div', {
+        class: 'me-insight-list',
+        role: 'list',
+        'aria-label': INSIGHTS_UI.section
+      });
+      localInsights.forEach(function (line) {
+        insightList.appendChild(el('p', {
+          class: 'p-voice me-insight-line',
+          role: 'listitem',
+          'data-insight-id': line.id,
+          text: line.text
+        }));
+      });
+      insights.appendChild(insightList);
+    }
     var progDots = weekActivityDots();
     var progN = progDots.filter(function (x) { return x.on; }).length;
     var weekLine = progN
@@ -4901,19 +4999,18 @@
     var week = weeklySummary();
     var stats = el('div', { class: 'qd-ruled me-stats qd-list-group' });
     stats.appendChild(qdRow({
-      className: 'stat-tile timeline-card',
+      className: 'timeline-card',
       title: TIMELINE_UI.title,
       sub: TIMELINE_UI.cardHint,
       onclick: timelineSheet
     }));
     stats.appendChild(qdRow({
-      className: 'stat-tile',
       title: 'Patterns',
       sub: patternN ? PATTERN_UI.heading : PATTERN_UI.noWeekly,
       onclick: patternsOverviewSheet
     }));
     stats.appendChild(qdRow({
-      className: 'stat-tile' + (week ? ' week-bloom' : ''),
+      className: week ? 'week-bloom' : '',
       title: 'Weekly',
       sub: week ? (week.common + ' · ' + PATTERN_UI.weeklyCommon) : PATTERN_UI.noWeekly,
       onclick: weeklyOverviewSheet
@@ -5402,7 +5499,7 @@
       }
     });
   }
-  var APP_VERSION = '7.0.8';
+  var APP_VERSION = '7.0.9';
   function settingsGroup(v, title, kids) {
     v.appendChild(el('p', { class: 'eyebrow settings-eyebrow', text: title }));
     var block = el('div', { class: 'settings-block' });
@@ -5889,7 +5986,7 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '7.0.8',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '7.0.9',
     effectiveMotion: effectiveMotion,
     motionCap: function () { return motionCap; },
     loadGsap: loadGsap,
@@ -5928,6 +6025,7 @@
       });
     },
     derivePatterns: derivePatterns, maybeQueueReflection: maybeQueueReflection,
+    buildLocalInsights: buildLocalInsights,
     buildManualDrafts: buildManualDrafts, refreshManual: refreshManual,
     dismissWhatsNew: dismissWhatsNew,
     openPath: pathSheet,

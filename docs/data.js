@@ -344,7 +344,9 @@ var EMPTY_UI = {
   journal:'A private place for your words. One line is enough.',
   map:'You at the centre. Add someone when it feels useful — only you see this map.',
   mapHint:'Nobody else ever sees this. It stays on your device.',
+  mapPurpose:'A quiet map of who is around you — only when you want it.',
   me:'This space fills in as you go. Profile, story, and plan are all optional.',
+  mePurpose:'Nothing to fill. This stays yours.',
   patterns:'Patterns appear after a few check-ins. Nothing to get right — this stays a quiet glance.',
   library:'Search experiences and articles when you want to understand something. Optional.',
   timeline:'Your emotional timeline fills as you check in. No targets.',
@@ -355,6 +357,17 @@ var EMPTY_UI = {
   mapAction:'Add the first person',
   meAction:'Set up profile',
   patternsAction:'Go to Now'
+};
+
+/* You-tab local insights — factual notes from on-device data. Never diagnostic. */
+var INSIGHTS_UI = {
+  section:'Your insights',
+  weekCommon:'This week, “{state}” showed up most in your check-ins — from your own notes, not a score.',
+  helpedOnce:'{name} is one you marked as helpful. Worth remembering — not a prescription.',
+  journalOne:'One private journal entry on this device.',
+  journalMany:'{n} private journal entries on this device.',
+  dayCount:'Day {n} with SoulCap. Still no scores — only what you choose to notice.',
+  checkinGlance:'{n} check-ins saved here. A quiet record, not a streak.'
 };
 
 /* Guided Path v2.1 — rule-based feeling → chips → family why → technique.

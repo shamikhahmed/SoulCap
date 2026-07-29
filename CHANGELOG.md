@@ -1,5 +1,15 @@
 ## [Unreleased]
 
+## [7.0.9] — 2026-07-29
+
+### Fixed
+- **You insights (SPEC-v7 V13):** hide "Your insights" until `buildLocalInsights()` has
+  non-diagnostic local lines; populate from patterns / week / helpful skills / journal.
+  Orphan header (label → nothing) gone.
+- **Empty middle:** People + You empty states use living-field stages + quiet purpose line;
+  map empty fills to tab chrome (dead gap ≤96px). Me-stats rows no longer `stat-tile` cards.
+- SW `soulcap-v709`. App **7.0.9**. Schema **v13**.
+
 ## [7.0.8] — 2026-07-29
 
 ### Fixed
