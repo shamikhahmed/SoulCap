@@ -1,5 +1,14 @@
 ## [Unreleased]
 
+## [7.0.10] — 2026-07-29
+
+### Fixed
+- **Theme contrast (SPEC-v7 V13 §2):** night `ink-2`/`ink-3`/`crisis` now AA / safety ≥7:1;
+  light/ocean/forest crisis darkened; dark/AMOLED crisis lightened; `ink-3` AA on all themes;
+  Help button uses `surface` + crisis ink (soft tint failed ≤2.3:1 on dark).
+- Guard: all 6 themes assert ink/ink-2/ink-3 AA, crisis+countdown+help ≥7:1. Fails on old night.
+- SW `soulcap-v710`. App **7.0.10**. Schema **v13**.
+
 ## [7.0.9] — 2026-07-29
 
 ### Fixed

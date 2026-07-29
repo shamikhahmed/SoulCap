@@ -197,7 +197,9 @@ must FAIL on today's 7.0.7 build, and pass only after the overlay is built.
 
 **Item 1 shipped in 7.0.9** (`soulcap-v709`): insights header hidden until local lines exist;
 empty People/You stages fill middle with living field + purpose. Live: orphan=false,
-map dead≤0, demo insights populated. Remaining breadth items 2–7 still open.
+map dead≤0, demo insights populated.
+**Item 2 shipped in 7.0.10** (`soulcap-v710`): all themes AA for ink/ink-2/ink-3; crisis + Help +
+breath countdown ≥7:1 (night was failing; soft Help on dark ≤2.3:1). Remaining items 3–7 open.
 
 Journal void confirmed fixed live (closed body 564px, ratio 0.695 ≥0.55; emotion picker default-closed,
 position:fixed overlay; open→close delta 0). Remaining before an Apple/clinician-grade pass:

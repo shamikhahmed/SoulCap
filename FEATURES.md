@@ -1,6 +1,6 @@
 # SoulCap — Features (S/W/L/R)
 
-**Updated:** 2026-07-29 · Self-guided wellness companion · **v7.0.9**
+**Updated:** 2026-07-29 · Self-guided wellness companion · **v7.0.10**
 **Codes:** S = shipped · W = next wave · L = later · R = rejected
 
 ## S

@@ -1644,7 +1644,7 @@ test.describe('Accessibility', () => {
     await page.emulateMedia({ reducedMotion: 'reduce' });
     await seedDemo(page);
 
-    const themes = ['light', 'dark', 'night', 'amoled', 'ocean'];
+    const themes = ['light', 'dark', 'night', 'amoled', 'ocean', 'forest'];
     for (const theme of themes) {
       await page.evaluate((t) => document.documentElement.setAttribute('data-theme', t), theme);
       await waitForAnimationsIdle(page, 'body');
@@ -1733,6 +1733,81 @@ test.describe('Accessibility', () => {
       expect(runner.ringOpacity, `${theme} runner ring`).toBeGreaterThanOrEqual(0.4);
       await page.locator('#runner').getByRole('button', { name: 'End' }).click();
       await expect(page.locator('#runner.on')).toHaveCount(0);
+    }
+  });
+
+  test('V13: all themes ink/crisis AA + safety+countdown ≥7:1', async ({ page }) => {
+    // Token audit (hex) — night ink-2/crisis and soft help-btn failed live before 7.0.10.
+    test.setTimeout(60000);
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await seedDemo(page);
+    const themes = ['light', 'dark', 'night', 'amoled', 'ocean', 'forest'];
+    const report = await page.evaluate((themes) => {
+      function parseColor(c: string) {
+        c = (c || '').trim();
+        if (c.startsWith('#')) {
+          let h = c.slice(1);
+          if (h.length === 3) h = h.split('').map((x) => x + x).join('');
+          return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)];
+        }
+        const m = c.match(/rgba?\(([\d.]+),\s*([\d.]+),\s*([\d.]+)/);
+        return m ? [+m[1], +m[2], +m[3]] : null;
+      }
+      function lum(rgb: number[]) {
+        const [r, g, b] = rgb.map((v) => {
+          const s = v / 255;
+          return s <= 0.03928 ? s / 12.92 : Math.pow((s + 0.055) / 1.055, 2.4);
+        });
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      }
+      function ratio(a: number[], b: number[]) {
+        const x = lum(a), y = lum(b);
+        return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05);
+      }
+      function tok(name: string) {
+        return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+      }
+      return themes.map((t) => {
+        document.documentElement.setAttribute('data-theme', t);
+        void document.body.offsetHeight;
+        const ground = parseColor(tok('--ground'))!;
+        const surface = parseColor(tok('--surface'))!;
+        const ink = parseColor(tok('--ink'))!;
+        const ink2 = parseColor(tok('--ink-2'))!;
+        const ink3 = parseColor(tok('--ink-3'))!;
+        const crisis = parseColor(tok('--crisis'))!;
+        const probe = document.createElement('span');
+        probe.style.color = 'var(--ink-safe)';
+        document.body.appendChild(probe);
+        const inkSafe = parseColor(getComputedStyle(probe).color)!;
+        probe.remove();
+        document.getElementById('panic')!.classList.add('on');
+        const count = parseColor(getComputedStyle(document.getElementById('pacerCount')!).color)!;
+        document.getElementById('panic')!.classList.remove('on');
+        const help = document.querySelector('.help-btn') as HTMLElement;
+        const hs = getComputedStyle(help);
+        const helpFg = parseColor(hs.color)!;
+        const helpBg = parseColor(hs.backgroundColor)!;
+        return {
+          theme: t,
+          ink: +ratio(ink, ground).toFixed(2),
+          ink2: +ratio(ink2, ground).toFixed(2),
+          ink3: +ratio(ink3, ground).toFixed(2),
+          crisis: +ratio(crisis, ground).toFixed(2),
+          inkSafe: +ratio(inkSafe, ground).toFixed(2),
+          countdown: +ratio(count, ground).toFixed(2),
+          help: +ratio(helpFg, helpBg).toFixed(2)
+        };
+      });
+    }, themes);
+
+    for (const r of report) {
+      expect(r.ink, `${r.theme} ink AA`).toBeGreaterThanOrEqual(4.5);
+      expect(r.ink2, `${r.theme} ink-2 AA`).toBeGreaterThanOrEqual(4.5);
+      expect(r.ink3, `${r.theme} ink-3 AA`).toBeGreaterThanOrEqual(4.5);
+      expect(r.crisis, `${r.theme} crisis on ground ≥7 (safety)`).toBeGreaterThanOrEqual(7);
+      expect(r.countdown, `${r.theme} countdown ≥7`).toBeGreaterThanOrEqual(7);
+      expect(r.help, `${r.theme} help-btn ≥7`).toBeGreaterThanOrEqual(7);
     }
   });
 
