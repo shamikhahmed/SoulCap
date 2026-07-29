@@ -159,3 +159,29 @@ toolbar flex column instead of being an on-demand overlay. It consumes the edito
 It must reproduce ratio≈0.2 on today's build (fail), and pass only after the overlay fix.
 
 Same loop: fix → test truly fails-then-passes → bump 4 version fields → doc → gallery → commit → push.
+
+---
+
+## V12 — journal void STILL failing at v7.0.7 (measured live, overlay never built)
+
+v7.0.7 fixed only the toolbar (`.je-tools` now 72px, good). The emotion picker fix from §V11 was NOT
+done. Measured live on a fresh blank entry (SW+caches cleared):
+- `#jeBody` = 202px, `.je-paper` = 303px, `.je-tools` = 72px, `.je-emotion-wrap` = **356px**,
+  `#journalEditor` = 812px → **#jeBody / editor = 0.25** (target ≥ 0.55). FAILS.
+- `.je-emotion-wrap`: `position:static`, in-flow child of `#journalEditor`, `display:block` and
+  **visible by default** (`classList.contains('on')` is false, yet it still renders — the base
+  `.je-emotion-wrap` rule lacks `display:none`). So it always occupies ~356px of the editor column
+  above the writing area.
+
+Root problems remaining:
+1. `.je-emotion-wrap` still lives IN the flex column (position:static). It must become a true overlay
+   (`position:absolute`/`fixed`, anchored above the toolbar, its own scroll), so its open/closed state
+   NEVER changes `.je-paper`/`#jeBody` height.
+2. It defaults to OPEN/visible. Base rule must be `display:none`; only `.je-emotion-wrap.on` shows it;
+   a new entry opens with it CLOSED.
+
+Definition of done (verify LIVE, not by green test): on a fresh blank entry with the emotion picker
+closed, `#jeBody` height / `#journalEditor` height ≥ 0.55, and opening the picker does NOT reduce
+`#jeBody` height (overlay, not inline). The guard test is STILL false-green (passes at 0.25 reality) —
+it must assert the picker is `display:none` on open AND that `#jeBody` ratio ≥ 0.55 with picker closed,
+must FAIL on today's 7.0.7 build, and pass only after the overlay is built.
