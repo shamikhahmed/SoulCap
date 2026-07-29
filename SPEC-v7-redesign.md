@@ -230,3 +230,12 @@ Breadth sweep — VERIFY EACH LIVE (measure/screenshot, never trust green), fix 
 
 Each item: reproduce a failing state where possible, fix, prove live, add/repair a test that fails on
 the broken state and passes after. Then bump 4 version fields, doc, gallery, commit, push.
+
+---
+
+## V14 — stale "What's new" copy (found live at 7.0.12)
+
+The Now-tab "What's new" card still reads "SoulCap 5.0 — calmer motion…". App is 7.0.12. Update the
+whats-new copy to the current release (or make it derive from APP_VERSION so it can't go stale again),
+and gate it on the seen-version logic already present. Verified elsewhere this turn (live): app 7.0.12,
+You-tab orphan "YOUR INSIGHTS" header gone, network = localhost + data: only (zero external hosts).
