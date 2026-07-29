@@ -164,8 +164,13 @@ Same loop: fix → test truly fails-then-passes → bump 4 version fields → do
 
 ## V12 — journal void STILL failing at v7.0.7 (measured live, overlay never built)
 
+**Shipped in 7.0.8** (`soulcap-v708`): true `position:fixed` overlay; base `display:none!important`
+until `.on`; new entry opens CLOSED (`hidden`); V12 guard asserts closed `display:none` + out-of-flow
++ body/editor ≥0.55 + open does not shrink `#jeBody`. Live (SW+caches cleared): ratio ≈0.63,
+`bodyDelta=0`. Broken in-flow probe fails (`display:block`, h≈386).
+
 v7.0.7 fixed only the toolbar (`.je-tools` now 72px, good). The emotion picker fix from §V11 was NOT
-done. Measured live on a fresh blank entry (SW+caches cleared):
+done. Measured live on a fresh blank entry (SW+caches cleared) **before 7.0.8**:
 - `#jeBody` = 202px, `.je-paper` = 303px, `.je-tools` = 72px, `.je-emotion-wrap` = **356px**,
   `#journalEditor` = 812px → **#jeBody / editor = 0.25** (target ≥ 0.55). FAILS.
 - `.je-emotion-wrap`: `position:static`, in-flow child of `#journalEditor`, `display:block` and
@@ -173,7 +178,7 @@ done. Measured live on a fresh blank entry (SW+caches cleared):
   `.je-emotion-wrap` rule lacks `display:none`). So it always occupies ~356px of the editor column
   above the writing area.
 
-Root problems remaining:
+Root problems remaining (pre-7.0.8):
 1. `.je-emotion-wrap` still lives IN the flex column (position:static). It must become a true overlay
    (`position:absolute`/`fixed`, anchored above the toolbar, its own scroll), so its open/closed state
    NEVER changes `.je-paper`/`#jeBody` height.

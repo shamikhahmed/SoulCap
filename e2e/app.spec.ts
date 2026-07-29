@@ -2362,13 +2362,13 @@ test.describe('Phase J — final QA stress', () => {
     expect(layout.gapBelowBody).toBeLessThan(80);
   });
 
-  test.describe('V11 journal emotion overlay guard', () => {
+  test.describe('V12 journal emotion true-overlay guard', () => {
     test.use({ serviceWorkers: 'block' });
 
-    // False-green trap (V10): body/paper stayed ≥0.55 while body/editor ≈0.2–0.4 because
-    // .je-emotion-wrap sat INLINE in .je-tools (~1016px) and starved the writing column.
-    // Assert editor-relative ratio + closed overlay zero-height + tools ≤72px.
-    test('V11: emotion wrap closed → tools ≤72px, body/editor ≥0.55 (0/1/20 lines)', async ({ page }, testInfo) => {
+    // V11 false-green trap: tools ≤72 alone can pass while .je-emotion-wrap stays
+    // position:static in the #journalEditor flex column (display:block, ~356px) and
+    // #jeBody/editor ≈0.25. Assert closed display:none + out-of-flow overlay + ratio.
+    test('V12: picker closed display:none + out-of-flow; body/editor ≥0.55; open does not shrink body', async ({ page }, testInfo) => {
       if (testInfo.project.name !== 'mobile') return;
       await seedDemo(page);
       await page.evaluate(() => (document.querySelector('#tabs button[data-tab="journal"]') as HTMLElement).click());
@@ -2385,31 +2385,76 @@ test.describe('Phase J — final QA stress', () => {
         const tr = tools.getBoundingClientRect();
         const es = emo ? getComputedStyle(emo) : null;
         const em = emo ? emo.getBoundingClientRect() : null;
+        const flexKids = Array.from(ed.children).filter((c) => {
+          const s = getComputedStyle(c as Element);
+          return s.display !== 'none' && s.position !== 'absolute' && s.position !== 'fixed';
+        });
+        const emoInFlexFlow = !!(emo && flexKids.indexOf(emo) !== -1);
         return {
           toolsH: tr.height,
           emoDisplay: es ? es.display : 'missing',
+          emoPosition: es ? es.position : 'missing',
           emoH: em ? em.height : 0,
-          emoInToolsFlow: !!(emo && tools.contains(emo) && es && es.position !== 'absolute' && es.position !== 'fixed' && es.display !== 'none'),
+          emoHasOn: !!(emo && emo.classList.contains('on')),
+          emoInFlexFlow,
           ratio: br.height / er.height,
           bodyH: br.height,
           editorH: er.height
         };
       });
-      expect(closed.emoDisplay, `emotion wrap must be display:none when closed (got ${closed.emoDisplay}, h=${closed.emoH})`).toBe('none');
-      expect(closed.emoH, `closed emotion wrap must contribute 0 height (got ${closed.emoH})`).toBe(0);
-      expect(closed.emoInToolsFlow, 'emotion wrap must not be an in-flow toolbar sibling when closed').toBe(false);
-      expect(closed.toolsH, `tools closed height ≤72 (got ${closed.toolsH})`).toBeLessThanOrEqual(72);
+      expect(closed.emoHasOn, 'new entry must open with picker CLOSED (.on absent)').toBe(false);
+      expect(closed.emoDisplay, `picker must be display:none when closed (got ${closed.emoDisplay}, h=${closed.emoH})`).toBe('none');
+      expect(closed.emoH, `closed picker must contribute 0 height (got ${closed.emoH})`).toBe(0);
+      expect(['absolute', 'fixed'].indexOf(closed.emoPosition) !== -1,
+        `picker must be absolute/fixed overlay (got ${closed.emoPosition})`).toBe(true);
+      expect(closed.emoInFlexFlow, 'picker must not be an in-flow flex column sibling').toBe(false);
+      expect(closed.toolsH, `tools ≤72 (got ${closed.toolsH})`).toBeLessThanOrEqual(72);
+      expect(closed.ratio, `closed: bodyH=${closed.bodyH} editorH=${closed.editorH} ratio=${closed.ratio}`).toBeGreaterThanOrEqual(0.55);
+
+      const bodyClosed = closed.bodyH;
+      await page.locator('#jeFeelingBtn').click();
+      await page.waitForTimeout(80);
+      const opened = await page.evaluate(() => {
+        const ed = document.getElementById('journalEditor')!;
+        const body = document.getElementById('jeBody')!;
+        const emo = ed.querySelector('.je-emotion-wrap') as HTMLElement;
+        const es = getComputedStyle(emo);
+        return {
+          bodyH: body.getBoundingClientRect().height,
+          emoDisplay: es.display,
+          emoPosition: es.position,
+          emoH: emo.getBoundingClientRect().height,
+          hasOn: emo.classList.contains('on'),
+          ratio: body.getBoundingClientRect().height / ed.getBoundingClientRect().height
+        };
+      });
+      expect(opened.hasOn, 'feeling tap must add .on').toBe(true);
+      expect(opened.emoDisplay).not.toBe('none');
+      expect(['absolute', 'fixed'].indexOf(opened.emoPosition) !== -1).toBe(true);
+      expect(opened.emoH, 'open overlay must paint').toBeGreaterThan(40);
+      expect(Math.abs(opened.bodyH - bodyClosed), `open must not shrink #jeBody (closed=${bodyClosed} open=${opened.bodyH})`).toBeLessThanOrEqual(2);
+      expect(opened.ratio).toBeGreaterThanOrEqual(0.55);
 
       async function assertRatio(value: string, label: string) {
+        await page.locator('#jeFeelingBtn').click().catch(() => {});
+        await page.evaluate(() => {
+          const emo = document.getElementById('jeEmotionOverlay');
+          if (emo) emo.classList.remove('on');
+        });
         await page.locator('#jeBody').fill(value);
         await page.waitForTimeout(60);
         const ok = await page.evaluate(() => {
           const ed = document.getElementById('journalEditor')!;
           const body = document.getElementById('jeBody')!;
+          const emo = ed.querySelector('.je-emotion-wrap') as HTMLElement;
           const er = ed.getBoundingClientRect();
           const br = body.getBoundingClientRect();
-          return { ratio: br.height / er.height, editorH: er.height, bodyH: br.height };
+          return {
+            ratio: br.height / er.height, editorH: er.height, bodyH: br.height,
+            emoDisplay: getComputedStyle(emo).display
+          };
         });
+        expect(ok.emoDisplay, `${label}: picker must stay closed`).toBe('none');
         expect(ok.ratio, `${label}: bodyH=${ok.bodyH} editorH=${ok.editorH} ratio=${ok.ratio}`).toBeGreaterThanOrEqual(0.55);
       }
 

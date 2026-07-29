@@ -1,4 +1,4 @@
-**Version:** 7.0.7 · SW `soulcap-v707`
+**Version:** 7.0.8 · SW `soulcap-v708`
 
 # SoulCap — Project Handover
 
@@ -6,10 +6,10 @@
 > first — it is the current truth as of 2026-07-29. The sections further down describe an
 > earlier architecture and are kept for reference only.
 
-## Current state (v7.0.7 — 2026-07-29)
+## Current state (v7.0.8 — 2026-07-29)
 
-**Quiet Depth (SPEC-v7)** — V1–V9 + **V11 journal void** + persona UX polish (7.0.7). See
-`REDESIGN-DIFF.md` (anti-lookalike vs v6.0.10).
+**Quiet Depth (SPEC-v7)** — V1–V9 + **V12 journal emotion overlay** (true `position:fixed`;
+V11 toolbar-only was insufficient). See `REDESIGN-DIFF.md`.
 
 **The product is the PWA in `docs/`.** Offline-first, local-only, **no network calls after load**.
 Schema **v13**. Phase H: self-concept, patterns, habits. Prior Phase G: dialog a11y + 200% text / reduced-motion Playwright coverage; panic
@@ -20,7 +20,7 @@ appearance axes). Viewer: `screen-gallery.html` (`npm run gallery:view`).
 Live: https://shamikhahmed.github.io/SoulCap/
 
 ### Schema & ship
-- State `DEFAULT.v = 13` · SW `soulcap-v707` · app **7.0.7** · `package.json` **7.0.7**
+- State `DEFAULT.v = 13` · SW `soulcap-v708` · app **7.0.8** · `package.json` **7.0.8**
 - Ship workflow: bump CACHE + VERSION.json + APP_VERSION + package.json; CHANGELOG;
   SAFETY/HANDOVER (+ README/FEATURES when they drift); gallery; `npm run verify`; push `main`.
 

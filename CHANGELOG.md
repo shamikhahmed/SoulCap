@@ -1,5 +1,17 @@
 ## [Unreleased]
 
+## [7.0.8] — 2026-07-29
+
+### Fixed
+- **Journal void (SPEC-v7 V12):** feeling picker is a true `position:fixed` overlay
+  (`display:none!important` until `.on`). In-flow `position:static` / visible-by-default
+  starved `#jeBody` (live ratio ≈0.25). Open/closed no longer changes `.je-paper`/`#jeBody`
+  height. New entry opens CLOSED (`hidden` + no `.on`).
+- **Guard rewrite:** V12 asserts `display:none` + out-of-flow on open, body/editor ≥0.55,
+  and opening picker does not shrink `#jeBody`. Failed on broken static/in-flow probe
+  (`display:block`, h≈356); passes after overlay.
+- SW `soulcap-v708`. App **7.0.8**. Schema **v13**.
+
 ## [7.0.7] — 2026-07-29
 
 ### Changed

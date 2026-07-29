@@ -949,16 +949,37 @@ input[type="range"]{width:100%;min-height:48px;accent-color:var(--accent)}
 .je-mood{display:flex;gap:6px;flex:none}
 .je-mood button{font-size:19px;width:48px;height:48px;border-radius:10px;border:1px solid var(--line-strong);background:var(--surface);flex:none;transition:border-color var(--dur-fast) var(--ease)}
 .je-mood button[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
-/* Closed: display:none → ZERO height in the editor column. Open: popover above toolbar. */
+/* V12: true overlay — NEVER an in-flow flex sibling of .je-paper.
+   Closed = display:none (zero column height). Open = fixed above toolbar. */
+#journalEditor .je-emotion-wrap,
 .je-emotion-wrap{
-  display:none;position:absolute;z-index:6;
-  left:12px;right:12px;
-  bottom:calc(64px + var(--sab) + var(--kb-inset,0px));
-  max-height:min(42vh, 320px);overflow-y:auto;-webkit-overflow-scrolling:touch;
+  display:none!important;
+  position:fixed!important;
+  z-index:98;
+  left:max(12px, calc(50% - 290px + 12px));
+  right:max(12px, calc(50% - 290px + 12px));
+  width:auto;
+  max-width:560px;
+  margin:0 auto;
+  bottom:calc(64px + var(--sab,0px) + var(--kb-inset,0px));
+  max-height:min(42vh, 320px);
+  overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch;
   padding:14px 16px;background:var(--surface);border:1px solid var(--line-strong);
   border-radius:var(--r-md);box-shadow:var(--shadow-2);
+  flex:none!important;
+  pointer-events:none;
 }
-.je-emotion-wrap.on{display:block}
+#journalEditor .je-emotion-wrap.on,
+.je-emotion-wrap.on{
+  display:block!important;
+  pointer-events:auto;
+}
+@media (max-width:600px){
+  #journalEditor .je-emotion-wrap,
+  .je-emotion-wrap{
+    left:12px;right:12px;max-width:none;
+  }
+}
 
 /* Persistent floating Help — above tab bar. Icon-only on phone widths so it
    does not steal a content column (v5.1.3 gutter caused empty-right layout).

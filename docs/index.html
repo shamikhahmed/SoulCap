@@ -175,8 +175,8 @@ else{document.documentElement.setAttribute('lang','en');document.documentElement
     </button>
     <div id="jeMoodWrap" class="je-mood"></div>
   </div>
-  <!-- Feeling picker: overlay only. Closed = display:none → zero column height (SPEC-v7 V11). -->
-  <div id="jeEmotionOverlay" class="je-emotion-wrap" aria-hidden="true"></div>
+  <!-- Feeling picker: fixed overlay only (SPEC-v7 V12). Closed=hidden+display:none → never in flex column. -->
+  <div id="jeEmotionOverlay" class="je-emotion-wrap" hidden aria-hidden="true"></div>
   <input id="jeFile" type="file" accept="image/*" hidden/>
 </div>
 

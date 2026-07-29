@@ -3902,7 +3902,13 @@
     var host = $('#jeEmotionOverlay');
     var btn = $('#jeFeelingBtn');
     if (!host) return;
-    if (open) host.classList.add('on'); else host.classList.remove('on');
+    if (open) {
+      host.classList.add('on');
+      host.removeAttribute('hidden');
+    } else {
+      host.classList.remove('on');
+      host.setAttribute('hidden', '');
+    }
     host.setAttribute('aria-hidden', open ? 'false' : 'true');
     if (btn) {
       btn.setAttribute('aria-pressed', open ? 'true' : 'false');
@@ -5396,7 +5402,7 @@
       }
     });
   }
-  var APP_VERSION = '7.0.7';
+  var APP_VERSION = '7.0.8';
   function settingsGroup(v, title, kids) {
     v.appendChild(el('p', { class: 'eyebrow settings-eyebrow', text: title }));
     var block = el('div', { class: 'settings-block' });
@@ -5883,7 +5889,7 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '7.0.7',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '7.0.8',
     effectiveMotion: effectiveMotion,
     motionCap: function () { return motionCap; },
     loadGsap: loadGsap,
