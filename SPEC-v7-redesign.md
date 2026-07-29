@@ -100,3 +100,25 @@ intact; docs/app.js ↔ backend safety-gate kept in sync if touched. No crisis n
 picker. Worth-returning-to, NOT addictive — no streaks/variable-reward/guilt. About/Legal keeps the one
 honest not-medical line. Nothing marked clinically reviewed. Living layer must stay GPU-cheap and
 degrade on weak devices (capability probe) — never janky, never a battery sink.
+
+---
+
+## V10 — REGRESSION: journal editor still voids (measured v7.0.4, blocker)
+
+Opening a Blank-page entry, the writing area collapses and the void returns. Measured live:
+- `.je-body` textarea: `flex-grow:1`, `line-height:34px`, but **computed height = 6px** (placeholder
+  text clipped through the middle). Toolbar floats; large dead space below.
+- Ancestor chain: `.je-body` (6px) → `.je-paper` (`display:flex; flex-direction:column; flex-grow:1`
+  but **height = 30px**) → `.on` (`display:flex; flex-direction:column; height = 812px`).
+- Root cause: `.je-paper` is NOT expanding inside `.on`. `flex:1` was placed on the textarea, but the
+  break is one level up — `.je-paper` either shares `.on` with siblings (header/toolbar/prompt block)
+  that consume the column and it lacks `flex:1 1 0; min-height:0`, or `.on` is not the intended editor
+  flex column. Fix the CHAIN: the editor screen root must be `display:flex; flex-direction:column;
+  height:100%`, header `flex:none`, **`.je-paper` `flex:1 1 0; min-height:0`**, `.je-body`
+  `flex:1 1 0; min-height:0; height:100%`, toolbar `flex:none` pinned keyboard-safe. No fixed heights.
+- **Guard test (add, must fail before fix, pass after):** open a blank entry on mobile viewport;
+  assert `.je-body` bounding height ≥ 55% of the editor screen height at 0, 1, and 20 lines of text.
+  This is the coverage gap that let the void ship through 314 green tests twice.
+
+Same loop protocol: fix → the guard test goes green → bump all 4 version fields → doc → gallery →
+commit → push.
