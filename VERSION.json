@@ -1,8 +1,8 @@
 {
   "name": "SoulCap",
-  "version": "7.0.6",
-  "swCache": "soulcap-v706",
+  "version": "7.0.7",
+  "swCache": "soulcap-v707",
   "schema": 13,
   "released": "2026-07-29",
-  "note": "v7.0.6 Quiet Depth journal emotion-overlay fix (V11) — feeling picker no longer voids editor"
+  "note": "v7.0.7 Quiet Depth persona UX + journal hero craft after V11 — feeling picker no longer voids editor"
 }

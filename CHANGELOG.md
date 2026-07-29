@@ -1,5 +1,16 @@
 ## [Unreleased]
 
+## [7.0.7] — 2026-07-29
+
+### Changed
+- **Persona UX (Phase 1):** Help shows honesty line + “Try a 1-minute breath” for pre-onboard
+  distressed users; Settings puts Accessibility (Large text / motion) first; Now “This week” opens
+  weekly summary; About & Legal reachable from You without digging Settings.
+- **Journal hero craft (Phase 3):** editorial eyebrow + voice title + living field; book cover as
+  supporting customise surface (not a flat full-bleed void).
+- In-therapy companion track (ROADMAP §5 P22–P29) still **not built** — not faked.
+- SW `soulcap-v707`. App **7.0.7**. Schema **v13**.
+
 ## [7.0.6] — 2026-07-29
 
 ### Fixed

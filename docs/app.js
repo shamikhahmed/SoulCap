@@ -861,6 +861,14 @@
     container.appendChild(el('button', { class: 'btn ghost', text: t('panic.plan', 'Open my plan'), onclick: function () {
       closePanic(); safetyPlanSheet();
     } }));
+    // Distressed first-timer (pre-onboard): one-tap into a short offline breath after Help.
+    if (!state.onboarded) {
+      container.appendChild(el('button', { class: 'btn ghost', text: 'Try a 1-minute breath', onclick: function () {
+        closePanic(); startSkill('physiological-sigh');
+      } }));
+    }
+    // Honest limits — same line as About/Legal; visible without digging into Settings.
+    container.appendChild(el('p', { class: 'p-sm panic-honesty', text: ABOUT_UI.honesty }));
   }
 
   var pacerTimer = null, pacerPhase = 0;
@@ -3278,22 +3286,7 @@
   function settingsSheet() {
     openSheet(function (p) {
       p.appendChild(el('h2', { class: 'h-sec', text: tUi('common', 'settings', { settings: 'Settings' }) }));
-      settingsGroup(p, tUi('common', 'appearance', { appearance: 'Appearance' }), [
-        themeSwatchGrid(THEME_OPTIONS,
-          function (o) { return state.theme === o.k; }, function (o) { setTheme(o.k); }, function (o) { return themeChipLabel(o.k, o.l); }),
-        el('p', { class: 'p-sm', text: tUi('presentation', 'themeNote', PRESENTATION_UI) }),
-        el('p', { class: 'eyebrow mt-2', text: tUi('locale', 'language', LOCALE_UI) }),
-        settingChips(LOCALE_OPTIONS,
-          function (o) { return state.locale === o.k; }, function (o) { setLocale(o.k); }),
-        el('p', { class: 'p-sm', text: state.locale === 'rui' ? tUi('locale', 'reviewPending', LOCALE_UI) : tUi('locale', 'previewNote', LOCALE_UI) }),
-        state.locale === 'rui' && !clinicalNoticeDismissed() ? el('div', { class: 'notice' }, [
-          el('p', { class: 'p-sm', text: tUi('locale', 'clinicalNotice', LOCALE_UI) }),
-          el('button', { class: 'btn ghost', text: tUi('locale', 'clinicalDismiss', LOCALE_UI), onclick: dismissClinicalNotice })
-        ]) : null,
-        el('p', { class: 'eyebrow mt-2', text: tUi('presentation', 'accent', PRESENTATION_UI) }),
-        settingChips(ACCENT_OPTIONS,
-          function (o) { return state.appearance.accent === o.k; }, function (o) { setAppearance('accent', o.k); }, function (o) { return presentationChipLabel(o.k, o.l); })
-      ]);
+      // Accessibility first — older / low-tech adults should not scroll past themes to find Large text.
       settingsGroup(p, tUi('presentation', 'accessibility', PRESENTATION_UI), [
         el('p', { class: 'eyebrow', text: tUi('presentation', 'motion', PRESENTATION_UI) }),
         settingChips(MOTION_OPTIONS,
@@ -3309,6 +3302,22 @@
           function (o) { return state.appearance.density === o.k; }, function (o) { setAppearance('density', o.k); }, function (o) { return presentationChipLabel(o.k, o.l); }),
         toggleRow(tUi('presentation', 'contrast', PRESENTATION_UI), state.appearance.contrast === 'high', function () { setAppearance('contrast', state.appearance.contrast === 'high' ? 'standard' : 'high'); }),
         toggleRow(tUi('presentation', 'transparency', PRESENTATION_UI), state.appearance.reduceTransparency, function () { setAppearance('reduceTransparency', !state.appearance.reduceTransparency); })
+      ]);
+      settingsGroup(p, tUi('common', 'appearance', { appearance: 'Appearance' }), [
+        themeSwatchGrid(THEME_OPTIONS,
+          function (o) { return state.theme === o.k; }, function (o) { setTheme(o.k); }, function (o) { return themeChipLabel(o.k, o.l); }),
+        el('p', { class: 'p-sm', text: tUi('presentation', 'themeNote', PRESENTATION_UI) }),
+        el('p', { class: 'eyebrow mt-2', text: tUi('locale', 'language', LOCALE_UI) }),
+        settingChips(LOCALE_OPTIONS,
+          function (o) { return state.locale === o.k; }, function (o) { setLocale(o.k); }),
+        el('p', { class: 'p-sm', text: state.locale === 'rui' ? tUi('locale', 'reviewPending', LOCALE_UI) : tUi('locale', 'previewNote', LOCALE_UI) }),
+        state.locale === 'rui' && !clinicalNoticeDismissed() ? el('div', { class: 'notice' }, [
+          el('p', { class: 'p-sm', text: tUi('locale', 'clinicalNotice', LOCALE_UI) }),
+          el('button', { class: 'btn ghost', text: tUi('locale', 'clinicalDismiss', LOCALE_UI), onclick: dismissClinicalNotice })
+        ]) : null,
+        el('p', { class: 'eyebrow mt-2', text: tUi('presentation', 'accent', PRESENTATION_UI) }),
+        settingChips(ACCENT_OPTIONS,
+          function (o) { return state.appearance.accent === o.k; }, function (o) { setAppearance('accent', o.k); }, function (o) { return presentationChipLabel(o.k, o.l); })
       ]);
       settingsGroup(p, SETTINGS_UI.personalisation, [
         toggleRow(tUi('presentation', 'patternLearning', PRESENTATION_UI), state.patternPrefs.enabled, function () {
@@ -3617,16 +3626,22 @@
 
     var hero = el('div', { class: 'qd-hero journal-hero' });
     hero.appendChild(el('div', { class: 'living-field', 'aria-hidden': 'true' }));
+    hero.appendChild(el('p', { class: 'eyebrow', text: 'Journal' }));
+    hero.appendChild(el('h1', { class: 'h-voice', text: cov.title || 'A private page.' }));
+    hero.appendChild(el('p', { class: 'p-voice journal-hero-sub',
+      text: cov.subtitle || 'Only on this device. Write anything — nobody else will ever read it.' }));
     hero.appendChild(el('button', { class: 'book-cover book-cover-bleed',
-      style: '--bc-a:' + cc[0] + ';--bc-b:' + cc[1], onclick: coverSheet }, [
+      style: '--bc-a:' + cc[0] + ';--bc-b:' + cc[1],
+      'aria-label': 'Customise journal cover',
+      onclick: coverSheet }, [
       el('span', { class: 'bc-spine', 'aria-hidden': 'true' }),
       el('span', { class: 'bc-edge', 'aria-hidden': 'true' }),
       coverPhoto ? el('img', { class: 'bc-photo', src: coverPhoto, alt: '' }) : null,
       coverPhoto ? el('span', { class: 'bc-shade' }) : null,
-      el('span', { class: 'bc-edit', text: 'Customise' }),
+      el('span', { class: 'bc-edit', text: 'Customise cover' }),
       cov.sticker ? el('span', { class: 'bc-sticker', text: cov.sticker }) : null,
-      el('h1', { class: 'bc-title', text: cov.title || 'My Journal' }),
-      el('p', { class: 'bc-sub', text: cov.subtitle || (state.journal.length + (state.journal.length === 1 ? ' entry' : ' entries')) })
+      el('span', { class: 'bc-title', text: cov.title || 'My Journal' }),
+      el('span', { class: 'bc-sub', text: state.journal.length + (state.journal.length === 1 ? ' entry' : ' entries') })
     ]));
     v.appendChild(hero);
     v.appendChild(el('button', { class: 'btn journal-new-row', text: '＋  New entry', onclick: newEntrySheet }));
@@ -4685,12 +4700,14 @@
     ]));
     primary.appendChild(suggest);
 
-    var progress = el('div', { class: 'progress-glance qd-ruled qd-progress' });
+    var progress = el('button', { class: 'progress-glance qd-ruled qd-progress', type: 'button',
+      'aria-label': 'This week — open weekly summary', onclick: weeklyOverviewSheet });
     progress.appendChild(el('p', { class: 'section-label', text: 'This week' }));
     progress.appendChild(el('div', { class: 'progress-dots', role: 'img', 'aria-label': weekActivityLabel(dots) }, dots.map(function (d) {
       return el('i', { class: d.on ? 'on' : '', title: d.key });
     })));
     progress.appendChild(el('p', { class: 'glance-sub', text: weekActivityLabel(dots) }));
+    progress.appendChild(el('p', { class: 'p-sm glance-open', text: 'Open quietly' }));
     primary.appendChild(progress);
     signatureProgressIn(progress);
 
@@ -4961,6 +4978,11 @@
       title: tUi('me', 'knowsHeading', { knowsHeading: 'What SoulCap knows' }),
       meta: 'Estimates, screeners, and what seemed to help',
       onclick: knowsSheet
+    }));
+    aboutGroup.appendChild(listRow({
+      title: ABOUT_UI.open,
+      meta: ABOUT_UI.honesty,
+      onclick: aboutSheet
     }));
     about.appendChild(aboutGroup);
     v.appendChild(about);
@@ -5374,7 +5396,7 @@
       }
     });
   }
-  var APP_VERSION = '7.0.6';
+  var APP_VERSION = '7.0.7';
   function settingsGroup(v, title, kids) {
     v.appendChild(el('p', { class: 'eyebrow settings-eyebrow', text: title }));
     var block = el('div', { class: 'settings-block' });
@@ -5861,7 +5883,7 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '7.0.6',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '7.0.7',
     effectiveMotion: effectiveMotion,
     motionCap: function () { return motionCap; },
     loadGsap: loadGsap,

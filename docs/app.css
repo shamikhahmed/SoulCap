@@ -1196,14 +1196,28 @@ input[type="range"]{width:100%;min-height:48px;accent-color:var(--accent)}
 /* ── V6 Quiet Depth — Journal / You / People ─────────────────────────────── */
 #view-journal.view-qd{padding-top:0}
 .qd-hero.journal-hero{
-  margin:0 calc(-1 * var(--space-4)) var(--space-4);padding:0;
-  border-radius:0 0 var(--r-xl) var(--r-xl);min-height:220px;overflow:hidden;
+  margin:0 calc(-1 * var(--space-4)) var(--space-4);
+  padding:calc(var(--sat) + var(--space-4)) var(--space-4) var(--space-4);
+  border-radius:0 0 var(--r-xl) var(--r-xl);min-height:0;overflow:hidden;
+  display:flex;flex-direction:column;gap:var(--space-2);
 }
-.qd-hero.journal-hero .living-field{opacity:.38}
+.qd-hero.journal-hero .living-field{opacity:.5}
+.qd-hero.journal-hero .p-voice.journal-hero-sub{color:var(--ink-2);margin:0 0 var(--space-2);max-width:28ch}
 .qd-hero.journal-hero .book-cover-bleed{
-  margin:0;width:100%;min-height:220px;border-radius:0 0 var(--r-xl) var(--r-xl);
-  box-shadow:none;border:none;
+  margin:var(--space-2) 0 0;width:100%;min-height:148px;border-radius:var(--r-lg);
+  box-shadow:var(--shadow-2);border:1px solid var(--line);
+  position:relative;
 }
+.qd-hero.journal-hero .book-cover-bleed .bc-title{
+  font-family:var(--voice);font-size:22px;font-weight:500;letter-spacing:-.018em;color:var(--ink);
+}
+.qd-hero.journal-hero .book-cover-bleed .bc-sub{font-size:13px;color:var(--ink-2)}
+.progress-glance.qd-progress{
+  width:100%;text-align:left;border:none;background:transparent;cursor:pointer;
+  padding:var(--space-3) 0;font:inherit;color:inherit;
+}
+.progress-glance .glance-open{color:var(--ink-2);margin:var(--space-1) 0 0}
+.panic-honesty{margin-top:var(--space-3);color:var(--ink-2);font-size:13.5px;line-height:1.45}
 .journal-contents-block{margin-top:var(--space-2)}
 .journal-contents-block .section-label{margin-top:0}
 .journal-contents .journal-month-heading{
