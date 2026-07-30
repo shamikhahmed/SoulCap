@@ -32,6 +32,10 @@
       padding: 16px 20px;
     }
     h1 { margin: 0 0 4px; font-size: 1.35rem; font-weight: 650; }
+    h2.tab-head {
+      margin: 28px 0 12px; font-size: 1.05rem; font-weight: 650;
+      color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 6px;
+    }
     .sub { color: var(--muted); font-size: 0.85rem; margin: 0 0 12px; }
     .toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-bottom: 8px; }
     .btn {
@@ -63,6 +67,7 @@
     figure img { width: 100%; display: block; }
     figcaption { padding: 10px 12px; font-size: 0.8rem; }
     figcaption .route { color: var(--muted); font-family: ui-monospace, monospace; font-size: 0.72rem; }
+    figcaption .why { color: var(--muted); font-size: 0.75rem; margin-top: 6px; }
     #lightbox {
       position: fixed; inset: 0; z-index: 200;
       background: rgba(0, 0, 0, 0.92);
@@ -82,12 +87,14 @@
     <a class="back" href="docs/?demo=1">← Open app</a>
     <h1>SoulCap — Screen Gallery</h1>
     <p class="sub" id="meta">Loading manifest…</p>
+    <p class="sub">Organisation rationale: <a class="back" href="IA-RATIONALE.md">IA-RATIONALE.md</a></p>
     <div class="toolbar" id="filters-viewport"></div>
     <div class="toolbar" id="filters-pack"></div>
+    <div class="toolbar" id="filters-tab"></div>
     <div class="toolbar" id="filters-variant"></div>
   </header>
   <main>
-    <div class="grid" id="grid"></div>
+    <div id="sections"></div>
     <div class="empty" id="empty" hidden>
       No screenshots yet. Run <code>npm run gallery</code> first.
     </div>
@@ -95,15 +102,21 @@
   <div id="lightbox"><img alt="" /></div>
   <script>
     var DIR = 'docs/screenshots/gallery/';
-    var grid = document.getElementById('grid');
+    var sections = document.getElementById('sections');
     var meta = document.getElementById('meta');
     var lightbox = document.getElementById('lightbox');
     var lightboxImg = lightbox.querySelector('img');
     var shots = [];
     var viewport = 'all';
     var pack = 'all';
+    var tab = 'all';
     var variant = 'all';
     var query = '';
+    var TAB_ORDER = ['now', 'calm', 'journal', 'map', 'me', 'chrome', 'other'];
+    var TAB_LABEL = {
+      now: 'Now', calm: 'Calm', journal: 'Journal', map: 'People', me: 'You',
+      chrome: 'Chrome / Settings / Help', other: 'Other'
+    };
 
     function unique(arr) {
       var out = [];
@@ -116,43 +129,77 @@
       return out;
     }
 
+    function inferTab(s) {
+      if (s.tab) return s.tab;
+      var r = s.route || '';
+      if (r.indexOf('tab/now') === 0 || r.indexOf('now/') === 0) return 'now';
+      if (r.indexOf('tab/calm') === 0 || r.indexOf('calm/') === 0 || r.indexOf('runner') === 0) return 'calm';
+      if (r.indexOf('tab/journal') === 0 || r.indexOf('journal') === 0) return 'journal';
+      if (r.indexOf('tab/map') === 0 || r.indexOf('map/') === 0) return 'map';
+      if (r.indexOf('tab/me') === 0 || r.indexOf('me/') === 0 || r.indexOf('screener') === 0) return 'me';
+      if (r === 'settings' || r === 'about' || r === 'help' || r === 'splash' || r === 'welcome' || r.indexOf('onboard') === 0) return 'chrome';
+      return 'other';
+    }
+
     function filtered() {
       var q = query.trim().toLowerCase();
       return shots.filter(function (s) {
         if (viewport !== 'all' && s.viewport !== viewport) return false;
         if (pack !== 'all' && (s.pack || 'default') !== pack) return false;
         if (variant !== 'all' && (s.variant || 'default') !== variant) return false;
+        if (tab !== 'all' && inferTab(s) !== tab) return false;
         if (!q) return true;
-        return (s.label + ' ' + s.route + ' ' + s.file + ' ' + (s.variant || '') + ' ' + (s.pack || ''))
+        return (s.label + ' ' + s.route + ' ' + s.file + ' ' + (s.caption || '') + ' ' + (s.variant || '') + ' ' + (s.pack || ''))
           .toLowerCase()
           .indexOf(q) !== -1;
       });
     }
 
+    function figureFor(s) {
+      var fig = document.createElement('figure');
+      var img = document.createElement('img');
+      img.loading = 'lazy';
+      img.src = DIR + s.file;
+      img.alt = s.label;
+      var cap = document.createElement('figcaption');
+      var why = s.caption || ('What: ' + s.label + '. State kept in localStorage. Why: IA-RATIONALE.md.');
+      cap.innerHTML =
+        '<strong>' + s.label + '</strong><br /><span class="route">' +
+        s.viewport + ' · ' + (s.pack || 'default') + ' · ' + (s.variant || 'default') +
+        (s.state ? ' · ' + s.state : '') + ' · ' + s.route +
+        '</span><div class="why">' + why + '</div>';
+      fig.appendChild(img);
+      fig.appendChild(cap);
+      fig.addEventListener('click', function () {
+        lightboxImg.src = img.src;
+        lightbox.classList.add('open');
+      });
+      return fig;
+    }
+
     function render() {
-      grid.className = 'grid' + (viewport === 'desktop' ? ' desktop-view' : '');
-      grid.innerHTML = '';
+      sections.innerHTML = '';
       var visible = filtered();
       document.getElementById('empty').hidden = visible.length > 0;
       meta.textContent = meta.dataset.base + ' · showing ' + visible.length;
+
+      var byTab = {};
       visible.forEach(function (s) {
-        var fig = document.createElement('figure');
-        var img = document.createElement('img');
-        img.loading = 'lazy';
-        img.src = DIR + s.file;
-        img.alt = s.label;
-        var cap = document.createElement('figcaption');
-        cap.innerHTML =
-          '<strong>' + s.label + '</strong><br /><span class="route">' +
-          s.viewport + ' · ' + (s.pack || 'default') + ' · ' + (s.variant || 'default') + ' · ' + s.route +
-          '</span>';
-        fig.appendChild(img);
-        fig.appendChild(cap);
-        fig.addEventListener('click', function () {
-          lightboxImg.src = img.src;
-          lightbox.classList.add('open');
-        });
-        grid.appendChild(fig);
+        var t = inferTab(s);
+        if (!byTab[t]) byTab[t] = [];
+        byTab[t].push(s);
+      });
+
+      TAB_ORDER.forEach(function (t) {
+        if (!byTab[t] || !byTab[t].length) return;
+        var h = document.createElement('h2');
+        h.className = 'tab-head';
+        h.textContent = TAB_LABEL[t] || t;
+        sections.appendChild(h);
+        var grid = document.createElement('div');
+        grid.className = 'grid' + (viewport === 'desktop' ? ' desktop-view' : '');
+        byTab[t].forEach(function (s) { grid.appendChild(figureFor(s)); });
+        sections.appendChild(grid);
       });
     }
 
@@ -183,7 +230,15 @@
         if (v === 'default') return 'Default screens';
         if (v === 'theme') return 'Themes';
         if (v === 'appearance') return 'Appearance';
+        if (v === 'states') return 'States';
         return v;
+      });
+
+      var tabs = ['all'].concat(TAB_ORDER.filter(function (t) {
+        return shots.some(function (s) { return inferTab(s) === t; });
+      }));
+      btnRow('filters-tab', tabs, tab, function (v) { tab = v; }, function (v) {
+        return v === 'all' ? 'All tabs' : (TAB_LABEL[v] || v);
       });
 
       var variants = ['all'];
@@ -234,6 +289,7 @@
         shots = (m.shots || []).map(function (s) {
           if (!s.pack) s.pack = 'default';
           if (!s.variant) s.variant = 'default';
+          if (!s.tab) s.tab = inferTab(s);
           return s;
         });
         meta.dataset.base = 'v' + m.version + ' · ' + shots.length + ' shots · generated ' + new Date(m.generated).toLocaleString();

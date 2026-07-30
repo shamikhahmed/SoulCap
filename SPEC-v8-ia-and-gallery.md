@@ -10,7 +10,7 @@
 > screenshot, never trust green) → bump 4 version fields → doc → gallery → commit → push → next.
 > STOP only when W1–W8 are all done and proven live.
 
-Current: v7.0.13. Measured live this session (the evidence behind this spec):
+**Shipped in 8.0.0** (`soulcap-v800`). Was: v7.0.13. Measured live this session (the evidence behind this spec):
 - "You" tab does three jobs (progress + tools + about/settings), is a long scroll, and shows
   **"Set up profile" TWICE** (a top button and an "About you" row).
 - Depth tools (Two versions of you, Habit support, Reflection check) sit two levels deep under

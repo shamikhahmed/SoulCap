@@ -110,6 +110,7 @@
   var DRIP_DAY_CAP = 4;
   var state = load();
   var sheetOpener = null;
+  var sheetScrollY = 0;
   var panicSaveWarning = false;
 
   function load() {
@@ -828,7 +829,22 @@
     var before = state.theme;
     state.theme = next && VALID_THEMES[next] ? next : null;
     if (!save()) { state.theme = before; showPreferenceSaveFailed(); return; }
-    applyTheme(); reRender();
+    applyTheme();
+    /* Theme lives in Settings sheet — avoid full reRender (scroll jump). Refresh sheet marks. */
+    refreshOpenSettingsThemeMarks();
+  }
+  function refreshOpenSettingsThemeMarks() {
+    var sheet = $('#sheetPanel');
+    if (!sheet || !$('#sheet') || !$('#sheet').classList.contains('on')) return;
+    var nodes = sheet.querySelectorAll('.theme-swatch');
+    Array.prototype.forEach.call(nodes, function (btn) {
+      var labelEl = btn.querySelector('.theme-swatch-label');
+      var label = labelEl ? (labelEl.textContent || '').trim() : (btn.textContent || '').trim();
+      var match = THEME_OPTIONS.some(function (o) {
+        return themeChipLabel(o.k, o.l) === label && ((o.k == null && !state.theme) || state.theme === o.k);
+      });
+      btn.setAttribute('aria-pressed', match ? 'true' : 'false');
+    });
   }
   function buzz(pattern) {
     if (!state.haptics) return;
@@ -2622,7 +2638,10 @@
   }
   function openSheet(build, opts) {
     opts = opts || {};
-    if (!$('#sheet').classList.contains('on')) sheetOpener = document.activeElement;
+    if (!$('#sheet').classList.contains('on')) {
+      sheetOpener = document.activeElement;
+      sheetScrollY = window.scrollY || (document.scrollingElement && document.scrollingElement.scrollTop) || 0;
+    }
     if (mapState) mapState.sheetPause = true;
     var panel = $('#sheetPanel'); clear(panel);
     if (opts.flow) {
@@ -2678,8 +2697,12 @@
     $('#sheet').setAttribute('aria-hidden', 'true');
     setSheetBackgroundInert(false);
     document.body.style.overflow = '';
-    if (sheetOpener && document.documentElement.contains(sheetOpener)) sheetOpener.focus();
+    if (sheetOpener && document.documentElement.contains(sheetOpener)) {
+      try { sheetOpener.focus({ preventScroll: true }); } catch (e) { sheetOpener.focus(); }
+    }
     sheetOpener = null;
+    window.scrollTo(0, sheetScrollY || 0);
+    requestAnimationFrame(function () { window.scrollTo(0, sheetScrollY || 0); });
   }
 
   /* ── Gestures (v5 PR-3) — always paired with visible controls ─────────── */
@@ -3347,127 +3370,184 @@
   function settingsSheet() {
     openSheet(function (p) {
       p.appendChild(el('h2', { class: 'h-sec', text: tUi('common', 'settings', { settings: 'Settings' }) }));
-      // Accessibility first — older / low-tech adults should not scroll past themes to find Large text.
-      settingsGroup(p, tUi('presentation', 'accessibility', PRESENTATION_UI), [
-        el('p', { class: 'eyebrow', text: tUi('presentation', 'motion', PRESENTATION_UI) }),
-        settingChips(MOTION_OPTIONS,
-          function (o) { return state.appearance.motion === o.k; },
-          function (o) { setAppearance('motion', o.k); },
-          function (o) { return presentationChipLabel(o.k, o.l); }),
-        el('p', { class: 'p-sm', text: tUi('presentation', 'motionHint', PRESENTATION_UI) }),
-        el('p', { class: 'eyebrow mt-2', text: tUi('presentation', 'text', PRESENTATION_UI) }),
-        settingChips(TEXT_OPTIONS,
-          function (o) { return state.appearance.text === o.k; }, function (o) { setAppearance('text', o.k); }, function (o) { return presentationChipLabel(o.k, o.l); }),
-        el('p', { class: 'eyebrow mt-2', text: tUi('presentation', 'density', PRESENTATION_UI) }),
-        settingChips(DENSITY_OPTIONS,
-          function (o) { return state.appearance.density === o.k; }, function (o) { setAppearance('density', o.k); }, function (o) { return presentationChipLabel(o.k, o.l); }),
-        toggleRow(tUi('presentation', 'contrast', PRESENTATION_UI), state.appearance.contrast === 'high', function () { setAppearance('contrast', state.appearance.contrast === 'high' ? 'standard' : 'high'); }),
-        toggleRow(tUi('presentation', 'transparency', PRESENTATION_UI), state.appearance.reduceTransparency, function () { setAppearance('reduceTransparency', !state.appearance.reduceTransparency); })
-      ]);
-      settingsGroup(p, tUi('common', 'appearance', { appearance: 'Appearance' }), [
-        themeSwatchGrid(THEME_OPTIONS,
-          function (o) { return state.theme === o.k; }, function (o) { setTheme(o.k); }, function (o) { return themeChipLabel(o.k, o.l); }),
-        el('p', { class: 'p-sm', text: tUi('presentation', 'themeNote', PRESENTATION_UI) }),
-        el('p', { class: 'eyebrow mt-2', text: tUi('locale', 'language', LOCALE_UI) }),
-        settingChips(LOCALE_OPTIONS,
-          function (o) { return state.locale === o.k; }, function (o) { setLocale(o.k); }),
-        el('p', { class: 'p-sm', text: state.locale === 'rui' ? tUi('locale', 'reviewPending', LOCALE_UI) : tUi('locale', 'previewNote', LOCALE_UI) }),
-        state.locale === 'rui' && !clinicalNoticeDismissed() ? el('div', { class: 'notice' }, [
-          el('p', { class: 'p-sm', text: tUi('locale', 'clinicalNotice', LOCALE_UI) }),
-          el('button', { class: 'btn ghost', text: tUi('locale', 'clinicalDismiss', LOCALE_UI), onclick: dismissClinicalNotice })
-        ]) : null,
-        el('p', { class: 'eyebrow mt-2', text: tUi('presentation', 'accent', PRESENTATION_UI) }),
-        settingChips(ACCENT_OPTIONS,
-          function (o) { return state.appearance.accent === o.k; }, function (o) { setAppearance('accent', o.k); }, function (o) { return presentationChipLabel(o.k, o.l); })
-      ]);
-      settingsGroup(p, SETTINGS_UI.personalisation, [
-        toggleRow(tUi('presentation', 'patternLearning', PRESENTATION_UI), state.patternPrefs.enabled, function () {
-          var before = state.patternPrefs.enabled;
-          state.patternPrefs.enabled = !state.patternPrefs.enabled;
-          if (!save()) { state.patternPrefs.enabled = before; showPreferenceSaveFailed(); return; }
-          reRender();
-        }, state.patternPrefs.enabled ? tUi('presentation', 'patternHint', PRESENTATION_UI) : tUi('pattern', 'disabled', PATTERN_UI)),
-        Object.keys(state.patternPrefs.decisions).length ? listRow({
-          title: tUi('pattern', 'reset', PATTERN_UI),
-          onclick: function () {
-            var before = clone(state.patternPrefs.decisions);
-            state.patternPrefs.decisions = {};
-            if (!save()) { state.patternPrefs.decisions = before; showPreferenceSaveFailed(); return; }
-            reRender();
-          }
-        }) : null,
-        toggleRow(state.pathPrefs.hide ? PATH_UI.showCard : PATH_UI.hideCard, !state.pathPrefs.hide, function () {
-          var before = state.pathPrefs.hide;
-          state.pathPrefs.hide = !state.pathPrefs.hide;
-          if (!save()) { state.pathPrefs.hide = before; showPreferenceSaveFailed(); return; }
-          reRender();
-        })
-      ]);
-      settingsGroup(p, SETTINGS_UI.guided, [
-        toggleRow(SETTINGS_UI.spoken, state.voice.on, function () {
-          var before = state.voice.on; state.voice.on = !state.voice.on;
-          if (!save()) { state.voice.on = before; showPreferenceSaveFailed(); return; }
-          reRender();
-        }),
-        state.voice.on ? listRow({ title: SETTINGS_UI.voiceAccent, onclick: voiceSheet }) : null,
-        toggleRow(SETTINGS_UI.vibration, state.haptics, function () {
-          var before = state.haptics; state.haptics = !state.haptics;
-          if (!save()) { state.haptics = before; showPreferenceSaveFailed(); return; }
-          haptic('done'); reRender();
-        }),
-        el('p', { class: 'eyebrow mt-2', text: SETTINGS_UI.techniquePace }),
-        settingChips([{ v: 1.35, l: SETTINGS_UI.slow }, { v: 1, l: SETTINGS_UI.steady }, { v: 0.8, l: SETTINGS_UI.brisk }],
-          function (o) { return paceMult() === o.v; }, function (o) {
-            var before = state.pace; state.pace = o.v;
-            if (!save()) { state.pace = before; showPreferenceSaveFailed(); return; }
-            haptic('tick'); reRender();
-          }),
-        el('p', { class: 'p-sm', text: SETTINGS_UI.paceHint }),
-        el('p', { class: 'eyebrow mt-2', text: WIND_DOWN_UI.settingsTitle }),
-        el('p', { class: 'p-sm', text: WIND_DOWN_UI.settingsHint }),
-        settingChips(
-          [{ v: null, l: WIND_DOWN_UI.off }].concat([17, 18, 19, 20, 21, 22, 23].map(function (h) {
-            return { v: h, l: h + ':00' };
-          })),
-          function (o) { return state.windDownHour === o.v || (o.v === null && state.windDownHour == null); },
-          function (o) {
-            var before = state.windDownHour;
-            state.windDownHour = o.v;
-            if (!save()) { state.windDownHour = before; showPreferenceSaveFailed(); return; }
-            reRender();
-          }
-        )
-      ]);
-      settingsGroup(p, SETTINGS_UI.constellation, [
-        el('p', { class: 'eyebrow', text: SETTINGS_UI.mapPace }),
-        settingChips(MAP_PACE_OPTIONS,
-          function (o) { return state.mapPace === o.k; }, function (o) {
-            var before = state.mapPace; state.mapPace = o.k;
-            if (!save()) { state.mapPace = before; showPreferenceSaveFailed(); return; }
-            reRender();
-          }, function (o) { return mapPaceLabel(o.k, o.l); }),
-        el('p', { class: 'p-sm', text: SETTINGS_UI.mapPaceHint }),
-        toggleRow(SETTINGS_UI.showLinks, state.showLinks, function () {
-          var before = state.showLinks; state.showLinks = !state.showLinks;
-          if (!save()) { state.showLinks = before; showPreferenceSaveFailed(); return; }
-          reRender();
-        }),
-        toggleRow(SETTINGS_UI.trackContact, state.trackContact, function () {
-          var before = state.trackContact; state.trackContact = !state.trackContact;
-          if (!save()) { state.trackContact = before; showPreferenceSaveFailed(); return; }
-          reRender();
-        }, SETTINGS_UI.trackHint)
-      ]);
-      settingsGroup(p, SETTINGS_UI.yourData, [
-        listRow({ title: SETTINGS_UI.export, onclick: exportData }),
-        el('button', { class: 'btn danger', type: 'button', text: SETTINGS_UI.delete, onclick: confirmDelete })
-      ]);
-      settingsGroup(p, SETTINGS_UI.about, [
-        listRow({ title: ABOUT_UI.open, onclick: function () { closeSheet(); aboutSheet(); } }),
-        el('p', { class: 'p-sm', text: 'SoulCap · v' + APP_VERSION })
-      ]);
+      var search = el('input', {
+        class: 'settings-search',
+        type: 'search',
+        placeholder: SETTINGS_UI.searchPlaceholder,
+        value: settingsQuery || '',
+        'aria-label': SETTINGS_UI.searchPlaceholder
+      });
+      search.oninput = function () {
+        settingsQuery = (search.value || '').trim().toLowerCase();
+        renderSettingsGroups(p);
+      };
+      p.appendChild(search);
+      var host = el('div', { class: 'settings-groups', id: 'settingsGroups' });
+      p.appendChild(host);
+      renderSettingsGroups(p);
       p.appendChild(el('button', { class: 'btn quiet', text: tUi('common', 'close', { close: 'Close' }), onclick: closeSheet }));
     });
+  }
+  function settingsMatch(q, texts) {
+    if (!q) return true;
+    var blob = (texts || []).join(' ').toLowerCase();
+    return blob.indexOf(q) !== -1;
+  }
+  function renderSettingsGroups(sheetRoot) {
+    var host = sheetRoot.querySelector('#settingsGroups') || sheetRoot;
+    if (host.id === 'settingsGroups') clear(host);
+    else return;
+    var q = settingsQuery || '';
+    var any = false;
+
+    function addGroup(title, texts, kids) {
+      if (!settingsMatch(q, texts.concat([title]))) return;
+      any = true;
+      settingsGroup(host, title, kids);
+    }
+
+    addGroup(SETTINGS_UI.appearance, [
+      SETTINGS_UI.appearance, tUi('presentation', 'accent', PRESENTATION_UI), tUi('presentation', 'themeNote', PRESENTATION_UI)
+    ], [
+      themeSwatchGrid(THEME_OPTIONS,
+        function (o) { return state.theme === o.k; }, function (o) { setTheme(o.k); }, function (o) { return themeChipLabel(o.k, o.l); }),
+      el('p', { class: 'p-sm', text: tUi('presentation', 'themeNote', PRESENTATION_UI) }),
+      el('p', { class: 'eyebrow mt-2', text: tUi('presentation', 'accent', PRESENTATION_UI) }),
+      settingChips(ACCENT_OPTIONS,
+        function (o) { return state.appearance.accent === o.k; }, function (o) { setAppearance('accent', o.k); }, function (o) { return presentationChipLabel(o.k, o.l); })
+    ]);
+
+    addGroup(SETTINGS_UI.language, [
+      LOCALE_UI.language, tUi('locale', 'language', LOCALE_UI), tUi('locale', 'previewNote', LOCALE_UI)
+    ], [
+      settingChips(LOCALE_OPTIONS,
+        function (o) { return state.locale === o.k; }, function (o) { setLocale(o.k); }),
+      el('p', { class: 'p-sm', text: state.locale === 'rui' ? tUi('locale', 'reviewPending', LOCALE_UI) : tUi('locale', 'previewNote', LOCALE_UI) }),
+      state.locale === 'rui' && !clinicalNoticeDismissed() ? el('div', { class: 'notice' }, [
+        el('p', { class: 'p-sm', text: tUi('locale', 'clinicalNotice', LOCALE_UI) }),
+        el('button', { class: 'btn ghost', text: tUi('locale', 'clinicalDismiss', LOCALE_UI), onclick: dismissClinicalNotice })
+      ]) : null
+    ]);
+
+    addGroup(tUi('presentation', 'accessibility', PRESENTATION_UI), [
+      PRESENTATION_UI.accessibility, PRESENTATION_UI.motion, PRESENTATION_UI.text, PRESENTATION_UI.density,
+      PRESENTATION_UI.contrast, PRESENTATION_UI.transparency
+    ], [
+      el('p', { class: 'eyebrow', text: tUi('presentation', 'motion', PRESENTATION_UI) }),
+      settingChips(MOTION_OPTIONS,
+        function (o) { return state.appearance.motion === o.k; },
+        function (o) { setAppearance('motion', o.k); },
+        function (o) { return presentationChipLabel(o.k, o.l); }),
+      el('p', { class: 'p-sm', text: tUi('presentation', 'motionHint', PRESENTATION_UI) }),
+      el('p', { class: 'eyebrow mt-2', text: tUi('presentation', 'text', PRESENTATION_UI) }),
+      settingChips(TEXT_OPTIONS,
+        function (o) { return state.appearance.text === o.k; }, function (o) { setAppearance('text', o.k); }, function (o) { return presentationChipLabel(o.k, o.l); }),
+      el('p', { class: 'eyebrow mt-2', text: tUi('presentation', 'density', PRESENTATION_UI) }),
+      settingChips(DENSITY_OPTIONS,
+        function (o) { return state.appearance.density === o.k; }, function (o) { setAppearance('density', o.k); }, function (o) { return presentationChipLabel(o.k, o.l); }),
+      toggleRow(tUi('presentation', 'contrast', PRESENTATION_UI), state.appearance.contrast === 'high', function () { setAppearance('contrast', state.appearance.contrast === 'high' ? 'standard' : 'high'); }),
+      toggleRow(tUi('presentation', 'transparency', PRESENTATION_UI), state.appearance.reduceTransparency, function () { setAppearance('reduceTransparency', !state.appearance.reduceTransparency); })
+    ]);
+
+    addGroup(SETTINGS_UI.personalisation, [
+      SETTINGS_UI.personalisation, PRESENTATION_UI.patternLearning, PATH_UI.hideCard, SETTINGS_UI.spoken,
+      SETTINGS_UI.vibration, SETTINGS_UI.techniquePace, SETTINGS_UI.mapPace, WIND_DOWN_UI.settingsTitle
+    ], [
+      toggleRow(tUi('presentation', 'patternLearning', PRESENTATION_UI), state.patternPrefs.enabled, function () {
+        var before = state.patternPrefs.enabled;
+        state.patternPrefs.enabled = !state.patternPrefs.enabled;
+        if (!save()) { state.patternPrefs.enabled = before; showPreferenceSaveFailed(); return; }
+        reRender();
+      }, state.patternPrefs.enabled ? tUi('presentation', 'patternHint', PRESENTATION_UI) : tUi('pattern', 'disabled', PATTERN_UI)),
+      Object.keys(state.patternPrefs.decisions).length ? listRow({
+        title: tUi('pattern', 'reset', PATTERN_UI),
+        onclick: function () {
+          var before = clone(state.patternPrefs.decisions);
+          state.patternPrefs.decisions = {};
+          if (!save()) { state.patternPrefs.decisions = before; showPreferenceSaveFailed(); return; }
+          reRender();
+        }
+      }) : null,
+      toggleRow(state.pathPrefs.hide ? PATH_UI.showCard : PATH_UI.hideCard, !state.pathPrefs.hide, function () {
+        var before = state.pathPrefs.hide;
+        state.pathPrefs.hide = !state.pathPrefs.hide;
+        if (!save()) { state.pathPrefs.hide = before; showPreferenceSaveFailed(); return; }
+        reRender();
+      }),
+      el('p', { class: 'eyebrow mt-2', text: SETTINGS_UI.guided }),
+      toggleRow(SETTINGS_UI.spoken, state.voice.on, function () {
+        var before = state.voice.on; state.voice.on = !state.voice.on;
+        if (!save()) { state.voice.on = before; showPreferenceSaveFailed(); return; }
+        reRender();
+      }),
+      state.voice.on ? listRow({ title: SETTINGS_UI.voiceAccent, onclick: voiceSheet }) : null,
+      toggleRow(SETTINGS_UI.vibration, state.haptics, function () {
+        var before = state.haptics; state.haptics = !state.haptics;
+        if (!save()) { state.haptics = before; showPreferenceSaveFailed(); return; }
+        haptic('done'); reRender();
+      }),
+      el('p', { class: 'eyebrow mt-2', text: SETTINGS_UI.techniquePace }),
+      settingChips([{ v: 1.35, l: SETTINGS_UI.slow }, { v: 1, l: SETTINGS_UI.steady }, { v: 0.8, l: SETTINGS_UI.brisk }],
+        function (o) { return paceMult() === o.v; }, function (o) {
+          var before = state.pace; state.pace = o.v;
+          if (!save()) { state.pace = before; showPreferenceSaveFailed(); return; }
+          haptic('tick'); reRender();
+        }),
+      el('p', { class: 'p-sm', text: SETTINGS_UI.paceHint }),
+      el('p', { class: 'eyebrow mt-2', text: WIND_DOWN_UI.settingsTitle }),
+      el('p', { class: 'p-sm', text: WIND_DOWN_UI.settingsHint }),
+      settingChips(
+        [{ v: null, l: WIND_DOWN_UI.off }].concat([17, 18, 19, 20, 21, 22, 23].map(function (h) {
+          return { v: h, l: h + ':00' };
+        })),
+        function (o) { return state.windDownHour === o.v || (o.v === null && state.windDownHour == null); },
+        function (o) {
+          var before = state.windDownHour;
+          state.windDownHour = o.v;
+          if (!save()) { state.windDownHour = before; showPreferenceSaveFailed(); return; }
+          reRender();
+        }
+      ),
+      el('p', { class: 'eyebrow mt-2', text: SETTINGS_UI.constellation }),
+      el('p', { class: 'eyebrow', text: SETTINGS_UI.mapPace }),
+      settingChips(MAP_PACE_OPTIONS,
+        function (o) { return state.mapPace === o.k; }, function (o) {
+          var before = state.mapPace; state.mapPace = o.k;
+          if (!save()) { state.mapPace = before; showPreferenceSaveFailed(); return; }
+          reRender();
+        }, function (o) { return mapPaceLabel(o.k, o.l); }),
+      el('p', { class: 'p-sm', text: SETTINGS_UI.mapPaceHint }),
+      toggleRow(SETTINGS_UI.showLinks, state.showLinks, function () {
+        var before = state.showLinks; state.showLinks = !state.showLinks;
+        if (!save()) { state.showLinks = before; showPreferenceSaveFailed(); return; }
+        reRender();
+      }),
+      toggleRow(SETTINGS_UI.trackContact, state.trackContact, function () {
+        var before = state.trackContact; state.trackContact = !state.trackContact;
+        if (!save()) { state.trackContact = before; showPreferenceSaveFailed(); return; }
+        reRender();
+      }, SETTINGS_UI.trackHint)
+    ]);
+
+    addGroup(SETTINGS_UI.privacyData, [
+      SETTINGS_UI.privacyData, SETTINGS_UI.onDevice, SETTINGS_UI.export, SETTINGS_UI.delete
+    ], [
+      el('p', { class: 'p-sm', text: SETTINGS_UI.onDevice }),
+      listRow({ title: SETTINGS_UI.export, onclick: exportData }),
+      el('button', { class: 'btn danger', type: 'button', text: SETTINGS_UI.delete, onclick: confirmDelete })
+    ]);
+
+    addGroup(SETTINGS_UI.about, [
+      SETTINGS_UI.about, ABOUT_UI.open, ABOUT_UI.honesty, 'version'
+    ], [
+      listRow({ title: ABOUT_UI.open, onclick: function () { closeSheet(); aboutSheet(); } }),
+      el('p', { class: 'p-sm', text: ABOUT_UI.honesty }),
+      el('p', { class: 'p-sm', text: 'SoulCap · v' + APP_VERSION })
+    ]);
+
+    if (!any) {
+      host.appendChild(el('p', { class: 'p-sm', role: 'status', text: SETTINGS_UI.searchEmpty }));
+    }
   }
   function aboutSheet() {
     openSheet(function (p) {
@@ -4781,14 +4861,21 @@
     ]));
     primary.appendChild(suggest);
 
-    var progress = el('button', { class: 'progress-glance qd-ruled qd-progress', type: 'button',
-      'aria-label': 'This week — open weekly summary', onclick: weeklyOverviewSheet });
-    progress.appendChild(el('p', { class: 'section-label', text: 'This week' }));
-    progress.appendChild(el('div', { class: 'progress-dots', role: 'img', 'aria-label': weekActivityLabel(dots) }, dots.map(function (d) {
-      return el('i', { class: d.on ? 'on' : '', title: d.key });
-    })));
-    progress.appendChild(el('p', { class: 'glance-sub', text: weekActivityLabel(dots) }));
-    progress.appendChild(el('p', { class: 'p-sm glance-open', text: 'Open quietly' }));
+    var nowPreview = !(state.checkins || []).length && !(state.skillRuns || []).length;
+    var nowWeekLabel = nowPreview ? PREVIEW_UI.weekSummary : weekActivityLabel(dots);
+    var progress = el('button', { class: 'progress-glance qd-ruled qd-progress' + (nowPreview ? ' is-preview' : ''), type: 'button',
+      'aria-label': nowWeekLabel + ' · ' + PROGRESS_UI.openWeekly, onclick: weeklyOverviewSheet });
+    if (nowPreview) {
+      progress.appendChild(el('span', { class: 'preview-badge', text: PREVIEW_UI.badge }));
+      progress.appendChild(el('p', { class: 'section-label', text: PREVIEW_UI.weekTitle }));
+      progress.appendChild(el('p', { class: 'p-sm', text: PREVIEW_UI.weekBody }));
+      progress.appendChild(weekDotsEl(previewWeekDots(), true));
+    } else {
+      progress.appendChild(el('p', { class: 'section-label', text: 'This week' }));
+      progress.appendChild(weekDotsEl(dots, true));
+      progress.appendChild(el('p', { class: 'glance-sub', 'aria-hidden': 'true', text: nowWeekLabel }));
+    }
+    progress.appendChild(el('p', { class: 'p-sm glance-open', 'aria-hidden': 'true', text: 'Open quietly' }));
     primary.appendChild(progress);
     signatureProgressIn(progress);
 
@@ -4925,6 +5012,14 @@
     var dayN = soulcapDayCount();
     var hero = el('div', { class: 'qd-hero me-hero' });
     hero.appendChild(el('div', { class: 'living-field', 'aria-hidden': 'true' }));
+    hero.appendChild(el('button', {
+      class: 'me-settings-gear settings-card',
+      type: 'button',
+      'aria-label': tUi('me', 'settingsAria', { settingsAria: 'Settings' }),
+      title: tUi('settingsCard', 'title', { title: 'Settings' }),
+      onclick: settingsSheet,
+      html: '<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>'
+    }));
     hero.appendChild(el('p', { class: 'eyebrow', text: tUi('me', 'eyebrow', { eyebrow: 'You' }) }));
     hero.appendChild(el('h1', { class: 'h-voice type-display', text: name || tUi('me', 'yourSpace', { yourSpace: 'Your space.' }) }));
     hero.appendChild(el('p', { class: 'p-voice', text: dayN
@@ -4932,15 +5027,13 @@
       : 'A quiet place for what you notice.' }));
     v.appendChild(hero);
 
+    /* SPEC-v8 W1: no second "Set up profile" CTA — Profile lives once under About you. */
     if (!name && !historyFilled() && !state.principles.length && !state.manual.lines.length && !planFilled()) {
       var meEmpty = el('div', { class: 'me-empty-stage' });
       meEmpty.appendChild(el('div', { class: 'living-field me-empty-living', 'aria-hidden': 'true' }));
       meEmpty.appendChild(emptyState({
         className: 'empty-tight',
-        body: tUi('empty', 'me', EMPTY_UI),
-        action: EMPTY_UI.meAction,
-        primary: false,
-        onclick: profileSheet
+        body: tUi('empty', 'me', EMPTY_UI)
       }));
       meEmpty.appendChild(el('p', {
         class: 'p-voice me-empty-purpose',
@@ -4949,80 +5042,7 @@
       v.appendChild(meEmpty);
     }
 
-    var localInsights = buildLocalInsights();
-    var insights = el('div', { class: 'section-block me-insights' });
-    /* SPEC-v7 V13: never show "Your insights" with nothing beneath it. */
-    if (localInsights.length) {
-      insights.appendChild(el('p', {
-        class: 'section-label',
-        text: tUi('me', 'sectionInsights', { sectionInsights: INSIGHTS_UI.section })
-      }));
-      var insightList = el('div', {
-        class: 'me-insight-list',
-        role: 'list',
-        'aria-label': INSIGHTS_UI.section
-      });
-      localInsights.forEach(function (line) {
-        insightList.appendChild(el('p', {
-          class: 'p-voice me-insight-line',
-          role: 'listitem',
-          'data-insight-id': line.id,
-          text: line.text
-        }));
-      });
-      insights.appendChild(insightList);
-    }
-    var progDots = weekActivityDots();
-    var progN = progDots.filter(function (x) { return x.on; }).length;
-    var weekLine = progN
-      ? PROGRESS_UI.weekDays.replace('{n}', '' + progN).replace('{s}', progN === 1 ? '' : 's')
-      : PROGRESS_UI.weekEmpty;
-    var runs = state.skillRuns.length, helped = state.skillRuns.filter(function (r) { return r.helpful; }).length;
-    var pathN = (state.pathSessions || []).length;
-    var progress = el('div', { class: 'progress-dash qd-ruled qd-progress' + (progN ? ' week-bloom' : '') });
-    progress.appendChild(el('p', { class: 'section-label', text: PROGRESS_UI.title }));
-    progress.appendChild(el('p', { class: 'glance-label', text: PROGRESS_UI.weekLabel }));
-    progress.appendChild(el('div', { class: 'progress-dots', role: 'img', 'aria-label': weekLine }, progDots.map(function (d) {
-      return el('i', { class: d.on ? 'on' : '' });
-    })));
-    progress.appendChild(el('p', { class: 'glance-sub', text: weekLine }));
-    if (runs || state.checkins.length || state.journal.length || pathN) {
-      var statsWrap = el('div', { class: 'progress-stats' });
-      statsWrap.appendChild(el('p', { class: 'p-sm', text: PROGRESS_UI.techniques + ' · ' + runs + (helped ? ' (' + helped + ' felt helpful)' : '') }));
-      statsWrap.appendChild(el('p', { class: 'p-sm', text: PROGRESS_UI.checkins + ' · ' + state.checkins.length }));
-      statsWrap.appendChild(el('p', { class: 'p-sm', text: PROGRESS_UI.journals + ' · ' + state.journal.length }));
-      if (pathN) statsWrap.appendChild(el('p', { class: 'p-sm', text: PROGRESS_UI.paths + ' · ' + pathN }));
-      progress.appendChild(statsWrap);
-    } else {
-      progress.appendChild(el('p', { class: 'p-sm', text: PROGRESS_UI.empty }));
-    }
-    progress.appendChild(el('p', { class: 'reason', text: PROGRESS_UI.gentle }));
-    insights.appendChild(progress);
-    signatureProgressIn(progress);
-
-    var patternN = derivePatterns().length;
-    var week = weeklySummary();
-    var stats = el('div', { class: 'qd-ruled me-stats qd-list-group' });
-    stats.appendChild(qdRow({
-      className: 'timeline-card',
-      title: TIMELINE_UI.title,
-      sub: TIMELINE_UI.cardHint,
-      onclick: timelineSheet
-    }));
-    stats.appendChild(qdRow({
-      title: 'Patterns',
-      sub: patternN ? PATTERN_UI.heading : PATTERN_UI.noWeekly,
-      onclick: patternsOverviewSheet
-    }));
-    stats.appendChild(qdRow({
-      className: week ? 'week-bloom' : '',
-      title: 'Weekly',
-      sub: week ? (week.common + ' · ' + PATTERN_UI.weeklyCommon) : PATTERN_UI.noWeekly,
-      onclick: weeklyOverviewSheet
-    }));
-    insights.appendChild(stats);
-    v.appendChild(insights);
-
+    /* Tools high — discoverable depth features (W1). */
     var tools = el('div', { class: 'section-block me-tools qd-ruled' }, [
       el('p', { class: 'section-label', text: tUi('me', 'sectionTools', { sectionTools: 'Your tools' }) })
     ]);
@@ -5041,15 +5061,15 @@
       onclick: habitsOverviewSheet
     }));
     toolsGroup.appendChild(listRow({
-      title: tUi('me', 'myPlan', { myPlan: 'My plan' }),
-      meta: filled ? (filled + '/' + SAFETY_PLAN_STEPS.length + ' filled') : 'Write it while you’re steady',
-      onclick: safetyPlanSheet
-    }));
-    toolsGroup.appendChild(listRow({
       className: 'screener-card',
       title: SCREENER_UI.cardTitle,
       meta: SCREENER_UI.cardHint,
       onclick: screenerPickSheet
+    }));
+    toolsGroup.appendChild(listRow({
+      title: tUi('me', 'myPlan', { myPlan: 'My plan' }),
+      meta: filled ? (filled + '/' + SAFETY_PLAN_STEPS.length + ' filled') : 'Write it while you’re steady',
+      onclick: safetyPlanSheet
     }));
     toolsGroup.appendChild(listRow({
       title: PRINCIPLES_UI.title,
@@ -5065,11 +5085,93 @@
     tools.appendChild(toolsGroup);
     v.appendChild(tools);
 
+    /* Compact week glance — not the full dashboard (W1 / W4 / W5). */
+    var progDots = weekActivityDots();
+    var progN = progDots.filter(function (x) { return x.on; }).length;
+    var isPreview = progN === 0 && !(state.checkins || []).length && !(state.skillRuns || []).length;
+    var weekLine = isPreview
+      ? PREVIEW_UI.weekSummary
+      : (progN
+        ? PROGRESS_UI.weekDays.replace('{n}', '' + progN).replace('{s}', progN === 1 ? '' : 's')
+        : PROGRESS_UI.weekEmpty);
+    var weekGlance = el('div', { class: 'section-block me-week' });
+    weekGlance.appendChild(el('p', {
+      class: 'section-label',
+      text: tUi('me', 'sectionWeek', { sectionWeek: PROGRESS_UI.weekLabel })
+    }));
+    var progress = el('button', {
+      class: 'progress-dash qd-ruled qd-progress week-glance-btn' + (progN ? ' week-bloom' : '') + (isPreview ? ' is-preview' : ''),
+      type: 'button',
+      'aria-label': weekLine + ' · ' + PROGRESS_UI.seeMore,
+      onclick: weeklyOverviewSheet
+    });
+    if (isPreview) {
+      progress.appendChild(el('span', { class: 'preview-badge', text: PREVIEW_UI.badge }));
+      progress.appendChild(el('p', { class: 'glance-label', text: PREVIEW_UI.weekTitle }));
+      progress.appendChild(el('p', { class: 'p-sm', text: PREVIEW_UI.weekBody }));
+      progress.appendChild(weekDotsEl(previewWeekDots(), true));
+    } else {
+      progress.appendChild(el('p', { class: 'glance-label', text: PROGRESS_UI.weekLabel }));
+      progress.appendChild(weekDotsEl(progDots, true));
+      progress.appendChild(el('p', { class: 'glance-sub', 'aria-hidden': 'true', text: weekLine }));
+    }
+    progress.appendChild(el('p', { class: 'p-sm glance-open', 'aria-hidden': 'true', text: PROGRESS_UI.seeMore }));
+    weekGlance.appendChild(progress);
+    signatureProgressIn(progress);
+
+    var patternN = derivePatterns().length;
+    var week = weeklySummary();
+    var stats = el('div', { class: 'qd-ruled me-stats qd-list-group' });
+    stats.appendChild(qdRow({
+      className: 'timeline-card',
+      title: TIMELINE_UI.title,
+      sub: TIMELINE_UI.cardHint,
+      onclick: timelineSheet
+    }));
+    stats.appendChild(qdRow({
+      title: 'Patterns',
+      sub: patternN ? PATTERN_UI.heading : PREVIEW_UI.patternsBody,
+      onclick: patternsOverviewSheet
+    }));
+    stats.appendChild(qdRow({
+      className: week ? 'week-bloom' : '',
+      title: 'Weekly',
+      sub: week ? (week.common + ' · ' + PATTERN_UI.weeklyCommon) : PATTERN_UI.noWeekly,
+      onclick: weeklyOverviewSheet
+    }));
+    weekGlance.appendChild(stats);
+    v.appendChild(weekGlance);
+
+    var localInsights = buildLocalInsights();
+    if (localInsights.length) {
+      var insights = el('div', { class: 'section-block me-insights' });
+      insights.appendChild(el('p', {
+        class: 'section-label',
+        text: tUi('me', 'sectionInsights', { sectionInsights: INSIGHTS_UI.section })
+      }));
+      var insightList = el('div', {
+        class: 'me-insight-list',
+        role: 'list',
+        'aria-label': INSIGHTS_UI.section
+      });
+      localInsights.forEach(function (line) {
+        insightList.appendChild(el('p', {
+          class: 'p-voice me-insight-line',
+          role: 'listitem',
+          'data-insight-id': line.id,
+          text: line.text
+        }));
+      });
+      insights.appendChild(insightList);
+      v.appendChild(insights);
+    }
+
     var about = el('div', { class: 'section-block me-about qd-ruled' }, [
       el('p', { class: 'section-label', text: tUi('me', 'sectionAbout', { sectionAbout: 'About you' }) })
     ]);
     var aboutGroup = el('div', { class: 'list-group qd-list-group' });
     aboutGroup.appendChild(listRow({
+      className: 'profile-card',
       title: name ? tUi('me', 'profile', { profile: 'Profile' }) : tUi('me', 'setupProfile', { setupProfile: 'Set up your profile' }),
       meta: name
         ? [name, state.profile.age && state.profile.age + ' years', state.profile.pronouns].filter(Boolean).join(' · ')
@@ -5087,11 +5189,6 @@
       meta: 'Estimates, screeners, and what seemed to help',
       onclick: knowsSheet
     }));
-    aboutGroup.appendChild(listRow({
-      title: ABOUT_UI.open,
-      meta: ABOUT_UI.honesty,
-      onclick: aboutSheet
-    }));
     about.appendChild(aboutGroup);
     v.appendChild(about);
 
@@ -5101,15 +5198,6 @@
         el('button', { class: 'btn ghost', text: tUi('locale', 'clinicalDismiss', LOCALE_UI), onclick: dismissClinicalNotice })
       ]));
     }
-
-    v.appendChild(el('div', { class: 'qd-ruled me-settings' }, [
-      listRow({
-        className: 'settings-card',
-        title: tUi('settingsCard', 'title', { title: 'Settings' }),
-        meta: tUi('settingsCard', 'hint', { hint: 'Appearance, language, accessibility, constellation pace, guided techniques, and your data.' }),
-        onclick: settingsSheet
-      })
-    ]));
 
     v.appendChild(el('button', { class: 'help-btn', text: t('helpNow'), onclick: openPanic }));
   }
@@ -5504,7 +5592,8 @@
       }
     });
   }
-  var APP_VERSION = '7.0.13';
+  var APP_VERSION = '8.0.0';
+  var settingsQuery = '';
   function settingsGroup(v, title, kids) {
     v.appendChild(el('p', { class: 'eyebrow settings-eyebrow', text: title }));
     var block = el('div', { class: 'settings-block' });
@@ -5580,6 +5669,23 @@
       dots.push({ key: key, on: has });
     }
     return dots;
+  }
+  /* Decorative only — parent control owns the single SR summary (SPEC-v8 W5). */
+  function weekDotsEl(dots, hideFromAt) {
+    return el('div', {
+      class: 'progress-dots',
+      'aria-hidden': hideFromAt ? 'true' : undefined
+    }, (dots || []).map(function (d) {
+      return el('i', { class: d.on ? 'on' : '' });
+    }));
+  }
+  /* Fixed pattern for Example week — never stored as user history. */
+  function previewWeekDots() {
+    return [
+      { key: 'ex-0', on: true }, { key: 'ex-1', on: false }, { key: 'ex-2', on: true },
+      { key: 'ex-3', on: true }, { key: 'ex-4', on: false }, { key: 'ex-5', on: false },
+      { key: 'ex-6', on: true }
+    ];
   }
   function weekActivityLabel(dots) {
     var n = dots.filter(function (x) { return x.on; }).length;
@@ -5791,9 +5897,16 @@
     });
   }
   // Re-render in place without jumping to the top — for toggles/pickers inside a
-  // scrolled view (theme, vibration, etc). Rebuilding the view otherwise resets
-  // scroll to 0, which read as an unwanted auto-scroll.
-  function reRender() { var y = window.scrollY; render(); window.scrollTo(0, y); }
+  // scrolled view (theme, vibration, etc). Clearing `.on` briefly collapses layout
+  // so scrollTo in the same turn can clamp to 0; restore again after paint.
+  function reRender() {
+    var y = window.scrollY || (document.scrollingElement && document.scrollingElement.scrollTop) || 0;
+    render();
+    window.scrollTo(0, y);
+    requestAnimationFrame(function () {
+      window.scrollTo(0, y);
+    });
+  }
   var VIEWS = ['welcome', 'onboarding', 'now', 'calm', 'journal', 'map', 'me'];
   function render() {
     applyTheme();
@@ -5991,7 +6104,7 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '7.0.13',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: APP_VERSION,
     effectiveMotion: effectiveMotion,
     motionCap: function () { return motionCap; },
     loadGsap: loadGsap,

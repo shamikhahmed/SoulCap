@@ -1,7 +1,7 @@
 {
   "app": "SoulCap",
-  "version": "7.0.13",
-  "generated": "2026-07-30T09:08:42.843Z",
+  "version": "8.0.0",
+  "generated": "2026-07-30T10:15:47.859Z",
   "shots": [
     {
       "file": "desktop__accent-lilac__calm.png",
@@ -9,7 +9,11 @@
       "route": "tab/calm",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "accent-lilac"
+      "variant": "accent-lilac",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Calm · Accent · Lilac. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__accent-lilac__help.png",
@@ -17,7 +21,11 @@
       "route": "help",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "accent-lilac"
+      "variant": "accent-lilac",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Help now · Accent · Lilac. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__accent-lilac__journal.png",
@@ -25,7 +33,11 @@
       "route": "tab/journal",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "accent-lilac"
+      "variant": "accent-lilac",
+      "tab": "journal",
+      "state": "default",
+      "caption": "Journal · Accent · Lilac. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__accent-lilac__map.png",
@@ -33,7 +45,11 @@
       "route": "tab/map",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "accent-lilac"
+      "variant": "accent-lilac",
+      "tab": "map",
+      "state": "default",
+      "caption": "Constellation · Accent · Lilac. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__accent-lilac__me.png",
@@ -41,7 +57,11 @@
       "route": "tab/me",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "accent-lilac"
+      "variant": "accent-lilac",
+      "tab": "me",
+      "state": "default",
+      "caption": "You · Accent · Lilac. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__accent-lilac__now.png",
@@ -49,7 +69,11 @@
       "route": "tab/now",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "accent-lilac"
+      "variant": "accent-lilac",
+      "tab": "now",
+      "state": "default",
+      "caption": "Now · Accent · Lilac. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__accent-lilac__runner-breathing.png",
@@ -57,7 +81,11 @@
       "route": "runner/box-breathing",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "accent-lilac"
+      "variant": "accent-lilac",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Runner · Breathing · Accent · Lilac. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__accent-lilac__settings.png",
@@ -65,7 +93,11 @@
       "route": "settings",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "accent-lilac"
+      "variant": "accent-lilac",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Settings · Accent · Lilac. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__accent-mulberry__calm.png",
@@ -73,7 +105,11 @@
       "route": "tab/calm",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "accent-mulberry"
+      "variant": "accent-mulberry",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Calm · Accent · Mulberry. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__accent-mulberry__help.png",
@@ -81,7 +117,11 @@
       "route": "help",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "accent-mulberry"
+      "variant": "accent-mulberry",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Help now · Accent · Mulberry. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__accent-mulberry__journal.png",
@@ -89,7 +129,11 @@
       "route": "tab/journal",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "accent-mulberry"
+      "variant": "accent-mulberry",
+      "tab": "journal",
+      "state": "default",
+      "caption": "Journal · Accent · Mulberry. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__accent-mulberry__map.png",
@@ -97,7 +141,11 @@
       "route": "tab/map",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "accent-mulberry"
+      "variant": "accent-mulberry",
+      "tab": "map",
+      "state": "default",
+      "caption": "Constellation · Accent · Mulberry. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__accent-mulberry__me.png",
@@ -105,7 +153,11 @@
       "route": "tab/me",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "accent-mulberry"
+      "variant": "accent-mulberry",
+      "tab": "me",
+      "state": "default",
+      "caption": "You · Accent · Mulberry. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__accent-mulberry__now.png",
@@ -113,7 +165,11 @@
       "route": "tab/now",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "accent-mulberry"
+      "variant": "accent-mulberry",
+      "tab": "now",
+      "state": "default",
+      "caption": "Now · Accent · Mulberry. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__accent-mulberry__runner-breathing.png",
@@ -121,7 +177,11 @@
       "route": "runner/box-breathing",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "accent-mulberry"
+      "variant": "accent-mulberry",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Runner · Breathing · Accent · Mulberry. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__accent-mulberry__settings.png",
@@ -129,7 +189,11 @@
       "route": "settings",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "accent-mulberry"
+      "variant": "accent-mulberry",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Settings · Accent · Mulberry. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__combo-large-comfortable-high__calm.png",
@@ -137,7 +201,11 @@
       "route": "tab/calm",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "combo-large-comfortable-high"
+      "variant": "combo-large-comfortable-high",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Calm · Combo · Large + Comfortable + High contrast. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__combo-large-comfortable-high__help.png",
@@ -145,7 +213,11 @@
       "route": "help",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "combo-large-comfortable-high"
+      "variant": "combo-large-comfortable-high",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Help now · Combo · Large + Comfortable + High contrast. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__combo-large-comfortable-high__journal.png",
@@ -153,7 +225,11 @@
       "route": "tab/journal",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "combo-large-comfortable-high"
+      "variant": "combo-large-comfortable-high",
+      "tab": "journal",
+      "state": "default",
+      "caption": "Journal · Combo · Large + Comfortable + High contrast. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__combo-large-comfortable-high__map.png",
@@ -161,7 +237,11 @@
       "route": "tab/map",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "combo-large-comfortable-high"
+      "variant": "combo-large-comfortable-high",
+      "tab": "map",
+      "state": "default",
+      "caption": "Constellation · Combo · Large + Comfortable + High contrast. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__combo-large-comfortable-high__me.png",
@@ -169,7 +249,11 @@
       "route": "tab/me",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "combo-large-comfortable-high"
+      "variant": "combo-large-comfortable-high",
+      "tab": "me",
+      "state": "default",
+      "caption": "You · Combo · Large + Comfortable + High contrast. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__combo-large-comfortable-high__now.png",
@@ -177,7 +261,11 @@
       "route": "tab/now",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "combo-large-comfortable-high"
+      "variant": "combo-large-comfortable-high",
+      "tab": "now",
+      "state": "default",
+      "caption": "Now · Combo · Large + Comfortable + High contrast. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__combo-large-comfortable-high__runner-breathing.png",
@@ -185,7 +273,11 @@
       "route": "runner/box-breathing",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "combo-large-comfortable-high"
+      "variant": "combo-large-comfortable-high",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Runner · Breathing · Combo · Large + Comfortable + High contrast. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__combo-large-comfortable-high__settings.png",
@@ -193,7 +285,11 @@
       "route": "settings",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "combo-large-comfortable-high"
+      "variant": "combo-large-comfortable-high",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Settings · Combo · Large + Comfortable + High contrast. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__contrast-high__calm.png",
@@ -201,7 +297,11 @@
       "route": "tab/calm",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "contrast-high"
+      "variant": "contrast-high",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Calm · Contrast · High. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__contrast-high__help.png",
@@ -209,7 +309,11 @@
       "route": "help",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "contrast-high"
+      "variant": "contrast-high",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Help now · Contrast · High. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__contrast-high__journal.png",
@@ -217,7 +321,11 @@
       "route": "tab/journal",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "contrast-high"
+      "variant": "contrast-high",
+      "tab": "journal",
+      "state": "default",
+      "caption": "Journal · Contrast · High. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__contrast-high__map.png",
@@ -225,7 +333,11 @@
       "route": "tab/map",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "contrast-high"
+      "variant": "contrast-high",
+      "tab": "map",
+      "state": "default",
+      "caption": "Constellation · Contrast · High. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__contrast-high__me.png",
@@ -233,7 +345,11 @@
       "route": "tab/me",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "contrast-high"
+      "variant": "contrast-high",
+      "tab": "me",
+      "state": "default",
+      "caption": "You · Contrast · High. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__contrast-high__now.png",
@@ -241,7 +357,11 @@
       "route": "tab/now",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "contrast-high"
+      "variant": "contrast-high",
+      "tab": "now",
+      "state": "default",
+      "caption": "Now · Contrast · High. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__contrast-high__runner-breathing.png",
@@ -249,7 +369,11 @@
       "route": "runner/box-breathing",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "contrast-high"
+      "variant": "contrast-high",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Runner · Breathing · Contrast · High. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__contrast-high__settings.png",
@@ -257,7 +381,11 @@
       "route": "settings",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "contrast-high"
+      "variant": "contrast-high",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Settings · Contrast · High. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__about.png",
@@ -265,7 +393,11 @@
       "route": "about",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "About SoulCap. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__add-person.png",
@@ -273,7 +405,11 @@
       "route": "map/add",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "map",
+      "state": "default",
+      "caption": "Add someone. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__article-alarm.png",
@@ -281,7 +417,11 @@
       "route": "article/alarm-system",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Article · Alarm system. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__article-wind-down.png",
@@ -289,7 +429,11 @@
       "route": "article/wind-down-boundaries",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Article · Wind-down. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__calm.png",
@@ -297,7 +441,11 @@
       "route": "tab/calm",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Calm. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__checkin-detail.png",
@@ -305,7 +453,11 @@
       "route": "checkin/detail",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "now",
+      "state": "default",
+      "caption": "Check-in detail. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__daily-supports.png",
@@ -313,7 +465,11 @@
       "route": "calm/supports",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Daily supports. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__drip.png",
@@ -321,7 +477,11 @@
       "route": "drip",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "now",
+      "state": "default",
+      "caption": "Gentle questions. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__experience-picker.png",
@@ -329,7 +489,11 @@
       "route": "experience/picker",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Experience picker. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__experience.png",
@@ -337,7 +501,11 @@
       "route": "experience",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Experience detail. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__guided-path-result.png",
@@ -345,7 +513,11 @@
       "route": "path/result",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "path",
+      "state": "default",
+      "caption": "Guided Path · result. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__guided-path.png",
@@ -353,7 +525,11 @@
       "route": "path/start",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "path",
+      "state": "default",
+      "caption": "Guided Path · start. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__help.png",
@@ -361,7 +537,11 @@
       "route": "help",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Help now. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__journal-cover.png",
@@ -369,7 +549,11 @@
       "route": "journal/cover",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "journal",
+      "state": "default",
+      "caption": "Journal cover. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__journal-editor.png",
@@ -377,7 +561,11 @@
       "route": "journal/editor",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "journal",
+      "state": "default",
+      "caption": "Journal editor. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__journal-new.png",
@@ -385,7 +573,11 @@
       "route": "journal/new",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "journal",
+      "state": "default",
+      "caption": "New journal entry. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__journal.png",
@@ -393,7 +585,11 @@
       "route": "tab/journal",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "journal",
+      "state": "default",
+      "caption": "Journal. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__knows.png",
@@ -401,7 +597,11 @@
       "route": "me/knows",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "me",
+      "state": "default",
+      "caption": "What SoulCap knows. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__library-articles.png",
@@ -409,7 +609,11 @@
       "route": "calm/library/articles",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Library · Articles. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__library-experiences.png",
@@ -417,7 +621,11 @@
       "route": "calm/library/experiences",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Library · Experiences. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__library.png",
@@ -425,7 +633,11 @@
       "route": "calm/library",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Emotional library. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__manual.png",
@@ -433,7 +645,11 @@
       "route": "me/manual",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "me",
+      "state": "default",
+      "caption": "Personal Manual. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__map.png",
@@ -441,7 +657,11 @@
       "route": "tab/map",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "map",
+      "state": "default",
+      "caption": "Constellation. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__me.png",
@@ -449,7 +669,11 @@
       "route": "tab/me",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "me",
+      "state": "default",
+      "caption": "You. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__now.png",
@@ -457,7 +681,11 @@
       "route": "tab/now",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "now",
+      "state": "default",
+      "caption": "Now. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__onboard-age.png",
@@ -465,7 +693,11 @@
       "route": "onboard/age",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Onboarding · age. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__onboard-concerns.png",
@@ -473,7 +705,11 @@
       "route": "onboard/concerns",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Onboarding · concerns. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__onboard-consent.png",
@@ -481,7 +717,11 @@
       "route": "onboard/consent",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Onboarding · consent. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__onboard-motion.png",
@@ -489,7 +729,11 @@
       "route": "onboard/motion",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Onboarding · motion. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__onboard-name.png",
@@ -497,7 +741,11 @@
       "route": "onboard/name",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Onboarding · name. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__park-thought.png",
@@ -505,7 +753,11 @@
       "route": "park-thought",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "other",
+      "state": "default",
+      "caption": "Thought parking. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__patterns.png",
@@ -513,7 +765,11 @@
       "route": "me/patterns",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "me",
+      "state": "default",
+      "caption": "Patterns. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__person.png",
@@ -521,7 +777,11 @@
       "route": "map/person",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "map",
+      "state": "default",
+      "caption": "Person detail. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__principles.png",
@@ -529,7 +789,11 @@
       "route": "me/principles",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "me",
+      "state": "default",
+      "caption": "Principles. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__profile.png",
@@ -537,7 +801,11 @@
       "route": "me/profile",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "me",
+      "state": "default",
+      "caption": "Profile. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__reset-menu.png",
@@ -545,7 +813,11 @@
       "route": "reset-menu",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "other",
+      "state": "default",
+      "caption": "Reset menu. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__runner-breathing.png",
@@ -553,7 +825,11 @@
       "route": "runner/box-breathing",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Runner · Breathing. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__runner-steps.png",
@@ -561,7 +837,11 @@
       "route": "runner/thought-record",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Runner · Steps. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__safety-plan.png",
@@ -569,7 +849,11 @@
       "route": "me/plan",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "me",
+      "state": "default",
+      "caption": "My plan. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__screener-pick.png",
@@ -577,7 +861,11 @@
       "route": "screener/pick",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "me",
+      "state": "default",
+      "caption": "Reflection screeners. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__screener-run.png",
@@ -585,7 +873,11 @@
       "route": "screener/run",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "me",
+      "state": "default",
+      "caption": "Screener · in progress. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__settings.png",
@@ -593,7 +885,11 @@
       "route": "settings",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Settings. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__skill-box-breathing.png",
@@ -601,7 +897,11 @@
       "route": "skill/box-breathing",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Technique · Box breathing. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__skill-thought-record.png",
@@ -609,7 +909,11 @@
       "route": "skill/thought-record",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Technique · Thought record. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__splash.png",
@@ -617,7 +921,11 @@
       "route": "splash",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Splash · Quiet Depth. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__timeline.png",
@@ -625,7 +933,11 @@
       "route": "me/timeline",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "me",
+      "state": "default",
+      "caption": "Timeline. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__under-18.png",
@@ -633,7 +945,11 @@
       "route": "onboard/under-18",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Under 18. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__weekly.png",
@@ -641,7 +957,11 @@
       "route": "me/weekly",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "me",
+      "state": "default",
+      "caption": "Weekly overview. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__welcome.png",
@@ -649,7 +969,11 @@
       "route": "welcome",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Welcome. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__whats-new.png",
@@ -657,7 +981,11 @@
       "route": "now/whats-new",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "now",
+      "state": "default",
+      "caption": "What's new. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__default__your-story.png",
@@ -665,7 +993,11 @@
       "route": "me/story",
       "viewport": "desktop",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "me",
+      "state": "default",
+      "caption": "Your story. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__density-comfortable__calm.png",
@@ -673,7 +1005,11 @@
       "route": "tab/calm",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "density-comfortable"
+      "variant": "density-comfortable",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Calm · Density · Comfortable. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__density-comfortable__help.png",
@@ -681,7 +1017,11 @@
       "route": "help",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "density-comfortable"
+      "variant": "density-comfortable",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Help now · Density · Comfortable. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__density-comfortable__journal.png",
@@ -689,7 +1029,11 @@
       "route": "tab/journal",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "density-comfortable"
+      "variant": "density-comfortable",
+      "tab": "journal",
+      "state": "default",
+      "caption": "Journal · Density · Comfortable. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__density-comfortable__map.png",
@@ -697,7 +1041,11 @@
       "route": "tab/map",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "density-comfortable"
+      "variant": "density-comfortable",
+      "tab": "map",
+      "state": "default",
+      "caption": "Constellation · Density · Comfortable. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__density-comfortable__me.png",
@@ -705,7 +1053,11 @@
       "route": "tab/me",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "density-comfortable"
+      "variant": "density-comfortable",
+      "tab": "me",
+      "state": "default",
+      "caption": "You · Density · Comfortable. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__density-comfortable__now.png",
@@ -713,7 +1065,11 @@
       "route": "tab/now",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "density-comfortable"
+      "variant": "density-comfortable",
+      "tab": "now",
+      "state": "default",
+      "caption": "Now · Density · Comfortable. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__density-comfortable__runner-breathing.png",
@@ -721,7 +1077,11 @@
       "route": "runner/box-breathing",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "density-comfortable"
+      "variant": "density-comfortable",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Runner · Breathing · Density · Comfortable. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__density-comfortable__settings.png",
@@ -729,7 +1089,47 @@
       "route": "settings",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "density-comfortable"
+      "variant": "density-comfortable",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Settings · Density · Comfortable. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
+    },
+    {
+      "file": "desktop__empty__me-cold-ia.png",
+      "label": "You · cold IA (tools + gear)",
+      "route": "tab/me",
+      "viewport": "desktop",
+      "pack": "states",
+      "variant": "empty",
+      "tab": "me",
+      "state": "empty",
+      "caption": "You cold: Settings gear, tools high, one Profile row, Example week. No duplicate Set up profile.",
+      "rationale": "IA-RATIONALE.md"
+    },
+    {
+      "file": "desktop__empty__now-cold-example.png",
+      "label": "Now · cold Example week",
+      "route": "tab/now",
+      "viewport": "desktop",
+      "pack": "states",
+      "variant": "empty",
+      "tab": "now",
+      "state": "empty-preview",
+      "caption": "Cold Now with labelled Example week — not the user’s data. See IA-RATIONALE.md §Cold-open.",
+      "rationale": "IA-RATIONALE.md"
+    },
+    {
+      "file": "desktop__empty__settings-regrouped.png",
+      "label": "Settings · regrouped",
+      "route": "settings",
+      "viewport": "desktop",
+      "pack": "states",
+      "variant": "empty",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Settings order: Appearance · Language · Accessibility · Personalisation · Privacy · About. Search at top.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__motion-still__calm.png",
@@ -737,7 +1137,11 @@
       "route": "tab/calm",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "motion-still"
+      "variant": "motion-still",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Calm · Motion · Still. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__motion-still__help.png",
@@ -745,7 +1149,11 @@
       "route": "help",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "motion-still"
+      "variant": "motion-still",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Help now · Motion · Still. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__motion-still__journal.png",
@@ -753,7 +1161,11 @@
       "route": "tab/journal",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "motion-still"
+      "variant": "motion-still",
+      "tab": "journal",
+      "state": "default",
+      "caption": "Journal · Motion · Still. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__motion-still__map.png",
@@ -761,7 +1173,11 @@
       "route": "tab/map",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "motion-still"
+      "variant": "motion-still",
+      "tab": "map",
+      "state": "default",
+      "caption": "Constellation · Motion · Still. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__motion-still__me.png",
@@ -769,7 +1185,11 @@
       "route": "tab/me",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "motion-still"
+      "variant": "motion-still",
+      "tab": "me",
+      "state": "default",
+      "caption": "You · Motion · Still. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__motion-still__now.png",
@@ -777,7 +1197,11 @@
       "route": "tab/now",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "motion-still"
+      "variant": "motion-still",
+      "tab": "now",
+      "state": "default",
+      "caption": "Now · Motion · Still. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__motion-still__runner-breathing.png",
@@ -785,7 +1209,11 @@
       "route": "runner/box-breathing",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "motion-still"
+      "variant": "motion-still",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Runner · Breathing · Motion · Still. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__motion-still__settings.png",
@@ -793,7 +1221,11 @@
       "route": "settings",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "motion-still"
+      "variant": "motion-still",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Settings · Motion · Still. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__motion-vivid__calm.png",
@@ -801,7 +1233,11 @@
       "route": "tab/calm",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "motion-vivid"
+      "variant": "motion-vivid",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Calm · Motion · Vivid. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__motion-vivid__help.png",
@@ -809,7 +1245,11 @@
       "route": "help",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "motion-vivid"
+      "variant": "motion-vivid",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Help now · Motion · Vivid. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__motion-vivid__journal.png",
@@ -817,7 +1257,11 @@
       "route": "tab/journal",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "motion-vivid"
+      "variant": "motion-vivid",
+      "tab": "journal",
+      "state": "default",
+      "caption": "Journal · Motion · Vivid. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__motion-vivid__map.png",
@@ -825,7 +1269,11 @@
       "route": "tab/map",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "motion-vivid"
+      "variant": "motion-vivid",
+      "tab": "map",
+      "state": "default",
+      "caption": "Constellation · Motion · Vivid. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__motion-vivid__me.png",
@@ -833,7 +1281,11 @@
       "route": "tab/me",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "motion-vivid"
+      "variant": "motion-vivid",
+      "tab": "me",
+      "state": "default",
+      "caption": "You · Motion · Vivid. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__motion-vivid__now.png",
@@ -841,7 +1293,11 @@
       "route": "tab/now",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "motion-vivid"
+      "variant": "motion-vivid",
+      "tab": "now",
+      "state": "default",
+      "caption": "Now · Motion · Vivid. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__motion-vivid__runner-breathing.png",
@@ -849,7 +1305,11 @@
       "route": "runner/box-breathing",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "motion-vivid"
+      "variant": "motion-vivid",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Runner · Breathing · Motion · Vivid. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__motion-vivid__settings.png",
@@ -857,7 +1317,11 @@
       "route": "settings",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "motion-vivid"
+      "variant": "motion-vivid",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Settings · Motion · Vivid. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__text-large__calm.png",
@@ -865,7 +1329,11 @@
       "route": "tab/calm",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "text-large"
+      "variant": "text-large",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Calm · Text · Large. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__text-large__help.png",
@@ -873,7 +1341,11 @@
       "route": "help",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "text-large"
+      "variant": "text-large",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Help now · Text · Large. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__text-large__journal.png",
@@ -881,7 +1353,11 @@
       "route": "tab/journal",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "text-large"
+      "variant": "text-large",
+      "tab": "journal",
+      "state": "default",
+      "caption": "Journal · Text · Large. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__text-large__map.png",
@@ -889,7 +1365,11 @@
       "route": "tab/map",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "text-large"
+      "variant": "text-large",
+      "tab": "map",
+      "state": "default",
+      "caption": "Constellation · Text · Large. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__text-large__me.png",
@@ -897,7 +1377,11 @@
       "route": "tab/me",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "text-large"
+      "variant": "text-large",
+      "tab": "me",
+      "state": "default",
+      "caption": "You · Text · Large. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__text-large__now.png",
@@ -905,7 +1389,11 @@
       "route": "tab/now",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "text-large"
+      "variant": "text-large",
+      "tab": "now",
+      "state": "default",
+      "caption": "Now · Text · Large. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__text-large__runner-breathing.png",
@@ -913,7 +1401,11 @@
       "route": "runner/box-breathing",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "text-large"
+      "variant": "text-large",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Runner · Breathing · Text · Large. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__text-large__settings.png",
@@ -921,7 +1413,11 @@
       "route": "settings",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "text-large"
+      "variant": "text-large",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Settings · Text · Large. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-amoled__calm.png",
@@ -929,7 +1425,11 @@
       "route": "tab/calm",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-amoled"
+      "variant": "theme-amoled",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Calm · AMOLED. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-amoled__help.png",
@@ -937,7 +1437,11 @@
       "route": "help",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-amoled"
+      "variant": "theme-amoled",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Help now · AMOLED. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-amoled__journal.png",
@@ -945,7 +1449,11 @@
       "route": "tab/journal",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-amoled"
+      "variant": "theme-amoled",
+      "tab": "journal",
+      "state": "default",
+      "caption": "Journal · AMOLED. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-amoled__map.png",
@@ -953,7 +1461,11 @@
       "route": "tab/map",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-amoled"
+      "variant": "theme-amoled",
+      "tab": "map",
+      "state": "default",
+      "caption": "Constellation · AMOLED. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-amoled__me.png",
@@ -961,7 +1473,11 @@
       "route": "tab/me",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-amoled"
+      "variant": "theme-amoled",
+      "tab": "me",
+      "state": "default",
+      "caption": "You · AMOLED. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-amoled__now.png",
@@ -969,7 +1485,11 @@
       "route": "tab/now",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-amoled"
+      "variant": "theme-amoled",
+      "tab": "now",
+      "state": "default",
+      "caption": "Now · AMOLED. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-amoled__runner-breathing.png",
@@ -977,7 +1497,11 @@
       "route": "runner/box-breathing",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-amoled"
+      "variant": "theme-amoled",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Runner · Breathing · AMOLED. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-amoled__settings.png",
@@ -985,7 +1509,11 @@
       "route": "settings",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-amoled"
+      "variant": "theme-amoled",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Settings · AMOLED. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-auto__calm.png",
@@ -993,7 +1521,11 @@
       "route": "tab/calm",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-auto"
+      "variant": "theme-auto",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Calm · Auto. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-auto__help.png",
@@ -1001,7 +1533,11 @@
       "route": "help",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-auto"
+      "variant": "theme-auto",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Help now · Auto. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-auto__journal.png",
@@ -1009,7 +1545,11 @@
       "route": "tab/journal",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-auto"
+      "variant": "theme-auto",
+      "tab": "journal",
+      "state": "default",
+      "caption": "Journal · Auto. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-auto__map.png",
@@ -1017,7 +1557,11 @@
       "route": "tab/map",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-auto"
+      "variant": "theme-auto",
+      "tab": "map",
+      "state": "default",
+      "caption": "Constellation · Auto. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-auto__me.png",
@@ -1025,7 +1569,11 @@
       "route": "tab/me",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-auto"
+      "variant": "theme-auto",
+      "tab": "me",
+      "state": "default",
+      "caption": "You · Auto. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-auto__now.png",
@@ -1033,7 +1581,11 @@
       "route": "tab/now",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-auto"
+      "variant": "theme-auto",
+      "tab": "now",
+      "state": "default",
+      "caption": "Now · Auto. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-auto__runner-breathing.png",
@@ -1041,7 +1593,11 @@
       "route": "runner/box-breathing",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-auto"
+      "variant": "theme-auto",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Runner · Breathing · Auto. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-auto__settings.png",
@@ -1049,7 +1605,11 @@
       "route": "settings",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-auto"
+      "variant": "theme-auto",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Settings · Auto. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-dark__calm.png",
@@ -1057,7 +1617,11 @@
       "route": "tab/calm",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-dark"
+      "variant": "theme-dark",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Calm · Dark. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-dark__help.png",
@@ -1065,7 +1629,11 @@
       "route": "help",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-dark"
+      "variant": "theme-dark",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Help now · Dark. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-dark__journal.png",
@@ -1073,7 +1641,11 @@
       "route": "tab/journal",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-dark"
+      "variant": "theme-dark",
+      "tab": "journal",
+      "state": "default",
+      "caption": "Journal · Dark. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-dark__map.png",
@@ -1081,7 +1653,11 @@
       "route": "tab/map",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-dark"
+      "variant": "theme-dark",
+      "tab": "map",
+      "state": "default",
+      "caption": "Constellation · Dark. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-dark__me.png",
@@ -1089,7 +1665,11 @@
       "route": "tab/me",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-dark"
+      "variant": "theme-dark",
+      "tab": "me",
+      "state": "default",
+      "caption": "You · Dark. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-dark__now.png",
@@ -1097,7 +1677,11 @@
       "route": "tab/now",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-dark"
+      "variant": "theme-dark",
+      "tab": "now",
+      "state": "default",
+      "caption": "Now · Dark. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-dark__runner-breathing.png",
@@ -1105,7 +1689,11 @@
       "route": "runner/box-breathing",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-dark"
+      "variant": "theme-dark",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Runner · Breathing · Dark. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-dark__settings.png",
@@ -1113,7 +1701,11 @@
       "route": "settings",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-dark"
+      "variant": "theme-dark",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Settings · Dark. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-forest__calm.png",
@@ -1121,7 +1713,11 @@
       "route": "tab/calm",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-forest"
+      "variant": "theme-forest",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Calm · Forest. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-forest__help.png",
@@ -1129,7 +1725,11 @@
       "route": "help",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-forest"
+      "variant": "theme-forest",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Help now · Forest. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-forest__journal.png",
@@ -1137,7 +1737,11 @@
       "route": "tab/journal",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-forest"
+      "variant": "theme-forest",
+      "tab": "journal",
+      "state": "default",
+      "caption": "Journal · Forest. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-forest__map.png",
@@ -1145,7 +1749,11 @@
       "route": "tab/map",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-forest"
+      "variant": "theme-forest",
+      "tab": "map",
+      "state": "default",
+      "caption": "Constellation · Forest. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-forest__me.png",
@@ -1153,7 +1761,11 @@
       "route": "tab/me",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-forest"
+      "variant": "theme-forest",
+      "tab": "me",
+      "state": "default",
+      "caption": "You · Forest. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-forest__now.png",
@@ -1161,7 +1773,11 @@
       "route": "tab/now",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-forest"
+      "variant": "theme-forest",
+      "tab": "now",
+      "state": "default",
+      "caption": "Now · Forest. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-forest__runner-breathing.png",
@@ -1169,7 +1785,11 @@
       "route": "runner/box-breathing",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-forest"
+      "variant": "theme-forest",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Runner · Breathing · Forest. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-forest__settings.png",
@@ -1177,7 +1797,11 @@
       "route": "settings",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-forest"
+      "variant": "theme-forest",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Settings · Forest. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-light__calm.png",
@@ -1185,7 +1809,11 @@
       "route": "tab/calm",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-light"
+      "variant": "theme-light",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Calm · Light. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-light__help.png",
@@ -1193,7 +1821,11 @@
       "route": "help",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-light"
+      "variant": "theme-light",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Help now · Light. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-light__journal.png",
@@ -1201,7 +1833,11 @@
       "route": "tab/journal",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-light"
+      "variant": "theme-light",
+      "tab": "journal",
+      "state": "default",
+      "caption": "Journal · Light. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-light__map.png",
@@ -1209,7 +1845,11 @@
       "route": "tab/map",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-light"
+      "variant": "theme-light",
+      "tab": "map",
+      "state": "default",
+      "caption": "Constellation · Light. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-light__me.png",
@@ -1217,7 +1857,11 @@
       "route": "tab/me",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-light"
+      "variant": "theme-light",
+      "tab": "me",
+      "state": "default",
+      "caption": "You · Light. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-light__now.png",
@@ -1225,7 +1869,11 @@
       "route": "tab/now",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-light"
+      "variant": "theme-light",
+      "tab": "now",
+      "state": "default",
+      "caption": "Now · Light. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-light__runner-breathing.png",
@@ -1233,7 +1881,11 @@
       "route": "runner/box-breathing",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-light"
+      "variant": "theme-light",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Runner · Breathing · Light. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-light__settings.png",
@@ -1241,7 +1893,11 @@
       "route": "settings",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-light"
+      "variant": "theme-light",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Settings · Light. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-night__calm.png",
@@ -1249,7 +1905,11 @@
       "route": "tab/calm",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-night"
+      "variant": "theme-night",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Calm · Night. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-night__help.png",
@@ -1257,7 +1917,11 @@
       "route": "help",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-night"
+      "variant": "theme-night",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Help now · Night. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-night__journal.png",
@@ -1265,7 +1929,11 @@
       "route": "tab/journal",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-night"
+      "variant": "theme-night",
+      "tab": "journal",
+      "state": "default",
+      "caption": "Journal · Night. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-night__map.png",
@@ -1273,7 +1941,11 @@
       "route": "tab/map",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-night"
+      "variant": "theme-night",
+      "tab": "map",
+      "state": "default",
+      "caption": "Constellation · Night. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-night__me.png",
@@ -1281,7 +1953,11 @@
       "route": "tab/me",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-night"
+      "variant": "theme-night",
+      "tab": "me",
+      "state": "default",
+      "caption": "You · Night. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-night__now.png",
@@ -1289,7 +1965,11 @@
       "route": "tab/now",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-night"
+      "variant": "theme-night",
+      "tab": "now",
+      "state": "default",
+      "caption": "Now · Night. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-night__runner-breathing.png",
@@ -1297,7 +1977,11 @@
       "route": "runner/box-breathing",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-night"
+      "variant": "theme-night",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Runner · Breathing · Night. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-night__settings.png",
@@ -1305,7 +1989,11 @@
       "route": "settings",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-night"
+      "variant": "theme-night",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Settings · Night. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-ocean__calm.png",
@@ -1313,7 +2001,11 @@
       "route": "tab/calm",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-ocean"
+      "variant": "theme-ocean",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Calm · Ocean. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-ocean__help.png",
@@ -1321,7 +2013,11 @@
       "route": "help",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-ocean"
+      "variant": "theme-ocean",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Help now · Ocean. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-ocean__journal.png",
@@ -1329,7 +2025,11 @@
       "route": "tab/journal",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-ocean"
+      "variant": "theme-ocean",
+      "tab": "journal",
+      "state": "default",
+      "caption": "Journal · Ocean. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-ocean__map.png",
@@ -1337,7 +2037,11 @@
       "route": "tab/map",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-ocean"
+      "variant": "theme-ocean",
+      "tab": "map",
+      "state": "default",
+      "caption": "Constellation · Ocean. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-ocean__me.png",
@@ -1345,7 +2049,11 @@
       "route": "tab/me",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-ocean"
+      "variant": "theme-ocean",
+      "tab": "me",
+      "state": "default",
+      "caption": "You · Ocean. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-ocean__now.png",
@@ -1353,7 +2061,11 @@
       "route": "tab/now",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-ocean"
+      "variant": "theme-ocean",
+      "tab": "now",
+      "state": "default",
+      "caption": "Now · Ocean. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-ocean__runner-breathing.png",
@@ -1361,7 +2073,11 @@
       "route": "runner/box-breathing",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-ocean"
+      "variant": "theme-ocean",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Runner · Breathing · Ocean. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__theme-ocean__settings.png",
@@ -1369,7 +2085,11 @@
       "route": "settings",
       "viewport": "desktop",
       "pack": "theme",
-      "variant": "theme-ocean"
+      "variant": "theme-ocean",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Settings · Ocean. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__transparency-reduced__calm.png",
@@ -1377,7 +2097,11 @@
       "route": "tab/calm",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "transparency-reduced"
+      "variant": "transparency-reduced",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Calm · Transparency · Reduced. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__transparency-reduced__help.png",
@@ -1385,7 +2109,11 @@
       "route": "help",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "transparency-reduced"
+      "variant": "transparency-reduced",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Help now · Transparency · Reduced. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__transparency-reduced__journal.png",
@@ -1393,7 +2121,11 @@
       "route": "tab/journal",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "transparency-reduced"
+      "variant": "transparency-reduced",
+      "tab": "journal",
+      "state": "default",
+      "caption": "Journal · Transparency · Reduced. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__transparency-reduced__map.png",
@@ -1401,7 +2133,11 @@
       "route": "tab/map",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "transparency-reduced"
+      "variant": "transparency-reduced",
+      "tab": "map",
+      "state": "default",
+      "caption": "Constellation · Transparency · Reduced. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__transparency-reduced__me.png",
@@ -1409,7 +2145,11 @@
       "route": "tab/me",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "transparency-reduced"
+      "variant": "transparency-reduced",
+      "tab": "me",
+      "state": "default",
+      "caption": "You · Transparency · Reduced. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__transparency-reduced__now.png",
@@ -1417,7 +2157,11 @@
       "route": "tab/now",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "transparency-reduced"
+      "variant": "transparency-reduced",
+      "tab": "now",
+      "state": "default",
+      "caption": "Now · Transparency · Reduced. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__transparency-reduced__runner-breathing.png",
@@ -1425,7 +2169,11 @@
       "route": "runner/box-breathing",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "transparency-reduced"
+      "variant": "transparency-reduced",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Runner · Breathing · Transparency · Reduced. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "desktop__transparency-reduced__settings.png",
@@ -1433,7 +2181,11 @@
       "route": "settings",
       "viewport": "desktop",
       "pack": "appearance",
-      "variant": "transparency-reduced"
+      "variant": "transparency-reduced",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Settings · Transparency · Reduced. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__accent-lilac__calm.png",
@@ -1441,7 +2193,11 @@
       "route": "tab/calm",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "accent-lilac"
+      "variant": "accent-lilac",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Calm · Accent · Lilac. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__accent-lilac__help.png",
@@ -1449,7 +2205,11 @@
       "route": "help",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "accent-lilac"
+      "variant": "accent-lilac",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Help now · Accent · Lilac. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__accent-lilac__journal.png",
@@ -1457,7 +2217,11 @@
       "route": "tab/journal",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "accent-lilac"
+      "variant": "accent-lilac",
+      "tab": "journal",
+      "state": "default",
+      "caption": "Journal · Accent · Lilac. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__accent-lilac__map.png",
@@ -1465,7 +2229,11 @@
       "route": "tab/map",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "accent-lilac"
+      "variant": "accent-lilac",
+      "tab": "map",
+      "state": "default",
+      "caption": "Constellation · Accent · Lilac. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__accent-lilac__me.png",
@@ -1473,7 +2241,11 @@
       "route": "tab/me",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "accent-lilac"
+      "variant": "accent-lilac",
+      "tab": "me",
+      "state": "default",
+      "caption": "You · Accent · Lilac. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__accent-lilac__now.png",
@@ -1481,7 +2253,11 @@
       "route": "tab/now",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "accent-lilac"
+      "variant": "accent-lilac",
+      "tab": "now",
+      "state": "default",
+      "caption": "Now · Accent · Lilac. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__accent-lilac__runner-breathing.png",
@@ -1489,7 +2265,11 @@
       "route": "runner/box-breathing",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "accent-lilac"
+      "variant": "accent-lilac",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Runner · Breathing · Accent · Lilac. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__accent-lilac__settings.png",
@@ -1497,7 +2277,11 @@
       "route": "settings",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "accent-lilac"
+      "variant": "accent-lilac",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Settings · Accent · Lilac. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__accent-mulberry__calm.png",
@@ -1505,7 +2289,11 @@
       "route": "tab/calm",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "accent-mulberry"
+      "variant": "accent-mulberry",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Calm · Accent · Mulberry. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__accent-mulberry__help.png",
@@ -1513,7 +2301,11 @@
       "route": "help",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "accent-mulberry"
+      "variant": "accent-mulberry",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Help now · Accent · Mulberry. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__accent-mulberry__journal.png",
@@ -1521,7 +2313,11 @@
       "route": "tab/journal",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "accent-mulberry"
+      "variant": "accent-mulberry",
+      "tab": "journal",
+      "state": "default",
+      "caption": "Journal · Accent · Mulberry. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__accent-mulberry__map.png",
@@ -1529,7 +2325,11 @@
       "route": "tab/map",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "accent-mulberry"
+      "variant": "accent-mulberry",
+      "tab": "map",
+      "state": "default",
+      "caption": "Constellation · Accent · Mulberry. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__accent-mulberry__me.png",
@@ -1537,7 +2337,11 @@
       "route": "tab/me",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "accent-mulberry"
+      "variant": "accent-mulberry",
+      "tab": "me",
+      "state": "default",
+      "caption": "You · Accent · Mulberry. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__accent-mulberry__now.png",
@@ -1545,7 +2349,11 @@
       "route": "tab/now",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "accent-mulberry"
+      "variant": "accent-mulberry",
+      "tab": "now",
+      "state": "default",
+      "caption": "Now · Accent · Mulberry. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__accent-mulberry__runner-breathing.png",
@@ -1553,7 +2361,11 @@
       "route": "runner/box-breathing",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "accent-mulberry"
+      "variant": "accent-mulberry",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Runner · Breathing · Accent · Mulberry. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__accent-mulberry__settings.png",
@@ -1561,7 +2373,11 @@
       "route": "settings",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "accent-mulberry"
+      "variant": "accent-mulberry",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Settings · Accent · Mulberry. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__combo-large-comfortable-high__calm.png",
@@ -1569,7 +2385,11 @@
       "route": "tab/calm",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "combo-large-comfortable-high"
+      "variant": "combo-large-comfortable-high",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Calm · Combo · Large + Comfortable + High contrast. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__combo-large-comfortable-high__help.png",
@@ -1577,7 +2397,11 @@
       "route": "help",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "combo-large-comfortable-high"
+      "variant": "combo-large-comfortable-high",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Help now · Combo · Large + Comfortable + High contrast. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__combo-large-comfortable-high__journal.png",
@@ -1585,7 +2409,11 @@
       "route": "tab/journal",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "combo-large-comfortable-high"
+      "variant": "combo-large-comfortable-high",
+      "tab": "journal",
+      "state": "default",
+      "caption": "Journal · Combo · Large + Comfortable + High contrast. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__combo-large-comfortable-high__map.png",
@@ -1593,7 +2421,11 @@
       "route": "tab/map",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "combo-large-comfortable-high"
+      "variant": "combo-large-comfortable-high",
+      "tab": "map",
+      "state": "default",
+      "caption": "Constellation · Combo · Large + Comfortable + High contrast. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__combo-large-comfortable-high__me.png",
@@ -1601,7 +2433,11 @@
       "route": "tab/me",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "combo-large-comfortable-high"
+      "variant": "combo-large-comfortable-high",
+      "tab": "me",
+      "state": "default",
+      "caption": "You · Combo · Large + Comfortable + High contrast. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__combo-large-comfortable-high__now.png",
@@ -1609,7 +2445,11 @@
       "route": "tab/now",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "combo-large-comfortable-high"
+      "variant": "combo-large-comfortable-high",
+      "tab": "now",
+      "state": "default",
+      "caption": "Now · Combo · Large + Comfortable + High contrast. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__combo-large-comfortable-high__runner-breathing.png",
@@ -1617,7 +2457,11 @@
       "route": "runner/box-breathing",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "combo-large-comfortable-high"
+      "variant": "combo-large-comfortable-high",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Runner · Breathing · Combo · Large + Comfortable + High contrast. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__combo-large-comfortable-high__settings.png",
@@ -1625,7 +2469,11 @@
       "route": "settings",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "combo-large-comfortable-high"
+      "variant": "combo-large-comfortable-high",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Settings · Combo · Large + Comfortable + High contrast. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__contrast-high__calm.png",
@@ -1633,7 +2481,11 @@
       "route": "tab/calm",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "contrast-high"
+      "variant": "contrast-high",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Calm · Contrast · High. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__contrast-high__help.png",
@@ -1641,7 +2493,11 @@
       "route": "help",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "contrast-high"
+      "variant": "contrast-high",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Help now · Contrast · High. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__contrast-high__journal.png",
@@ -1649,7 +2505,11 @@
       "route": "tab/journal",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "contrast-high"
+      "variant": "contrast-high",
+      "tab": "journal",
+      "state": "default",
+      "caption": "Journal · Contrast · High. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__contrast-high__map.png",
@@ -1657,7 +2517,11 @@
       "route": "tab/map",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "contrast-high"
+      "variant": "contrast-high",
+      "tab": "map",
+      "state": "default",
+      "caption": "Constellation · Contrast · High. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__contrast-high__me.png",
@@ -1665,7 +2529,11 @@
       "route": "tab/me",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "contrast-high"
+      "variant": "contrast-high",
+      "tab": "me",
+      "state": "default",
+      "caption": "You · Contrast · High. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__contrast-high__now.png",
@@ -1673,7 +2541,11 @@
       "route": "tab/now",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "contrast-high"
+      "variant": "contrast-high",
+      "tab": "now",
+      "state": "default",
+      "caption": "Now · Contrast · High. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__contrast-high__runner-breathing.png",
@@ -1681,7 +2553,11 @@
       "route": "runner/box-breathing",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "contrast-high"
+      "variant": "contrast-high",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Runner · Breathing · Contrast · High. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__contrast-high__settings.png",
@@ -1689,7 +2565,11 @@
       "route": "settings",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "contrast-high"
+      "variant": "contrast-high",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Settings · Contrast · High. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__about.png",
@@ -1697,7 +2577,11 @@
       "route": "about",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "About SoulCap. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__add-person.png",
@@ -1705,7 +2589,11 @@
       "route": "map/add",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "map",
+      "state": "default",
+      "caption": "Add someone. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__article-alarm.png",
@@ -1713,7 +2601,11 @@
       "route": "article/alarm-system",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Article · Alarm system. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__article-wind-down.png",
@@ -1721,7 +2613,11 @@
       "route": "article/wind-down-boundaries",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Article · Wind-down. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__calm.png",
@@ -1729,7 +2625,11 @@
       "route": "tab/calm",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Calm. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__checkin-detail.png",
@@ -1737,7 +2637,11 @@
       "route": "checkin/detail",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "now",
+      "state": "default",
+      "caption": "Check-in detail. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__daily-supports.png",
@@ -1745,7 +2649,11 @@
       "route": "calm/supports",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Daily supports. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__drip.png",
@@ -1753,7 +2661,11 @@
       "route": "drip",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "now",
+      "state": "default",
+      "caption": "Gentle questions. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__experience-picker.png",
@@ -1761,7 +2673,11 @@
       "route": "experience/picker",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Experience picker. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__experience.png",
@@ -1769,7 +2685,11 @@
       "route": "experience",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Experience detail. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__guided-path-result.png",
@@ -1777,7 +2697,11 @@
       "route": "path/result",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "path",
+      "state": "default",
+      "caption": "Guided Path · result. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__guided-path.png",
@@ -1785,7 +2709,11 @@
       "route": "path/start",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "path",
+      "state": "default",
+      "caption": "Guided Path · start. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__help.png",
@@ -1793,7 +2721,11 @@
       "route": "help",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Help now. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__journal-cover.png",
@@ -1801,7 +2733,11 @@
       "route": "journal/cover",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "journal",
+      "state": "default",
+      "caption": "Journal cover. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__journal-editor.png",
@@ -1809,7 +2745,11 @@
       "route": "journal/editor",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "journal",
+      "state": "default",
+      "caption": "Journal editor. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__journal-new.png",
@@ -1817,7 +2757,11 @@
       "route": "journal/new",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "journal",
+      "state": "default",
+      "caption": "New journal entry. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__journal.png",
@@ -1825,7 +2769,11 @@
       "route": "tab/journal",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "journal",
+      "state": "default",
+      "caption": "Journal. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__knows.png",
@@ -1833,7 +2781,11 @@
       "route": "me/knows",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "me",
+      "state": "default",
+      "caption": "What SoulCap knows. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__library-articles.png",
@@ -1841,7 +2793,11 @@
       "route": "calm/library/articles",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Library · Articles. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__library-experiences.png",
@@ -1849,7 +2805,11 @@
       "route": "calm/library/experiences",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Library · Experiences. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__library.png",
@@ -1857,7 +2817,11 @@
       "route": "calm/library",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Emotional library. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__manual.png",
@@ -1865,7 +2829,11 @@
       "route": "me/manual",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "me",
+      "state": "default",
+      "caption": "Personal Manual. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__map.png",
@@ -1873,7 +2841,11 @@
       "route": "tab/map",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "map",
+      "state": "default",
+      "caption": "Constellation. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__me.png",
@@ -1881,7 +2853,11 @@
       "route": "tab/me",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "me",
+      "state": "default",
+      "caption": "You. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__now.png",
@@ -1889,7 +2865,11 @@
       "route": "tab/now",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "now",
+      "state": "default",
+      "caption": "Now. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__onboard-age.png",
@@ -1897,7 +2877,11 @@
       "route": "onboard/age",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Onboarding · age. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__onboard-concerns.png",
@@ -1905,7 +2889,11 @@
       "route": "onboard/concerns",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Onboarding · concerns. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__onboard-consent.png",
@@ -1913,7 +2901,11 @@
       "route": "onboard/consent",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Onboarding · consent. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__onboard-motion.png",
@@ -1921,7 +2913,11 @@
       "route": "onboard/motion",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Onboarding · motion. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__onboard-name.png",
@@ -1929,7 +2925,11 @@
       "route": "onboard/name",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Onboarding · name. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__park-thought.png",
@@ -1937,7 +2937,11 @@
       "route": "park-thought",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "other",
+      "state": "default",
+      "caption": "Thought parking. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__patterns.png",
@@ -1945,7 +2949,11 @@
       "route": "me/patterns",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "me",
+      "state": "default",
+      "caption": "Patterns. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__person.png",
@@ -1953,7 +2961,11 @@
       "route": "map/person",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "map",
+      "state": "default",
+      "caption": "Person detail. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__principles.png",
@@ -1961,7 +2973,11 @@
       "route": "me/principles",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "me",
+      "state": "default",
+      "caption": "Principles. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__profile.png",
@@ -1969,7 +2985,11 @@
       "route": "me/profile",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "me",
+      "state": "default",
+      "caption": "Profile. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__reset-menu.png",
@@ -1977,7 +2997,11 @@
       "route": "reset-menu",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "other",
+      "state": "default",
+      "caption": "Reset menu. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__runner-breathing.png",
@@ -1985,7 +3009,11 @@
       "route": "runner/box-breathing",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Runner · Breathing. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__runner-steps.png",
@@ -1993,7 +3021,11 @@
       "route": "runner/thought-record",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Runner · Steps. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__safety-plan.png",
@@ -2001,7 +3033,11 @@
       "route": "me/plan",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "me",
+      "state": "default",
+      "caption": "My plan. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__screener-pick.png",
@@ -2009,7 +3045,11 @@
       "route": "screener/pick",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "me",
+      "state": "default",
+      "caption": "Reflection screeners. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__screener-run.png",
@@ -2017,7 +3057,11 @@
       "route": "screener/run",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "me",
+      "state": "default",
+      "caption": "Screener · in progress. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__settings.png",
@@ -2025,7 +3069,11 @@
       "route": "settings",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Settings. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__skill-box-breathing.png",
@@ -2033,7 +3081,11 @@
       "route": "skill/box-breathing",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Technique · Box breathing. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__skill-thought-record.png",
@@ -2041,7 +3093,11 @@
       "route": "skill/thought-record",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Technique · Thought record. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__splash.png",
@@ -2049,7 +3105,11 @@
       "route": "splash",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Splash · Quiet Depth. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__timeline.png",
@@ -2057,7 +3117,11 @@
       "route": "me/timeline",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "me",
+      "state": "default",
+      "caption": "Timeline. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__under-18.png",
@@ -2065,7 +3129,11 @@
       "route": "onboard/under-18",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Under 18. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__weekly.png",
@@ -2073,7 +3141,11 @@
       "route": "me/weekly",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "me",
+      "state": "default",
+      "caption": "Weekly overview. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__welcome.png",
@@ -2081,7 +3153,11 @@
       "route": "welcome",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Welcome. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__whats-new.png",
@@ -2089,7 +3165,11 @@
       "route": "now/whats-new",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "now",
+      "state": "default",
+      "caption": "What's new. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__default__your-story.png",
@@ -2097,7 +3177,11 @@
       "route": "me/story",
       "viewport": "mobile",
       "pack": "default",
-      "variant": "default"
+      "variant": "default",
+      "tab": "me",
+      "state": "default",
+      "caption": "Your story. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__density-comfortable__calm.png",
@@ -2105,7 +3189,11 @@
       "route": "tab/calm",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "density-comfortable"
+      "variant": "density-comfortable",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Calm · Density · Comfortable. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__density-comfortable__help.png",
@@ -2113,7 +3201,11 @@
       "route": "help",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "density-comfortable"
+      "variant": "density-comfortable",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Help now · Density · Comfortable. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__density-comfortable__journal.png",
@@ -2121,7 +3213,11 @@
       "route": "tab/journal",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "density-comfortable"
+      "variant": "density-comfortable",
+      "tab": "journal",
+      "state": "default",
+      "caption": "Journal · Density · Comfortable. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__density-comfortable__map.png",
@@ -2129,7 +3225,11 @@
       "route": "tab/map",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "density-comfortable"
+      "variant": "density-comfortable",
+      "tab": "map",
+      "state": "default",
+      "caption": "Constellation · Density · Comfortable. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__density-comfortable__me.png",
@@ -2137,7 +3237,11 @@
       "route": "tab/me",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "density-comfortable"
+      "variant": "density-comfortable",
+      "tab": "me",
+      "state": "default",
+      "caption": "You · Density · Comfortable. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__density-comfortable__now.png",
@@ -2145,7 +3249,11 @@
       "route": "tab/now",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "density-comfortable"
+      "variant": "density-comfortable",
+      "tab": "now",
+      "state": "default",
+      "caption": "Now · Density · Comfortable. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__density-comfortable__runner-breathing.png",
@@ -2153,7 +3261,11 @@
       "route": "runner/box-breathing",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "density-comfortable"
+      "variant": "density-comfortable",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Runner · Breathing · Density · Comfortable. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__density-comfortable__settings.png",
@@ -2161,7 +3273,47 @@
       "route": "settings",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "density-comfortable"
+      "variant": "density-comfortable",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Settings · Density · Comfortable. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
+    },
+    {
+      "file": "mobile__empty__me-cold-ia.png",
+      "label": "You · cold IA (tools + gear)",
+      "route": "tab/me",
+      "viewport": "mobile",
+      "pack": "states",
+      "variant": "empty",
+      "tab": "me",
+      "state": "empty",
+      "caption": "You cold: Settings gear, tools high, one Profile row, Example week. No duplicate Set up profile.",
+      "rationale": "IA-RATIONALE.md"
+    },
+    {
+      "file": "mobile__empty__now-cold-example.png",
+      "label": "Now · cold Example week",
+      "route": "tab/now",
+      "viewport": "mobile",
+      "pack": "states",
+      "variant": "empty",
+      "tab": "now",
+      "state": "empty-preview",
+      "caption": "Cold Now with labelled Example week — not the user’s data. See IA-RATIONALE.md §Cold-open.",
+      "rationale": "IA-RATIONALE.md"
+    },
+    {
+      "file": "mobile__empty__settings-regrouped.png",
+      "label": "Settings · regrouped",
+      "route": "settings",
+      "viewport": "mobile",
+      "pack": "states",
+      "variant": "empty",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Settings order: Appearance · Language · Accessibility · Personalisation · Privacy · About. Search at top.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__motion-still__calm.png",
@@ -2169,7 +3321,11 @@
       "route": "tab/calm",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "motion-still"
+      "variant": "motion-still",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Calm · Motion · Still. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__motion-still__help.png",
@@ -2177,7 +3333,11 @@
       "route": "help",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "motion-still"
+      "variant": "motion-still",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Help now · Motion · Still. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__motion-still__journal.png",
@@ -2185,7 +3345,11 @@
       "route": "tab/journal",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "motion-still"
+      "variant": "motion-still",
+      "tab": "journal",
+      "state": "default",
+      "caption": "Journal · Motion · Still. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__motion-still__map.png",
@@ -2193,7 +3357,11 @@
       "route": "tab/map",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "motion-still"
+      "variant": "motion-still",
+      "tab": "map",
+      "state": "default",
+      "caption": "Constellation · Motion · Still. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__motion-still__me.png",
@@ -2201,7 +3369,11 @@
       "route": "tab/me",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "motion-still"
+      "variant": "motion-still",
+      "tab": "me",
+      "state": "default",
+      "caption": "You · Motion · Still. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__motion-still__now.png",
@@ -2209,7 +3381,11 @@
       "route": "tab/now",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "motion-still"
+      "variant": "motion-still",
+      "tab": "now",
+      "state": "default",
+      "caption": "Now · Motion · Still. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__motion-still__runner-breathing.png",
@@ -2217,7 +3393,11 @@
       "route": "runner/box-breathing",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "motion-still"
+      "variant": "motion-still",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Runner · Breathing · Motion · Still. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__motion-still__settings.png",
@@ -2225,7 +3405,11 @@
       "route": "settings",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "motion-still"
+      "variant": "motion-still",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Settings · Motion · Still. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__motion-vivid__calm.png",
@@ -2233,7 +3417,11 @@
       "route": "tab/calm",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "motion-vivid"
+      "variant": "motion-vivid",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Calm · Motion · Vivid. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__motion-vivid__help.png",
@@ -2241,7 +3429,11 @@
       "route": "help",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "motion-vivid"
+      "variant": "motion-vivid",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Help now · Motion · Vivid. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__motion-vivid__journal.png",
@@ -2249,7 +3441,11 @@
       "route": "tab/journal",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "motion-vivid"
+      "variant": "motion-vivid",
+      "tab": "journal",
+      "state": "default",
+      "caption": "Journal · Motion · Vivid. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__motion-vivid__map.png",
@@ -2257,7 +3453,11 @@
       "route": "tab/map",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "motion-vivid"
+      "variant": "motion-vivid",
+      "tab": "map",
+      "state": "default",
+      "caption": "Constellation · Motion · Vivid. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__motion-vivid__me.png",
@@ -2265,7 +3465,11 @@
       "route": "tab/me",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "motion-vivid"
+      "variant": "motion-vivid",
+      "tab": "me",
+      "state": "default",
+      "caption": "You · Motion · Vivid. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__motion-vivid__now.png",
@@ -2273,7 +3477,11 @@
       "route": "tab/now",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "motion-vivid"
+      "variant": "motion-vivid",
+      "tab": "now",
+      "state": "default",
+      "caption": "Now · Motion · Vivid. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__motion-vivid__runner-breathing.png",
@@ -2281,7 +3489,11 @@
       "route": "runner/box-breathing",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "motion-vivid"
+      "variant": "motion-vivid",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Runner · Breathing · Motion · Vivid. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__motion-vivid__settings.png",
@@ -2289,7 +3501,11 @@
       "route": "settings",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "motion-vivid"
+      "variant": "motion-vivid",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Settings · Motion · Vivid. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__text-large__calm.png",
@@ -2297,7 +3513,11 @@
       "route": "tab/calm",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "text-large"
+      "variant": "text-large",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Calm · Text · Large. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__text-large__help.png",
@@ -2305,7 +3525,11 @@
       "route": "help",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "text-large"
+      "variant": "text-large",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Help now · Text · Large. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__text-large__journal.png",
@@ -2313,7 +3537,11 @@
       "route": "tab/journal",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "text-large"
+      "variant": "text-large",
+      "tab": "journal",
+      "state": "default",
+      "caption": "Journal · Text · Large. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__text-large__map.png",
@@ -2321,7 +3549,11 @@
       "route": "tab/map",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "text-large"
+      "variant": "text-large",
+      "tab": "map",
+      "state": "default",
+      "caption": "Constellation · Text · Large. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__text-large__me.png",
@@ -2329,7 +3561,11 @@
       "route": "tab/me",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "text-large"
+      "variant": "text-large",
+      "tab": "me",
+      "state": "default",
+      "caption": "You · Text · Large. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__text-large__now.png",
@@ -2337,7 +3573,11 @@
       "route": "tab/now",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "text-large"
+      "variant": "text-large",
+      "tab": "now",
+      "state": "default",
+      "caption": "Now · Text · Large. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__text-large__runner-breathing.png",
@@ -2345,7 +3585,11 @@
       "route": "runner/box-breathing",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "text-large"
+      "variant": "text-large",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Runner · Breathing · Text · Large. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__text-large__settings.png",
@@ -2353,7 +3597,11 @@
       "route": "settings",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "text-large"
+      "variant": "text-large",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Settings · Text · Large. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-amoled__calm.png",
@@ -2361,7 +3609,11 @@
       "route": "tab/calm",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-amoled"
+      "variant": "theme-amoled",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Calm · AMOLED. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-amoled__help.png",
@@ -2369,7 +3621,11 @@
       "route": "help",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-amoled"
+      "variant": "theme-amoled",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Help now · AMOLED. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-amoled__journal.png",
@@ -2377,7 +3633,11 @@
       "route": "tab/journal",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-amoled"
+      "variant": "theme-amoled",
+      "tab": "journal",
+      "state": "default",
+      "caption": "Journal · AMOLED. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-amoled__map.png",
@@ -2385,7 +3645,11 @@
       "route": "tab/map",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-amoled"
+      "variant": "theme-amoled",
+      "tab": "map",
+      "state": "default",
+      "caption": "Constellation · AMOLED. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-amoled__me.png",
@@ -2393,7 +3657,11 @@
       "route": "tab/me",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-amoled"
+      "variant": "theme-amoled",
+      "tab": "me",
+      "state": "default",
+      "caption": "You · AMOLED. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-amoled__now.png",
@@ -2401,7 +3669,11 @@
       "route": "tab/now",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-amoled"
+      "variant": "theme-amoled",
+      "tab": "now",
+      "state": "default",
+      "caption": "Now · AMOLED. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-amoled__runner-breathing.png",
@@ -2409,7 +3681,11 @@
       "route": "runner/box-breathing",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-amoled"
+      "variant": "theme-amoled",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Runner · Breathing · AMOLED. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-amoled__settings.png",
@@ -2417,7 +3693,11 @@
       "route": "settings",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-amoled"
+      "variant": "theme-amoled",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Settings · AMOLED. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-auto__calm.png",
@@ -2425,7 +3705,11 @@
       "route": "tab/calm",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-auto"
+      "variant": "theme-auto",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Calm · Auto. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-auto__help.png",
@@ -2433,7 +3717,11 @@
       "route": "help",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-auto"
+      "variant": "theme-auto",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Help now · Auto. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-auto__journal.png",
@@ -2441,7 +3729,11 @@
       "route": "tab/journal",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-auto"
+      "variant": "theme-auto",
+      "tab": "journal",
+      "state": "default",
+      "caption": "Journal · Auto. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-auto__map.png",
@@ -2449,7 +3741,11 @@
       "route": "tab/map",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-auto"
+      "variant": "theme-auto",
+      "tab": "map",
+      "state": "default",
+      "caption": "Constellation · Auto. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-auto__me.png",
@@ -2457,7 +3753,11 @@
       "route": "tab/me",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-auto"
+      "variant": "theme-auto",
+      "tab": "me",
+      "state": "default",
+      "caption": "You · Auto. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-auto__now.png",
@@ -2465,7 +3765,11 @@
       "route": "tab/now",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-auto"
+      "variant": "theme-auto",
+      "tab": "now",
+      "state": "default",
+      "caption": "Now · Auto. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-auto__runner-breathing.png",
@@ -2473,7 +3777,11 @@
       "route": "runner/box-breathing",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-auto"
+      "variant": "theme-auto",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Runner · Breathing · Auto. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-auto__settings.png",
@@ -2481,7 +3789,11 @@
       "route": "settings",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-auto"
+      "variant": "theme-auto",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Settings · Auto. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-dark__calm.png",
@@ -2489,7 +3801,11 @@
       "route": "tab/calm",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-dark"
+      "variant": "theme-dark",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Calm · Dark. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-dark__help.png",
@@ -2497,7 +3813,11 @@
       "route": "help",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-dark"
+      "variant": "theme-dark",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Help now · Dark. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-dark__journal.png",
@@ -2505,7 +3825,11 @@
       "route": "tab/journal",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-dark"
+      "variant": "theme-dark",
+      "tab": "journal",
+      "state": "default",
+      "caption": "Journal · Dark. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-dark__map.png",
@@ -2513,7 +3837,11 @@
       "route": "tab/map",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-dark"
+      "variant": "theme-dark",
+      "tab": "map",
+      "state": "default",
+      "caption": "Constellation · Dark. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-dark__me.png",
@@ -2521,7 +3849,11 @@
       "route": "tab/me",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-dark"
+      "variant": "theme-dark",
+      "tab": "me",
+      "state": "default",
+      "caption": "You · Dark. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-dark__now.png",
@@ -2529,7 +3861,11 @@
       "route": "tab/now",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-dark"
+      "variant": "theme-dark",
+      "tab": "now",
+      "state": "default",
+      "caption": "Now · Dark. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-dark__runner-breathing.png",
@@ -2537,7 +3873,11 @@
       "route": "runner/box-breathing",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-dark"
+      "variant": "theme-dark",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Runner · Breathing · Dark. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-dark__settings.png",
@@ -2545,7 +3885,11 @@
       "route": "settings",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-dark"
+      "variant": "theme-dark",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Settings · Dark. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-forest__calm.png",
@@ -2553,7 +3897,11 @@
       "route": "tab/calm",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-forest"
+      "variant": "theme-forest",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Calm · Forest. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-forest__help.png",
@@ -2561,7 +3909,11 @@
       "route": "help",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-forest"
+      "variant": "theme-forest",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Help now · Forest. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-forest__journal.png",
@@ -2569,7 +3921,11 @@
       "route": "tab/journal",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-forest"
+      "variant": "theme-forest",
+      "tab": "journal",
+      "state": "default",
+      "caption": "Journal · Forest. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-forest__map.png",
@@ -2577,7 +3933,11 @@
       "route": "tab/map",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-forest"
+      "variant": "theme-forest",
+      "tab": "map",
+      "state": "default",
+      "caption": "Constellation · Forest. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-forest__me.png",
@@ -2585,7 +3945,11 @@
       "route": "tab/me",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-forest"
+      "variant": "theme-forest",
+      "tab": "me",
+      "state": "default",
+      "caption": "You · Forest. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-forest__now.png",
@@ -2593,7 +3957,11 @@
       "route": "tab/now",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-forest"
+      "variant": "theme-forest",
+      "tab": "now",
+      "state": "default",
+      "caption": "Now · Forest. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-forest__runner-breathing.png",
@@ -2601,7 +3969,11 @@
       "route": "runner/box-breathing",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-forest"
+      "variant": "theme-forest",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Runner · Breathing · Forest. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-forest__settings.png",
@@ -2609,7 +3981,11 @@
       "route": "settings",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-forest"
+      "variant": "theme-forest",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Settings · Forest. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-light__calm.png",
@@ -2617,7 +3993,11 @@
       "route": "tab/calm",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-light"
+      "variant": "theme-light",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Calm · Light. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-light__help.png",
@@ -2625,7 +4005,11 @@
       "route": "help",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-light"
+      "variant": "theme-light",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Help now · Light. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-light__journal.png",
@@ -2633,7 +4017,11 @@
       "route": "tab/journal",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-light"
+      "variant": "theme-light",
+      "tab": "journal",
+      "state": "default",
+      "caption": "Journal · Light. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-light__map.png",
@@ -2641,7 +4029,11 @@
       "route": "tab/map",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-light"
+      "variant": "theme-light",
+      "tab": "map",
+      "state": "default",
+      "caption": "Constellation · Light. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-light__me.png",
@@ -2649,7 +4041,11 @@
       "route": "tab/me",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-light"
+      "variant": "theme-light",
+      "tab": "me",
+      "state": "default",
+      "caption": "You · Light. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-light__now.png",
@@ -2657,7 +4053,11 @@
       "route": "tab/now",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-light"
+      "variant": "theme-light",
+      "tab": "now",
+      "state": "default",
+      "caption": "Now · Light. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-light__runner-breathing.png",
@@ -2665,7 +4065,11 @@
       "route": "runner/box-breathing",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-light"
+      "variant": "theme-light",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Runner · Breathing · Light. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-light__settings.png",
@@ -2673,7 +4077,11 @@
       "route": "settings",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-light"
+      "variant": "theme-light",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Settings · Light. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-night__calm.png",
@@ -2681,7 +4089,11 @@
       "route": "tab/calm",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-night"
+      "variant": "theme-night",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Calm · Night. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-night__help.png",
@@ -2689,7 +4101,11 @@
       "route": "help",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-night"
+      "variant": "theme-night",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Help now · Night. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-night__journal.png",
@@ -2697,7 +4113,11 @@
       "route": "tab/journal",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-night"
+      "variant": "theme-night",
+      "tab": "journal",
+      "state": "default",
+      "caption": "Journal · Night. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-night__map.png",
@@ -2705,7 +4125,11 @@
       "route": "tab/map",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-night"
+      "variant": "theme-night",
+      "tab": "map",
+      "state": "default",
+      "caption": "Constellation · Night. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-night__me.png",
@@ -2713,7 +4137,11 @@
       "route": "tab/me",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-night"
+      "variant": "theme-night",
+      "tab": "me",
+      "state": "default",
+      "caption": "You · Night. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-night__now.png",
@@ -2721,7 +4149,11 @@
       "route": "tab/now",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-night"
+      "variant": "theme-night",
+      "tab": "now",
+      "state": "default",
+      "caption": "Now · Night. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-night__runner-breathing.png",
@@ -2729,7 +4161,11 @@
       "route": "runner/box-breathing",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-night"
+      "variant": "theme-night",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Runner · Breathing · Night. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-night__settings.png",
@@ -2737,7 +4173,11 @@
       "route": "settings",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-night"
+      "variant": "theme-night",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Settings · Night. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-ocean__calm.png",
@@ -2745,7 +4185,11 @@
       "route": "tab/calm",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-ocean"
+      "variant": "theme-ocean",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Calm · Ocean. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-ocean__help.png",
@@ -2753,7 +4197,11 @@
       "route": "help",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-ocean"
+      "variant": "theme-ocean",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Help now · Ocean. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-ocean__journal.png",
@@ -2761,7 +4209,11 @@
       "route": "tab/journal",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-ocean"
+      "variant": "theme-ocean",
+      "tab": "journal",
+      "state": "default",
+      "caption": "Journal · Ocean. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-ocean__map.png",
@@ -2769,7 +4221,11 @@
       "route": "tab/map",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-ocean"
+      "variant": "theme-ocean",
+      "tab": "map",
+      "state": "default",
+      "caption": "Constellation · Ocean. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-ocean__me.png",
@@ -2777,7 +4233,11 @@
       "route": "tab/me",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-ocean"
+      "variant": "theme-ocean",
+      "tab": "me",
+      "state": "default",
+      "caption": "You · Ocean. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-ocean__now.png",
@@ -2785,7 +4245,11 @@
       "route": "tab/now",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-ocean"
+      "variant": "theme-ocean",
+      "tab": "now",
+      "state": "default",
+      "caption": "Now · Ocean. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-ocean__runner-breathing.png",
@@ -2793,7 +4257,11 @@
       "route": "runner/box-breathing",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-ocean"
+      "variant": "theme-ocean",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Runner · Breathing · Ocean. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__theme-ocean__settings.png",
@@ -2801,7 +4269,11 @@
       "route": "settings",
       "viewport": "mobile",
       "pack": "theme",
-      "variant": "theme-ocean"
+      "variant": "theme-ocean",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Settings · Ocean. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__transparency-reduced__calm.png",
@@ -2809,7 +4281,11 @@
       "route": "tab/calm",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "transparency-reduced"
+      "variant": "transparency-reduced",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Calm · Transparency · Reduced. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__transparency-reduced__help.png",
@@ -2817,7 +4293,11 @@
       "route": "help",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "transparency-reduced"
+      "variant": "transparency-reduced",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Help now · Transparency · Reduced. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__transparency-reduced__journal.png",
@@ -2825,7 +4305,11 @@
       "route": "tab/journal",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "transparency-reduced"
+      "variant": "transparency-reduced",
+      "tab": "journal",
+      "state": "default",
+      "caption": "Journal · Transparency · Reduced. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__transparency-reduced__map.png",
@@ -2833,7 +4317,11 @@
       "route": "tab/map",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "transparency-reduced"
+      "variant": "transparency-reduced",
+      "tab": "map",
+      "state": "default",
+      "caption": "Constellation · Transparency · Reduced. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__transparency-reduced__me.png",
@@ -2841,7 +4329,11 @@
       "route": "tab/me",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "transparency-reduced"
+      "variant": "transparency-reduced",
+      "tab": "me",
+      "state": "default",
+      "caption": "You · Transparency · Reduced. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__transparency-reduced__now.png",
@@ -2849,7 +4341,11 @@
       "route": "tab/now",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "transparency-reduced"
+      "variant": "transparency-reduced",
+      "tab": "now",
+      "state": "default",
+      "caption": "Now · Transparency · Reduced. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__transparency-reduced__runner-breathing.png",
@@ -2857,7 +4353,11 @@
       "route": "runner/box-breathing",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "transparency-reduced"
+      "variant": "transparency-reduced",
+      "tab": "calm",
+      "state": "default",
+      "caption": "Runner · Breathing · Transparency · Reduced. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     },
     {
       "file": "mobile__transparency-reduced__settings.png",
@@ -2865,7 +4365,11 @@
       "route": "settings",
       "viewport": "mobile",
       "pack": "appearance",
-      "variant": "transparency-reduced"
+      "variant": "transparency-reduced",
+      "tab": "chrome",
+      "state": "default",
+      "caption": "Settings · Transparency · Reduced. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
     }
   ]
 }

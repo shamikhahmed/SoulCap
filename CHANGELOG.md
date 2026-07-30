@@ -1,5 +1,16 @@
 ## [Unreleased]
 
+## [8.0.0] — 2026-07-30
+
+### Changed
+- **SPEC-v8 IA (W1–W8):** You-tab reorganised — Settings gear in header, tools high and discoverable,
+  one Profile entry, compact week glance. Settings groups: Appearance · Language · Accessibility ·
+  Personalisation · Privacy & Data · About & Legal (+ search). Cold-open **Example** week (labelled,
+  not fake user data). Heatmap dots `aria-hidden`; one SR summary on the control.
+- `IA-RATIONALE.md` documents tab jobs, Settings order, and empty-state rules.
+- Documented gallery captions + tab grouping in `screen-gallery.html`.
+- SW `soulcap-v800`. App **8.0.0**. Schema **v13**.
+
 ## [7.0.13] — 2026-07-30
 
 ### Fixed

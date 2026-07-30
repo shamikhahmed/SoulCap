@@ -240,7 +240,9 @@ var LOCALE_OPTIONS = [
 var LOCALE_UI = {
   language:'Language',
   previewNote:'Roman Urdu is a layout preview only. Clinical and safety wording still needs a native clinical-copy review before it replaces English.',
-  reviewPending:'Roman Urdu clinical review is not complete yet. English remains the default safety language.'
+  reviewPending:'Roman Urdu clinical review is not complete yet. English remains the default safety language.',
+  clinicalNotice:'Technique steps, library articles, and crisis guidance stay in English until clinical review is complete.',
+  clinicalDismiss:'Got it'
 };
 
 var MAP_PACE_OPTIONS = [
@@ -355,8 +357,18 @@ var EMPTY_UI = {
   nowAction:'How are you arriving?',
   journalAction:'Write first entry',
   mapAction:'Add the first person',
-  meAction:'Set up profile',
+  meAction:'Open profile',
   patternsAction:'Go to Now'
+};
+
+/* Cold-open Example / Preview — never presented as the user’s own data. */
+var PREVIEW_UI = {
+  badge:'Example',
+  weekTitle:'Example week',
+  weekBody:'What this glance looks like after a few check-ins. Not your data — no fake scores or streaks.',
+  weekSummary:'Example week — preview only, not your activity.',
+  patternsBody:'After a few of your own check-ins, quiet pattern notes can appear here. Nothing invented as yours.',
+  seeMore:'See more'
 };
 
 /* You-tab local insights — factual notes from on-device data. Never diagnostic. */
@@ -495,7 +507,7 @@ var APPROACH_PACKS = {
 };
 
 var PROGRESS_UI = {
-  title:'Your progress',
+  title:'This week',
   weekLabel:'This week',
   weekEmpty:'This week is still open — no pressure.',
   weekDays:'{n} day{s} with a check-in or technique · not a streak.',
@@ -504,7 +516,9 @@ var PROGRESS_UI = {
   journals:'Journal entries',
   paths:'Short paths tried',
   gentle:'Gentle glance only — no scores, no streaks, no targets.',
-  empty:'As you check in and try techniques, a quiet picture of the weeks builds here.'
+  empty:'As you check in and try techniques, a quiet picture of the weeks builds here.',
+  seeMore:'See more',
+  openWeekly:'This week — open weekly summary'
 };
 
 var SESSION_UI = {
@@ -531,11 +545,18 @@ var WHATS_NEW_UI = {
 };
 
 var SETTINGS_UI = {
+  searchPlaceholder:'Search settings',
+  searchEmpty:'No settings match that.',
+  appearance:'Appearance',
+  language:'Language',
+  accessibility:'Accessibility',
   personalisation:'Personalisation',
   guided:'Guided techniques',
   constellation:'Constellation',
+  privacyData:'Privacy & Data',
+  onDevice:'Everything stays on this device. No account, no cloud sync.',
   yourData:'Your data',
-  about:'About',
+  about:'About & Legal',
   spoken:'Spoken guidance',
   voiceAccent:'Voice & accent',
   vibration:'Vibration',
@@ -795,8 +816,10 @@ var STRINGS = {
       sectionAbout:'About you',
       sectionInsights:'Your insights',
       sectionTools:'Your tools',
+      sectionWeek:'This week',
       knowsHeading:'What SoulCap knows',
-      calmMore:'Also here'
+      calmMore:'Also here',
+      settingsAria:'Settings'
     },
     concerns:{
       hard_to_switch_off:'Hard to switch off',
@@ -827,7 +850,7 @@ var STRINGS = {
       vivid:'Vivid', balanced:'Balanced', still:'Still',
       patternLearning:'Local pattern observations',
       patternHint:'When off, SoulCap stops deriving new pattern cards. Your check-ins and existing data stay unchanged.',
-      themeNote:'Primary: Auto, Light, Dark, Night, AMOLED. Ocean and Forest are calm ambient looks. Accessibility options live below.',
+      themeNote:'Primary: Auto, Light, Dark, Night, AMOLED. Ocean and Forest are calm ambient looks.',
       accessibility:'Accessibility',
       standard:'Standard', large:'Large', compact:'Compact', comfortable:'Comfortable',
       plum:'Plum', lilac:'Lilac', mulberry:'Mulberry'
@@ -876,7 +899,7 @@ var STRINGS = {
     },
     mapPace:{ still:'Still', drift:'Drift', live:'Live' },
     panic:{ exit:'I’m okay — go back', plan:'Open my plan' },
-    settingsCard:{ title:'Settings', hint:'Appearance, language, accessibility, constellation pace, guided techniques, and your data.', open:'Open' }
+    settingsCard:{ title:'Settings', hint:'Appearance, language, accessibility, personalisation, privacy, and About.', open:'Open' }
   },
   rui: {
     helpNow:'Mujhe ab madad chahiye',

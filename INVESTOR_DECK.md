@@ -1,6 +1,6 @@
 # SoulCap — Investor Deck
 
-> **Product honesty (read first):** The live product (**v7.0.13** / schema v13) is an offline
+> **Product honesty (read first):** The live product (**v8.0.0** / schema v13) is an offline
 > **self-guided wellness PWA** — Quiet Depth identity, deterministic suggestions, Guided Path
 > (rule-based), keyword safety on free-text surfaces, and a private on-device journal. NestJS +
 > model orchestration in `backend/` is **lab source only (not deployed)**. Do not pitch the Pages

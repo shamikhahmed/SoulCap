@@ -16,7 +16,31 @@ type ManifestShot = {
   viewport: string;
   pack: string;
   variant: string;
+  tab?: string;
+  state?: string;
+  caption?: string;
+  rationale?: string;
 };
+
+const RATIONALE = 'IA-RATIONALE.md';
+
+function shotMeta(slug: string, label: string, route: string): Pick<ManifestShot, 'tab' | 'state' | 'caption' | 'rationale'> {
+  const tab =
+    route.startsWith('tab/') ? route.split('/')[1] :
+    route.startsWith('me/') || route.startsWith('screener') ? 'me' :
+    route.startsWith('journal') ? 'journal' :
+    route.startsWith('map') || route.startsWith('calm') || route.startsWith('path') ? route.split('/')[0] :
+    route.startsWith('now') || route === 'checkin/detail' || route === 'drip' ? 'now' :
+    route === 'settings' || route === 'about' || route === 'help' || route === 'welcome' || route.startsWith('onboard') || route === 'splash' ? 'chrome' :
+    route.startsWith('runner') || route.startsWith('skill') || route.startsWith('article') || route.startsWith('experience') ? 'calm' :
+    'other';
+  return {
+    tab,
+    state: 'default',
+    caption: `${label}. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see ${RATIONALE}.`,
+    rationale: RATIONALE,
+  };
+}
 
 /** Surfaces that show chrome, colour, type — enough to prove every look. */
 const MATRIX_SHOTS: { kind: string; arg?: string; slug: string; label: string; route: string }[] = [
@@ -190,11 +214,13 @@ async function snap(
   slug: string,
   label: string,
   route: string,
+  extra?: Partial<ManifestShot>,
 ) {
   const file = `${viewport}__${variant}__${slug}.png`;
   await page.waitForTimeout(280);
   await page.screenshot({ path: join(GALLERY_DIR, file), fullPage: true });
-  shots.push({ file, label, route, viewport, pack, variant });
+  const meta = shotMeta(slug, label, route);
+  shots.push({ file, label, route, viewport, pack, variant, ...meta, ...extra });
 }
 
 async function captureFreshFlow(page: Page, viewport: keyof typeof VIEWPORTS, shots: ManifestShot[]) {
@@ -283,6 +309,37 @@ async function captureAll(page: Page, viewport: keyof typeof VIEWPORTS) {
   const shots: ManifestShot[] = [];
 
   await captureFreshFlow(page, viewport, shots);
+  /* SPEC-v8 W4/W6 — cold-open Example states (labelled preview, not fake user data). */
+  await page.goto('/');
+  await page.evaluate(() => localStorage.clear());
+  await page.goto('/');
+  await page.waitForFunction(() => Boolean((window as any).__soulcap));
+  await dismissSplash(page);
+  await page.getByRole('button', { name: 'Begin' }).click();
+  await page.getByRole('button', { name: '18 or older' }).click();
+  await page.getByRole('button', { name: 'Skip', exact: true }).click();
+  await page.getByRole('button', { name: 'I understand' }).click();
+  await page.getByRole('button', { name: 'Skip', exact: true }).click();
+  await page.getByRole('button', { name: /Skip — just let me in/ }).click();
+  await page.waitForTimeout(400);
+  await snap(page, shots, viewport, 'states', 'empty', 'now-cold-example', 'Now · cold Example week', 'tab/now', {
+    tab: 'now', state: 'empty-preview',
+    caption: 'Cold Now with labelled Example week — not the user’s data. See IA-RATIONALE.md §Cold-open.',
+  });
+  await page.evaluate(() => (document.querySelector('#tabs button[data-tab="me"]') as HTMLElement).click());
+  await page.waitForTimeout(300);
+  await snap(page, shots, viewport, 'states', 'empty', 'me-cold-ia', 'You · cold IA (tools + gear)', 'tab/me', {
+    tab: 'me', state: 'empty',
+    caption: 'You cold: Settings gear, tools high, one Profile row, Example week. No duplicate Set up profile.',
+  });
+  await page.locator('.me-settings-gear').click();
+  await page.waitForTimeout(300);
+  await snap(page, shots, viewport, 'states', 'empty', 'settings-regrouped', 'Settings · regrouped', 'settings', {
+    tab: 'chrome', state: 'default',
+    caption: 'Settings order: Appearance · Language · Accessibility · Personalisation · Privacy · About. Search at top.',
+  });
+  await page.evaluate(() => (window as any).__soulcap.galleryReset?.());
+
   await seedDemo(page);
   await applyLook(page, { theme: 'light', appearance: DEFAULT_APPEARANCE });
 

@@ -1,6 +1,6 @@
 # SoulCap — Safety & Truth Inventory
 
-**Version:** 7.0.13 · **Updated:** 2026-07-30
+**Version:** 8.0.0 · **Updated:** 2026-07-30
 **Status:** **Clinical path** — self-guided wellness companion.
 **Not** a cleared SaMD / medical device. **Not** a substitute for licensed care.
 See also `CLINICAL.md` and `Capricorn-Brain/AI/Claude-Code/SoulCap-Eval-Harness.md`.
@@ -14,6 +14,13 @@ SoulCap is **not** clinical care, therapy, medical advice, diagnosis, or crisis 
 - Market as **self-guided wellness companion (clinical path)** only.
 - Never claim FDA/CE clearance, "clinical-grade therapy," or replacement for licensed professionals.
 - Help guidance is hard-coded, number-free, and country-agnostic.
+
+### Pattern + screener copy (SPEC-v8 W7)
+
+Local **pattern observations** and optional **reflection checks** (PHQ-9 / GAD-7 style) are
+on-device, user-correctable, and **not clinician-reviewed**. Wording stays non-diagnostic
+(no severity verdicts). Item-9 and tier-3 free text open hard-coded Help. About & Legal keeps
+the single not-medical line. **Do not claim clinical review** until a licensed clinician signs off.
 
 ---
 
@@ -104,7 +111,7 @@ re-introduce them per region behind the region-pack model and verify each is liv
 
 ## Blockers remaining
 
-1. **No licensed clinician has reviewed any skill card, library article, or Guided Path copy.** Calm / path say so in-product.
+1. **No licensed clinician has reviewed any skill card, library article, Guided Path, pattern, or screener copy.** Calm / path / About say so in-product. Pattern + screener remain reflection-only.
 2. No Urdu clinical copy reviewer; no Urdu localisation shipped.
 3. Safety kernel is still keyword-based. It cannot detect oblique risk
    ("I've been sorting out my things", "I finally feel calm about it all").

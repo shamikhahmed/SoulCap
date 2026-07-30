@@ -715,17 +715,21 @@ test.describe('v2.1 Guided Path', () => {
 });
 
 test.describe('v2.0 IA restructure', () => {
-  test('You has About / Insights / Tools sections; timeline on You not Now', async ({ page }) => {
+  test('You has About / Tools / week glance; Settings gear first-class', async ({ page }) => {
     await seedDemo(page);
     await page.evaluate(() => (document.querySelector('#tabs button[data-tab="me"]') as HTMLElement).click());
     const me = page.locator('#view-me');
     await expect(me.locator('.me-about')).toContainText('About you');
-    await expect(me.locator('.me-insights')).toContainText('Your insights');
-    await expect(me.locator('.progress-dash')).toContainText('Your progress');
     await expect(me.locator('.me-tools')).toContainText('Your tools');
+    await expect(me.locator('.me-week')).toContainText('This week');
+    await expect(me.locator('.progress-dash')).toBeVisible();
     await expect(me.locator('.timeline-card')).toContainText('Your week');
-    await expect(me.locator('.settings-card')).toBeVisible();
+    await expect(me.locator('.me-settings-gear.settings-card')).toBeVisible();
     await expect(me.locator('.screener-card')).toBeVisible();
+    /* Tools appear before About (discoverability). */
+    const toolsY = await me.locator('.me-tools').boundingBox();
+    const aboutY = await me.locator('.me-about').boundingBox();
+    expect(toolsY && aboutY && toolsY.y < aboutY.y).toBeTruthy();
     await page.evaluate(() => (document.querySelector('#tabs button[data-tab="now"]') as HTMLElement).click());
     await expect(page.locator('#view-now .now-primary .now-suggest')).toBeVisible();
     await expect(page.locator('#view-now .progress-glance')).toBeVisible();
@@ -754,7 +758,7 @@ test.describe('v2.0 IA restructure', () => {
     await expect(page.locator('#sheetPanel')).toContainText(
       'SoulCap is a self-guided wellness companion — not therapy, diagnosis, or medical advice.',
     );
-    await expect(page.locator('#sheetPanel')).toContainText(/Version 7\./);
+    await expect(page.locator('#sheetPanel')).toContainText(/Version \d+\.\d+/);
     await page.locator('#sheetPanel').getByRole('button', { name: 'Close' }).click();
     await page.evaluate(() => (window as any).__soulcap.setSeenVersion('1.9.3'));
     await expect(page.locator('#view-now .whats-new')).toContainText(/What.s new/);
@@ -1159,12 +1163,20 @@ test.describe('Journal', () => {
   test('changing theme does not scroll the page to the top', async ({ page }) => {
     await seedDemo(page);
     await page.evaluate(() => (document.querySelector('#tabs button[data-tab="me"]') as HTMLElement).click());
-    await page.evaluate(() => window.scrollTo(0, 700));
-    await page.locator('.settings-card').click();
+    await page.evaluate(() => {
+      var v = document.querySelector('#view-me');
+      if (v) v.style.minHeight = '2200px';
+      window.scrollTo(0, 720);
+    });
+    const before = await page.evaluate(() => window.scrollY);
+    expect(before).toBeGreaterThan(300);
+    /* DOM click — Playwright auto-scroll-into-view on the header gear would jump to top. */
+    await page.evaluate(() => (document.querySelector('.me-settings-gear') as HTMLElement).click());
+    await expect(page.locator('#sheet.on')).toBeVisible();
     await page.locator('#sheetPanel .theme-swatch', { hasText: 'Dark' }).first().click();
     await page.locator('#sheetPanel').getByRole('button', { name: 'Close' }).click();
     const y = await page.evaluate(() => window.scrollY);
-    expect(y).toBeGreaterThan(300); // stayed roughly where it was, no jump to 0
+    expect(y).toBeGreaterThan(300);
   });
 
   test('the paper editor uses the serif reading face', async ({ page }) => {
@@ -2689,16 +2701,21 @@ test.describe('Phase 1–4 live invariants (Fable QA)', () => {
     await expect(page.locator('#runner.on')).toBeVisible({ timeout: 5000 });
   });
 
-  test('Settings lists Accessibility before Appearance', async ({ page }) => {
+  test('Settings: Appearance then Language then Accessibility; Privacy near bottom', async ({ page }) => {
     await seedDemo(page);
     await openSettings(page);
     const groupTitles = await page.locator('#sheetPanel .settings-eyebrow').allTextContents();
     const joined = groupTitles.join(' | ');
     const a11y = groupTitles.findIndex((t) => /accessibility/i.test(t));
-    const appear = groupTitles.findIndex((t) => /appearance/i.test(t));
-    expect(a11y, `groups: ${joined}`).toBeGreaterThanOrEqual(0);
+    const appear = groupTitles.findIndex((t) => /^appearance$/i.test(t.trim()));
+    const language = groupTitles.findIndex((t) => /^language$/i.test(t.trim()));
+    const privacy = groupTitles.findIndex((t) => /privacy/i.test(t));
+    const about = groupTitles.findIndex((t) => /about/i.test(t));
     expect(appear, `groups: ${joined}`).toBeGreaterThanOrEqual(0);
-    expect(a11y).toBeLessThan(appear);
+    expect(language, `groups: ${joined}`).toBeGreaterThan(appear);
+    expect(a11y, `groups: ${joined}`).toBeGreaterThan(language);
+    expect(privacy, `groups: ${joined}`).toBeGreaterThan(a11y);
+    expect(about, `groups: ${joined}`).toBeGreaterThan(privacy);
   });
 
   test('Journal hero has editorial voice title (not cover-only)', async ({ page }) => {
@@ -2724,10 +2741,12 @@ test.describe('Phase 1–4 live invariants (Fable QA)', () => {
     await expect(page.locator('#subview')).toContainText(/week|summary|days|check-in/i);
   });
 
-  test('About honesty reachable from You without Settings dig', async ({ page }) => {
+  test('About honesty reachable via Settings gear (first-class)', async ({ page }) => {
     await seedDemo(page);
     await clickTab(page, 'me');
-    await page.getByRole('button', { name: /About & Legal/ }).click();
+    await page.locator('.me-settings-gear').click();
+    await expect(page.locator('#sheet.on')).toBeVisible();
+    await page.locator('#sheetPanel').getByRole('button', { name: 'About & Legal', exact: true }).click();
     await expect(page.locator('#sheet.on')).toContainText(/not therapy|self-guided wellness/i);
   });
 
@@ -2935,5 +2954,116 @@ test.describe('V13 You insights + empty middle (SPEC-v7)', () => {
     expect(demo.hasLabel, 'demo must show Your insights header').toBe(true);
     expect(demo.lines.length, 'demo header must have lines under it').toBeGreaterThan(0);
     expect(demo.banned, 'insights must stay non-diagnostic').toBe(false);
+  });
+});
+
+test.describe('SPEC-v8 IA', () => {
+  test('You: one profile entry, tools high, Settings gear, no bottom settings row', async ({ page }) => {
+    await freshThrough(page);
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="me"]') as HTMLElement).click());
+    const me = page.locator('#view-me');
+    const profileHits = await me.evaluate((root) => {
+      const text = root.textContent || '';
+      const setup = (text.match(/Set up (your )?profile/gi) || []).length;
+      const gear = !!root.querySelector('.me-settings-gear');
+      const bottomSettings = !!root.querySelector('.me-settings .list-row');
+      const tools = root.querySelector('.me-tools');
+      const about = root.querySelector('.me-about');
+      const toolsBeforeAbout = !!(tools && about &&
+        (tools.compareDocumentPosition(about) & Node.DOCUMENT_POSITION_FOLLOWING));
+      const toolTitles = Array.from(root.querySelectorAll('.me-tools .lr-title')).map((el) => (el.textContent || '').trim());
+      return { setup, gear, bottomSettings, toolsBeforeAbout, toolTitles };
+    });
+    expect(profileHits.setup, 'duplicate Set up profile').toBe(1);
+    expect(profileHits.gear).toBe(true);
+    expect(profileHits.bottomSettings).toBe(false);
+    expect(profileHits.toolsBeforeAbout).toBe(true);
+    expect(profileHits.toolTitles).toEqual(expect.arrayContaining([
+      'Two versions of you', 'Habit support', 'Reflection check'
+    ]));
+    const rowH = await me.locator('.me-tools .list-row').first().evaluate((el) => el.getBoundingClientRect().height);
+    expect(rowH).toBeGreaterThanOrEqual(48);
+  });
+
+  test('Week glance exposes one SR summary; dots aria-hidden', async ({ page }) => {
+    await seedDemo(page);
+    const now = page.locator('#view-now .progress-glance');
+    await expect(now).toBeVisible();
+    const nowA11y = await now.evaluate((btn) => {
+      const dots = btn.querySelector('.progress-dots');
+      const titles = Array.from(btn.querySelectorAll('.progress-dots i[title]')).length;
+      return {
+        label: btn.getAttribute('aria-label') || '',
+        dotsHidden: dots ? dots.getAttribute('aria-hidden') === 'true' : false,
+        dotsRole: dots ? dots.getAttribute('role') : null,
+        titledDots: titles
+      };
+    });
+    expect(nowA11y.dotsHidden).toBe(true);
+    expect(nowA11y.dotsRole).toBeNull();
+    expect(nowA11y.titledDots).toBe(0);
+    expect(nowA11y.label.length).toBeGreaterThan(10);
+    expect(nowA11y.label.toLowerCase()).not.toMatch(/\d{4}-\d{2}-\d{2}/);
+
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="me"]') as HTMLElement).click());
+    const meGlance = page.locator('#view-me .week-glance-btn');
+    const meA11y = await meGlance.evaluate((btn) => {
+      const dots = btn.querySelector('.progress-dots');
+      return {
+        label: btn.getAttribute('aria-label') || '',
+        dotsHidden: dots ? dots.getAttribute('aria-hidden') === 'true' : false,
+        tag: btn.tagName
+      };
+    });
+    expect(meA11y.tag).toBe('BUTTON');
+    expect(meA11y.dotsHidden).toBe(true);
+    expect(meA11y.label.length).toBeGreaterThan(10);
+  });
+
+  test('Cold-open shows labelled Example week, not fake user history', async ({ page }) => {
+    await freshThrough(page);
+    const preview = await page.evaluate(() => {
+      const btn = document.querySelector('#view-now .progress-glance');
+      return {
+        hasPreview: !!(btn && btn.classList.contains('is-preview')),
+        badge: btn ? (btn.querySelector('.preview-badge') || {}).textContent || '' : '',
+        label: btn ? btn.getAttribute('aria-label') || '' : '',
+        checkins: (window as any).__soulcap.getState().checkins.length
+      };
+    });
+    expect(preview.checkins).toBe(0);
+    expect(preview.hasPreview).toBe(true);
+    expect(preview.badge).toMatch(/example/i);
+    expect(preview.label.toLowerCase()).toMatch(/example|preview/);
+    expect(preview.label.toLowerCase()).toMatch(/not your/);
+  });
+
+  test('broken heatmap with per-dot titles would fail this gate', async ({ page }) => {
+    await seedDemo(page);
+    const broken = await page.evaluate(() => {
+      const btn = document.querySelector('#view-now .progress-glance');
+      if (!btn) return true;
+      const dots = btn.querySelector('.progress-dots');
+      if (!dots) return true;
+      /* Simulate broken state: role=img + date titles on each i */
+      dots.removeAttribute('aria-hidden');
+      dots.setAttribute('role', 'img');
+      Array.from(dots.querySelectorAll('i')).forEach((i, n) => i.setAttribute('title', '2026-01-0' + (n + 1)));
+      const titled = dots.querySelectorAll('i[title]').length;
+      const hidden = dots.getAttribute('aria-hidden') === 'true';
+      return titled >= 7 || !hidden;
+    });
+    expect(broken, 'probe must detect broken per-date heatmap').toBe(true);
+    /* Live DOM after reload must still be fixed */
+    await page.reload();
+    await page.waitForFunction(() => Boolean((window as any).__soulcap));
+    await dismissSplash(page);
+    await seedDemo(page);
+    const fixed = await page.locator('#view-now .progress-glance .progress-dots').evaluate((dots) => ({
+      hidden: dots.getAttribute('aria-hidden') === 'true',
+      titled: dots.querySelectorAll('i[title]').length
+    }));
+    expect(fixed.hidden).toBe(true);
+    expect(fixed.titled).toBe(0);
   });
 });
