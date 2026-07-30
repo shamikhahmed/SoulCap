@@ -3106,9 +3106,20 @@ test.describe('SPEC-v8 IA', () => {
         must.forEach((sel) => {
           const el = (root.querySelector(sel) || document.querySelector(sel)) as HTMLElement | null;
           if (!el) { bad.push(sel + ':missing'); return; }
+          el.scrollIntoView({ block: 'nearest' });
           const r = el.getBoundingClientRect();
           if (r.width < 8 || r.height < 8) bad.push(sel + ':zero');
-          if (r.bottom > window.innerHeight + 4 && r.top > window.innerHeight) bad.push(sel + ':offscreen');
+          /* Clipped by ancestor overflow:hidden (not merely below fold). */
+          let p: HTMLElement | null = el;
+          while (p && p !== document.body) {
+            const st = getComputedStyle(p);
+            if ((st.overflow === 'hidden' || st.overflowY === 'hidden') && p.scrollHeight > p.clientHeight + 4) {
+              const pr = p.getBoundingClientRect();
+              if (r.bottom > pr.bottom + 2 || r.top < pr.top - 2) bad.push(sel + ':clipped-by-' + (p.id || p.className || 'ancestor'));
+              break;
+            }
+            p = p.parentElement;
+          }
         });
         if (root.scrollWidth > root.clientWidth + 4) bad.push('h-overflow');
         return { ok: bad.length === 0, bad };
