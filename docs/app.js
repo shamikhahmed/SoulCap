@@ -3484,6 +3484,11 @@
     if (!state.onboarded || !state.notices) return false;
     return state.notices.seenVersion !== APP_VERSION;
   }
+  function whatsNewBody() {
+    var tpl = WHATS_NEW_UI.body || '';
+    if (tpl.indexOf('{version}') !== -1) return tpl.replace('{version}', APP_VERSION);
+    return tpl;
+  }
   function dismissWhatsNew() {
     if (!state.notices) state.notices = clone(DEFAULT.notices);
     state.notices.seenVersion = APP_VERSION;
@@ -4754,7 +4759,7 @@
     if (shouldShowWhatsNew()) {
       v.appendChild(el('div', { class: 'qd-note whats-new' }, [
         el('h2', { class: 'card-title', text: WHATS_NEW_UI.title }),
-        el('p', { class: 'p-sm', text: WHATS_NEW_UI.body }),
+        el('p', { class: 'p-sm', text: whatsNewBody() }),
         el('button', { class: 'btn ghost', text: WHATS_NEW_UI.dismiss, onclick: dismissWhatsNew })
       ]));
     }
@@ -5499,7 +5504,7 @@
       }
     });
   }
-  var APP_VERSION = '7.0.12';
+  var APP_VERSION = '7.0.13';
   function settingsGroup(v, title, kids) {
     v.appendChild(el('p', { class: 'eyebrow settings-eyebrow', text: title }));
     var block = el('div', { class: 'settings-block' });
@@ -5986,7 +5991,7 @@
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
     getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '7.0.12',
+    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: '7.0.13',
     effectiveMotion: effectiveMotion,
     motionCap: function () { return motionCap; },
     loadGsap: loadGsap,

@@ -526,7 +526,7 @@ var ABOUT_UI = {
 
 var WHATS_NEW_UI = {
   title:'What’s new',
-  body:'SoulCap 5.0 — calmer motion: View Transitions, optional gestures, a soft breathing orb, and a Movement setting (Vivid / Balanced / Still). Same private offline tools. Not therapy, not a diagnosis.',
+  body:'SoulCap {version} — calmer motion: View Transitions, optional gestures, a soft breathing orb, and a Movement setting (Vivid / Balanced / Still). Same private offline tools. Not therapy, not a diagnosis.',
   dismiss:'Got it'
 };
 

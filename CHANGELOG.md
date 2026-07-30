@@ -1,5 +1,12 @@
 ## [Unreleased]
 
+## [7.0.13] — 2026-07-30
+
+### Fixed
+- **SPEC-v7 V14:** What's-new body now derives from `APP_VERSION` (`SoulCap {version}` template), so copy cannot drift to stale release numbers.
+- Existing `seenVersion !== APP_VERSION` gate unchanged: card appears once per version, dismiss writes current app version.
+- SW `soulcap-v713`. App **7.0.13**. Schema **v13**.
+
 ## [7.0.12] — 2026-07-29
 
 ### Added

@@ -758,7 +758,13 @@ test.describe('v2.0 IA restructure', () => {
     await page.locator('#sheetPanel').getByRole('button', { name: 'Close' }).click();
     await page.evaluate(() => (window as any).__soulcap.setSeenVersion('1.9.3'));
     await expect(page.locator('#view-now .whats-new')).toContainText(/What.s new/);
+    const appV = await page.evaluate(() => (window as any).__soulcap.version);
+    await expect(page.locator('#view-now .whats-new')).toContainText('SoulCap ' + appV);
     await page.locator('#view-now .whats-new').getByRole('button', { name: 'Got it' }).click();
+    await expect(page.locator('.whats-new')).toHaveCount(0);
+    await page.reload();
+    await page.waitForFunction(() => Boolean((window as any).__soulcap));
+    await dismissSplash(page);
     await expect(page.locator('.whats-new')).toHaveCount(0);
   });
 });
