@@ -1,5 +1,18 @@
 ## [Unreleased]
 
+## [8.0.2] — 2026-07-30
+
+### Added
+- **Full-phase audit pack:** `AUDIT.md` (map + phase/appendix status), `PERF.md` (live budgets),
+  `QA-MATRIX.md` (interactive coverage).
+- Playwright **Phase audit budgets** — critical-path size ceilings + zero external hosts after load;
+  Settings group order lock (Appearance → … → About & Legal).
+
+### Changed
+- Splash background uses `--splash-bg` token (same colour).
+- Hardened splash dismiss + breath phase sync + persona Calm chip click (suite-load flakes).
+- SW `soulcap-v802`. App **8.0.2**.
+
 ## [8.0.1] — 2026-07-30
 
 ### Added

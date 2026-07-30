@@ -1,8 +1,8 @@
 {
   "name": "SoulCap",
-  "version": "8.0.1",
-  "swCache": "soulcap-v801",
+  "version": "8.0.2",
+  "swCache": "soulcap-v802",
   "schema": 13,
   "released": "2026-07-30",
-  "note": "v8.0.1 SPEC-v8 complete: W5 a11y fail-gates + W6 documented states gallery"
+  "note": "v8.0.2 full-phase audit: AUDIT.md / PERF.md / QA-MATRIX.md + budget e2e + splash token"
 }

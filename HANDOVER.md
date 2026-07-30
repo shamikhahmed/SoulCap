@@ -1,4 +1,4 @@
-**Version:** 8.0.1 · SW `soulcap-v801`
+**Version:** 8.0.2 · SW `soulcap-v802`
 
 # SoulCap — Project Handover
 
@@ -6,10 +6,11 @@
 > first — it is the current truth as of 2026-07-30. The sections further down describe an
 > earlier architecture and are kept for reference only.
 
-## Current state (v8.0.1 — 2026-07-30)
+## Current state (v8.0.2 — 2026-07-30)
 
 **SPEC-v8 IA complete** — W1–W8 including W5 a11y fail-gates + W6 documented state gallery.
-See `IA-RATIONALE.md` + `SPEC-v8-ia-and-gallery.md`.
+See `IA-RATIONALE.md` + `SPEC-v8-ia-and-gallery.md`. **Full-phase audit pack:** `AUDIT.md` ·
+`PERF.md` · `QA-MATRIX.md`.
 
 **Quiet Depth (SPEC-v7)** — V1–V9 + **V12 journal overlay** + **V13 items 1–7** + **V14 What's-new**.
 See `REDESIGN-DIFF.md`.
@@ -23,7 +24,7 @@ appearance axes). Viewer: `screen-gallery.html` (`npm run gallery:view`).
 Live: https://shamikhahmed.github.io/SoulCap/
 
 ### Schema & ship
-- State `DEFAULT.v = 13` · SW `soulcap-v801` · app **8.0.1** · `package.json` **8.0.1**
+- State `DEFAULT.v = 13` · SW `soulcap-v802` · app **8.0.2** · `package.json` **8.0.2**
 - Ship workflow: bump CACHE + VERSION.json + APP_VERSION + package.json; CHANGELOG;
   SAFETY/HANDOVER (+ README/FEATURES when they drift); gallery; `npm run verify`; push `main`.
 

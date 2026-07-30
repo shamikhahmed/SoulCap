@@ -29,6 +29,7 @@
   --layer-3:var(--surface);
   --living:radial-gradient(ellipse 55% 45% at 50% 42%,rgba(109,93,211,.20),transparent 70%);
   --ease-quiet:cubic-bezier(.25,.1,.25,1);
+  --splash-bg:#0A0810;
   color-scheme: light;
 }
 
@@ -336,7 +337,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 
 /* ── Splash — Quiet Depth v7 ───────────────────────────── */
 #splash,.splash-qd{
-  position:fixed;inset:0;z-index:200;background:#0A0810;
+  position:fixed;inset:0;z-index:200;background:var(--splash-bg,#0A0810);
   display:flex;align-items:center;justify-content:center;
   transition:opacity 480ms var(--ease-quiet),visibility 480ms;
   overflow:hidden;

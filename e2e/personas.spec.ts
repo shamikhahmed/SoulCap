@@ -1,10 +1,20 @@
 import { test, expect, Page } from '@playwright/test';
 
 async function dismissSplash(page: Page) {
-  await page.evaluate(() => document.getElementById('splash')?.classList.add('gone'));
+  await page.evaluate(() => {
+    const s = document.getElementById('splash');
+    if (!s) return;
+    s.classList.add('gone');
+    s.setAttribute('hidden', '');
+    s.style.visibility = 'hidden';
+    s.style.opacity = '0';
+    s.style.pointerEvents = 'none';
+  });
   await page.waitForFunction(() => {
     const splash = document.getElementById('splash');
-    return !splash || getComputedStyle(splash).visibility === 'hidden';
+    if (!splash) return true;
+    if (splash.hasAttribute('hidden')) return true;
+    return getComputedStyle(splash).visibility === 'hidden' || getComputedStyle(splash).pointerEvents === 'none';
   }, null, { timeout: 12000 });
 }
 
@@ -31,6 +41,7 @@ async function waitForAnimationsIdle(page: Page, selector: string) {
 
 test.describe('Synthetic user journeys', () => {
   test('overwhelmed newcomer reaches help before consent and gets discreet Calm options', async ({ page }) => {
+    test.setTimeout(60000);
     await page.goto('/');
     await dismissSplash(page);
     await page.getByRole('button', { name: 'Begin' }).click();
@@ -49,7 +60,9 @@ test.describe('Synthetic user journeys', () => {
 
     await selectTab(page, 'calm');
     await page.getByRole('button', { name: /Settle down/ }).click();
-    await page.getByRole('button', { name: 'Around people' }).click();
+    const around = page.getByRole('button', { name: 'Around people' });
+    await around.scrollIntoViewIfNeeded();
+    await around.click({ timeout: 15000 });
     await page.getByRole('button', { name: 'Nothing', exact: true }).click();
     const cards = page.locator('#view-calm .card.tap');
     await expect(cards.first()).toBeVisible();

@@ -13,10 +13,20 @@ async function seedDemo(page: Page) {
 
 /** The splash covers the viewport for ~2s. Tests dismiss it rather than wait. */
 async function dismissSplash(page: Page) {
-  await page.evaluate(() => document.getElementById('splash')?.classList.add('gone'));
+  await page.evaluate(() => {
+    const s = document.getElementById('splash');
+    if (!s) return;
+    s.classList.add('gone');
+    s.setAttribute('hidden', '');
+    s.style.visibility = 'hidden';
+    s.style.opacity = '0';
+    s.style.pointerEvents = 'none';
+  });
   await page.waitForFunction(() => {
     const s = document.getElementById('splash');
-    return !s || getComputedStyle(s).visibility === 'hidden';
+    if (!s) return true;
+    if (s.hasAttribute('hidden')) return true;
+    return getComputedStyle(s).visibility === 'hidden' || getComputedStyle(s).pointerEvents === 'none';
   }, null, { timeout: 12000 });
 }
 

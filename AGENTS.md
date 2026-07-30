@@ -5,8 +5,9 @@ laid out, the exact conventions to write in, and the workflow to ship a change. 
 your changes will look like they were written by the same hand as the rest of the app.
 
 Companion docs: `ROADMAP.md` (what to build next) · **`SPEC-v8-ia-and-gallery.md`** / **`IA-RATIONALE.md`**
-(**IA + documented gallery — shipped 8.0.0+**) · **`SPEC-v7-redesign.md`** / **`REDESIGN-DIFF.md`**
-(**Quiet Depth** visual identity — **shipped through 8.0.0**) · **`SPEC-v6.0-production.md`**
+(**IA + documented gallery — shipped 8.0.0+**) · **`AUDIT.md`** / **`PERF.md`** / **`QA-MATRIX.md`**
+(full-phase audit pack — **8.0.2**) · **`SPEC-v7-redesign.md`** / **`REDESIGN-DIFF.md`**
+(**Quiet Depth** visual identity — **shipped through 8.0.0+**) · **`SPEC-v6.0-production.md`**
 (**shipped** through **6.0.10** / schema v13) · `AUDIT-v6.md` · older specs
 (`SPEC-v5.1-fixes.md`, `SPEC-v5.0-native-motion.md`, `SPEC-v4.0-master-design.md`) are reference ·
 `SPEC-v3.1-screen-layouts.md` (absorbed into v4.0) · **`SPEC-v3.0-redesign.md`** (Amethyst redesign —

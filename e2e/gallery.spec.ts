@@ -166,7 +166,15 @@ function writeManifest(shots: ManifestShot[], viewport: string) {
 }
 
 async function dismissSplash(page: Page) {
-  await page.evaluate(() => document.getElementById('splash')?.classList.add('gone'));
+  await page.evaluate(() => {
+    const s = document.getElementById('splash');
+    if (!s) return;
+    s.classList.add('gone');
+    s.setAttribute('hidden', '');
+    s.style.visibility = 'hidden';
+    s.style.opacity = '0';
+    s.style.pointerEvents = 'none';
+  });
   await page.waitForTimeout(200);
 }
 

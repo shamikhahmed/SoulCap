@@ -1,6 +1,6 @@
 # SoulCap — Information Architecture rationale
 
-**Version:** 8.0.1 · **Spec:** `SPEC-v8-ia-and-gallery.md`  
+**Version:** 8.0.2 · **Spec:** `SPEC-v8-ia-and-gallery.md`  
 **Standard:** Apple Settings / Linear / Notion — most-changed near top, destructive & legal at bottom; one idea per screen.
 
 This document explains **why** surfaces are grouped the way they are. The gallery captions link here.
