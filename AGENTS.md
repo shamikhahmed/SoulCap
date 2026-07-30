@@ -4,13 +4,14 @@ Read this first. It tells you what SoulCap is, the rules you must never break, h
 laid out, the exact conventions to write in, and the workflow to ship a change. If you follow it,
 your changes will look like they were written by the same hand as the rest of the app.
 
-Companion docs: `ROADMAP.md` (what to build next) · **`SPEC-v7-redesign.md`** / **`REDESIGN-DIFF.md`**
+Companion docs: `ROADMAP.md` (what to build next) · **`SPEC-v8-ia-and-gallery.md`** / **`IA-RATIONALE.md`**
+(**IA + documented gallery — shipped 8.0.0+**) · **`SPEC-v7-redesign.md`** / **`REDESIGN-DIFF.md`**
 (**Quiet Depth** visual identity — **shipped through 8.0.0**) · **`SPEC-v6.0-production.md`**
 (**shipped** through **6.0.10** / schema v13) · `AUDIT-v6.md` · older specs
 (`SPEC-v5.1-fixes.md`, `SPEC-v5.0-native-motion.md`, `SPEC-v4.0-master-design.md`) are reference ·
 `SPEC-v3.1-screen-layouts.md` (absorbed into v4.0) · **`SPEC-v3.0-redesign.md`** (Amethyst redesign —
-**shipped through 3.0.1**; keep as design reference) · `SPEC-v2.3-regulation-depth.md` (next build
-wave) · `SPEC-v2.2-approach-packs.md` (packs shipped in 3.0.1; lens/wizard still later) ·
+**shipped through 3.0.1**; keep as design reference) · `SPEC-v2.3-regulation-depth.md` (later depth) ·
+`SPEC-v2.2-approach-packs.md` (packs shipped in 3.0.1; lens/wizard still later) ·
 `SPEC-v2.1-guided-path.md` / `SPEC-v2.0-premium-polish.md` /
 `SPEC-v1.9-clinical-library.md` (shipped, reference) ·
 `ARCHITECTURE.md` · `DATA_MODEL.md` · `PRIVACY.md` · `ACCESSIBILITY.md` · `EVALUATION.md` ·

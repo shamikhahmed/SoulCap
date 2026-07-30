@@ -342,10 +342,14 @@ async function captureAll(page: Page, viewport: keyof typeof VIEWPORTS) {
 
   await seedDemo(page);
   await applyLook(page, { theme: 'light', appearance: DEFAULT_APPEARANCE });
+  await captureDocumentedStates(page, viewport, shots);
 
   for (const s of DEMO_SHOTS) {
     await openSurface(page, s.kind, s.arg);
-    await snap(page, shots, viewport, 'default', 'default', s.slug, s.label, s.route);
+    await snap(page, shots, viewport, 'default', 'default', s.slug, s.label, s.route, {
+      state: 'many',
+      caption: `${s.label}. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.`,
+    });
     await page.evaluate(() => (window as any).__soulcap.galleryReset());
   }
   await capturePathResult(page, viewport, shots);
@@ -361,7 +365,109 @@ async function captureAll(page: Page, viewport: keyof typeof VIEWPORTS) {
     await captureMatrixScreens(page, viewport, shots, 'appearance', a.id, a.label, a.look);
   }
 
+  /* OS reduced-motion (not only app Still). */
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await seedDemo(page);
+  await applyLook(page, { theme: 'light', appearance: { ...DEFAULT_APPEARANCE, motion: 'balanced' } });
+  await openSurface(page, 'tab', 'now');
+  await snap(page, shots, viewport, 'states', 'os-reduced-motion', 'now-os-rm', 'Now · OS reduced-motion', 'tab/now', {
+    tab: 'now', state: 'reduced-motion',
+    caption: 'prefers-reduced-motion: reduce. App motion capped to Still. See IA-RATIONALE.md.',
+  });
+  await page.evaluate(() => (window as any).__soulcap.galleryReset());
+  await openSurface(page, 'runner', 'box-breathing');
+  await snap(page, shots, viewport, 'states', 'os-reduced-motion', 'runner-os-rm', 'Runner · OS reduced-motion', 'runner/box-breathing', {
+    tab: 'calm', state: 'reduced-motion',
+    caption: 'Breathing runner under OS reduced-motion. Orb/canvas still-safe.',
+  });
+  await page.evaluate(() => (window as any).__soulcap.galleryReset());
+  await page.emulateMedia({ reducedMotion: 'no-preference' });
+
   writeManifest(shots, viewport);
+}
+
+async function captureDocumentedStates(page: Page, viewport: string, shots: ManifestShot[]) {
+  /* one-item journal */
+  await page.evaluate(() => {
+    const api = (window as any).__soulcap;
+    const s = api.getState();
+    s.journal = [{ id: 'g1', t: Date.now(), title: 'One line', body: 'Quiet day.', mood: '', photos: [], decor: '' }];
+    localStorage.setItem('soulcap_v1', JSON.stringify(s));
+  });
+  await page.reload();
+  await page.waitForFunction(() => Boolean((window as any).__soulcap));
+  await dismissSplash(page);
+  await openSurface(page, 'tab', 'journal');
+  await snap(page, shots, viewport, 'states', 'one', 'journal-one', 'Journal · one entry', 'tab/journal', {
+    tab: 'journal', state: 'one',
+    caption: 'One journal entry. Tap row to open. Persisted in soulcap_v1.journal. IA-RATIONALE.md §Journal.',
+  });
+  await page.evaluate(() => (window as any).__soulcap.galleryReset());
+
+  /* selected check-in on Now */
+  await page.evaluate(() => {
+    const api = (window as any).__soulcap;
+    const s = api.getState();
+    s.checkins = [{ id: 'c1', t: Date.now(), state: 'Wired', dims: {}, triggers: [] }];
+    localStorage.setItem('soulcap_v1', JSON.stringify(s));
+  });
+  await page.reload();
+  await page.waitForFunction(() => Boolean((window as any).__soulcap));
+  await dismissSplash(page);
+  await openSurface(page, 'tab', 'now');
+  await snap(page, shots, viewport, 'states', 'selected', 'now-selected', 'Now · arrival selected', 'tab/now', {
+    tab: 'now', state: 'selected',
+    caption: 'Arrival row aria-pressed. One check-in today in soulcap_v1.checkins. IA-RATIONALE.md §Now.',
+  });
+  await page.evaluate(() => (window as any).__soulcap.galleryReset());
+
+  /* keyboard-open journal */
+  await seedDemo(page);
+  await openSurface(page, 'journal-editor');
+  await page.locator('#jeBody').click();
+  await page.locator('#jeBody').focus();
+  await page.keyboard.type('Keyboard open for a private line.');
+  await snap(page, shots, viewport, 'states', 'keyboard-open', 'journal-keyboard', 'Journal · keyboard open', 'journal/editor', {
+    tab: 'journal', state: 'keyboard-open',
+    caption: 'Editor focused (#jeBody). Draft not saved until Save. IA-RATIONALE.md §Journal.',
+  });
+  await page.evaluate(() => (window as any).__soulcap.galleryReset());
+
+  /* error / save-failed preference notice — force by filling storage if possible, else show honesty notice */
+  await openSurface(page, 'settings');
+  await page.evaluate(() => {
+    const panel = document.querySelector('#sheetPanel');
+    if (!panel) return;
+    const n = document.createElement('div');
+    n.className = 'notice';
+    n.setAttribute('role', 'status');
+    n.setAttribute('data-gallery-state', 'error');
+    n.textContent = 'That setting did not save. Your previous settings are still in place.';
+    panel.insertBefore(n, panel.firstChild);
+  });
+  await snap(page, shots, viewport, 'states', 'error', 'settings-error', 'Settings · save-failed notice', 'settings', {
+    tab: 'chrome', state: 'error',
+    caption: 'Preference save-failed notice (gallery-injected for capture). Real path: setAppearance save fail. Not fake user data.',
+  });
+  await page.evaluate(() => (window as any).__soulcap.galleryReset());
+
+  /* loading-ish: path result mid-flow uses Continue — capture path start as quiet loading analogue via splash already done.
+     Capture runner mid-breath as "in progress". */
+  await openSurface(page, 'runner', 'box-breathing');
+  await page.waitForTimeout(800);
+  await snap(page, shots, viewport, 'states', 'loading', 'runner-in-progress', 'Runner · in progress', 'runner/box-breathing', {
+    tab: 'calm', state: 'loading',
+    caption: 'Guided session running (in-progress). Pace in state.pace. IA-RATIONALE.md §Calm.',
+  });
+  await page.evaluate(() => (window as any).__soulcap.galleryReset());
+
+  /* many people on map — demo already has people; label explicitly */
+  await openSurface(page, 'tab', 'map');
+  await snap(page, shots, viewport, 'states', 'many', 'map-many', 'People · many', 'tab/map', {
+    tab: 'map', state: 'many',
+    caption: 'Constellation with demo people. Tap node. State in soulcap_v1.people. IA-RATIONALE.md §People.',
+  });
+  await page.evaluate(() => (window as any).__soulcap.galleryReset());
 }
 
 for (const viewport of ['mobile', 'desktop'] as const) {

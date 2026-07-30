@@ -1,7 +1,7 @@
 {
   "app": "SoulCap",
-  "version": "8.0.0",
-  "generated": "2026-07-30T10:15:47.859Z",
+  "version": "8.0.1",
+  "generated": "2026-07-30T11:46:37.108Z",
   "shots": [
     {
       "file": "desktop__accent-lilac__calm.png",
@@ -395,8 +395,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "chrome",
-      "state": "default",
-      "caption": "About SoulCap. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "About SoulCap. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -407,8 +407,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "map",
-      "state": "default",
-      "caption": "Add someone. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Add someone. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -419,8 +419,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "calm",
-      "state": "default",
-      "caption": "Article · Alarm system. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Article · Alarm system. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -431,8 +431,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "calm",
-      "state": "default",
-      "caption": "Article · Wind-down. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Article · Wind-down. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -443,8 +443,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "calm",
-      "state": "default",
-      "caption": "Calm. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Calm. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -455,8 +455,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "now",
-      "state": "default",
-      "caption": "Check-in detail. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Check-in detail. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -467,8 +467,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "calm",
-      "state": "default",
-      "caption": "Daily supports. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Daily supports. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -479,8 +479,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "now",
-      "state": "default",
-      "caption": "Gentle questions. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Gentle questions. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -491,8 +491,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "calm",
-      "state": "default",
-      "caption": "Experience picker. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Experience picker. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -503,8 +503,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "calm",
-      "state": "default",
-      "caption": "Experience detail. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Experience detail. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -527,8 +527,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "path",
-      "state": "default",
-      "caption": "Guided Path · start. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Guided Path · start. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -539,8 +539,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "chrome",
-      "state": "default",
-      "caption": "Help now. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Help now. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -551,8 +551,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "journal",
-      "state": "default",
-      "caption": "Journal cover. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Journal cover. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -563,8 +563,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "journal",
-      "state": "default",
-      "caption": "Journal editor. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Journal editor. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -575,8 +575,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "journal",
-      "state": "default",
-      "caption": "New journal entry. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "New journal entry. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -587,8 +587,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "journal",
-      "state": "default",
-      "caption": "Journal. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Journal. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -599,8 +599,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "me",
-      "state": "default",
-      "caption": "What SoulCap knows. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "What SoulCap knows. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -611,8 +611,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "calm",
-      "state": "default",
-      "caption": "Library · Articles. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Library · Articles. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -623,8 +623,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "calm",
-      "state": "default",
-      "caption": "Library · Experiences. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Library · Experiences. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -635,8 +635,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "calm",
-      "state": "default",
-      "caption": "Emotional library. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Emotional library. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -647,8 +647,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "me",
-      "state": "default",
-      "caption": "Personal Manual. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Personal Manual. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -659,8 +659,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "map",
-      "state": "default",
-      "caption": "Constellation. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Constellation. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -671,8 +671,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "me",
-      "state": "default",
-      "caption": "You. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "You. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -683,8 +683,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "now",
-      "state": "default",
-      "caption": "Now. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Now. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -755,8 +755,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "other",
-      "state": "default",
-      "caption": "Thought parking. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Thought parking. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -767,8 +767,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "me",
-      "state": "default",
-      "caption": "Patterns. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Patterns. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -779,8 +779,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "map",
-      "state": "default",
-      "caption": "Person detail. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Person detail. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -791,8 +791,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "me",
-      "state": "default",
-      "caption": "Principles. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Principles. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -803,8 +803,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "me",
-      "state": "default",
-      "caption": "Profile. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Profile. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -815,8 +815,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "other",
-      "state": "default",
-      "caption": "Reset menu. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Reset menu. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -827,8 +827,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "calm",
-      "state": "default",
-      "caption": "Runner · Breathing. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Runner · Breathing. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -839,8 +839,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "calm",
-      "state": "default",
-      "caption": "Runner · Steps. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Runner · Steps. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -851,8 +851,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "me",
-      "state": "default",
-      "caption": "My plan. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "My plan. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -863,8 +863,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "me",
-      "state": "default",
-      "caption": "Reflection screeners. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Reflection screeners. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -875,8 +875,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "me",
-      "state": "default",
-      "caption": "Screener · in progress. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Screener · in progress. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -887,8 +887,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "chrome",
-      "state": "default",
-      "caption": "Settings. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Settings. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -899,8 +899,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "calm",
-      "state": "default",
-      "caption": "Technique · Box breathing. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Technique · Box breathing. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -911,8 +911,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "calm",
-      "state": "default",
-      "caption": "Technique · Thought record. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Technique · Thought record. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -935,8 +935,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "me",
-      "state": "default",
-      "caption": "Timeline. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Timeline. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -959,8 +959,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "me",
-      "state": "default",
-      "caption": "Weekly overview. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Weekly overview. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -983,8 +983,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "now",
-      "state": "default",
-      "caption": "What's new. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "What's new. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -995,8 +995,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "me",
-      "state": "default",
-      "caption": "Your story. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Your story. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -1129,6 +1129,54 @@
       "tab": "chrome",
       "state": "default",
       "caption": "Settings order: Appearance · Language · Accessibility · Personalisation · Privacy · About. Search at top.",
+      "rationale": "IA-RATIONALE.md"
+    },
+    {
+      "file": "desktop__error__settings-error.png",
+      "label": "Settings · save-failed notice",
+      "route": "settings",
+      "viewport": "desktop",
+      "pack": "states",
+      "variant": "error",
+      "tab": "chrome",
+      "state": "error",
+      "caption": "Preference save-failed notice (gallery-injected for capture). Real path: setAppearance save fail. Not fake user data.",
+      "rationale": "IA-RATIONALE.md"
+    },
+    {
+      "file": "desktop__keyboard-open__journal-keyboard.png",
+      "label": "Journal · keyboard open",
+      "route": "journal/editor",
+      "viewport": "desktop",
+      "pack": "states",
+      "variant": "keyboard-open",
+      "tab": "journal",
+      "state": "keyboard-open",
+      "caption": "Editor focused (#jeBody). Draft not saved until Save. IA-RATIONALE.md §Journal.",
+      "rationale": "IA-RATIONALE.md"
+    },
+    {
+      "file": "desktop__loading__runner-in-progress.png",
+      "label": "Runner · in progress",
+      "route": "runner/box-breathing",
+      "viewport": "desktop",
+      "pack": "states",
+      "variant": "loading",
+      "tab": "calm",
+      "state": "loading",
+      "caption": "Guided session running (in-progress). Pace in state.pace. IA-RATIONALE.md §Calm.",
+      "rationale": "IA-RATIONALE.md"
+    },
+    {
+      "file": "desktop__many__map-many.png",
+      "label": "People · many",
+      "route": "tab/map",
+      "viewport": "desktop",
+      "pack": "states",
+      "variant": "many",
+      "tab": "map",
+      "state": "many",
+      "caption": "Constellation with demo people. Tap node. State in soulcap_v1.people. IA-RATIONALE.md §People.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -1321,6 +1369,54 @@
       "tab": "chrome",
       "state": "default",
       "caption": "Settings · Motion · Vivid. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
+    },
+    {
+      "file": "desktop__one__journal-one.png",
+      "label": "Journal · one entry",
+      "route": "tab/journal",
+      "viewport": "desktop",
+      "pack": "states",
+      "variant": "one",
+      "tab": "journal",
+      "state": "one",
+      "caption": "One journal entry. Tap row to open. Persisted in soulcap_v1.journal. IA-RATIONALE.md §Journal.",
+      "rationale": "IA-RATIONALE.md"
+    },
+    {
+      "file": "desktop__os-reduced-motion__now-os-rm.png",
+      "label": "Now · OS reduced-motion",
+      "route": "tab/now",
+      "viewport": "desktop",
+      "pack": "states",
+      "variant": "os-reduced-motion",
+      "tab": "now",
+      "state": "reduced-motion",
+      "caption": "prefers-reduced-motion: reduce. App motion capped to Still. See IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
+    },
+    {
+      "file": "desktop__os-reduced-motion__runner-os-rm.png",
+      "label": "Runner · OS reduced-motion",
+      "route": "runner/box-breathing",
+      "viewport": "desktop",
+      "pack": "states",
+      "variant": "os-reduced-motion",
+      "tab": "calm",
+      "state": "reduced-motion",
+      "caption": "Breathing runner under OS reduced-motion. Orb/canvas still-safe.",
+      "rationale": "IA-RATIONALE.md"
+    },
+    {
+      "file": "desktop__selected__now-selected.png",
+      "label": "Now · arrival selected",
+      "route": "tab/now",
+      "viewport": "desktop",
+      "pack": "states",
+      "variant": "selected",
+      "tab": "now",
+      "state": "selected",
+      "caption": "Arrival row aria-pressed. One check-in today in soulcap_v1.checkins. IA-RATIONALE.md §Now.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -2579,8 +2675,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "chrome",
-      "state": "default",
-      "caption": "About SoulCap. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "About SoulCap. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -2591,8 +2687,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "map",
-      "state": "default",
-      "caption": "Add someone. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Add someone. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -2603,8 +2699,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "calm",
-      "state": "default",
-      "caption": "Article · Alarm system. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Article · Alarm system. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -2615,8 +2711,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "calm",
-      "state": "default",
-      "caption": "Article · Wind-down. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Article · Wind-down. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -2627,8 +2723,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "calm",
-      "state": "default",
-      "caption": "Calm. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Calm. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -2639,8 +2735,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "now",
-      "state": "default",
-      "caption": "Check-in detail. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Check-in detail. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -2651,8 +2747,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "calm",
-      "state": "default",
-      "caption": "Daily supports. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Daily supports. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -2663,8 +2759,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "now",
-      "state": "default",
-      "caption": "Gentle questions. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Gentle questions. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -2675,8 +2771,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "calm",
-      "state": "default",
-      "caption": "Experience picker. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Experience picker. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -2687,8 +2783,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "calm",
-      "state": "default",
-      "caption": "Experience detail. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Experience detail. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -2711,8 +2807,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "path",
-      "state": "default",
-      "caption": "Guided Path · start. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Guided Path · start. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -2723,8 +2819,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "chrome",
-      "state": "default",
-      "caption": "Help now. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Help now. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -2735,8 +2831,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "journal",
-      "state": "default",
-      "caption": "Journal cover. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Journal cover. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -2747,8 +2843,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "journal",
-      "state": "default",
-      "caption": "Journal editor. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Journal editor. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -2759,8 +2855,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "journal",
-      "state": "default",
-      "caption": "New journal entry. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "New journal entry. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -2771,8 +2867,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "journal",
-      "state": "default",
-      "caption": "Journal. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Journal. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -2783,8 +2879,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "me",
-      "state": "default",
-      "caption": "What SoulCap knows. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "What SoulCap knows. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -2795,8 +2891,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "calm",
-      "state": "default",
-      "caption": "Library · Articles. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Library · Articles. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -2807,8 +2903,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "calm",
-      "state": "default",
-      "caption": "Library · Experiences. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Library · Experiences. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -2819,8 +2915,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "calm",
-      "state": "default",
-      "caption": "Emotional library. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Emotional library. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -2831,8 +2927,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "me",
-      "state": "default",
-      "caption": "Personal Manual. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Personal Manual. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -2843,8 +2939,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "map",
-      "state": "default",
-      "caption": "Constellation. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Constellation. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -2855,8 +2951,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "me",
-      "state": "default",
-      "caption": "You. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "You. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -2867,8 +2963,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "now",
-      "state": "default",
-      "caption": "Now. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Now. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -2939,8 +3035,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "other",
-      "state": "default",
-      "caption": "Thought parking. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Thought parking. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -2951,8 +3047,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "me",
-      "state": "default",
-      "caption": "Patterns. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Patterns. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -2963,8 +3059,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "map",
-      "state": "default",
-      "caption": "Person detail. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Person detail. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -2975,8 +3071,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "me",
-      "state": "default",
-      "caption": "Principles. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Principles. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -2987,8 +3083,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "me",
-      "state": "default",
-      "caption": "Profile. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Profile. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -2999,8 +3095,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "other",
-      "state": "default",
-      "caption": "Reset menu. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Reset menu. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -3011,8 +3107,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "calm",
-      "state": "default",
-      "caption": "Runner · Breathing. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Runner · Breathing. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -3023,8 +3119,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "calm",
-      "state": "default",
-      "caption": "Runner · Steps. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Runner · Steps. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -3035,8 +3131,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "me",
-      "state": "default",
-      "caption": "My plan. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "My plan. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -3047,8 +3143,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "me",
-      "state": "default",
-      "caption": "Reflection screeners. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Reflection screeners. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -3059,8 +3155,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "me",
-      "state": "default",
-      "caption": "Screener · in progress. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Screener · in progress. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -3071,8 +3167,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "chrome",
-      "state": "default",
-      "caption": "Settings. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Settings. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -3083,8 +3179,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "calm",
-      "state": "default",
-      "caption": "Technique · Box breathing. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Technique · Box breathing. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -3095,8 +3191,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "calm",
-      "state": "default",
-      "caption": "Technique · Thought record. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Technique · Thought record. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -3119,8 +3215,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "me",
-      "state": "default",
-      "caption": "Timeline. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Timeline. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -3143,8 +3239,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "me",
-      "state": "default",
-      "caption": "Weekly overview. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Weekly overview. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -3167,8 +3263,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "now",
-      "state": "default",
-      "caption": "What's new. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "What's new. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -3179,8 +3275,8 @@
       "pack": "default",
       "variant": "default",
       "tab": "me",
-      "state": "default",
-      "caption": "Your story. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "state": "many",
+      "caption": "Your story. Demo seed = many-items. Selection via galleryOpen. State in localStorage soulcap_v1. Why: IA-RATIONALE.md.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -3313,6 +3409,54 @@
       "tab": "chrome",
       "state": "default",
       "caption": "Settings order: Appearance · Language · Accessibility · Personalisation · Privacy · About. Search at top.",
+      "rationale": "IA-RATIONALE.md"
+    },
+    {
+      "file": "mobile__error__settings-error.png",
+      "label": "Settings · save-failed notice",
+      "route": "settings",
+      "viewport": "mobile",
+      "pack": "states",
+      "variant": "error",
+      "tab": "chrome",
+      "state": "error",
+      "caption": "Preference save-failed notice (gallery-injected for capture). Real path: setAppearance save fail. Not fake user data.",
+      "rationale": "IA-RATIONALE.md"
+    },
+    {
+      "file": "mobile__keyboard-open__journal-keyboard.png",
+      "label": "Journal · keyboard open",
+      "route": "journal/editor",
+      "viewport": "mobile",
+      "pack": "states",
+      "variant": "keyboard-open",
+      "tab": "journal",
+      "state": "keyboard-open",
+      "caption": "Editor focused (#jeBody). Draft not saved until Save. IA-RATIONALE.md §Journal.",
+      "rationale": "IA-RATIONALE.md"
+    },
+    {
+      "file": "mobile__loading__runner-in-progress.png",
+      "label": "Runner · in progress",
+      "route": "runner/box-breathing",
+      "viewport": "mobile",
+      "pack": "states",
+      "variant": "loading",
+      "tab": "calm",
+      "state": "loading",
+      "caption": "Guided session running (in-progress). Pace in state.pace. IA-RATIONALE.md §Calm.",
+      "rationale": "IA-RATIONALE.md"
+    },
+    {
+      "file": "mobile__many__map-many.png",
+      "label": "People · many",
+      "route": "tab/map",
+      "viewport": "mobile",
+      "pack": "states",
+      "variant": "many",
+      "tab": "map",
+      "state": "many",
+      "caption": "Constellation with demo people. Tap node. State in soulcap_v1.people. IA-RATIONALE.md §People.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -3505,6 +3649,54 @@
       "tab": "chrome",
       "state": "default",
       "caption": "Settings · Motion · Vivid. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
+    },
+    {
+      "file": "mobile__one__journal-one.png",
+      "label": "Journal · one entry",
+      "route": "tab/journal",
+      "viewport": "mobile",
+      "pack": "states",
+      "variant": "one",
+      "tab": "journal",
+      "state": "one",
+      "caption": "One journal entry. Tap row to open. Persisted in soulcap_v1.journal. IA-RATIONALE.md §Journal.",
+      "rationale": "IA-RATIONALE.md"
+    },
+    {
+      "file": "mobile__os-reduced-motion__now-os-rm.png",
+      "label": "Now · OS reduced-motion",
+      "route": "tab/now",
+      "viewport": "mobile",
+      "pack": "states",
+      "variant": "os-reduced-motion",
+      "tab": "now",
+      "state": "reduced-motion",
+      "caption": "prefers-reduced-motion: reduce. App motion capped to Still. See IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
+    },
+    {
+      "file": "mobile__os-reduced-motion__runner-os-rm.png",
+      "label": "Runner · OS reduced-motion",
+      "route": "runner/box-breathing",
+      "viewport": "mobile",
+      "pack": "states",
+      "variant": "os-reduced-motion",
+      "tab": "calm",
+      "state": "reduced-motion",
+      "caption": "Breathing runner under OS reduced-motion. Orb/canvas still-safe.",
+      "rationale": "IA-RATIONALE.md"
+    },
+    {
+      "file": "mobile__selected__now-selected.png",
+      "label": "Now · arrival selected",
+      "route": "tab/now",
+      "viewport": "mobile",
+      "pack": "states",
+      "variant": "selected",
+      "tab": "now",
+      "state": "selected",
+      "caption": "Arrival row aria-pressed. One check-in today in soulcap_v1.checkins. IA-RATIONALE.md §Now.",
       "rationale": "IA-RATIONALE.md"
     },
     {

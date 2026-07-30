@@ -1,6 +1,6 @@
 # SoulCap Architecture
 
-**Version:** 8.0.0 · **Product boundary:** `docs/` · **SW:** `soulcap-v800` · **Schema:** v13
+**Version:** 8.0.1 · **Product boundary:** `docs/` · **SW:** `soulcap-v801` · **Schema:** v13
 
 ## System shape
 

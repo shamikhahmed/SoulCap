@@ -1,8 +1,8 @@
 {
   "name": "SoulCap",
-  "version": "8.0.0",
-  "swCache": "soulcap-v800",
+  "version": "8.0.1",
+  "swCache": "soulcap-v801",
   "schema": 13,
   "released": "2026-07-30",
-  "note": "v8.0.0 SPEC-v8 IA: You/Settings regroup, Example cold-open, heatmap SR, documented gallery"
+  "note": "v8.0.1 SPEC-v8 complete: W5 a11y fail-gates + W6 documented states gallery"
 }

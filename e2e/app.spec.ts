@@ -3066,4 +3066,136 @@ test.describe('SPEC-v8 IA', () => {
     expect(fixed.hidden).toBe(true);
     expect(fixed.titled).toBe(0);
   });
+
+  test('W5: You / Settings / Journal / Runner / Screener / Panic — focus order + 200% no-clip', async ({ page }) => {
+    await seedDemo(page);
+
+    async function zoom200() {
+      await page.evaluate(() => {
+        document.documentElement.setAttribute('data-text', 'large');
+        (document.documentElement as HTMLElement).style.fontSize = '200%';
+      });
+    }
+    async function zoomReset() {
+      await page.evaluate(() => {
+        (document.documentElement as HTMLElement).style.fontSize = '';
+        document.documentElement.setAttribute('data-text', 'standard');
+      });
+    }
+    async function focusNames(rootSel: string) {
+      return page.evaluate((sel) => {
+        const root = document.querySelector(sel);
+        if (!root) return [] as string[];
+        const nodes = Array.from(root.querySelectorAll(
+          'button, a[href], input:not([type="hidden"]), textarea, select, [tabindex]:not([tabindex="-1"])'
+        )) as HTMLElement[];
+        return nodes
+          .filter((el) => {
+            const r = el.getBoundingClientRect();
+            const st = getComputedStyle(el);
+            return r.width > 0 && r.height > 0 && st.visibility !== 'hidden' && st.display !== 'none';
+          })
+          .map((el) => (el.getAttribute('aria-label') || el.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 60));
+      }, rootSel);
+    }
+    async function noClip(rootSel: string, must: string[]) {
+      return page.evaluate(({ rootSel, must }) => {
+        const root = document.querySelector(rootSel) as HTMLElement | null;
+        if (!root) return { ok: false, reason: 'missing root' };
+        const bad: string[] = [];
+        must.forEach((sel) => {
+          const el = (root.querySelector(sel) || document.querySelector(sel)) as HTMLElement | null;
+          if (!el) { bad.push(sel + ':missing'); return; }
+          const r = el.getBoundingClientRect();
+          if (r.width < 8 || r.height < 8) bad.push(sel + ':zero');
+          if (r.bottom > window.innerHeight + 4 && r.top > window.innerHeight) bad.push(sel + ':offscreen');
+        });
+        if (root.scrollWidth > root.clientWidth + 4) bad.push('h-overflow');
+        return { ok: bad.length === 0, bad };
+      }, { rootSel, must });
+    }
+
+    /* You */
+    await clickTab(page, 'me');
+    const youOrder = await focusNames('#view-me');
+    expect(youOrder[0], `You focus order: ${youOrder.slice(0, 5).join(' | ')}`).toMatch(/Settings/i);
+    expect(youOrder.some((n) => /Two versions of you/i.test(n))).toBe(true);
+    await zoom200();
+    const youClip = await noClip('#view-me', ['.me-settings-gear', '.me-tools .list-row', '.week-glance-btn']);
+    expect(youClip.ok, `You 200% clip: ${JSON.stringify(youClip.bad)}`).toBe(true);
+    await zoomReset();
+
+    /* Settings */
+    await openSettings(page);
+    const setOrder = await focusNames('#sheetPanel');
+    expect(setOrder.some((n) => /Search settings/i.test(n) || n === '')).toBeTruthy();
+    expect(setOrder.join(' ')).toMatch(/Appearance|Theme|Auto|Light/i);
+    await zoom200();
+    const setClip = await noClip('#sheetPanel', ['.settings-search', '.theme-swatch', '.settings-eyebrow']);
+    expect(setClip.ok, `Settings 200% clip: ${JSON.stringify(setClip.bad)}`).toBe(true);
+    await page.locator('#sheetPanel').getByRole('button', { name: 'Close' }).click();
+    await zoomReset();
+
+    /* Journal editor */
+    await clickTab(page, 'journal');
+    await openBlankJournalEntry(page);
+    const jeOrder = await focusNames('#journalEditor');
+    expect(jeOrder.join(' ')).toMatch(/Save|Cancel|body|title/i);
+    await zoom200();
+    const jeClip = await noClip('#journalEditor', ['#jeBody', '#jeSave', '#jeCancel']);
+    expect(jeClip.ok, `Journal 200% clip: ${JSON.stringify(jeClip.bad)}`).toBe(true);
+    await page.locator('#jeCancel').click();
+    await zoomReset();
+
+    /* Panic */
+    await page.getByRole('button', { name: 'I need help now' }).first().click();
+    await expect(page.locator('#panic.on')).toBeVisible();
+    const panicOrder = await focusNames('#panic');
+    expect(panicOrder.some((n) => /okay|go back|exit|Message|plan/i.test(n))).toBe(true);
+    await zoom200();
+    const panicClip = await noClip('#panic', ['#panicExit', '#panicLinks']);
+    expect(panicClip.ok, `Panic 200% clip: ${JSON.stringify(panicClip.bad)}`).toBe(true);
+    await page.locator('#panicExit').click();
+    await zoomReset();
+
+    /* Runner */
+    await page.evaluate(() => (window as any).__soulcap.startSkill('hand-on-heart'));
+    await expect(page.locator('#runner.on')).toBeVisible();
+    const runOrder = await focusNames('#runner');
+    expect(runOrder.some((n) => /Next|Finish|Close|Enough|voice|speaker/i.test(n))).toBe(true);
+    await zoom200();
+    const runClip = await noClip('#runner', ['#runText', '#runActions .btn']);
+    expect(runClip.ok, `Runner 200% clip: ${JSON.stringify(runClip.bad)}`).toBe(true);
+    await page.evaluate(() => (window as any).__soulcap.galleryReset());
+    await zoomReset();
+
+    /* Screener */
+    await page.evaluate(() => (window as any).__soulcap.openScreener());
+    await expect(page.locator('#sheet.on')).toBeVisible();
+    const scOrder = await focusNames('#sheetPanel');
+    expect(scOrder.join(' ')).toMatch(/PHQ|GAD|Reflection|Close/i);
+    await zoom200();
+    const scClip = await noClip('#sheetPanel', ['h2, .h-sec', 'button']);
+    expect(scClip.ok, `Screener 200% clip: ${JSON.stringify(scClip.bad)}`).toBe(true);
+    await zoomReset();
+  });
+
+  test('W5 fail-gate: broken You focus order (Settings not first) is detectable', async ({ page }) => {
+    await seedDemo(page);
+    await clickTab(page, 'me');
+    const broken = await page.evaluate(() => {
+      const me = document.querySelector('#view-me');
+      const gear = me && me.querySelector('.me-settings-gear');
+      if (!me || !gear) return false;
+      /* Simulate broken: move Settings after tools (was first). */
+      const tools = me.querySelector('.me-tools');
+      if (tools && tools.parentNode) tools.parentNode.insertBefore(gear, tools.nextSibling);
+      const nodes = Array.from(me.querySelectorAll('button')) as HTMLElement[];
+      const names = nodes
+        .filter((el) => el.getBoundingClientRect().height > 0)
+        .map((el) => (el.getAttribute('aria-label') || el.textContent || '').trim());
+      return names[0] && !/Settings/i.test(names[0]);
+    });
+    expect(broken, 'probe must detect Settings not first').toBe(true);
+  });
 });

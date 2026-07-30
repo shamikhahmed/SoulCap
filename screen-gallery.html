@@ -91,6 +91,7 @@
     <div class="toolbar" id="filters-viewport"></div>
     <div class="toolbar" id="filters-pack"></div>
     <div class="toolbar" id="filters-tab"></div>
+    <div class="toolbar" id="filters-state"></div>
     <div class="toolbar" id="filters-variant"></div>
   </header>
   <main>
@@ -110,6 +111,7 @@
     var viewport = 'all';
     var pack = 'all';
     var tab = 'all';
+    var state = 'all';
     var variant = 'all';
     var query = '';
     var TAB_ORDER = ['now', 'calm', 'journal', 'map', 'me', 'chrome', 'other'];
@@ -148,6 +150,7 @@
         if (pack !== 'all' && (s.pack || 'default') !== pack) return false;
         if (variant !== 'all' && (s.variant || 'default') !== variant) return false;
         if (tab !== 'all' && inferTab(s) !== tab) return false;
+        if (state !== 'all' && (s.state || 'default') !== state) return false;
         if (!q) return true;
         return (s.label + ' ' + s.route + ' ' + s.file + ' ' + (s.caption || '') + ' ' + (s.variant || '') + ' ' + (s.pack || ''))
           .toLowerCase()
@@ -239,6 +242,11 @@
       }));
       btnRow('filters-tab', tabs, tab, function (v) { tab = v; }, function (v) {
         return v === 'all' ? 'All tabs' : (TAB_LABEL[v] || v);
+      });
+
+      var states = ['all'].concat(unique(shots.map(function (s) { return s.state || 'default'; })));
+      btnRow('filters-state', states, state, function (v) { state = v; }, function (v) {
+        return v === 'all' ? 'All states' : v;
       });
 
       var variants = ['all'];

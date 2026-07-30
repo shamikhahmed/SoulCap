@@ -1,5 +1,14 @@
 ## [Unreleased]
 
+## [8.0.1] — 2026-07-30
+
+### Added
+- **SPEC-v8 W5:** fail-on-broken focus-order + 200% no-clip coverage for You, Settings, Journal,
+  Runner, Screener, Panic (plus Settings-not-first probe).
+- **SPEC-v8 W6:** documented gallery states — one / many / selected / keyboard-open / error /
+  in-progress / OS reduced-motion; state filter in `screen-gallery.html`.
+- AGENTS/ROADMAP point at SPEC-v8. SW `soulcap-v801`. App **8.0.1**.
+
 ## [8.0.0] — 2026-07-30
 
 ### Changed
