@@ -6243,7 +6243,7 @@
     state.welcomed = true; state.onboarded = true; state.ageOk = true;
     state.consent = true;
     state.notices.seenVersion = APP_VERSION;
-    state.profile = { name: 'Shamikh', age: '', pronouns: '' };
+    state.profile = { name: 'Alex', age: '', pronouns: '' };
     state.history = { status: 'Single', household: 'with my family', hobbies: 'cricket, cooking, long drives' };
     state.concerns = ['Hard to switch off', 'Low mood'];
     var day = 86400000, now = Date.now();

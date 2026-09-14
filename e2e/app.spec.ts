@@ -98,7 +98,7 @@ test.describe('Smoke', () => {
       ['calm', /What do you need/],
       ['journal', /My Journal|Contents/],
       ['map', /The people around you/],
-      ['me', /Shamikh|Your space/]
+      ['me', /Alex|Your space/]
     ] as const) {
       await page.evaluate((t) => {
         (document.querySelector(`#tabs button[data-tab="${t}"]`) as HTMLElement).click();
