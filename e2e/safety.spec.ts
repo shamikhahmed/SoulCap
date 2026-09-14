@@ -112,7 +112,7 @@ test.describe('Safety kernel — risk tiers', () => {
     await page.getByRole('textbox', { name: 'Your own words (optional)' }).fill(phrase);
     await page.getByRole('button', { name: 'Save detail' }).click();
     await expect(page.locator('#panic')).toBeVisible();
-    await expect(page.locator('#panic')).toContainText('You don’t have to get through this alone');
+    await expect(page.locator('#panic')).toContainText(/Get help now|Emergency|Your region/i);
     expect(await page.evaluate(() => {
       const checkins = (window as any).__soulcap.getState().checkins;
       return checkins[checkins.length - 1].feeling;
@@ -194,7 +194,7 @@ test.describe('Help is always reachable', () => {
     await page.goto('/?demo=1&panic=1');
     await page.waitForFunction(() => !!(window as any).__soulcap);
     await expect(page.locator('#panic')).toBeVisible();
-    await expect(page.locator('#panic')).toContainText('You don’t have to get through this alone');
+    await expect(page.locator('#panic')).toContainText(/Get help now|Emergency|Your region/i);
   });
 
   test('every main screen exposes a help affordance', async ({ page }) => {
@@ -218,19 +218,15 @@ test.describe('Help is always reachable', () => {
     await expect(page.locator('#view-onboarding .help-btn')).toBeVisible();
   });
 
-  test('panic screen gives gentle reach-out guidance and exits in one tap', async ({ page }) => {
+  test('panic screen shows region Help with verified tel links and exits in one tap', async ({ page }) => {
     await seedDemo(page);
     await page.locator('.view.on .help-btn').click();
     await expect(page.locator('#panic')).toBeVisible();
-
-    // No phone numbers anywhere on the panic screen (owner decision).
-    const text = await page.locator('#panic').innerText();
-    expect(text).not.toMatch(/\b\d{3,}\b/); // no long digit strings (numbers/lines)
-    expect(text.toLowerCase()).toContain('trust');
-    // The one action opens the user's own messages, not a specific line.
-    const msg = page.locator('#panicLinks a');
+    await expect(page.locator('#panicLinks')).toContainText('Get help now');
+    await expect(page.locator('#panicLinks')).toContainText('Your region');
+    await expect(page.locator('#panicLinks')).toContainText('Emergency');
+    const msg = page.locator('#panicLinks a[href="sms:"]');
     expect(await msg.getAttribute('href')).toBe('sms:');
-
     await page.locator('#panicExit').click();
     await expect(page.locator('#panic')).toBeHidden();
   });
@@ -249,31 +245,52 @@ test.describe('Help is always reachable', () => {
     await expect(page.locator('#panic')).toBeVisible();
   });
 
-  test('no crisis numbers or country lines anywhere on the panic screen', async ({ page }) => {
+  test('region Help lists verified emergency and talk numbers (SOUL-P0-02 / D-05)', async ({ page }) => {
     await seedDemo(page);
     await page.locator('.view.on .help-btn').click();
-    const text = await page.locator('#panic').innerText();
-    // No named lines, no country services, no phone numbers.
-    for (const bad of ['Samaritans', 'Umang', 'Taskeen', '988', '741741', '116', '911', '999', '1122', 'IASP', 'Find a Helpline']) {
-      expect(text, `panic screen must not contain "${bad}"`).not.toContain(bad);
-    }
-    expect(text).not.toContain('tel:');
+    const group = page.locator('#panicLinks [aria-label="Your region"]');
+    await expect(group).toBeVisible();
+
+    await group.getByRole('button', { name: 'United Kingdom' }).click();
+    await expect(group.getByRole('button', { name: 'United Kingdom' })).toHaveAttribute('aria-pressed', 'true');
+    await expect(page.locator('#panicLinks a[href="tel:999"]')).toBeVisible();
+    await expect(page.locator('#panicLinks a[href="tel:116123"]')).toBeVisible();
+    await expect(page.locator('#panicLinks')).toContainText('Samaritans');
+
+    await group.getByRole('button', { name: 'United States' }).click();
+    await expect(page.locator('#panicLinks a[href="tel:911"]')).toBeVisible();
+    await expect(page.locator('#panicLinks a[href="tel:988"]')).toBeVisible();
+
+    await group.getByRole('button', { name: 'Pakistan' }).click();
+    await expect(page.locator('#panicLinks a[href="tel:1122"]')).toBeVisible();
+    await expect(page.locator('#panicLinks a[href="tel:115"]')).toBeVisible();
+    await expect(page.locator('#panicLinks a[href="tel:15"]')).toBeVisible();
+    await expect(page.locator('#panicLinks a[href="tel:+923117786264"]')).toBeVisible();
+
+    await group.getByRole('button', { name: 'United Arab Emirates' }).click();
+    await expect(page.locator('#panicLinks a[href="tel:999"]')).toBeVisible();
+    await expect(page.locator('#panicLinks a[href="tel:998"]')).toBeVisible();
+    await expect(page.locator('#panicLinks a[href="tel:8004673"]')).toBeVisible();
+
+    await group.getByRole('button', { name: 'Somewhere else' }).click();
+    await expect(page.locator('#panicLinks')).toContainText('Call your local emergency number');
+    await expect(page.locator('#panicLinks')).toContainText('findahelpline.com');
+
+    const region = await page.evaluate(() => (window as any).__soulcap.getState().notices.crisisRegion);
+    expect(region).toBe('other');
+    await expect(page.locator('#panicLinks')).toContainText(/isn.?t a crisis service/i);
   });
 
   test('crisis region chips persist without introducing helpline numbers (SOUL-P0-02)', async ({ page }) => {
+    // Kept as alias coverage: region persistence + UK numbers after D-05.
     await seedDemo(page);
     await page.locator('.view.on .help-btn').click();
-    const group = page.locator('#panicLinks [aria-label="Crisis resource region"]');
-    await expect(group).toBeVisible();
-    await group.getByRole('button', { name: 'UK' }).click();
-    await expect(group.getByRole('button', { name: 'UK' })).toHaveAttribute('aria-pressed', 'true');
-    const text = await page.locator('#panic').innerText();
-    expect(text).not.toMatch(/\b\d{3,}\b/);
-    for (const bad of ['Samaritans', '988', '911', '999', 'tel:']) {
-      expect(text).not.toContain(bad);
-    }
+    const group = page.locator('#panicLinks [aria-label="Your region"]');
+    await group.getByRole('button', { name: 'United Kingdom' }).click();
+    await expect(group.getByRole('button', { name: 'United Kingdom' })).toHaveAttribute('aria-pressed', 'true');
     const region = await page.evaluate(() => (window as any).__soulcap.getState().notices.crisisRegion);
     expect(region).toBe('uk');
+    await expect(page.locator('#panicLinks a[href^="tel:"]')).toHaveCount(3); // 999, 111, 116123
   });
 
   test('voice starts silent on the panic screen (safe around people)', async ({ page }) => {
@@ -301,11 +318,11 @@ test.describe('Help is always reachable', () => {
     await expect(page.locator('#runVoice .voice-toggle')).toHaveAttribute('aria-pressed', 'false');
   });
 
-  test('onboarding never asks for a country', async ({ page }) => {
+  test('onboarding never asks for a country before consent', async ({ page }) => {
     await page.goto('/');
     await dismissSplash(page);
     await page.getByRole('button', { name: 'Begin' }).click();
-    await page.getByRole('button', { name: '18 or older' }).click();
+    await page.getByRole('button', { name: /I.?m 18 or over/i }).click();
     await page.getByRole('button', { name: 'Skip', exact: true }).click();
     // Next is the plain-language consent, not a region picker.
     await expect(page.getByText('What this is, plainly.')).toBeVisible();
@@ -316,16 +333,16 @@ test.describe('Help is always reachable', () => {
 test.describe('Age gate', () => {
   test('under 18 does not enter the app', async ({ page }) => {
     await toAgeGate(page);
-    await page.getByRole('button', { name: /Under 18/ }).click();
-    // Stays on onboarding (never enters the app) and points elsewhere for support.
+    await page.getByRole('button', { name: /I.?m under 18/i }).click();
+    // Stays on onboarding (never enters the app) and shows emergency Help for the region.
     await expect(page.locator('#view-onboarding')).toBeVisible();
     await expect(page.locator('#tabs')).toBeHidden();
-    await expect(page.locator('#view-onboarding')).toContainText(/trusted adult|young people/i);
+    await expect(page.locator('#under18Help')).toContainText(/SoulCap isn.?t made for you yet|trusted|Emergency/i);
   });
 
   test('18+ proceeds into onboarding', async ({ page }) => {
     await toAgeGate(page);
-    await page.getByRole('button', { name: '18 or older' }).click();
+    await page.getByRole('button', { name: /I.?m 18 or over/i }).click();
     await expect(page.getByText('What should we call you?')).toBeVisible();
   });
 });

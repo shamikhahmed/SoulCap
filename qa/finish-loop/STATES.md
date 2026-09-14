@@ -22,4 +22,4 @@ Updated: 2026-09-14
 | slow network | N/A | local | |
 | interrupted operation | ⏳ | mid-onboarding / mid-import | add fixture test |
 
-Help / crisis (SOUL-P0-02): region chips persist; numbers still blocked pending D-05.
+Help / crisis (SOUL-P0-02): region chips persist; verified tel: emergency + talk lines per DECISIONS §4.3; under-18 shows Emergency only.

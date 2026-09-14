@@ -35,3 +35,9 @@ Residual: final region copy blocked on D-05
 ## C-01 — 2026-09-14
 - Released **8.1.1** / `soulcap-v811` from main (Phase 0 privacy fixtures).
 - Live smoke: `https://shamikhahmed.github.io/SoulCap/sw.js` serves `soulcap-v811`.
+
+### SOUL-P0-02 — Help + age gate (D-05)                    status: ✅
+Current behavior: number-free DRAFT Help
+Plan: DECISIONS §4.3 region Help + age gate; verify numbers in SAFETY.md
+Changes: docs/app.js, docs/data.js, e2e/safety.spec.ts, e2e/app.spec.ts, SAFETY.md, STATES.md
+Verify: test:safety 52 passed

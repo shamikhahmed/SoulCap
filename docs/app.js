@@ -946,17 +946,61 @@
   }
   function hushVoice() { try { window.speechSynthesis.cancel(); } catch (e) {} }
 
-  /* ── Reaching out (SOUL-P0-02 structure) ───────────────────────────────────
-   * Region selector is stored for when D-05 supplies approved resources.
-   * Until then every region shows the same number-free guidance (safety tests).
-   * Final helpline lists must come from DECISIONS.md verbatim — never invent. */
+  /* ── Get help now (SOUL-P0-02 / D-05) — DECISIONS.md §4.3 exactly ───────────
+   * Numbers verified from official sources (see SAFETY.md). Omit unverifiable
+   * helplines. tel: only on user tap; bundled for offline; never auto-dial. */
   var CRISIS_REGIONS = [
     { id: 'pk', label: 'Pakistan' },
-    { id: 'uk', label: 'UK' },
-    { id: 'us', label: 'US' },
-    { id: 'uae', label: 'UAE' },
-    { id: 'other', label: 'Other' }
+    { id: 'uk', label: 'United Kingdom' },
+    { id: 'us', label: 'United States' },
+    { id: 'uae', label: 'United Arab Emirates' },
+    { id: 'other', label: 'Somewhere else' }
   ];
+  /** Verified emergency + talk lines per region (tel digits only in `tel`). */
+  var CRISIS_RESOURCES = {
+    pk: {
+      emergency: [
+        { label: 'Call 1122 — Rescue', display: '1122', tel: '1122' },
+        { label: 'Call 115 — Edhi ambulance', display: '115', tel: '115' },
+        { label: 'Call 15 — Police', display: '15', tel: '15' }
+      ],
+      talk: [
+        { label: 'Call Umang — 0311 7786264', display: '0311 7786264', tel: '+923117786264' }
+      ]
+    },
+    uk: {
+      emergency: [
+        { label: 'Call 999 — Emergency', display: '999', tel: '999' },
+        { label: 'Call 111 — NHS (urgent, not emergency)', display: '111', tel: '111' }
+      ],
+      talk: [
+        { label: 'Call Samaritans — 116 123', display: '116 123', tel: '116123' }
+      ]
+    },
+    us: {
+      emergency: [
+        { label: 'Call 911 — Emergency', display: '911', tel: '911' }
+      ],
+      talk: [
+        { label: 'Call or text 988 — Suicide & Crisis Lifeline', display: '988', tel: '988' }
+      ]
+    },
+    uae: {
+      emergency: [
+        { label: 'Call 999 — Police', display: '999', tel: '999' },
+        { label: 'Call 998 — Ambulance', display: '998', tel: '998' }
+      ],
+      talk: [
+        { label: 'Call 800-HOPE — Mental Support Line', display: '800 4673', tel: '8004673' }
+      ]
+    },
+    other: {
+      emergency: [],
+      talk: [],
+      emergencyNote: 'Call your local emergency number.',
+      talkNote: 'Find a free, confidential helpline near you at findahelpline.com.'
+    }
+  };
   function crisisRegion() {
     return (state.notices && state.notices.crisisRegion) || 'other';
   }
@@ -965,19 +1009,40 @@
     state.notices.crisisRegion = id;
     save();
   }
-  /** DRAFT slot — returns owner-approved copy only. Until D-05, always general. */
-  function crisisRegionGuidance(/* regionId */) {
-    // DRAFT: D-05 will replace this map with approved region-aware text.
-    return 'If you feel unsafe or in danger, contact local emergency services. SoulCap does not list phone numbers yet.';
+  function appendTelButton(parent, item) {
+    parent.appendChild(el('a', {
+      href: 'tel:' + item.tel,
+      class: 'btn help-tel',
+      style: 'text-decoration:none;display:block;text-align:center;margin-top:8px',
+      'aria-label': item.label,
+      text: item.label
+    }));
+    parent.appendChild(el('p', {
+      class: 'p-sm',
+      style: 'margin:2px 0 0;text-align:center',
+      text: item.display
+    }));
   }
-  function renderPanicHelp(container) {
+  function renderPanicHelp(container, opts) {
+    opts = opts || {};
     clear(container);
-    container.appendChild(el('p', { class: 'panic-sub', style: 'margin:0',
-      text: 'You don’t have to get through this alone. Reaching out to someone — a family member, a friend, anyone who steadies you — really can help.' }));
-    container.appendChild(el('a', { href: 'sms:', class: 'btn', style: 'text-decoration:none', text: 'Message someone I trust' }));
+    var under18 = !!opts.under18;
 
-    container.appendChild(el('p', { class: 'eyebrow', style: 'margin:12px 0 6px', text: 'Where you are' }));
-    var regionRow = el('div', { class: 'chips', role: 'group', 'aria-label': 'Crisis resource region' });
+    container.appendChild(el('h2', {
+      class: 'panic-help-title',
+      style: 'margin:0 0 8px;font-size:1.25rem',
+      text: under18 ? 'SoulCap isn’t made for you yet' : 'Get help now'
+    }));
+    container.appendChild(el('p', {
+      class: 'panic-sub',
+      style: 'margin:0',
+      text: under18
+        ? 'If you need support, talk to an adult you trust, or contact emergency services if you’re in danger.'
+        : 'If you might hurt yourself or someone else, or you’re in danger, contact emergency services now.'
+    }));
+
+    container.appendChild(el('p', { class: 'eyebrow', style: 'margin:14px 0 6px', text: 'Your region' }));
+    var regionRow = el('div', { class: 'chips', role: 'group', 'aria-label': 'Your region' });
     CRISIS_REGIONS.forEach(function (r) {
       regionRow.appendChild(el('button', {
         class: 'chip',
@@ -986,29 +1051,81 @@
         text: r.label,
         onclick: function () {
           setCrisisRegion(r.id);
-          renderPanicHelp(container);
+          renderPanicHelp(container, opts);
         }
       }));
     });
     container.appendChild(regionRow);
 
-    container.appendChild(el('p', { class: 'p-sm', style: 'margin:8px 0 0',
-      text: crisisRegionGuidance(crisisRegion()) }));
-    container.appendChild(el('p', { class: 'p-sm', style: 'margin:4px 0 0',
-      text: 'Call emergency services if you are in immediate danger.' }));
+    var res = CRISIS_RESOURCES[crisisRegion()] || CRISIS_RESOURCES.other;
 
-    if (panicSaveWarning) container.appendChild(el('p', { class: 'p-sm', text: tUi('checkin', 'crisisSaveFailed', CHECKIN_UI) }));
-    container.appendChild(el('button', { class: 'btn ghost', text: t('panic.plan', 'Open my plan'), onclick: function () {
-      closePanic(); safetyPlanSheet();
-    } }));
-    // Distressed first-timer (pre-onboard): one-tap into a short offline breath after Help.
-    if (!state.onboarded) {
-      container.appendChild(el('button', { class: 'btn ghost', text: 'Try a 1-minute breath', onclick: function () {
-        closePanic(); startSkill('physiological-sigh');
-      } }));
+    container.appendChild(el('p', { class: 'eyebrow', style: 'margin:14px 0 6px', text: 'Emergency' }));
+    if (res.emergency && res.emergency.length) {
+      res.emergency.forEach(function (item) { appendTelButton(container, item); });
+    } else if (res.emergencyNote) {
+      container.appendChild(el('p', { class: 'p-sm', style: 'margin:4px 0 0', text: res.emergencyNote }));
     }
-    // Honest limits — same line as About/Legal; visible without digging into Settings.
-    container.appendChild(el('p', { class: 'p-sm panic-honesty', text: ABOUT_UI.honesty }));
+
+    if (!under18) {
+      container.appendChild(el('p', { class: 'eyebrow', style: 'margin:14px 0 6px', text: 'Talk to someone' }));
+      if (res.talk && res.talk.length) {
+        res.talk.forEach(function (item) { appendTelButton(container, item); });
+      } else if (res.talkNote) {
+        container.appendChild(el('p', { class: 'p-sm', style: 'margin:4px 0 0', text: res.talkNote }));
+        container.appendChild(el('a', {
+          href: 'https://findahelpline.com',
+          class: 'btn ghost',
+          style: 'text-decoration:none;margin-top:8px',
+          target: '_blank',
+          rel: 'noopener noreferrer',
+          text: 'Open findahelpline.com'
+        }));
+      }
+
+      container.appendChild(el('a', {
+        href: 'sms:',
+        class: 'btn ghost',
+        style: 'text-decoration:none;margin-top:12px',
+        text: 'Message someone I trust'
+      }));
+    }
+
+    if (panicSaveWarning) {
+      container.appendChild(el('p', { class: 'p-sm', text: tUi('checkin', 'crisisSaveFailed', CHECKIN_UI) }));
+    }
+    if (!under18) {
+      container.appendChild(el('button', {
+        class: 'btn ghost',
+        text: t('panic.plan', 'Open my plan'),
+        onclick: function () { closePanic(); safetyPlanSheet(); }
+      }));
+      if (!state.onboarded) {
+        container.appendChild(el('button', {
+          class: 'btn ghost',
+          text: 'Try a 1-minute breath',
+          onclick: function () { closePanic(); startSkill('physiological-sigh'); }
+        }));
+      }
+    } else {
+      container.appendChild(el('button', {
+        class: 'btn',
+        text: 'Back',
+        onclick: function () {
+          if (opts.onBack) opts.onBack();
+          else closePanic();
+        }
+      }));
+    }
+
+    container.appendChild(el('p', {
+      class: 'p-sm panic-honesty',
+      style: 'margin-top:14px',
+      text: 'SoulCap isn’t a crisis service and can’t contact anyone for you.'
+    }));
+    container.appendChild(el('p', {
+      class: 'p-sm',
+      text: 'SoulCap offers self-help tools. It isn’t therapy, medical advice, a diagnosis or a crisis service.'
+    }));
   }
 
   var pacerTimer = null, pacerPhase = 0;
@@ -6181,11 +6298,18 @@
     var head = el('div', { class: 'qd-head' });
     var thumb = el('div', { class: 'qd-thumb' });
     if (obStep === 0) {
-      head.appendChild(el('h1', { class: 'qd-prompt', text: tUi('onboarding', 'ageTitle', { ageTitle: 'First — how old are you?' }) }));
-      head.appendChild(el('p', { class: 'qd-lede', text: tUi('onboarding', 'ageBody', { ageBody: 'SoulCap is built for adults. We ask because the right support for someone under 18 looks different, and we’d rather point you somewhere better than get it wrong.' }) }));
-      if (state.ageOk === false) head.appendChild(el('div', { class: 'qd-note' }, [el('p', { class: 'p-voice', text: tUi('onboarding', 'under18Body', { under18Body: 'SoulCap isn’t the right fit yet. Please reach out to a trusted adult, or a support service made for young people where you are.' }) })]));
-      thumb.appendChild(el('button', { class: 'opt qd-row', html: tUi('onboarding', 'over18', { over18: '18 or older' }), onclick: function () { state.ageOk = true; save(); obStep = 1; render(); } }));
-      thumb.appendChild(el('button', { class: 'opt qd-row', html: tUi('onboarding', 'under18', { under18: 'Under 18' }) + '<span class="os">' + tUi('onboarding', 'under18Hint', { under18Hint: 'This isn’t built for you yet — please talk to a trusted adult or a service for young people' }) + '</span>', onclick: function () { state.ageOk = false; save(); render(); } }));
+      head.appendChild(el('h1', { class: 'qd-prompt', text: 'Before you start' }));
+      head.appendChild(el('p', { class: 'qd-lede', text: 'SoulCap is for adults 18 and over. It offers self-help tools and isn’t therapy, a diagnosis or a crisis service.' }));
+      if (state.ageOk === false) {
+        var underWrap = el('div', { class: 'qd-note stack', id: 'under18Help' });
+        head.appendChild(underWrap);
+        renderPanicHelp(underWrap, {
+          under18: true,
+          onBack: function () { state.ageOk = null; save(); render(); }
+        });
+      }
+      thumb.appendChild(el('button', { class: 'opt qd-row', html: 'I’m 18 or over', onclick: function () { state.ageOk = true; save(); obStep = 1; render(); } }));
+      thumb.appendChild(el('button', { class: 'opt qd-row', html: 'I’m under 18', onclick: function () { state.ageOk = false; save(); render(); } }));
     } else if (obStep === 1) {
       head.appendChild(el('h1', { class: 'qd-prompt', text: tUi('onboarding', 'nameTitle', { nameTitle: 'What should we call you?' }) }));
       head.appendChild(el('p', { class: 'qd-lede', text: tUi('onboarding', 'nameBody', { nameBody: 'So this feels like yours. Skip it if you’d rather not.' }) }));

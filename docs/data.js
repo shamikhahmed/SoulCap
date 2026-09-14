@@ -532,7 +532,7 @@ var SESSION_UI = {
 var ABOUT_UI = {
   title:'About & Legal',
   purpose:'A calm, private place for self-regulation techniques, a journal, and the people around you.',
-  honesty:'SoulCap is a self-guided wellness companion — not therapy, diagnosis, or medical advice.',
+  honesty:'SoulCap offers self-help tools. It isn’t therapy, medical advice, a diagnosis or a crisis service.',
   credits:'Built by Capricorn Systems. Everything stays on this device.',
   open:'About & Legal',
   close:'Close'

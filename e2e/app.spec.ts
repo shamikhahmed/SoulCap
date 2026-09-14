@@ -548,7 +548,7 @@ test.describe('v1.9.3 reflection screeners', () => {
     await expect(page.locator('#panic.on')).toBeVisible({ timeout: 5000 });
     const panicText = await page.locator('#panic').innerText();
     expect(panicText.toLowerCase()).not.toMatch(/\bsevere\b|\bmild\b|\bmoderate\b|\bminimal\b/);
-    expect(panicText).toMatch(/not therapy|self-guided wellness/i);
+    expect(panicText).toMatch(/not therapy|self-help tools|crisis service/i);
     expect(panicText).not.toMatch(/\b\d{3}[-.\s]?\d{3}\b/);
     await page.locator('#panicExit').click();
 
@@ -775,7 +775,7 @@ test.describe('v2.0 IA restructure', () => {
     await openSettings(page);
     await page.locator('#sheetPanel').getByRole('button', { name: 'About & Legal', exact: true }).click();
     await expect(page.locator('#sheetPanel')).toContainText(
-      'SoulCap is a self-guided wellness companion — not therapy, diagnosis, or medical advice.',
+      'SoulCap offers self-help tools. It isn’t therapy, medical advice, a diagnosis or a crisis service.',
     );
     await expect(page.locator('#sheetPanel')).toContainText(/Version \d+\.\d+/);
     await page.locator('#sheetPanel').getByRole('button', { name: 'Close' }).click();
@@ -2727,7 +2727,7 @@ test.describe('Phase 1–4 live invariants (Fable QA)', () => {
     await page.getByRole('button', { name: 'Begin' }).click();
     await page.getByRole('button', { name: 'I need help now' }).click();
     await expect(page.locator('#panic.on')).toBeVisible();
-    await expect(page.locator('#panicLinks')).toContainText(/not therapy|self-guided wellness/i);
+    await expect(page.locator('#panicLinks')).toContainText(/not therapy|self-help tools|crisis service/i);
     await expect(page.getByRole('button', { name: /Try a 1-minute breath/ })).toBeVisible();
     const nums = await page.locator('#panic').innerText();
     expect(nums).not.toMatch(/\b\d{3}[-.\s]?\d{3}\b/);
