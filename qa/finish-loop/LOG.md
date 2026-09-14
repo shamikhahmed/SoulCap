@@ -24,3 +24,10 @@ Changes: .whats-new padding 16px; dismiss right-aligned
 
 ### SOUL-P1-03 — ambient blob + Open quietly                     status: ✅
 Changes: hero-band::before opacity/position; reduced transparency off; removed Open quietly line
+
+### SOUL-P0-02 — crisis region structure                         status: ⛔ PARKED (D-05) + structure ✅
+Current behavior: number-free Help; no region preference
+Plan: region chips + DRAFT guidance map; no helpline numbers until DECISIONS
+Changes: docs/app.js (CRISIS_REGIONS, notices.crisisRegion); app.css panic scroll/sticky exit; e2e region test
+Verify: safety suite green
+Residual: final region copy blocked on D-05

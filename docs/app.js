@@ -113,7 +113,7 @@
     libraryBookmarks: [],
     windDownHour: null,
     screenerResults: {},
-    notices: { clinicalEnglishDismissed: false, seenVersion: null },
+    notices: { clinicalEnglishDismissed: false, seenVersion: null, crisisRegion: 'other' },
     pathSessions: [],
     pathPrefs: { hide: false },
     selfConcept: { areas: {}, updatedAt: null },
@@ -184,6 +184,8 @@
       } catch (noticeErr) {}
       p.notices.clinicalEnglishDismissed = p.notices.clinicalEnglishDismissed === true;
       if (typeof p.notices.seenVersion !== 'string') p.notices.seenVersion = null;
+      var crisisRegions = { pk: 1, uk: 1, us: 1, uae: 1, other: 1 };
+      if (!crisisRegions[p.notices.crisisRegion]) p.notices.crisisRegion = 'other';
       p.pathSessions = Array.isArray(p.pathSessions) ? p.pathSessions : [];
       p.pathPrefs = Object.assign(clone(DEFAULT.pathPrefs), p.pathPrefs || {});
       p.pathPrefs.hide = p.pathPrefs.hide === true;
@@ -944,17 +946,57 @@
   }
   function hushVoice() { try { window.speechSynthesis.cancel(); } catch (e) {} }
 
-  /* ── Reaching out ──────────────────────────────────────────────────────────
-   * No phone numbers, no country-specific lines (owner decision — we can't
-   * promise any line is reachable). Gentle, general guidance instead, plus a
-   * one-tap way to message a person the user trusts. */
+  /* ── Reaching out (SOUL-P0-02 structure) ───────────────────────────────────
+   * Region selector is stored for when D-05 supplies approved resources.
+   * Until then every region shows the same number-free guidance (safety tests).
+   * Final helpline lists must come from DECISIONS.md verbatim — never invent. */
+  var CRISIS_REGIONS = [
+    { id: 'pk', label: 'Pakistan' },
+    { id: 'uk', label: 'UK' },
+    { id: 'us', label: 'US' },
+    { id: 'uae', label: 'UAE' },
+    { id: 'other', label: 'Other' }
+  ];
+  function crisisRegion() {
+    return (state.notices && state.notices.crisisRegion) || 'other';
+  }
+  function setCrisisRegion(id) {
+    if (!state.notices) state.notices = clone(DEFAULT.notices);
+    state.notices.crisisRegion = id;
+    save();
+  }
+  /** DRAFT slot — returns owner-approved copy only. Until D-05, always general. */
+  function crisisRegionGuidance(/* regionId */) {
+    // DRAFT: D-05 will replace this map with approved region-aware text.
+    return 'If you feel unsafe or in danger, contact local emergency services. SoulCap does not list phone numbers yet.';
+  }
   function renderPanicHelp(container) {
     clear(container);
     container.appendChild(el('p', { class: 'panic-sub', style: 'margin:0',
       text: 'You don’t have to get through this alone. Reaching out to someone — a family member, a friend, anyone who steadies you — really can help.' }));
     container.appendChild(el('a', { href: 'sms:', class: 'btn', style: 'text-decoration:none', text: 'Message someone I trust' }));
-    container.appendChild(el('p', { class: 'p-sm', style: 'margin:2px 0 0',
-      text: 'If you feel unsafe or in danger, please contact your local emergency services or a crisis helpline in your area.' }));
+
+    container.appendChild(el('p', { class: 'eyebrow', style: 'margin:12px 0 6px', text: 'Where you are' }));
+    var regionRow = el('div', { class: 'chips', role: 'group', 'aria-label': 'Crisis resource region' });
+    CRISIS_REGIONS.forEach(function (r) {
+      regionRow.appendChild(el('button', {
+        class: 'chip',
+        type: 'button',
+        'aria-pressed': crisisRegion() === r.id ? 'true' : 'false',
+        text: r.label,
+        onclick: function () {
+          setCrisisRegion(r.id);
+          renderPanicHelp(container);
+        }
+      }));
+    });
+    container.appendChild(regionRow);
+
+    container.appendChild(el('p', { class: 'p-sm', style: 'margin:8px 0 0',
+      text: crisisRegionGuidance(crisisRegion()) }));
+    container.appendChild(el('p', { class: 'p-sm', style: 'margin:4px 0 0',
+      text: 'Call emergency services if you are in immediate danger.' }));
+
     if (panicSaveWarning) container.appendChild(el('p', { class: 'p-sm', text: tUi('checkin', 'crisisSaveFailed', CHECKIN_UI) }));
     container.appendChild(el('button', { class: 'btn ghost', text: t('panic.plan', 'Open my plan'), onclick: function () {
       closePanic(); safetyPlanSheet();

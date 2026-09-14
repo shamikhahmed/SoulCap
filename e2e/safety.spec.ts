@@ -260,6 +260,22 @@ test.describe('Help is always reachable', () => {
     expect(text).not.toContain('tel:');
   });
 
+  test('crisis region chips persist without introducing helpline numbers (SOUL-P0-02)', async ({ page }) => {
+    await seedDemo(page);
+    await page.locator('.view.on .help-btn').click();
+    const group = page.locator('#panicLinks [aria-label="Crisis resource region"]');
+    await expect(group).toBeVisible();
+    await group.getByRole('button', { name: 'UK' }).click();
+    await expect(group.getByRole('button', { name: 'UK' })).toHaveAttribute('aria-pressed', 'true');
+    const text = await page.locator('#panic').innerText();
+    expect(text).not.toMatch(/\b\d{3,}\b/);
+    for (const bad of ['Samaritans', '988', '911', '999', 'tel:']) {
+      expect(text).not.toContain(bad);
+    }
+    const region = await page.evaluate(() => (window as any).__soulcap.getState().notices.crisisRegion);
+    expect(region).toBe('uk');
+  });
+
   test('voice starts silent on the panic screen (safe around people)', async ({ page }) => {
     await seedDemo(page);
     // Turn spoken guidance on globally first.
