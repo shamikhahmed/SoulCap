@@ -36,6 +36,37 @@ else{document.documentElement.setAttribute('lang','en');document.documentElement
 
 <a class="sr" href="#views">Skip to content</a>
 
+<!-- App lock gate (SOUL-P1-05 / G-10): paints before main UI when locked -->
+<div id="applock" class="applock" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="applockTitle">
+  <div class="applock-card">
+    <h1 id="applockTitle" class="h-voice">SoulCap is locked</h1>
+    <p class="p-sm" id="applockHint">Enter your passcode to open your private data.</p>
+    <label class="sr" for="applockPin">Passcode</label>
+    <input id="applockPin" class="applock-pin" type="password" inputmode="numeric" pattern="[0-9]*" autocomplete="current-password" maxlength="32" />
+    <p class="p-sm" id="applockStatus" role="status" aria-live="polite"></p>
+    <button type="button" class="btn" id="applockUnlock">Unlock</button>
+    <button type="button" class="btn ghost" id="applockBio" hidden>Use device unlock</button>
+    <button type="button" class="btn quiet" id="applockForgot">Forgot passcode</button>
+  </div>
+</div>
+<script>
+/* Show lock chrome before app.js if a sealed vault is on disk (no content flash). */
+(function () {
+  try {
+    var raw = localStorage.getItem('soulcap_v1');
+    if (!raw) return;
+    var p = JSON.parse(raw);
+    if (!(p && p.lock && p.lock.enabled && p.sealed)) return;
+    document.documentElement.setAttribute('data-app-locked', '1');
+    var el = document.getElementById('applock');
+    if (!el) return;
+    el.hidden = false;
+    el.classList.add('on');
+    el.setAttribute('aria-hidden', 'false');
+  } catch (e) {}
+})();
+</script>
+
 <!-- ── Splash ────────────────────────────────────────────────── -->
 <div id="splash" class="splash-qd" aria-hidden="true">
   <div class="splash-living" aria-hidden="true"></div>
@@ -186,6 +217,7 @@ else{document.documentElement.setAttribute('lang','en');document.documentElement
   <div id="sheetPanel" class="panel"></div>
 </div>
 
+<script src="vendor/local-lock.js"></script>
 <script src="data.js"></script>
 <script src="app.js"></script>
 </body>

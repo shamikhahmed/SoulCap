@@ -47,3 +47,8 @@ Current behavior: tall check-in rows; path/week above fold; Help below fold on 3
 Plan: greeting → chip check-in → suggest+Begin → Explore → Help; More holds path/week/etc.
 Changes: docs/app.js renderNow; docs/app.css compact suggest; e2e age-gate "I'm 18 or over"; tab-bar Help-not-last on Now
 Verify: SOUL-P1-04 first-fold + 8 regression fixes; mobile app+safety subset green
+
+### SOUL-P1-05 — App lock (Q-4 / G-10)                   status: ✅
+Built CapLocalLock (PBKDF2 600k · AES-GCM · lockout delays · WebAuthn optional).
+SoulCap: Settings → Privacy → App lock; seal sensitive keys; early #applock gate; auto-lock; forgot→erase; export blocked while locked.
+Verify: node unit tests; e2e/lock.spec.ts 3/3 mobile

@@ -1057,6 +1057,22 @@ input[type="range"]{width:100%;min-height:48px;accent-color:var(--accent)}
 .now-hero .p-voice{margin-top:var(--space-2)!important}
 .now-hero .qd-checkin{margin-top:var(--space-2)}
 #view-now{padding-bottom:calc(72px + var(--sab, 0px))}
+
+/* SOUL-P1-05 app lock */
+html[data-app-locked="1"] #app,
+html[data-app-locked="1"] #splash,
+html[data-app-locked="1"] #fab,
+html[data-app-locked="1"] #tabs,
+html[data-app-locked="1"] #journalEditor,
+html[data-app-locked="1"] #runner{visibility:hidden!important;pointer-events:none!important}
+.applock{position:fixed;inset:0;z-index:10000;display:none;align-items:center;justify-content:center;padding:24px;padding-bottom:calc(24px + var(--sab,0px));background:var(--bg, #F5F3F8);color:var(--ink, #1a1625)}
+.applock.on{display:flex}
+.applock.beneath-sheet{pointer-events:none}
+html[data-app-locked="1"] #sheet{visibility:visible!important;pointer-events:auto!important;z-index:10050}
+html[data-app-locked="1"] #sheet.on{visibility:visible!important}
+.applock-card{width:min(360px,100%);display:flex;flex-direction:column;gap:12px}
+.applock-pin{font-size:1.25rem;letter-spacing:.2em;text-align:center;padding:14px 16px;border-radius:12px;border:1px solid var(--line, rgba(0,0,0,.12));background:var(--card, #fff);color:inherit;min-height:48px}
+.applock-pin:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .explore-toggle{margin-top:var(--space-2);margin-bottom:var(--space-2);position:relative;z-index:2}
 /* ═══ Quiet Depth — welcome + onboarding (SPEC v7) ═══════════════════════════ */
 #view-welcome.view-qd,

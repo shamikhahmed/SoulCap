@@ -17,6 +17,7 @@ var ASSETS = [
   'app.js',
   'vendor/gsap.min.js',
   'vendor/breath-orb.js',
+  'vendor/local-lock.js',
   'manifest.json',
   'icons/mark.svg',
   'icons/favicon.svg',

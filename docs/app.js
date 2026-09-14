@@ -91,6 +91,22 @@
 
   /* ── State ─────────────────────────────────────────────────────────────── */
   var KEY = 'soulcap_v1';
+  var PRE_LOCK_BACKUP_KEY = 'soulcap_premigration_backup_v14';
+  var LOCK_BIO_IDB = 'soulcap_lock_bio';
+  var SENSITIVE_KEYS = [
+    'journal', 'checkins', 'people', 'links', 'safetyPlan', 'episodes', 'history',
+    'principles', 'manual', 'pendingReflection', 'reflectionPrefs', 'screenerResults',
+    'profile', 'emotionNotes', 'reframes', 'parkedThoughts', 'selfConcept', 'habits',
+    'drip', 'userModel', 'pathSessions', 'skillRuns', 'favourites', 'emotionFavorites',
+    'journalCover', 'resetItems', 'resetDone', 'dailySupports', 'storiesSeen',
+    'experienceViews', 'concerns', 'libraryBookmarks'
+  ];
+  var Lock = (typeof window !== 'undefined' && window.CapLocalLock) ? window.CapLocalLock : null;
+  var lockDataKey = null;
+  var lockNeedsUnlock = false;
+  var sealedBlob = null;
+  var lockLastActive = Date.now();
+  var sealedSaveChain = Promise.resolve();
   var DEFAULT = {
     v: 14, onboarded: false, welcomed: false, ageOk: null, consent: false,
     profile: { name: '', age: '', pronouns: '' },
@@ -119,7 +135,8 @@
     selfConcept: { areas: {}, updatedAt: null },
     habits: [],
     experienceViews: {},
-    emotionNotes: [], reframes: [], storiesSeen: []
+    emotionNotes: [], reframes: [], storiesSeen: [],
+    lock: null
   };
   var VALID_THEMES = { light:1, dark:1, night:1, ocean:1, forest:1, amoled:1 };
   var DRIP_DAY_CAP = 4;
@@ -132,8 +149,30 @@
     try {
       var raw = localStorage.getItem(KEY);
       if (!raw) return clone(DEFAULT);
-      var migration = migrateState(JSON.parse(raw));
+      var parsed = JSON.parse(raw);
+      sealedBlob = null;
+      lockNeedsUnlock = false;
+      lockDataKey = null;
+      if (parsed && parsed.lock && parsed.lock.enabled && parsed.sealed && Lock) {
+        sealedBlob = parsed.sealed;
+        lockNeedsUnlock = true;
+        var shellSrc = Lock.stripSensitive(parsed, SENSITIVE_KEYS.concat(['sealed']));
+        var shellMig = migrateState(shellSrc);
+        var shell = Object.assign(clone(DEFAULT), shellMig.value);
+        shell.lock = Lock.normalizeMeta(parsed.lock);
+        /* Sensitive fields stay at DEFAULT empties until unlock — no plaintext paint. */
+        SENSITIVE_KEYS.forEach(function (k) {
+          if (Object.prototype.hasOwnProperty.call(DEFAULT, k)) shell[k] = clone(DEFAULT[k]);
+        });
+        return finalizeLoaded(shell, shellMig.changed);
+      }
+      var migration = migrateState(parsed);
       var p = Object.assign(clone(DEFAULT), migration.value);
+      return finalizeLoaded(p, migration.changed);
+    } catch (e) { return clone(DEFAULT); }
+  }
+
+  function finalizeLoaded(p, changed) {
       p.profile = Object.assign(clone(DEFAULT.profile), p.profile || {});
       p.voice = Object.assign(clone(DEFAULT.voice), p.voice || {});
       p.history = p.history || {};
@@ -198,14 +237,19 @@
       if (p.locale !== 'en' && p.locale !== 'rui') p.locale = 'en';
       if (p.theme && !VALID_THEMES[p.theme]) p.theme = null;
       p.checkins = (Array.isArray(p.checkins) ? p.checkins : []).map(normalizeCheckin);
+      if (p.lock && Lock) p.lock = Lock.normalizeMeta(p.lock);
+      else p.lock = null;
       delete p.inferences;
       delete p.region;
-      if (migration.changed) {
-        try { localStorage.setItem(KEY, JSON.stringify(p)); } catch (migrationError) {}
+      delete p.sealed;
+      if (changed) {
+        try {
+          if (!(p.lock && p.lock.enabled)) localStorage.setItem(KEY, JSON.stringify(p));
+        } catch (migrationError) {}
       }
       return p;
-    } catch (e) { return clone(DEFAULT); }
   }
+
   function migrateState(saved) {
     var p = clone(saved || {}), changed = false;
     var version = typeof p.v === 'number' ? p.v : 5;
@@ -388,9 +432,326 @@
     });
   }
   function save() {
-    try { localStorage.setItem(KEY, JSON.stringify(state)); return true; }
-    catch (e) { return false; } // quota / private mode
+    try {
+      if (state.lock && state.lock.enabled && lockDataKey && Lock && !lockNeedsUnlock) {
+        scheduleSealedSave();
+        return true;
+      }
+      var plain = clone(state);
+      delete plain.sealed;
+      if (plain.lock && !plain.lock.enabled) plain.lock = null;
+      localStorage.setItem(KEY, JSON.stringify(plain));
+      return true;
+    } catch (e) { return false; } // quota / private mode
   }
+
+  function buildSealedEnvelope(sealed) {
+    var shell = Lock.stripSensitive(state, SENSITIVE_KEYS);
+    shell.lock = Lock.normalizeMeta(state.lock);
+    shell.sealed = sealed;
+    delete shell._sealed;
+    return shell;
+  }
+
+  function scheduleSealedSave() {
+    sealedSaveChain = sealedSaveChain.then(function () {
+      return persistSealedNow();
+    }).catch(function (err) {
+      console.warn('SoulCap sealed save failed', err);
+    });
+  }
+
+  function persistSealedNow() {
+    if (!Lock || !lockDataKey || !state.lock || !state.lock.enabled) return Promise.resolve();
+    var sensitive = Lock.pickSensitive(state, SENSITIVE_KEYS);
+    return Lock.encryptJson(lockDataKey, sensitive).then(function (sealed) {
+      sealedBlob = sealed;
+      var envelope = buildSealedEnvelope(sealed);
+      localStorage.setItem(KEY, JSON.stringify(envelope));
+    });
+  }
+
+  function flushSave() {
+    if (state.lock && state.lock.enabled && lockDataKey) return sealedSaveChain.then(function () { return persistSealedNow(); });
+    return Promise.resolve(save());
+  }
+
+  function showAppLock() {
+    var gate = $('#applock');
+    if (!gate) return;
+    document.documentElement.setAttribute('data-app-locked', '1');
+    gate.hidden = false;
+    gate.classList.add('on');
+    gate.setAttribute('aria-hidden', 'false');
+    var bio = $('#applockBio');
+    if (bio) {
+      var hasBio = !!(state.lock && state.lock.webauthnCredentialId);
+      bio.hidden = !hasBio;
+    }
+    var pin = $('#applockPin');
+    if (pin) { pin.value = ''; setTimeout(function () { pin.focus(); }, 50); }
+    var st = $('#applockStatus');
+    if (st) st.textContent = '';
+  }
+
+  function hideAppLock() {
+    var gate = $('#applock');
+    document.documentElement.removeAttribute('data-app-locked');
+    if (!gate) return;
+    gate.classList.remove('on');
+    gate.hidden = true;
+    gate.setAttribute('aria-hidden', 'true');
+  }
+
+  function applyUnlockedSensitive(payload) {
+    SENSITIVE_KEYS.forEach(function (k) {
+      if (Object.prototype.hasOwnProperty.call(payload, k)) state[k] = payload[k];
+    });
+    state.profile = Object.assign(clone(DEFAULT.profile), state.profile || {});
+    state.people = (Array.isArray(state.people) ? state.people : []).map(normalizePerson);
+    state.checkins = (Array.isArray(state.checkins) ? state.checkins : []).map(normalizeCheckin);
+    state.manual = state.manual && typeof state.manual === 'object' ? state.manual : clone(DEFAULT.manual);
+    lockNeedsUnlock = false;
+    sealedBlob = null;
+    lockLastActive = Date.now();
+    hideAppLock();
+  }
+
+  function unlockWithPasscode(passcode) {
+    if (!Lock || !state.lock) return Promise.reject(new Error('no lock'));
+    return Lock.unlock(state.lock, passcode).then(function (res) {
+      state.lock = res.meta;
+      lockDataKey = res.dataKey;
+      var sealed = sealedBlob;
+      if (!sealed) {
+        try {
+          var raw = JSON.parse(localStorage.getItem(KEY) || '{}');
+          sealed = raw.sealed;
+        } catch (e) {}
+      }
+      if (!sealed) {
+        lockNeedsUnlock = false;
+        hideAppLock();
+        return flushSave().then(function () { render(); });
+      }
+      return Lock.decryptJson(lockDataKey, sealed).then(function (payload) {
+        applyUnlockedSensitive(payload);
+        return flushSave().then(function () { render(); });
+      });
+    }).catch(function (err) {
+      if (err && err.meta) {
+        state.lock = err.meta;
+        try {
+          var raw = JSON.parse(localStorage.getItem(KEY) || '{}');
+          raw.lock = err.meta;
+          localStorage.setItem(KEY, JSON.stringify(raw));
+        } catch (e) {}
+      }
+      throw err;
+    });
+  }
+
+  function sessionLockNow() {
+    if (!(state.lock && state.lock.enabled)) return Promise.resolve();
+    if (!lockDataKey) {
+      lockNeedsUnlock = true;
+      showAppLock();
+      render();
+      return Promise.resolve();
+    }
+    return sealedSaveChain.then(function () { return persistSealedNow(); }).then(function () {
+      lockDataKey = null;
+      lockNeedsUnlock = true;
+      SENSITIVE_KEYS.forEach(function (k) {
+        if (Object.prototype.hasOwnProperty.call(DEFAULT, k)) state[k] = clone(DEFAULT[k]);
+      });
+      try {
+        var raw = JSON.parse(localStorage.getItem(KEY) || '{}');
+        sealedBlob = raw.sealed || sealedBlob;
+      } catch (e) {}
+      closeSheet();
+      closeSubview();
+      closeRunner();
+      closePanic();
+      closeEditor();
+      showAppLock();
+      render();
+    });
+  }
+
+  function wireAppLockUi() {
+    var unlockBtn = $('#applockUnlock');
+    var pin = $('#applockPin');
+    var status = $('#applockStatus');
+    var forgot = $('#applockForgot');
+    var bio = $('#applockBio');
+    if (unlockBtn) unlockBtn.addEventListener('click', function () {
+      var code = pin ? pin.value : '';
+      if (status) status.textContent = 'Unlocking…';
+      unlockWithPasscode(code).then(function () {
+        if (status) status.textContent = '';
+      }).catch(function (err) {
+        if (status) {
+          if (err && err.code === 'LOCKED_OUT') status.textContent = 'Too many attempts. Wait and try again.';
+          else if (err && err.code === 'WRONG_PASSCODE') status.textContent = 'Wrong passcode.';
+          else status.textContent = (err && err.message) || 'Could not unlock.';
+        }
+      });
+    });
+    if (pin) pin.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' && unlockBtn) unlockBtn.click();
+    });
+    if (forgot) forgot.addEventListener('click', function () {
+      var gate = $('#applock');
+      if (gate) gate.classList.add('beneath-sheet');
+      openSheet(function (p) {
+        p.appendChild(el('h2', { class: 'h-sec', text: 'Forgot passcode?' }));
+        p.appendChild(el('p', { class: 'p', text: 'SoulCap can’t recover a forgotten passcode. You can erase all data on this device and start again.' }));
+        p.appendChild(el('button', { class: 'btn danger', text: 'Erase all data', onclick: function () {
+          try {
+            localStorage.removeItem(KEY);
+            localStorage.removeItem(PRE_LOCK_BACKUP_KEY);
+            localStorage.removeItem('soulcap_theme');
+            localStorage.removeItem('soulcap_appearance');
+            localStorage.removeItem('soulcap_locale');
+          } catch (e) {}
+          lockDataKey = null;
+          lockNeedsUnlock = false;
+          sealedBlob = null;
+          state = clone(DEFAULT);
+          if (gate) gate.classList.remove('beneath-sheet');
+          hideAppLock();
+          closeSheet();
+          applyTheme();
+          render();
+        } }));
+        p.appendChild(el('button', { class: 'btn quiet', text: 'Keep trying', onclick: function () {
+          closeSheet();
+          if (gate) gate.classList.remove('beneath-sheet');
+          showAppLock();
+        } }));
+      });
+    });
+    if (bio) bio.addEventListener('click', function () {
+      if (!Lock || !state.lock) return;
+      if (status) status.textContent = 'Waiting for device…';
+      Lock.unlockWithWebAuthn(state.lock, { bioStorageKey: LOCK_BIO_IDB }).then(function (res) {
+        state.lock = res.meta;
+        lockDataKey = res.dataKey;
+        var sealed = sealedBlob;
+        if (!sealed) {
+          try { sealed = JSON.parse(localStorage.getItem(KEY) || '{}').sealed; } catch (e) {}
+        }
+        return Lock.decryptJson(lockDataKey, sealed).then(function (payload) {
+          applyUnlockedSensitive(payload);
+          return flushSave().then(function () { render(); });
+        });
+      }).catch(function (err) {
+        if (status) status.textContent = (err && err.message) || 'Device unlock failed.';
+      });
+    });
+
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState === 'hidden') {
+        lockLastActive = Date.now();
+        return;
+      }
+      if (!(state.lock && state.lock.enabled && lockDataKey)) return;
+      var mins = state.lock.autoLockMinutes;
+      if (!mins) return;
+      var idle = Date.now() - lockLastActive;
+      if (idle >= mins * 60 * 1000) sessionLockNow();
+      else lockLastActive = Date.now();
+    });
+    ['pointerdown', 'keydown'].forEach(function (evt) {
+      document.addEventListener(evt, function () {
+        if (lockDataKey) lockLastActive = Date.now();
+      }, { passive: true });
+    });
+  }
+
+  function enableAppLockFlow() {
+    if (!Lock || !Lock.available()) {
+      openSheet(function (p) {
+        p.appendChild(el('h2', { class: 'h-sec', text: SETTINGS_UI.appLock }));
+        p.appendChild(el('p', { class: 'p', text: 'App lock needs Web Crypto, which isn’t available in this browser.' }));
+        p.appendChild(el('button', { class: 'btn', text: 'Close', onclick: closeSheet }));
+      });
+      return;
+    }
+    openSheet(function (p) {
+      p.appendChild(el('h2', { class: 'h-sec', text: SETTINGS_UI.appLockEnable }));
+      p.appendChild(el('p', { class: 'p-sm', text: SETTINGS_UI.appLockHint }));
+      p.appendChild(el('button', { class: 'btn', text: SETTINGS_UI.appLockExportFirst, onclick: function () { exportData(); } }));
+      p.appendChild(el('p', { class: 'eyebrow mt-2', text: 'Create a 6+ digit passcode' }));
+      var pin = el('input', { type: 'password', inputmode: 'numeric', pattern: '[0-9]*', autocomplete: 'new-password', 'aria-label': 'New passcode', class: 'applock-pin' });
+      var pin2 = el('input', { type: 'password', inputmode: 'numeric', pattern: '[0-9]*', autocomplete: 'new-password', 'aria-label': 'Confirm passcode', class: 'applock-pin' });
+      var status = el('p', { class: 'p-sm', role: 'status' });
+      p.appendChild(pin); p.appendChild(pin2); p.appendChild(status);
+      p.appendChild(el('p', { class: 'eyebrow mt-2', text: SETTINGS_UI.appLockAuto }));
+      var autoMins = 5;
+      p.appendChild(settingChips(
+        [{ v: 1, l: '1 min' }, { v: 5, l: '5 min' }, { v: 15, l: '15 min' }, { v: 0, l: 'Never' }],
+        function (o) { return autoMins === o.v; },
+        function (o) { autoMins = o.v; }
+      ));
+      p.appendChild(el('button', { class: 'btn', text: 'Turn on', onclick: function () {
+        if (pin.value !== pin2.value) { status.textContent = 'Passcodes don’t match.'; return; }
+        status.textContent = 'Encrypting…';
+        try { localStorage.setItem(PRE_LOCK_BACKUP_KEY, JSON.stringify(state)); } catch (e) {}
+        Lock.enable(pin.value, { autoLockMinutes: autoMins }).then(function (res) {
+          state.lock = res.meta;
+          lockDataKey = res.dataKey;
+          lockNeedsUnlock = false;
+          return persistSealedNow().then(function () {
+            try { localStorage.removeItem(PRE_LOCK_BACKUP_KEY); } catch (e) {}
+            closeSheet();
+            reRender();
+          });
+        }).catch(function (err) {
+          status.textContent = (err && err.message) || 'Could not enable lock.';
+        });
+      } }));
+      p.appendChild(el('button', { class: 'btn quiet', text: 'Cancel', onclick: closeSheet }));
+    });
+  }
+
+  function disableAppLockFlow() {
+    openSheet(function (p) {
+      p.appendChild(el('h2', { class: 'h-sec', text: SETTINGS_UI.appLockDisable }));
+      p.appendChild(el('p', { class: 'p-sm', text: 'Enter your passcode to turn off encryption.' }));
+      var pin = el('input', { type: 'password', inputmode: 'numeric', class: 'applock-pin', 'aria-label': 'Passcode' });
+      var status = el('p', { class: 'p-sm', role: 'status' });
+      p.appendChild(pin); p.appendChild(status);
+      p.appendChild(el('button', { class: 'btn', text: 'Turn off', onclick: function () {
+        var run = lockDataKey
+          ? Lock.unlock(state.lock, pin.value).then(function () { return lockDataKey; })
+          : Lock.unlock(state.lock, pin.value).then(function (res) {
+              lockDataKey = res.dataKey;
+              return Lock.decryptJson(res.dataKey, sealedBlob || JSON.parse(localStorage.getItem(KEY)).sealed)
+                .then(function (payload) { applyUnlockedSensitive(payload); return res.dataKey; });
+            });
+        status.textContent = 'Working…';
+        run.then(function () {
+          return Lock.clearWebAuthn(state.lock || {}, { bioStorageKey: LOCK_BIO_IDB }).then(function () {
+            state.lock = null;
+            lockDataKey = null;
+            sealedBlob = null;
+            lockNeedsUnlock = false;
+            var ok = save();
+            if (!ok) { status.textContent = 'Could not save.'; return; }
+            closeSheet();
+            reRender();
+          });
+        }).catch(function (err) {
+          if (err && err.meta) state.lock = err.meta;
+          status.textContent = (err && err.message) || 'Wrong passcode.';
+        });
+      } }));
+      p.appendChild(el('button', { class: 'btn quiet', text: 'Cancel', onclick: closeSheet }));
+    });
+  }
+
   function clone(o) { return JSON.parse(JSON.stringify(o)); }
   function uid() { return Math.random().toString(36).slice(2, 10); }
   function sameDay(a, b) { return new Date(a).toDateString() === new Date(b).toDateString(); }
@@ -3717,9 +4078,27 @@
     ]);
 
     addGroup(SETTINGS_UI.privacyData, [
-      SETTINGS_UI.privacyData, SETTINGS_UI.onDevice, SETTINGS_UI.export, SETTINGS_UI.delete
+      SETTINGS_UI.privacyData, SETTINGS_UI.onDevice, SETTINGS_UI.appLock, SETTINGS_UI.export, SETTINGS_UI.delete
     ], [
       el('p', { class: 'p-sm', text: SETTINGS_UI.onDevice }),
+      el('p', { class: 'p-sm', text: SETTINGS_UI.appLockHint }),
+      listRow({
+        title: (state.lock && state.lock.enabled) ? SETTINGS_UI.appLockDisable : SETTINGS_UI.appLockEnable,
+        meta: (state.lock && state.lock.enabled) ? 'On · auto-lock ' + (state.lock.autoLockMinutes ? state.lock.autoLockMinutes + ' min' : 'never') : 'Off',
+        onclick: function () {
+          if (state.lock && state.lock.enabled) disableAppLockFlow();
+          else enableAppLockFlow();
+        }
+      }),
+      (state.lock && state.lock.enabled && lockDataKey && Lock && window.PublicKeyCredential) ? listRow({
+        title: SETTINGS_UI.appLockBio,
+        onclick: function () {
+          Lock.enableWebAuthn(state.lock, lockDataKey, { bioStorageKey: LOCK_BIO_IDB, rpName: 'SoulCap' })
+            .then(function (meta) { state.lock = meta; return flushSave(); })
+            .then(function () { reRender(); })
+            .catch(function () {});
+        }
+      }) : null,
       listRow({ title: SETTINGS_UI.export, onclick: exportData }),
       el('button', { class: 'btn danger', type: 'button', text: SETTINGS_UI.delete, onclick: confirmDelete })
     ]);
@@ -6238,6 +6617,14 @@
     });
   }
   function exportData() {
+    if (state.lock && state.lock.enabled && (lockNeedsUnlock || !lockDataKey)) {
+      openSheet(function (p) {
+        p.appendChild(el('h2', { class: 'h-sec', text: 'Unlock to export' }));
+        p.appendChild(el('p', { class: 'p', text: 'App lock is on. Unlock SoulCap before exporting your data.' }));
+        p.appendChild(el('button', { class: 'btn', text: 'Close', onclick: closeSheet }));
+      });
+      return;
+    }
     var blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
     var url = URL.createObjectURL(blob), a = document.createElement('a');
     a.href = url; a.download = 'soulcap-export.json'; document.body.appendChild(a); a.click(); document.body.removeChild(a);
@@ -6378,6 +6765,14 @@
   }
   var VIEWS = ['welcome', 'onboarding', 'now', 'calm', 'journal', 'map', 'me'];
   function render() {
+    if (lockNeedsUnlock && !lockDataKey) {
+      showAppLock();
+      applyTheme();
+      $('#tabs').style.display = 'none';
+      $('#fab').classList.remove('on');
+      VIEWS.forEach(function (v) { $('#view-' + v).classList.remove('on'); });
+      return;
+    }
     applyTheme();
     stopMap(); // cancel any running orbit rAF; drawMap restarts it if we're on the map
     VIEWS.forEach(function (v) { $('#view-' + v).classList.remove('on'); });
@@ -6401,6 +6796,10 @@
   /* ── Demo ──────────────────────────────────────────────────────────────── */
   function seedDemo() {
     state = clone(DEFAULT);
+    lockDataKey = null;
+    lockNeedsUnlock = false;
+    sealedBlob = null;
+    hideAppLock();
     state.welcomed = true; state.onboarded = true; state.ageOk = true;
     state.consent = true;
     state.notices.seenVersion = APP_VERSION;
@@ -6484,6 +6883,7 @@
     var requestedTab = queryValue('tab');
     if (['now', 'calm', 'journal', 'map', 'me'].indexOf(requestedTab) !== -1) tab = requestedTab;
 
+    wireAppLockUi();
     $('#panicExit').addEventListener('click', closePanic);
     $('#runClose').addEventListener('click', closeRunner);
     $('#runGuide').addEventListener('click', toggleGuide);
@@ -6620,6 +7020,23 @@
     buildLocalInsights: buildLocalInsights,
     buildManualDrafts: buildManualDrafts, refreshManual: refreshManual,
     dismissWhatsNew: dismissWhatsNew,
+    save: save,
+    flushSave: flushSave,
+    enableAppLock: function (passcode, opts) {
+      return Lock.enable(passcode, opts || {}).then(function (res) {
+        try { localStorage.setItem(PRE_LOCK_BACKUP_KEY, JSON.stringify(state)); } catch (e) {}
+        state.lock = res.meta;
+        lockDataKey = res.dataKey;
+        lockNeedsUnlock = false;
+        return persistSealedNow().then(function () {
+          try { localStorage.removeItem(PRE_LOCK_BACKUP_KEY); } catch (e) {}
+          return state.lock;
+        });
+      });
+    },
+    unlockAppLock: unlockWithPasscode,
+    sessionLockNow: sessionLockNow,
+    isAppLocked: function () { return !!(lockNeedsUnlock && !lockDataKey); },
     openPath: pathSheet,
     scorePathFamilies: scorePathFamilies,
     pathPanicCluster: pathPanicCluster,
