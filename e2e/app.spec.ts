@@ -1661,12 +1661,15 @@ test.describe('Accessibility', () => {
   test('compact labels preserve the iPhone visual hierarchy', async ({ page }) => {
     await seedDemo(page);
     const sizes = await page.evaluate(() => ({
+      width: window.innerWidth,
       tab: parseFloat(getComputedStyle(document.querySelector('#tabs button span')!).fontSize),
       eyebrow: parseFloat(getComputedStyle(document.querySelector('.view.on .eyebrow')!).fontSize),
       tabTarget: document.querySelector('#tabs button')!.getBoundingClientRect().height,
     }));
     expect(sizes.tab).toBeGreaterThanOrEqual(11);
-    expect(sizes.tab).toBeLessThanOrEqual(12);
+    // Phone bottom tabs stay caption-sized; ≥900px sidebar uses readable 15px labels (SOUL-P1-01).
+    if (sizes.width >= 900) expect(sizes.tab).toBeLessThanOrEqual(16);
+    else expect(sizes.tab).toBeLessThanOrEqual(12);
     expect(sizes.eyebrow).toBeLessThanOrEqual(13);
     expect(sizes.tabTarget).toBeGreaterThanOrEqual(48);
   });
