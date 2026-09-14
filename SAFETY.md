@@ -138,7 +138,7 @@ calls — the privacy promise is intact.
    screener, or v10 framework/story copy.** Calm / path / About say so in-product. Pattern + screener
    + all v10 frameworks remain reflection-only. This gate is now **larger**: the belief reframe is
    EMDR-adjacent and the stories touch distress — both especially need review before any "reviewed"
-   or "clinically safe" claim.
+   or "clinically safe" claim. **Review checklist: `CLINICAL-REVIEW.md`** (exact copy + question per surface).
 2. No Urdu clinical copy reviewer; no Urdu localisation shipped.
 3. Safety kernel is still keyword-based. It cannot detect oblique risk
    ("I've been sorting out my things", "I finally feel calm about it all").

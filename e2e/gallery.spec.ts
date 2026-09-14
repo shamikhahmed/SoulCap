@@ -476,6 +476,25 @@ async function captureDocumentedStates(page: Page, viewport: string, shots: Mani
     caption: 'Constellation with demo people. Tap node. State in soulcap_v1.people. IA-RATIONALE.md §People.',
   });
   await page.evaluate(() => (window as any).__soulcap.galleryReset());
+
+  /* v10 therapist-informed frameworks (You › Reframe & learn) */
+  const v10Tools: Array<[string, string, string]> = [
+    ['emotion', 'Name a feeling', 'Emotion wheel — core→nuanced word + optional SUDS. Selection: chips/slider. State: soulcap_v1.emotionNotes.'],
+    ['reframe', 'Reframe a harsh thought', 'Belief reframe (CBT-style, never EMDR): NC→PC + kinder line + 1–7 feel. State: soulcap_v1.reframes.'],
+    ['distortions', 'Thinking traps', 'Cognitive distortions + thoughts·feelings·actions triangle. Psychoeducation, no state.'],
+    ['wot', 'Steady your system', 'Window of Tolerance self-locate → routes to breath / grounding / check-in.'],
+    ['zones', 'Comfort · Stretch · Panic', 'Learning-zone calibration; panic → shrink the step. Comfort allowed.'],
+    ['stories', 'Stories', 'Fictional/composite lived-experience stories, hope-ending. Labelled not real. State: soulcap_v1.storiesSeen.'],
+  ];
+  for (const [slug, label, cap] of v10Tools) {
+    await seedDemo(page);
+    await openSurface(page, slug);
+    await snap(page, shots, viewport, 'frameworks', 'default', 'v10-' + slug, label, 'you/' + slug, {
+      tab: 'me', state: 'default',
+      caption: cap + ' Why: IA-RATIONALE.md §Reframe & learn.',
+    });
+    await page.evaluate(() => (window as any).__soulcap.galleryReset());
+  }
 }
 
 for (const viewport of ['mobile', 'desktop'] as const) {

@@ -1,7 +1,7 @@
 {
   "app": "SoulCap",
-  "version": "8.0.1",
-  "generated": "2026-07-30T11:46:37.108Z",
+  "version": "8.1.0",
+  "generated": "2026-09-14T09:16:30.321Z",
   "shots": [
     {
       "file": "desktop__accent-lilac__calm.png",
@@ -949,6 +949,78 @@
       "tab": "chrome",
       "state": "default",
       "caption": "Under 18. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
+    },
+    {
+      "file": "desktop__default__v10-distortions.png",
+      "label": "Thinking traps",
+      "route": "you/distortions",
+      "viewport": "desktop",
+      "pack": "frameworks",
+      "variant": "default",
+      "tab": "me",
+      "state": "default",
+      "caption": "Cognitive distortions + thoughts·feelings·actions triangle. Psychoeducation, no state. Why: IA-RATIONALE.md §Reframe & learn.",
+      "rationale": "IA-RATIONALE.md"
+    },
+    {
+      "file": "desktop__default__v10-emotion.png",
+      "label": "Name a feeling",
+      "route": "you/emotion",
+      "viewport": "desktop",
+      "pack": "frameworks",
+      "variant": "default",
+      "tab": "me",
+      "state": "default",
+      "caption": "Emotion wheel — core→nuanced word + optional SUDS. Selection: chips/slider. State: soulcap_v1.emotionNotes. Why: IA-RATIONALE.md §Reframe & learn.",
+      "rationale": "IA-RATIONALE.md"
+    },
+    {
+      "file": "desktop__default__v10-reframe.png",
+      "label": "Reframe a harsh thought",
+      "route": "you/reframe",
+      "viewport": "desktop",
+      "pack": "frameworks",
+      "variant": "default",
+      "tab": "me",
+      "state": "default",
+      "caption": "Belief reframe (CBT-style, never EMDR): NC→PC + kinder line + 1–7 feel. State: soulcap_v1.reframes. Why: IA-RATIONALE.md §Reframe & learn.",
+      "rationale": "IA-RATIONALE.md"
+    },
+    {
+      "file": "desktop__default__v10-stories.png",
+      "label": "Stories",
+      "route": "you/stories",
+      "viewport": "desktop",
+      "pack": "frameworks",
+      "variant": "default",
+      "tab": "me",
+      "state": "default",
+      "caption": "Fictional/composite lived-experience stories, hope-ending. Labelled not real. State: soulcap_v1.storiesSeen. Why: IA-RATIONALE.md §Reframe & learn.",
+      "rationale": "IA-RATIONALE.md"
+    },
+    {
+      "file": "desktop__default__v10-wot.png",
+      "label": "Steady your system",
+      "route": "you/wot",
+      "viewport": "desktop",
+      "pack": "frameworks",
+      "variant": "default",
+      "tab": "me",
+      "state": "default",
+      "caption": "Window of Tolerance self-locate → routes to breath / grounding / check-in. Why: IA-RATIONALE.md §Reframe & learn.",
+      "rationale": "IA-RATIONALE.md"
+    },
+    {
+      "file": "desktop__default__v10-zones.png",
+      "label": "Comfort · Stretch · Panic",
+      "route": "you/zones",
+      "viewport": "desktop",
+      "pack": "frameworks",
+      "variant": "default",
+      "tab": "me",
+      "state": "default",
+      "caption": "Learning-zone calibration; panic → shrink the step. Comfort allowed. Why: IA-RATIONALE.md §Reframe & learn.",
       "rationale": "IA-RATIONALE.md"
     },
     {
@@ -3229,6 +3301,78 @@
       "tab": "chrome",
       "state": "default",
       "caption": "Under 18. Selection: tap rows / chips. State: localStorage soulcap_v1. Why: see IA-RATIONALE.md.",
+      "rationale": "IA-RATIONALE.md"
+    },
+    {
+      "file": "mobile__default__v10-distortions.png",
+      "label": "Thinking traps",
+      "route": "you/distortions",
+      "viewport": "mobile",
+      "pack": "frameworks",
+      "variant": "default",
+      "tab": "me",
+      "state": "default",
+      "caption": "Cognitive distortions + thoughts·feelings·actions triangle. Psychoeducation, no state. Why: IA-RATIONALE.md §Reframe & learn.",
+      "rationale": "IA-RATIONALE.md"
+    },
+    {
+      "file": "mobile__default__v10-emotion.png",
+      "label": "Name a feeling",
+      "route": "you/emotion",
+      "viewport": "mobile",
+      "pack": "frameworks",
+      "variant": "default",
+      "tab": "me",
+      "state": "default",
+      "caption": "Emotion wheel — core→nuanced word + optional SUDS. Selection: chips/slider. State: soulcap_v1.emotionNotes. Why: IA-RATIONALE.md §Reframe & learn.",
+      "rationale": "IA-RATIONALE.md"
+    },
+    {
+      "file": "mobile__default__v10-reframe.png",
+      "label": "Reframe a harsh thought",
+      "route": "you/reframe",
+      "viewport": "mobile",
+      "pack": "frameworks",
+      "variant": "default",
+      "tab": "me",
+      "state": "default",
+      "caption": "Belief reframe (CBT-style, never EMDR): NC→PC + kinder line + 1–7 feel. State: soulcap_v1.reframes. Why: IA-RATIONALE.md §Reframe & learn.",
+      "rationale": "IA-RATIONALE.md"
+    },
+    {
+      "file": "mobile__default__v10-stories.png",
+      "label": "Stories",
+      "route": "you/stories",
+      "viewport": "mobile",
+      "pack": "frameworks",
+      "variant": "default",
+      "tab": "me",
+      "state": "default",
+      "caption": "Fictional/composite lived-experience stories, hope-ending. Labelled not real. State: soulcap_v1.storiesSeen. Why: IA-RATIONALE.md §Reframe & learn.",
+      "rationale": "IA-RATIONALE.md"
+    },
+    {
+      "file": "mobile__default__v10-wot.png",
+      "label": "Steady your system",
+      "route": "you/wot",
+      "viewport": "mobile",
+      "pack": "frameworks",
+      "variant": "default",
+      "tab": "me",
+      "state": "default",
+      "caption": "Window of Tolerance self-locate → routes to breath / grounding / check-in. Why: IA-RATIONALE.md §Reframe & learn.",
+      "rationale": "IA-RATIONALE.md"
+    },
+    {
+      "file": "mobile__default__v10-zones.png",
+      "label": "Comfort · Stretch · Panic",
+      "route": "you/zones",
+      "viewport": "mobile",
+      "pack": "frameworks",
+      "variant": "default",
+      "tab": "me",
+      "state": "default",
+      "caption": "Learning-zone calibration; panic → shrink the step. Comfort allowed. Why: IA-RATIONALE.md §Reframe & learn.",
       "rationale": "IA-RATIONALE.md"
     },
     {

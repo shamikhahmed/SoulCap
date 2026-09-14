@@ -1,6 +1,6 @@
 # SoulCap — Interactive QA matrix
 
-**Version:** 8.0.2 · Updated **2026-07-30**  
+**Version:** 8.1.0 · Updated **2026-09-14**  
 **Method:** Every primary control class below was exercised via Playwright e2e and/or live Chromium against `/?demo=1` or `freshThrough`. Failures fixed before ship; re-verify = `npm run verify`.
 
 Legend: **P** = pass (live/e2e) · **N/A** = surface absent by product law.
@@ -154,6 +154,24 @@ Legend: **P** = pass (live/e2e) · **N/A** = surface absent by product law.
 | Offline reload | UI present | true | P | PERF live |
 | What's-new body | Derives `APP_VERSION` | Template | P | 7.0.13+ |
 | Demo mode | `?demo=1` labelled seed | Works | P | seedDemo |
+
+---
+
+## v10 frameworks — You › "Reframe & learn" (8.1.0)
+
+| Control | Verified | How |
+|---|---|---|
+| Group renders with 6 rows | **P** | e2e `Reframe & learn exposes all six tools` (mobile+desktop) |
+| Name a feeling — core→word chips, note, SUDS, save | **P** | live: save persists `emotionNotes` {core,word,suds}; e2e persistence |
+| Reframe — neg/family/positive/VoC, save | **P** | live: persists `reframes` {negative,family,positive,voc}; e2e |
+| Reframe never claims EMDR | **P** | e2e: body has "not EMDR", never "eye movement/reprocessing/bilateral" |
+| Thinking traps — distortions + triangle open | **P** | e2e opens subview title "Thinking traps" |
+| Steady your system — WoT locate → breath/ground/checkin | **P** | live: chip reveals action button (Open breathing) |
+| Comfort·Stretch·Panic — zone chips + panic shrink field | **P** | live render + on-brand screenshot |
+| Stories — labelled fiction | **P** | e2e: `.story-card` contains "made-up example" |
+| Free text (note/positive/smaller-step) → safety kernel | **P** | `wireSafetyText`/`openPanicIfTier3` on every textarea |
+| Schema v14 migration (emotionNotes/reframes/storiesSeen) | **P** | e2e `migrates to v14 … v10 frameworks` |
+| Gallery capture (6 tools × mobile+desktop) | **P** | `npm run gallery` → `frameworks` pack in manifest |
 
 ---
 

@@ -26,6 +26,19 @@
 (function () {
   'use strict';
 
+  /* View Transitions reject their promises with InvalidStateError when a newer
+   * transition supersedes them (expected on fast navigation). Swallow ONLY that
+   * benign case globally so it never surfaces as console noise; everything else
+   * still throws normally. */
+  if (typeof window !== 'undefined' && window.addEventListener) {
+    window.addEventListener('unhandledrejection', function (e) {
+      var r = e && e.reason;
+      if (r && r.name === 'InvalidStateError' && /transition/i.test(String(r.message || ''))) {
+        e.preventDefault();
+      }
+    });
+  }
+
   /* ── Safety kernel ────────────────────────────────────────────────────────
    * Ported from backend SafetyGateService. Only place risk is assessed.
    * Tier 3 is terminal. Inflected forms listed explicitly (substring match:
@@ -5101,7 +5114,7 @@
     v.appendChild(tools);
 
     /* v10 — reflective frameworks + stories (folded into You, second group). */
-    var learn = el('div', { class: 'section-block me-tools qd-ruled' }, [
+    var learn = el('div', { class: 'section-block me-learn qd-ruled' }, [
       el('p', { class: 'section-label', text: 'Reframe & learn' })
     ]);
     var learnGroup = el('div', { class: 'list-group qd-list-group' });
@@ -5586,6 +5599,8 @@
         p.appendChild(refineWrap);
         p.appendChild(el('p', { class: 'lab', text: EMOTION_UI.notePlaceholder }));
         p.appendChild(note);
+        var suds = { n: null };
+        p.appendChild(sudsRow(0, function (v) { suds.n = v; }));
         p.appendChild(el('p', { class: 'p-voice', text: EMOTION_UI.affectNote }));
         var recentBox = el('div', { class: 'stack' });
         function drawRecent() {
@@ -5601,7 +5616,7 @@
           onclick: function () {
             if (!picked.word) return;
             openPanicIfTier3(note.value, { closeSheet: false });
-            state.emotionNotes.push({ t: Date.now(), core: picked.core, word: picked.word, note: note.value.trim().slice(0, 200) });
+            state.emotionNotes.push({ t: Date.now(), core: picked.core, word: picked.word, note: note.value.trim().slice(0, 200), suds: typeof suds.n === 'number' ? suds.n : null });
             save(); note.value = ''; drawRecent(); haptic('tick');
           }
         }));
@@ -6488,6 +6503,12 @@
         case 'principles': principlesSheet(); break;
         case 'self-concept': selfConceptSheet(); break;
         case 'habits': habitsOverviewSheet(); break;
+        case 'emotion': emotionSheet(); break;
+        case 'reframe': reframeSheet(); break;
+        case 'distortions': distortionsSheet(); break;
+        case 'zones': zonesSheet(); break;
+        case 'wot': wotSheet(); break;
+        case 'stories': storiesSheet(); break;
         case 'manual': manualSheet(); break;
         case 'patterns': patternsOverviewSheet(); break;
         case 'weekly': weeklyOverviewSheet(); break;

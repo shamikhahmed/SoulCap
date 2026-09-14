@@ -133,7 +133,7 @@ test.describe('v0.9 local model', () => {
       const stored = JSON.parse(localStorage.getItem('soulcap_v1')!);
       return { state, stored };
     });
-    expect(result.state.v).toBe(13);
+    expect(result.state.v).toBe(14);
     expect(result.state.checkins[0]).toMatchObject({
       id: 'checkin-1700000000000-0',
       state: 'Wired',
@@ -144,7 +144,7 @@ test.describe('v0.9 local model', () => {
     expect(result.state.drip.answers).toEqual({});
     expect(result.state.drip.skipped).toEqual({});
     expect(result.state.drip.askedToday).toEqual([]);
-    expect(result.stored.v).toBe(13);
+    expect(result.stored.v).toBe(14);
     expect(result.stored.profile.name).toBe('Migration test');
   });
 
@@ -163,7 +163,7 @@ test.describe('v0.9 local model', () => {
       memory: (window as any).__soulcap.getState(),
       stored: JSON.parse(localStorage.getItem('soulcap_v1')!)
     }));
-    expect(result.memory.v).toBe(13);
+    expect(result.memory.v).toBe(14);
     expect(result.memory.checkins[0]).toMatchObject({ state: 'Flat', dims: {}, triggers: [] });
     expect(result.stored.v).toBe(5);
     expect(result.stored.checkins[0]).toEqual({ t: 1700000000000, state: 'Flat' });
@@ -287,7 +287,7 @@ test.describe('v1.0 offline library and daily supports', () => {
       state: (window as any).__soulcap.getState(),
       stored: JSON.parse(localStorage.getItem('soulcap_v1')!)
     }));
-    expect(result.state.v).toBe(13);
+    expect(result.state.v).toBe(14);
     expect(result.state.profile.name).toBe('Version six');
     expect(result.state.checkins[0].id).toBe('kept');
     expect(result.state.dailySupports).toEqual({ selected: [], days: {} });
@@ -296,7 +296,7 @@ test.describe('v1.0 offline library and daily supports', () => {
     expect(result.state.drip.askedToday).toEqual([]);
     expect(result.state.userModel).toEqual({});
     expect(result.state.locale).toBe('en');
-    expect(result.stored.v).toBe(13);
+    expect(result.stored.v).toBe(14);
   });
 
   test('library search announces result count for assistive tech', async ({ page }) => {
@@ -580,7 +580,7 @@ test.describe('v1.9.3 reflection screeners', () => {
     await page.goto('/');
     await page.waitForFunction(() => Boolean((window as any).__soulcap));
     const v = await page.evaluate(() => (window as any).__soulcap.getState().v);
-    expect(v).toBe(13);
+    expect(v).toBe(14);
     const results = await page.evaluate(() => (window as any).__soulcap.getState().screenerResults);
     expect(results).toEqual({});
   });
@@ -598,12 +598,12 @@ test.describe('v1.9.3 reflection screeners', () => {
       const s = (window as any).__soulcap.getState();
       return { v: s.v, pathSessions: s.pathSessions, pathPrefs: s.pathPrefs };
     });
-    expect(result.v).toBe(13);
+    expect(result.v).toBe(14);
     expect(result.pathSessions).toEqual([]);
     expect(result.pathPrefs).toEqual({ hide: false });
   });
 
-  test('schema migrates to v13 with selfConcept and habits', async ({ page }) => {
+  test('schema migrates to v14 with selfConcept, habits, and v10 frameworks', async ({ page }) => {
     await page.addInitScript(() => {
       localStorage.setItem('soulcap_v1', JSON.stringify({
         v: 12, welcomed: true, onboarded: true, ageOk: true, consent: true,
@@ -614,13 +614,17 @@ test.describe('v1.9.3 reflection screeners', () => {
     await page.waitForFunction(() => Boolean((window as any).__soulcap));
     const result = await page.evaluate(() => {
       const s = (window as any).__soulcap.getState();
-      return { v: s.v, selfConcept: s.selfConcept, habits: s.habits, experienceViews: s.experienceViews };
+      return { v: s.v, selfConcept: s.selfConcept, habits: s.habits, experienceViews: s.experienceViews,
+        emotionNotes: s.emotionNotes, reframes: s.reframes, storiesSeen: s.storiesSeen };
     });
-    expect(result.v).toBe(13);
+    expect(result.v).toBe(14);
     expect(result.selfConcept.updatedAt).toBeNull();
     expect(Object.keys(result.selfConcept.areas).sort()).toEqual(['family', 'friends', 'online', 'work']);
     expect(result.habits).toEqual([]);
     expect(result.experienceViews).toEqual({});
+    expect(result.emotionNotes).toEqual([]);
+    expect(result.reframes).toEqual([]);
+    expect(result.storiesSeen).toEqual([]);
   });
 
 });
@@ -803,7 +807,7 @@ test.describe('v1.1 adaptive drip, themes, locale', () => {
       state: (window as any).__soulcap.getState(),
       stored: JSON.parse(localStorage.getItem('soulcap_v1')!)
     }));
-    expect(result.state.v).toBe(13);
+    expect(result.state.v).toBe(14);
     expect(result.state.profile.name).toBe('Version seven');
     expect(result.state.dailySupports.selected).toEqual(['water']);
     expect(result.state.drip.answers).toEqual({});
@@ -811,7 +815,7 @@ test.describe('v1.1 adaptive drip, themes, locale', () => {
     expect(result.state.drip.askedToday).toEqual([]);
     expect(result.state.userModel).toEqual({});
     expect(result.state.locale).toBe('en');
-    expect(result.stored.v).toBe(13);
+    expect(result.stored.v).toBe(14);
   });
 
   test('drip answers update estimates and stop after four asks today', async ({ page }) => {
@@ -2238,7 +2242,7 @@ test.describe('v1.4 bundled features', () => {
       state: (window as any).__soulcap.getState(),
       stored: JSON.parse(localStorage.getItem('soulcap_v1')!)
     }));
-    expect(result.state.v).toBe(13);
+    expect(result.state.v).toBe(14);
     expect(result.state.locale).toBe('rui');
     expect(result.stored.locale).toBe('rui');
     expect(result.state.mapPace).toBe('drift');
@@ -2263,13 +2267,13 @@ test.describe('v1.6 bundled features', () => {
       state: (window as any).__soulcap.getState(),
       stored: JSON.parse(localStorage.getItem('soulcap_v1')!)
     }));
-    expect(result.state.v).toBe(13);
+    expect(result.state.v).toBe(14);
     expect(result.state.manual.lines).toEqual([]);
     expect(result.state.libraryBookmarks).toEqual([]);
     expect(result.state.people[0].notes).toBe('');
     expect(result.state.people[0].events).toEqual([]);
     expect(result.state.people[0].ringHistory).toEqual([]);
-    expect(result.stored.v).toBe(13);
+    expect(result.stored.v).toBe(14);
   });
 
   test('manual refresh adds from principle and preserves edited user line', async ({ page }) => {
@@ -3284,5 +3288,55 @@ test.describe('Phase audit budgets', () => {
       expect(norm[i], `missing or out of order: ${want[w]} in ${JSON.stringify(norm)}`).toBe(want[w]);
       i++;
     }
+  });
+});
+
+test.describe('v8.1.0 therapist-informed frameworks (SPEC-v10)', () => {
+  test('You › Reframe & learn exposes all six tools, each opens', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="me"]') as HTMLElement).click());
+    const learn = page.locator('#view-me .me-learn');
+    await expect(learn).toContainText('Reframe & learn');
+    for (const label of ['Name a feeling', 'Reframe a harsh thought', 'Thinking traps',
+      'Steady your system', 'Comfort · Stretch · Panic', 'Stories']) {
+      await expect(learn.getByText(label, { exact: true })).toBeVisible();
+    }
+    // Each opens a subview with the matching title.
+    await learn.getByText('Thinking traps', { exact: true }).click();
+    await expect(page.locator('.nav-title')).toContainText('Thinking traps');
+  });
+
+  test('reframe is a CBT reframe — never names EMDR', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="me"]') as HTMLElement).click());
+    await page.locator('#view-me .me-learn').getByText('Reframe a harsh thought', { exact: true }).click();
+    await expect(page.locator('.nav-title')).toContainText('Reframe a harsh thought');
+    // Honest framing: it may say "not EMDR", but must never present itself AS EMDR
+    // or mention its mechanics (eye movements / reprocessing / bilateral).
+    await expect(page.locator('body')).toContainText('not EMDR');
+    await expect(page.locator('body')).not.toContainText('eye movement');
+    await expect(page.locator('body')).not.toContainText('reprocessing');
+    await expect(page.locator('body')).not.toContainText('bilateral');
+  });
+
+  test('reframe and emotion notes persist to state', async ({ page }) => {
+    await seedDemo(page);
+    const result = await page.evaluate(() => {
+      const S = (window as any).__soulcap.getState();
+      S.reframes.push({ id: 'x', t: Date.now(), negative: 'I am not good enough',
+        family: 'worth', positive: 'I am learning', voc: 4 });
+      S.emotionNotes.push({ t: Date.now(), core: 'Fear', word: 'anxious', note: '', suds: 40 });
+      return { reframes: S.reframes.length, emotion: S.emotionNotes.length };
+    });
+    expect(result.reframes).toBe(1);
+    expect(result.emotion).toBe(1);
+  });
+
+  test('stories are labelled fiction, not real people', async ({ page }) => {
+    await seedDemo(page);
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="me"]') as HTMLElement).click());
+    await page.locator('#view-me .me-learn').getByText('Stories', { exact: true }).click();
+    await expect(page.locator('.nav-title')).toContainText('Stories');
+    await expect(page.locator('.story-card').first()).toContainText('made-up example');
   });
 });
