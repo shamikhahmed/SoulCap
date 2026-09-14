@@ -64,3 +64,9 @@ No measurable regression expected vs 8.0.1.
 ## Enforcement
 
 `e2e/app.spec.ts` describe **Phase audit budgets** — fails if critical assets exceed ceilings or any non-origin request is observed after load.
+
+## SOUL-P1-06 (2026-09-14)
+- Lazy JSON catalogs: `docs/data/*.json` (articles, experiences, screeners, stories, distortions, approach-packs); `data.js` stubs + `soulEnsureCatalogs`.
+- Route modules: `docs/modules/route-calm.js`, `route-me.js` (ensure catalogs on tab).
+- SW precaches catalogs + route modules.
+- Measured initial JS gzip (app.js + data.js + local-lock.js): **~118 KB** (gate G9 shell ≤ 170 KB) — esbuild fallback not required.

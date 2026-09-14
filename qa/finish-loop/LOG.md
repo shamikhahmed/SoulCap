@@ -52,3 +52,6 @@ Verify: SOUL-P1-04 first-fold + 8 regression fixes; mobile app+safety subset gre
 Built CapLocalLock (PBKDF2 600k · AES-GCM · lockout delays · WebAuthn optional).
 SoulCap: Settings → Privacy → App lock; seal sensitive keys; early #applock gate; auto-lock; forgot→erase; export blocked while locked.
 Verify: node unit tests; e2e/lock.spec.ts 3/3 mobile
+
+### SOUL-P1-06 — Performance split (Q-5)                 status: ✅
+Lazy JSON catalogs + route modules + SW precache. Shell JS gzip ~118KB (<170). esbuild not needed.

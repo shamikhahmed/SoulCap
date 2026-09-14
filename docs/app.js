@@ -6744,12 +6744,35 @@
 
   /* ── Router ────────────────────────────────────────────────────────────── */
   var tab = 'now';
+  function loadRouteModule(name) {
+    window.SoulCapRoutes = window.SoulCapRoutes || {};
+    if (window.SoulCapRoutes[name] && window.SoulCapRoutes[name].ensure) {
+      return window.SoulCapRoutes[name].ensure();
+    }
+    return new Promise(function (resolve, reject) {
+      var s = document.createElement('script');
+      s.src = 'modules/route-' + name + '.js';
+      s.async = true;
+      s.onload = function () {
+        var mod = window.SoulCapRoutes[name];
+        if (mod && mod.ensure) mod.ensure().then(resolve).catch(reject);
+        else resolve();
+      };
+      s.onerror = function () { reject(new Error('route module ' + name)); };
+      document.head.appendChild(s);
+    });
+  }
   function selectTab(t) {
     closeSubviewImmediate();
     tab = t;
-    withViewTransition(function () {
-      render();
-      window.scrollTo(0, 0);
+    var prep = Promise.resolve();
+    if (t === 'calm') prep = loadRouteModule('calm');
+    if (t === 'me') prep = loadRouteModule('me');
+    prep.catch(function () { /* degrade: catalogs may already be warm from boot */ }).then(function () {
+      withViewTransition(function () {
+        render();
+        window.scrollTo(0, 0);
+      });
     });
   }
   // Re-render in place without jumping to the top — for toggles/pickers inside a
@@ -6941,17 +6964,31 @@
 
     if ('speechSynthesis' in window) { loadVoices(); window.speechSynthesis.onvoiceschanged = loadVoices; }
 
-    render();
-    try {
-      window.__APP_READY__ = true;
-      document.documentElement.dataset.appReady = 'true';
-    } catch (e) {}
-    setTimeout(function () { loadGsap(); }, 0);
-    if (queryValue('panic') === '1') {
-      $('#splash').classList.add('gone');
-      openPanic();
-    } else if (requestedTab === 'journal' && queryValue('new') === '1' && state.onboarded) {
-      setTimeout(function () { newEntrySheet(); }, 400);
+    var catalogNames = ['EXPERIENCES', 'ARTICLES', 'SCREENERS', 'STORIES', 'DISTORTIONS', 'APPROACH_PACKS'];
+    function finishBoot() {
+      render();
+      try {
+        window.__APP_READY__ = true;
+        document.documentElement.dataset.appReady = 'true';
+        if (window.__soulcap) {
+          window.__soulcap.experienceIds = EXPERIENCES.map(function (item) { return item.id; });
+        }
+      } catch (e) {}
+      setTimeout(function () { loadGsap(); }, 0);
+      if (queryValue('panic') === '1') {
+        $('#splash').classList.add('gone');
+        openPanic();
+      } else if (requestedTab === 'journal' && queryValue('new') === '1' && state.onboarded) {
+        setTimeout(function () { newEntrySheet(); }, 400);
+      }
+    }
+    if (typeof soulEnsureCatalogs === 'function') {
+      soulEnsureCatalogs(catalogNames).then(finishBoot).catch(function (err) {
+        console.warn('SoulCap catalog preload', err);
+        finishBoot();
+      });
+    } else {
+      finishBoot();
     }
 
     var splash = $('#splash');

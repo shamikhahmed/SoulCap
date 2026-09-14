@@ -20,7 +20,7 @@ async function dismissSplash(page: Page) {
 
 async function seedDemo(page: Page) {
   await page.goto('/?demo=1');
-  await page.waitForFunction(() => !!(window as any).__soulcap);
+  await page.waitForFunction(() => !!(window as any).__soulcap && (window as any).__APP_READY__ === true);
   await dismissSplash(page);
 }
 
