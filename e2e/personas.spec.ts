@@ -20,7 +20,7 @@ async function dismissSplash(page: Page) {
 
 async function seedDemo(page: Page) {
   await page.goto('/?demo=1');
-  await page.waitForFunction(() => Boolean((window as any).__soulcap));
+  await page.waitForFunction(() => Boolean((window as any).__soulcap) && (window as any).__APP_READY__ === true);
   await dismissSplash(page);
 }
 
@@ -93,7 +93,7 @@ test.describe('Synthetic user journeys', () => {
 
   test('low-energy returning user gets a fitted skill without engagement penalty', async ({ page }) => {
     await seedDemo(page);
-    await page.locator('#view-now .qd-row').filter({ hasText: 'Heavy' }).click();
+    await page.locator('#view-now .qd-checkin .chip').filter({ hasText: 'Heavy' }).click();
     await selectTab(page, 'calm');
     await page.getByRole('button', { name: /Lift a low mood/ }).click();
     await page.getByRole('button', { name: 'On my own' }).click();
