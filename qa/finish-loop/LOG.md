@@ -55,3 +55,11 @@ Verify: node unit tests; e2e/lock.spec.ts 3/3 mobile
 
 ### SOUL-P1-06 — Performance split (Q-5)                 status: ✅
 Lazy JSON catalogs + route modules + SW precache. Shell JS gzip ~118KB (<170). esbuild not needed.
+
+### SOUL-P2 set — privacy / a11y / lab docs / tokens           status: ✅
+privacy.html (template §4.4); outline:focus-visible; sub-11px cleared; About → Privacy;
+README lab folders (P-SOUL-2); cap-foundation.css vendored; Pages already docs-only.
+Native confirm()/alert(): none. Fonts: system stack (no Google Fonts).
+Gallery: deferred to release commit if time — fictional names already in fixtures (Alex).
+
+### Tier 1 release prep — 8.2.0 / soulcap-v820

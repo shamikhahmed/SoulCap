@@ -4123,6 +4123,7 @@
       p.appendChild(el('div', { class: 'notice', text: ABOUT_UI.honesty }));
       p.appendChild(el('p', { class: 'p-sm', text: 'Version ' + APP_VERSION }));
       p.appendChild(el('p', { class: 'about-credits', text: ABOUT_UI.credits }));
+      p.appendChild(el('a', { class: 'btn ghost', href: 'privacy.html', target: '_blank', rel: 'noopener', text: 'Privacy', style: 'text-decoration:none;text-align:center' }));
       p.appendChild(el('button', { class: 'btn quiet', text: ABOUT_UI.close, onclick: closeSheet }));
     });
   }
@@ -6433,7 +6434,7 @@
       }
     });
   }
-  var APP_VERSION = '8.1.1';
+  var APP_VERSION = '8.2.0';
   var settingsQuery = '';
   function settingsGroup(v, title, kids) {
     v.appendChild(el('p', { class: 'eyebrow settings-eyebrow', text: title }));
@@ -7009,7 +7010,7 @@
     setTimeout(dismissSplash, state.onboarded ? 1600 : 2600);
     splash.addEventListener('click', dismissSplash);
 
-    if ('serviceWorker' in navigator) window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js?v=8.1.1').catch(function () {}); });
+    if ('serviceWorker' in navigator) window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js?v=8.2.0').catch(function () {}); });
   }
 
   window.__soulcap = {
