@@ -1,3 +1,8 @@
+## 8.2.0 — 2026-09-14
+- Tier 1 finish: Now simplification (Q-3), optional app lock (G-10), lazy catalogs + route modules (Q-5).
+- Region-aware Help + age gate (D-05); hosted `docs/privacy.html`; foundation tokens linked.
+- SW `soulcap-v820` · register `?v=8.2.0`.
+
 ## 8.1.1 — 2026-09-14
 - Release (C-01): version + SW `soulcap-v811` so installed PWAs receive Phase 0 fixture privacy fix.
 

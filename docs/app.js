@@ -91,6 +91,22 @@
 
   /* ── State ─────────────────────────────────────────────────────────────── */
   var KEY = 'soulcap_v1';
+  var PRE_LOCK_BACKUP_KEY = 'soulcap_premigration_backup_v14';
+  var LOCK_BIO_IDB = 'soulcap_lock_bio';
+  var SENSITIVE_KEYS = [
+    'journal', 'checkins', 'people', 'links', 'safetyPlan', 'episodes', 'history',
+    'principles', 'manual', 'pendingReflection', 'reflectionPrefs', 'screenerResults',
+    'profile', 'emotionNotes', 'reframes', 'parkedThoughts', 'selfConcept', 'habits',
+    'drip', 'userModel', 'pathSessions', 'skillRuns', 'favourites', 'emotionFavorites',
+    'journalCover', 'resetItems', 'resetDone', 'dailySupports', 'storiesSeen',
+    'experienceViews', 'concerns', 'libraryBookmarks'
+  ];
+  var Lock = (typeof window !== 'undefined' && window.CapLocalLock) ? window.CapLocalLock : null;
+  var lockDataKey = null;
+  var lockNeedsUnlock = false;
+  var sealedBlob = null;
+  var lockLastActive = Date.now();
+  var sealedSaveChain = Promise.resolve();
   var DEFAULT = {
     v: 14, onboarded: false, welcomed: false, ageOk: null, consent: false,
     profile: { name: '', age: '', pronouns: '' },
@@ -113,13 +129,14 @@
     libraryBookmarks: [],
     windDownHour: null,
     screenerResults: {},
-    notices: { clinicalEnglishDismissed: false, seenVersion: null },
+    notices: { clinicalEnglishDismissed: false, seenVersion: null, crisisRegion: 'other' },
     pathSessions: [],
     pathPrefs: { hide: false },
     selfConcept: { areas: {}, updatedAt: null },
     habits: [],
     experienceViews: {},
-    emotionNotes: [], reframes: [], storiesSeen: []
+    emotionNotes: [], reframes: [], storiesSeen: [],
+    lock: null
   };
   var VALID_THEMES = { light:1, dark:1, night:1, ocean:1, forest:1, amoled:1 };
   var DRIP_DAY_CAP = 4;
@@ -132,8 +149,30 @@
     try {
       var raw = localStorage.getItem(KEY);
       if (!raw) return clone(DEFAULT);
-      var migration = migrateState(JSON.parse(raw));
+      var parsed = JSON.parse(raw);
+      sealedBlob = null;
+      lockNeedsUnlock = false;
+      lockDataKey = null;
+      if (parsed && parsed.lock && parsed.lock.enabled && parsed.sealed && Lock) {
+        sealedBlob = parsed.sealed;
+        lockNeedsUnlock = true;
+        var shellSrc = Lock.stripSensitive(parsed, SENSITIVE_KEYS.concat(['sealed']));
+        var shellMig = migrateState(shellSrc);
+        var shell = Object.assign(clone(DEFAULT), shellMig.value);
+        shell.lock = Lock.normalizeMeta(parsed.lock);
+        /* Sensitive fields stay at DEFAULT empties until unlock — no plaintext paint. */
+        SENSITIVE_KEYS.forEach(function (k) {
+          if (Object.prototype.hasOwnProperty.call(DEFAULT, k)) shell[k] = clone(DEFAULT[k]);
+        });
+        return finalizeLoaded(shell, shellMig.changed);
+      }
+      var migration = migrateState(parsed);
       var p = Object.assign(clone(DEFAULT), migration.value);
+      return finalizeLoaded(p, migration.changed);
+    } catch (e) { return clone(DEFAULT); }
+  }
+
+  function finalizeLoaded(p, changed) {
       p.profile = Object.assign(clone(DEFAULT.profile), p.profile || {});
       p.voice = Object.assign(clone(DEFAULT.voice), p.voice || {});
       p.history = p.history || {};
@@ -184,6 +223,8 @@
       } catch (noticeErr) {}
       p.notices.clinicalEnglishDismissed = p.notices.clinicalEnglishDismissed === true;
       if (typeof p.notices.seenVersion !== 'string') p.notices.seenVersion = null;
+      var crisisRegions = { pk: 1, uk: 1, us: 1, uae: 1, other: 1 };
+      if (!crisisRegions[p.notices.crisisRegion]) p.notices.crisisRegion = 'other';
       p.pathSessions = Array.isArray(p.pathSessions) ? p.pathSessions : [];
       p.pathPrefs = Object.assign(clone(DEFAULT.pathPrefs), p.pathPrefs || {});
       p.pathPrefs.hide = p.pathPrefs.hide === true;
@@ -196,14 +237,19 @@
       if (p.locale !== 'en' && p.locale !== 'rui') p.locale = 'en';
       if (p.theme && !VALID_THEMES[p.theme]) p.theme = null;
       p.checkins = (Array.isArray(p.checkins) ? p.checkins : []).map(normalizeCheckin);
+      if (p.lock && Lock) p.lock = Lock.normalizeMeta(p.lock);
+      else p.lock = null;
       delete p.inferences;
       delete p.region;
-      if (migration.changed) {
-        try { localStorage.setItem(KEY, JSON.stringify(p)); } catch (migrationError) {}
+      delete p.sealed;
+      if (changed) {
+        try {
+          if (!(p.lock && p.lock.enabled)) localStorage.setItem(KEY, JSON.stringify(p));
+        } catch (migrationError) {}
       }
       return p;
-    } catch (e) { return clone(DEFAULT); }
   }
+
   function migrateState(saved) {
     var p = clone(saved || {}), changed = false;
     var version = typeof p.v === 'number' ? p.v : 5;
@@ -386,9 +432,326 @@
     });
   }
   function save() {
-    try { localStorage.setItem(KEY, JSON.stringify(state)); return true; }
-    catch (e) { return false; } // quota / private mode
+    try {
+      if (state.lock && state.lock.enabled && lockDataKey && Lock && !lockNeedsUnlock) {
+        scheduleSealedSave();
+        return true;
+      }
+      var plain = clone(state);
+      delete plain.sealed;
+      if (plain.lock && !plain.lock.enabled) plain.lock = null;
+      localStorage.setItem(KEY, JSON.stringify(plain));
+      return true;
+    } catch (e) { return false; } // quota / private mode
   }
+
+  function buildSealedEnvelope(sealed) {
+    var shell = Lock.stripSensitive(state, SENSITIVE_KEYS);
+    shell.lock = Lock.normalizeMeta(state.lock);
+    shell.sealed = sealed;
+    delete shell._sealed;
+    return shell;
+  }
+
+  function scheduleSealedSave() {
+    sealedSaveChain = sealedSaveChain.then(function () {
+      return persistSealedNow();
+    }).catch(function (err) {
+      console.warn('SoulCap sealed save failed', err);
+    });
+  }
+
+  function persistSealedNow() {
+    if (!Lock || !lockDataKey || !state.lock || !state.lock.enabled) return Promise.resolve();
+    var sensitive = Lock.pickSensitive(state, SENSITIVE_KEYS);
+    return Lock.encryptJson(lockDataKey, sensitive).then(function (sealed) {
+      sealedBlob = sealed;
+      var envelope = buildSealedEnvelope(sealed);
+      localStorage.setItem(KEY, JSON.stringify(envelope));
+    });
+  }
+
+  function flushSave() {
+    if (state.lock && state.lock.enabled && lockDataKey) return sealedSaveChain.then(function () { return persistSealedNow(); });
+    return Promise.resolve(save());
+  }
+
+  function showAppLock() {
+    var gate = $('#applock');
+    if (!gate) return;
+    document.documentElement.setAttribute('data-app-locked', '1');
+    gate.hidden = false;
+    gate.classList.add('on');
+    gate.setAttribute('aria-hidden', 'false');
+    var bio = $('#applockBio');
+    if (bio) {
+      var hasBio = !!(state.lock && state.lock.webauthnCredentialId);
+      bio.hidden = !hasBio;
+    }
+    var pin = $('#applockPin');
+    if (pin) { pin.value = ''; setTimeout(function () { pin.focus(); }, 50); }
+    var st = $('#applockStatus');
+    if (st) st.textContent = '';
+  }
+
+  function hideAppLock() {
+    var gate = $('#applock');
+    document.documentElement.removeAttribute('data-app-locked');
+    if (!gate) return;
+    gate.classList.remove('on');
+    gate.hidden = true;
+    gate.setAttribute('aria-hidden', 'true');
+  }
+
+  function applyUnlockedSensitive(payload) {
+    SENSITIVE_KEYS.forEach(function (k) {
+      if (Object.prototype.hasOwnProperty.call(payload, k)) state[k] = payload[k];
+    });
+    state.profile = Object.assign(clone(DEFAULT.profile), state.profile || {});
+    state.people = (Array.isArray(state.people) ? state.people : []).map(normalizePerson);
+    state.checkins = (Array.isArray(state.checkins) ? state.checkins : []).map(normalizeCheckin);
+    state.manual = state.manual && typeof state.manual === 'object' ? state.manual : clone(DEFAULT.manual);
+    lockNeedsUnlock = false;
+    sealedBlob = null;
+    lockLastActive = Date.now();
+    hideAppLock();
+  }
+
+  function unlockWithPasscode(passcode) {
+    if (!Lock || !state.lock) return Promise.reject(new Error('no lock'));
+    return Lock.unlock(state.lock, passcode).then(function (res) {
+      state.lock = res.meta;
+      lockDataKey = res.dataKey;
+      var sealed = sealedBlob;
+      if (!sealed) {
+        try {
+          var raw = JSON.parse(localStorage.getItem(KEY) || '{}');
+          sealed = raw.sealed;
+        } catch (e) {}
+      }
+      if (!sealed) {
+        lockNeedsUnlock = false;
+        hideAppLock();
+        return flushSave().then(function () { render(); });
+      }
+      return Lock.decryptJson(lockDataKey, sealed).then(function (payload) {
+        applyUnlockedSensitive(payload);
+        return flushSave().then(function () { render(); });
+      });
+    }).catch(function (err) {
+      if (err && err.meta) {
+        state.lock = err.meta;
+        try {
+          var raw = JSON.parse(localStorage.getItem(KEY) || '{}');
+          raw.lock = err.meta;
+          localStorage.setItem(KEY, JSON.stringify(raw));
+        } catch (e) {}
+      }
+      throw err;
+    });
+  }
+
+  function sessionLockNow() {
+    if (!(state.lock && state.lock.enabled)) return Promise.resolve();
+    if (!lockDataKey) {
+      lockNeedsUnlock = true;
+      showAppLock();
+      render();
+      return Promise.resolve();
+    }
+    return sealedSaveChain.then(function () { return persistSealedNow(); }).then(function () {
+      lockDataKey = null;
+      lockNeedsUnlock = true;
+      SENSITIVE_KEYS.forEach(function (k) {
+        if (Object.prototype.hasOwnProperty.call(DEFAULT, k)) state[k] = clone(DEFAULT[k]);
+      });
+      try {
+        var raw = JSON.parse(localStorage.getItem(KEY) || '{}');
+        sealedBlob = raw.sealed || sealedBlob;
+      } catch (e) {}
+      closeSheet();
+      closeSubview();
+      closeRunner();
+      closePanic();
+      closeEditor();
+      showAppLock();
+      render();
+    });
+  }
+
+  function wireAppLockUi() {
+    var unlockBtn = $('#applockUnlock');
+    var pin = $('#applockPin');
+    var status = $('#applockStatus');
+    var forgot = $('#applockForgot');
+    var bio = $('#applockBio');
+    if (unlockBtn) unlockBtn.addEventListener('click', function () {
+      var code = pin ? pin.value : '';
+      if (status) status.textContent = 'Unlocking…';
+      unlockWithPasscode(code).then(function () {
+        if (status) status.textContent = '';
+      }).catch(function (err) {
+        if (status) {
+          if (err && err.code === 'LOCKED_OUT') status.textContent = 'Too many attempts. Wait and try again.';
+          else if (err && err.code === 'WRONG_PASSCODE') status.textContent = 'Wrong passcode.';
+          else status.textContent = (err && err.message) || 'Could not unlock.';
+        }
+      });
+    });
+    if (pin) pin.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' && unlockBtn) unlockBtn.click();
+    });
+    if (forgot) forgot.addEventListener('click', function () {
+      var gate = $('#applock');
+      if (gate) gate.classList.add('beneath-sheet');
+      openSheet(function (p) {
+        p.appendChild(el('h2', { class: 'h-sec', text: 'Forgot passcode?' }));
+        p.appendChild(el('p', { class: 'p', text: 'SoulCap can’t recover a forgotten passcode. You can erase all data on this device and start again.' }));
+        p.appendChild(el('button', { class: 'btn danger', text: 'Erase all data', onclick: function () {
+          try {
+            localStorage.removeItem(KEY);
+            localStorage.removeItem(PRE_LOCK_BACKUP_KEY);
+            localStorage.removeItem('soulcap_theme');
+            localStorage.removeItem('soulcap_appearance');
+            localStorage.removeItem('soulcap_locale');
+          } catch (e) {}
+          lockDataKey = null;
+          lockNeedsUnlock = false;
+          sealedBlob = null;
+          state = clone(DEFAULT);
+          if (gate) gate.classList.remove('beneath-sheet');
+          hideAppLock();
+          closeSheet();
+          applyTheme();
+          render();
+        } }));
+        p.appendChild(el('button', { class: 'btn quiet', text: 'Keep trying', onclick: function () {
+          closeSheet();
+          if (gate) gate.classList.remove('beneath-sheet');
+          showAppLock();
+        } }));
+      });
+    });
+    if (bio) bio.addEventListener('click', function () {
+      if (!Lock || !state.lock) return;
+      if (status) status.textContent = 'Waiting for device…';
+      Lock.unlockWithWebAuthn(state.lock, { bioStorageKey: LOCK_BIO_IDB }).then(function (res) {
+        state.lock = res.meta;
+        lockDataKey = res.dataKey;
+        var sealed = sealedBlob;
+        if (!sealed) {
+          try { sealed = JSON.parse(localStorage.getItem(KEY) || '{}').sealed; } catch (e) {}
+        }
+        return Lock.decryptJson(lockDataKey, sealed).then(function (payload) {
+          applyUnlockedSensitive(payload);
+          return flushSave().then(function () { render(); });
+        });
+      }).catch(function (err) {
+        if (status) status.textContent = (err && err.message) || 'Device unlock failed.';
+      });
+    });
+
+    document.addEventListener('visibilitychange', function () {
+      if (document.visibilityState === 'hidden') {
+        lockLastActive = Date.now();
+        return;
+      }
+      if (!(state.lock && state.lock.enabled && lockDataKey)) return;
+      var mins = state.lock.autoLockMinutes;
+      if (!mins) return;
+      var idle = Date.now() - lockLastActive;
+      if (idle >= mins * 60 * 1000) sessionLockNow();
+      else lockLastActive = Date.now();
+    });
+    ['pointerdown', 'keydown'].forEach(function (evt) {
+      document.addEventListener(evt, function () {
+        if (lockDataKey) lockLastActive = Date.now();
+      }, { passive: true });
+    });
+  }
+
+  function enableAppLockFlow() {
+    if (!Lock || !Lock.available()) {
+      openSheet(function (p) {
+        p.appendChild(el('h2', { class: 'h-sec', text: SETTINGS_UI.appLock }));
+        p.appendChild(el('p', { class: 'p', text: 'App lock needs Web Crypto, which isn’t available in this browser.' }));
+        p.appendChild(el('button', { class: 'btn', text: 'Close', onclick: closeSheet }));
+      });
+      return;
+    }
+    openSheet(function (p) {
+      p.appendChild(el('h2', { class: 'h-sec', text: SETTINGS_UI.appLockEnable }));
+      p.appendChild(el('p', { class: 'p-sm', text: SETTINGS_UI.appLockHint }));
+      p.appendChild(el('button', { class: 'btn', text: SETTINGS_UI.appLockExportFirst, onclick: function () { exportData(); } }));
+      p.appendChild(el('p', { class: 'eyebrow mt-2', text: 'Create a 6+ digit passcode' }));
+      var pin = el('input', { type: 'password', inputmode: 'numeric', pattern: '[0-9]*', autocomplete: 'new-password', 'aria-label': 'New passcode', class: 'applock-pin' });
+      var pin2 = el('input', { type: 'password', inputmode: 'numeric', pattern: '[0-9]*', autocomplete: 'new-password', 'aria-label': 'Confirm passcode', class: 'applock-pin' });
+      var status = el('p', { class: 'p-sm', role: 'status' });
+      p.appendChild(pin); p.appendChild(pin2); p.appendChild(status);
+      p.appendChild(el('p', { class: 'eyebrow mt-2', text: SETTINGS_UI.appLockAuto }));
+      var autoMins = 5;
+      p.appendChild(settingChips(
+        [{ v: 1, l: '1 min' }, { v: 5, l: '5 min' }, { v: 15, l: '15 min' }, { v: 0, l: 'Never' }],
+        function (o) { return autoMins === o.v; },
+        function (o) { autoMins = o.v; }
+      ));
+      p.appendChild(el('button', { class: 'btn', text: 'Turn on', onclick: function () {
+        if (pin.value !== pin2.value) { status.textContent = 'Passcodes don’t match.'; return; }
+        status.textContent = 'Encrypting…';
+        try { localStorage.setItem(PRE_LOCK_BACKUP_KEY, JSON.stringify(state)); } catch (e) {}
+        Lock.enable(pin.value, { autoLockMinutes: autoMins }).then(function (res) {
+          state.lock = res.meta;
+          lockDataKey = res.dataKey;
+          lockNeedsUnlock = false;
+          return persistSealedNow().then(function () {
+            try { localStorage.removeItem(PRE_LOCK_BACKUP_KEY); } catch (e) {}
+            closeSheet();
+            reRender();
+          });
+        }).catch(function (err) {
+          status.textContent = (err && err.message) || 'Could not enable lock.';
+        });
+      } }));
+      p.appendChild(el('button', { class: 'btn quiet', text: 'Cancel', onclick: closeSheet }));
+    });
+  }
+
+  function disableAppLockFlow() {
+    openSheet(function (p) {
+      p.appendChild(el('h2', { class: 'h-sec', text: SETTINGS_UI.appLockDisable }));
+      p.appendChild(el('p', { class: 'p-sm', text: 'Enter your passcode to turn off encryption.' }));
+      var pin = el('input', { type: 'password', inputmode: 'numeric', class: 'applock-pin', 'aria-label': 'Passcode' });
+      var status = el('p', { class: 'p-sm', role: 'status' });
+      p.appendChild(pin); p.appendChild(status);
+      p.appendChild(el('button', { class: 'btn', text: 'Turn off', onclick: function () {
+        var run = lockDataKey
+          ? Lock.unlock(state.lock, pin.value).then(function () { return lockDataKey; })
+          : Lock.unlock(state.lock, pin.value).then(function (res) {
+              lockDataKey = res.dataKey;
+              return Lock.decryptJson(res.dataKey, sealedBlob || JSON.parse(localStorage.getItem(KEY)).sealed)
+                .then(function (payload) { applyUnlockedSensitive(payload); return res.dataKey; });
+            });
+        status.textContent = 'Working…';
+        run.then(function () {
+          return Lock.clearWebAuthn(state.lock || {}, { bioStorageKey: LOCK_BIO_IDB }).then(function () {
+            state.lock = null;
+            lockDataKey = null;
+            sealedBlob = null;
+            lockNeedsUnlock = false;
+            var ok = save();
+            if (!ok) { status.textContent = 'Could not save.'; return; }
+            closeSheet();
+            reRender();
+          });
+        }).catch(function (err) {
+          if (err && err.meta) state.lock = err.meta;
+          status.textContent = (err && err.message) || 'Wrong passcode.';
+        });
+      } }));
+      p.appendChild(el('button', { class: 'btn quiet', text: 'Cancel', onclick: closeSheet }));
+    });
+  }
+
   function clone(o) { return JSON.parse(JSON.stringify(o)); }
   function uid() { return Math.random().toString(36).slice(2, 10); }
   function sameDay(a, b) { return new Date(a).toDateString() === new Date(b).toDateString(); }
@@ -944,29 +1307,186 @@
   }
   function hushVoice() { try { window.speechSynthesis.cancel(); } catch (e) {} }
 
-  /* ── Reaching out ──────────────────────────────────────────────────────────
-   * No phone numbers, no country-specific lines (owner decision — we can't
-   * promise any line is reachable). Gentle, general guidance instead, plus a
-   * one-tap way to message a person the user trusts. */
-  function renderPanicHelp(container) {
-    clear(container);
-    container.appendChild(el('p', { class: 'panic-sub', style: 'margin:0',
-      text: 'You don’t have to get through this alone. Reaching out to someone — a family member, a friend, anyone who steadies you — really can help.' }));
-    container.appendChild(el('a', { href: 'sms:', class: 'btn', style: 'text-decoration:none', text: 'Message someone I trust' }));
-    container.appendChild(el('p', { class: 'p-sm', style: 'margin:2px 0 0',
-      text: 'If you feel unsafe or in danger, please contact your local emergency services or a crisis helpline in your area.' }));
-    if (panicSaveWarning) container.appendChild(el('p', { class: 'p-sm', text: tUi('checkin', 'crisisSaveFailed', CHECKIN_UI) }));
-    container.appendChild(el('button', { class: 'btn ghost', text: t('panic.plan', 'Open my plan'), onclick: function () {
-      closePanic(); safetyPlanSheet();
-    } }));
-    // Distressed first-timer (pre-onboard): one-tap into a short offline breath after Help.
-    if (!state.onboarded) {
-      container.appendChild(el('button', { class: 'btn ghost', text: 'Try a 1-minute breath', onclick: function () {
-        closePanic(); startSkill('physiological-sigh');
-      } }));
+  /* ── Get help now (SOUL-P0-02 / D-05) — DECISIONS.md §4.3 exactly ───────────
+   * Numbers verified from official sources (see SAFETY.md). Omit unverifiable
+   * helplines. tel: only on user tap; bundled for offline; never auto-dial. */
+  var CRISIS_REGIONS = [
+    { id: 'pk', label: 'Pakistan' },
+    { id: 'uk', label: 'United Kingdom' },
+    { id: 'us', label: 'United States' },
+    { id: 'uae', label: 'United Arab Emirates' },
+    { id: 'other', label: 'Somewhere else' }
+  ];
+  /** Verified emergency + talk lines per region (tel digits only in `tel`). */
+  var CRISIS_RESOURCES = {
+    pk: {
+      emergency: [
+        { label: 'Call 1122 — Rescue', display: '1122', tel: '1122' },
+        { label: 'Call 115 — Edhi ambulance', display: '115', tel: '115' },
+        { label: 'Call 15 — Police', display: '15', tel: '15' }
+      ],
+      talk: [
+        { label: 'Call Umang — 0311 7786264', display: '0311 7786264', tel: '+923117786264' }
+      ]
+    },
+    uk: {
+      emergency: [
+        { label: 'Call 999 — Emergency', display: '999', tel: '999' },
+        { label: 'Call 111 — NHS (urgent, not emergency)', display: '111', tel: '111' }
+      ],
+      talk: [
+        { label: 'Call Samaritans — 116 123', display: '116 123', tel: '116123' }
+      ]
+    },
+    us: {
+      emergency: [
+        { label: 'Call 911 — Emergency', display: '911', tel: '911' }
+      ],
+      talk: [
+        { label: 'Call or text 988 — Suicide & Crisis Lifeline', display: '988', tel: '988' }
+      ]
+    },
+    uae: {
+      emergency: [
+        { label: 'Call 999 — Police', display: '999', tel: '999' },
+        { label: 'Call 998 — Ambulance', display: '998', tel: '998' }
+      ],
+      talk: [
+        { label: 'Call 800-HOPE — Mental Support Line', display: '800 4673', tel: '8004673' }
+      ]
+    },
+    other: {
+      emergency: [],
+      talk: [],
+      emergencyNote: 'Call your local emergency number.',
+      talkNote: 'Find a free, confidential helpline near you at findahelpline.com.'
     }
-    // Honest limits — same line as About/Legal; visible without digging into Settings.
-    container.appendChild(el('p', { class: 'p-sm panic-honesty', text: ABOUT_UI.honesty }));
+  };
+  function crisisRegion() {
+    return (state.notices && state.notices.crisisRegion) || 'other';
+  }
+  function setCrisisRegion(id) {
+    if (!state.notices) state.notices = clone(DEFAULT.notices);
+    state.notices.crisisRegion = id;
+    save();
+  }
+  function appendTelButton(parent, item) {
+    parent.appendChild(el('a', {
+      href: 'tel:' + item.tel,
+      class: 'btn help-tel',
+      style: 'text-decoration:none;display:block;text-align:center;margin-top:8px',
+      'aria-label': item.label,
+      text: item.label
+    }));
+    parent.appendChild(el('p', {
+      class: 'p-sm',
+      style: 'margin:2px 0 0;text-align:center',
+      text: item.display
+    }));
+  }
+  function renderPanicHelp(container, opts) {
+    opts = opts || {};
+    clear(container);
+    var under18 = !!opts.under18;
+
+    container.appendChild(el('h2', {
+      class: 'panic-help-title',
+      style: 'margin:0 0 8px;font-size:1.25rem',
+      text: under18 ? 'SoulCap isn’t made for you yet' : 'Get help now'
+    }));
+    container.appendChild(el('p', {
+      class: 'panic-sub',
+      style: 'margin:0',
+      text: under18
+        ? 'If you need support, talk to an adult you trust, or contact emergency services if you’re in danger.'
+        : 'If you might hurt yourself or someone else, or you’re in danger, contact emergency services now.'
+    }));
+
+    container.appendChild(el('p', { class: 'eyebrow', style: 'margin:14px 0 6px', text: 'Your region' }));
+    var regionRow = el('div', { class: 'chips', role: 'group', 'aria-label': 'Your region' });
+    CRISIS_REGIONS.forEach(function (r) {
+      regionRow.appendChild(el('button', {
+        class: 'chip',
+        type: 'button',
+        'aria-pressed': crisisRegion() === r.id ? 'true' : 'false',
+        text: r.label,
+        onclick: function () {
+          setCrisisRegion(r.id);
+          renderPanicHelp(container, opts);
+        }
+      }));
+    });
+    container.appendChild(regionRow);
+
+    var res = CRISIS_RESOURCES[crisisRegion()] || CRISIS_RESOURCES.other;
+
+    container.appendChild(el('p', { class: 'eyebrow', style: 'margin:14px 0 6px', text: 'Emergency' }));
+    if (res.emergency && res.emergency.length) {
+      res.emergency.forEach(function (item) { appendTelButton(container, item); });
+    } else if (res.emergencyNote) {
+      container.appendChild(el('p', { class: 'p-sm', style: 'margin:4px 0 0', text: res.emergencyNote }));
+    }
+
+    if (!under18) {
+      container.appendChild(el('p', { class: 'eyebrow', style: 'margin:14px 0 6px', text: 'Talk to someone' }));
+      if (res.talk && res.talk.length) {
+        res.talk.forEach(function (item) { appendTelButton(container, item); });
+      } else if (res.talkNote) {
+        container.appendChild(el('p', { class: 'p-sm', style: 'margin:4px 0 0', text: res.talkNote }));
+        container.appendChild(el('a', {
+          href: 'https://findahelpline.com',
+          class: 'btn ghost',
+          style: 'text-decoration:none;margin-top:8px',
+          target: '_blank',
+          rel: 'noopener noreferrer',
+          text: 'Open findahelpline.com'
+        }));
+      }
+
+      container.appendChild(el('a', {
+        href: 'sms:',
+        class: 'btn ghost',
+        style: 'text-decoration:none;margin-top:12px',
+        text: 'Message someone I trust'
+      }));
+    }
+
+    if (panicSaveWarning) {
+      container.appendChild(el('p', { class: 'p-sm', text: tUi('checkin', 'crisisSaveFailed', CHECKIN_UI) }));
+    }
+    if (!under18) {
+      container.appendChild(el('button', {
+        class: 'btn ghost',
+        text: t('panic.plan', 'Open my plan'),
+        onclick: function () { closePanic(); safetyPlanSheet(); }
+      }));
+      if (!state.onboarded) {
+        container.appendChild(el('button', {
+          class: 'btn ghost',
+          text: 'Try a 1-minute breath',
+          onclick: function () { closePanic(); startSkill('physiological-sigh'); }
+        }));
+      }
+    } else {
+      container.appendChild(el('button', {
+        class: 'btn',
+        text: 'Back',
+        onclick: function () {
+          if (opts.onBack) opts.onBack();
+          else closePanic();
+        }
+      }));
+    }
+
+    container.appendChild(el('p', {
+      class: 'p-sm panic-honesty',
+      style: 'margin-top:14px',
+      text: 'SoulCap isn’t a crisis service and can’t contact anyone for you.'
+    }));
+    container.appendChild(el('p', {
+      class: 'p-sm',
+      text: 'SoulCap offers self-help tools. It isn’t therapy, medical advice, a diagnosis or a crisis service.'
+    }));
   }
 
   var pacerTimer = null, pacerPhase = 0;
@@ -3558,9 +4078,27 @@
     ]);
 
     addGroup(SETTINGS_UI.privacyData, [
-      SETTINGS_UI.privacyData, SETTINGS_UI.onDevice, SETTINGS_UI.export, SETTINGS_UI.delete
+      SETTINGS_UI.privacyData, SETTINGS_UI.onDevice, SETTINGS_UI.appLock, SETTINGS_UI.export, SETTINGS_UI.delete
     ], [
       el('p', { class: 'p-sm', text: SETTINGS_UI.onDevice }),
+      el('p', { class: 'p-sm', text: SETTINGS_UI.appLockHint }),
+      listRow({
+        title: (state.lock && state.lock.enabled) ? SETTINGS_UI.appLockDisable : SETTINGS_UI.appLockEnable,
+        meta: (state.lock && state.lock.enabled) ? 'On · auto-lock ' + (state.lock.autoLockMinutes ? state.lock.autoLockMinutes + ' min' : 'never') : 'Off',
+        onclick: function () {
+          if (state.lock && state.lock.enabled) disableAppLockFlow();
+          else enableAppLockFlow();
+        }
+      }),
+      (state.lock && state.lock.enabled && lockDataKey && Lock && window.PublicKeyCredential) ? listRow({
+        title: SETTINGS_UI.appLockBio,
+        onclick: function () {
+          Lock.enableWebAuthn(state.lock, lockDataKey, { bioStorageKey: LOCK_BIO_IDB, rpName: 'SoulCap' })
+            .then(function (meta) { state.lock = meta; return flushSave(); })
+            .then(function () { reRender(); })
+            .catch(function () {});
+        }
+      }) : null,
       listRow({ title: SETTINGS_UI.export, onclick: exportData }),
       el('button', { class: 'btn danger', type: 'button', text: SETTINGS_UI.delete, onclick: confirmDelete })
     ]);
@@ -3585,6 +4123,7 @@
       p.appendChild(el('div', { class: 'notice', text: ABOUT_UI.honesty }));
       p.appendChild(el('p', { class: 'p-sm', text: 'Version ' + APP_VERSION }));
       p.appendChild(el('p', { class: 'about-credits', text: ABOUT_UI.credits }));
+      p.appendChild(el('a', { class: 'btn ghost', href: 'privacy.html', target: '_blank', rel: 'noopener', text: 'Privacy', style: 'text-decoration:none;text-align:center' }));
       p.appendChild(el('button', { class: 'btn quiet', text: ABOUT_UI.close, onclick: closeSheet }));
     });
   }
@@ -4824,16 +5363,18 @@
     var pick = suggestSkill(), dm = DOMAIN_META[pick.skill.domain];
     var dots = weekActivityDots();
 
+    /* SOUL-P1-04 / Q-3: greeting → check-in → suggest → Explore → Help.
+     * What's new sits under check-in. Path / experiences / this week → More. */
     var hero = el('div', { class: 'qd-hero now-hero' });
     if (today) hero.setAttribute('data-arrival', today);
     hero.appendChild(el('div', { class: 'living-field', 'aria-hidden': 'true' }));
     hero.appendChild(el('p', { class: 'eyebrow', text: new Date().toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' }) }));
     hero.appendChild(el('h1', { class: 'h-voice', text: greeting() }));
     hero.appendChild(el('p', { class: 'p-voice', style: 'margin-top:var(--space-3)', text: tUi('checkin', 'arrival', { arrival: 'How are you arriving right now?' }) }));
-    var checkin = el('div', { class: 'qd-ruled qd-checkin', role: 'group', 'aria-label': 'How you are arriving' });
+    var checkin = el('div', { class: 'chips qd-checkin', role: 'group', 'aria-label': 'How you are arriving' });
     states.forEach(function (s) {
       checkin.appendChild(el('button', {
-        class: 'qd-row',
+        class: 'chip',
         type: 'button',
         'aria-pressed': today === s ? 'true' : 'false',
         text: checkinStateLabel(s),
@@ -4852,18 +5393,6 @@
     }
     v.appendChild(hero);
 
-    if (state.pendingReflection && !state.reflectionPrefs.dismissedForever) {
-      var pr = REFLECTION_PROMPTS[state.pendingReflection.trigger] || REFLECTION_PROMPTS.journal;
-      v.appendChild(el('div', { class: 'qd-note' }, [
-        el('h2', { class: 'card-title', text: REFLECTION_UI.cardTitle }),
-        el('p', { class: 'p-sm', text: pr }),
-        el('button', { class: 'btn', text: REFLECTION_UI.answer, onclick: reflectionAnswerSheet }),
-        el('div', { class: 'chips mt-2' }, [
-          el('button', { class: 'chip', text: REFLECTION_UI.skip, onclick: skipReflection }),
-          el('button', { class: 'chip', text: REFLECTION_UI.dismiss, onclick: dismissReflectionForever })
-        ])
-      ]));
-    }
     if (shouldShowWhatsNew()) {
       v.appendChild(el('div', { class: 'qd-note whats-new' }, [
         el('h2', { class: 'card-title', text: WHATS_NEW_UI.title }),
@@ -4884,11 +5413,67 @@
     suggest.appendChild(el('h2', { class: 'ht-title', text: pick.skill.name }));
     suggest.appendChild(el('p', { class: 'ht-reason reason', text: reasonText(pick) }));
     suggest.appendChild(el('div', { class: 'qd-action' }, [
-      el('button', { class: 'btn', text: 'Begin', onclick: function () { startSkill(pick.skill.id); } }),
-      el('button', { class: 'btn quiet', text: 'Something else', onclick: function () { calm.browse = false; selectTab('calm'); } })
+      el('button', { class: 'btn', text: 'Begin', onclick: function () { startSkill(pick.skill.id); } })
     ]));
     primary.appendChild(suggest);
 
+    primary.appendChild(el('button', {
+      class: 'btn ghost explore-toggle',
+      'aria-expanded': nowExploreOpen ? 'true' : 'false',
+      text: nowExploreOpen ? 'Hide explore' : 'Explore',
+      onclick: function () { nowExploreOpen = !nowExploreOpen; render(); }
+    }));
+
+    if (nowExploreOpen) {
+      var quiet = el('div', { class: 'now-quiet' });
+      var dripQ = nextDripQuestion();
+      quiet.appendChild(listRow({
+        title: DRIP_UI.cardTitle,
+        meta: dripQ ? DRIP_UI.cardHint : DRIP_UI.doneToday,
+        onclick: dripSheet
+      }));
+      var person = suggestPerson();
+      if (person) {
+        quiet.appendChild(el('div', { class: 'qd-note' }, [
+          el('div', { class: 'card-head' }, [el('h2', { class: 'card-title', text: 'Message ' + person.name + '?' }), el('span', { class: 'domain', style: 'color:var(--connect)', text: 'Connect' })]),
+          el('p', { class: 'reason', text: 'You said ' + person.name + ' usually helps when things are hard.' }),
+          el('p', { class: 'p-sm', text: 'SoulCap never sends anything. This just opens your own messages.' }),
+          el('a', { class: 'btn ghost', href: 'sms:', style: 'text-decoration:none', text: 'Open messages' })
+        ]));
+      }
+      primary.appendChild(quiet);
+    }
+
+    primary.appendChild(el('button', { class: 'help-btn', text: t('helpNow'), onclick: openPanic }));
+
+    var moreKids = [];
+    if (state.pendingReflection && !state.reflectionPrefs.dismissedForever) {
+      var pr = REFLECTION_PROMPTS[state.pendingReflection.trigger] || REFLECTION_PROMPTS.journal;
+      moreKids.push(el('div', { class: 'qd-note' }, [
+        el('h2', { class: 'card-title', text: REFLECTION_UI.cardTitle }),
+        el('p', { class: 'p-sm', text: pr }),
+        el('button', { class: 'btn', text: REFLECTION_UI.answer, onclick: reflectionAnswerSheet }),
+        el('div', { class: 'chips mt-2' }, [
+          el('button', { class: 'chip', text: REFLECTION_UI.skip, onclick: skipReflection }),
+          el('button', { class: 'chip', text: REFLECTION_UI.dismiss, onclick: dismissReflectionForever })
+        ])
+      ]));
+    }
+    if (!state.pathPrefs || !state.pathPrefs.hide) {
+      moreKids.push(listRow({ className: 'path-card', title: PATH_UI.cardTitle, meta: PATH_UI.cardHint, onclick: pathSheet }));
+    }
+    moreKids.push(listRow({ className: 'experience-picker-card', title: EXPERIENCE_PICKER_UI.cardTitle, meta: EXPERIENCE_PICKER_UI.cardHint, onclick: experiencePickerSheet }));
+    if (typeof state.windDownHour === 'number' && new Date().getHours() >= state.windDownHour) {
+      moreKids.push(listRow({
+        className: 'wind-down-card',
+        title: WIND_DOWN_UI.nowTitle,
+        meta: WIND_DOWN_UI.nowHint,
+        onclick: function () {
+          selectTab('calm'); calm.section = 'library'; libraryQuery = 'winding'; libraryFilter = 'articles'; render();
+          setTimeout(function () { articleSheet('wind-down-boundaries'); }, 0);
+        }
+      }));
+    }
     var nowPreview = !(state.checkins || []).length && !(state.skillRuns || []).length;
     var nowWeekLabel = nowPreview ? PREVIEW_UI.weekSummary : weekActivityLabel(dots);
     var progress = el('button', { class: 'progress-glance qd-ruled qd-progress' + (nowPreview ? ' is-preview' : ''), type: 'button',
@@ -4903,66 +5488,15 @@
       progress.appendChild(weekDotsEl(dots, true));
       progress.appendChild(el('p', { class: 'glance-sub', 'aria-hidden': 'true', text: nowWeekLabel }));
     }
-    progress.appendChild(el('p', { class: 'p-sm glance-open', 'aria-hidden': 'true', text: 'Open quietly' }));
-    primary.appendChild(progress);
+    moreKids.push(progress);
     signatureProgressIn(progress);
 
-    var moreKids = [];
-    if (!state.pathPrefs || !state.pathPrefs.hide) {
-      moreKids.push(listRow({ className: 'path-card', title: PATH_UI.cardTitle, meta: PATH_UI.cardHint, onclick: pathSheet }));
-      moreKids.push(listRow({ className: 'experience-picker-card', title: EXPERIENCE_PICKER_UI.cardTitle, meta: EXPERIENCE_PICKER_UI.cardHint, onclick: experiencePickerSheet }));
-    } else {
-      moreKids.push(listRow({ className: 'experience-picker-card', title: EXPERIENCE_PICKER_UI.cardTitle, meta: EXPERIENCE_PICKER_UI.cardHint, onclick: experiencePickerSheet }));
-    }
-    if (typeof state.windDownHour === 'number' && new Date().getHours() >= state.windDownHour) {
-      moreKids.push(listRow({
-        className: 'wind-down-card',
-        title: WIND_DOWN_UI.nowTitle,
-        meta: WIND_DOWN_UI.nowHint,
-        onclick: function () {
-          selectTab('calm'); calm.section = 'library'; libraryQuery = 'winding'; libraryFilter = 'articles'; render();
-          setTimeout(function () { articleSheet('wind-down-boundaries'); }, 0);
-        }
-      }));
-    }
-    if (moreKids.length) {
-      primary.appendChild(el('div', { class: 'qd-ruled now-more' }, [
-        el('p', { class: 'section-label', text: 'More' }),
-        el('div', { class: 'list-group qd-list-group' }, moreKids)
-      ]));
-    }
+    primary.appendChild(el('div', { class: 'qd-ruled now-more' }, [
+      el('p', { class: 'section-label', text: 'More' }),
+      el('div', { class: 'list-group qd-list-group' }, moreKids)
+    ]));
+
     v.appendChild(primary);
-
-    v.appendChild(el('button', {
-      class: 'btn ghost explore-toggle',
-      'aria-expanded': nowExploreOpen ? 'true' : 'false',
-      text: nowExploreOpen ? 'Hide explore' : 'Explore',
-      onclick: function () { nowExploreOpen = !nowExploreOpen; render(); }
-    }));
-
-    if (!nowExploreOpen) {
-      v.appendChild(el('button', { class: 'help-btn', text: t('helpNow'), onclick: openPanic }));
-      return;
-    }
-
-    var quiet = el('div', { class: 'now-quiet' });
-    var dripQ = nextDripQuestion();
-    quiet.appendChild(listRow({
-      title: DRIP_UI.cardTitle,
-      meta: dripQ ? DRIP_UI.cardHint : DRIP_UI.doneToday,
-      onclick: dripSheet
-    }));
-    var person = suggestPerson();
-    if (person) {
-      quiet.appendChild(el('div', { class: 'qd-note' }, [
-        el('div', { class: 'card-head' }, [el('h2', { class: 'card-title', text: 'Message ' + person.name + '?' }), el('span', { class: 'domain', style: 'color:var(--connect)', text: 'Connect' })]),
-        el('p', { class: 'reason', text: 'You said ' + person.name + ' usually helps when things are hard.' }),
-        el('p', { class: 'p-sm', text: 'SoulCap never sends anything. This just opens your own messages.' }),
-        el('a', { class: 'btn ghost', href: 'sms:', style: 'text-decoration:none', text: 'Open messages' })
-      ]));
-    }
-    v.appendChild(quiet);
-    v.appendChild(el('button', { class: 'help-btn', text: t('helpNow'), onclick: openPanic }));
   }
 
   /* ── Safety plan ───────────────────────────────────────────────────────── */
@@ -5900,7 +6434,7 @@
       }
     });
   }
-  var APP_VERSION = '8.1.1';
+  var APP_VERSION = '8.2.0';
   var settingsQuery = '';
   function settingsGroup(v, title, kids) {
     v.appendChild(el('p', { class: 'eyebrow settings-eyebrow', text: title }));
@@ -6084,6 +6618,14 @@
     });
   }
   function exportData() {
+    if (state.lock && state.lock.enabled && (lockNeedsUnlock || !lockDataKey)) {
+      openSheet(function (p) {
+        p.appendChild(el('h2', { class: 'h-sec', text: 'Unlock to export' }));
+        p.appendChild(el('p', { class: 'p', text: 'App lock is on. Unlock SoulCap before exporting your data.' }));
+        p.appendChild(el('button', { class: 'btn', text: 'Close', onclick: closeSheet }));
+      });
+      return;
+    }
     var blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
     var url = URL.createObjectURL(blob), a = document.createElement('a');
     a.href = url; a.download = 'soulcap-export.json'; document.body.appendChild(a); a.click(); document.body.removeChild(a);
@@ -6139,11 +6681,18 @@
     var head = el('div', { class: 'qd-head' });
     var thumb = el('div', { class: 'qd-thumb' });
     if (obStep === 0) {
-      head.appendChild(el('h1', { class: 'qd-prompt', text: tUi('onboarding', 'ageTitle', { ageTitle: 'First — how old are you?' }) }));
-      head.appendChild(el('p', { class: 'qd-lede', text: tUi('onboarding', 'ageBody', { ageBody: 'SoulCap is built for adults. We ask because the right support for someone under 18 looks different, and we’d rather point you somewhere better than get it wrong.' }) }));
-      if (state.ageOk === false) head.appendChild(el('div', { class: 'qd-note' }, [el('p', { class: 'p-voice', text: tUi('onboarding', 'under18Body', { under18Body: 'SoulCap isn’t the right fit yet. Please reach out to a trusted adult, or a support service made for young people where you are.' }) })]));
-      thumb.appendChild(el('button', { class: 'opt qd-row', html: tUi('onboarding', 'over18', { over18: '18 or older' }), onclick: function () { state.ageOk = true; save(); obStep = 1; render(); } }));
-      thumb.appendChild(el('button', { class: 'opt qd-row', html: tUi('onboarding', 'under18', { under18: 'Under 18' }) + '<span class="os">' + tUi('onboarding', 'under18Hint', { under18Hint: 'This isn’t built for you yet — please talk to a trusted adult or a service for young people' }) + '</span>', onclick: function () { state.ageOk = false; save(); render(); } }));
+      head.appendChild(el('h1', { class: 'qd-prompt', text: 'Before you start' }));
+      head.appendChild(el('p', { class: 'qd-lede', text: 'SoulCap is for adults 18 and over. It offers self-help tools and isn’t therapy, a diagnosis or a crisis service.' }));
+      if (state.ageOk === false) {
+        var underWrap = el('div', { class: 'qd-note stack', id: 'under18Help' });
+        head.appendChild(underWrap);
+        renderPanicHelp(underWrap, {
+          under18: true,
+          onBack: function () { state.ageOk = null; save(); render(); }
+        });
+      }
+      thumb.appendChild(el('button', { class: 'opt qd-row', html: 'I’m 18 or over', onclick: function () { state.ageOk = true; save(); obStep = 1; render(); } }));
+      thumb.appendChild(el('button', { class: 'opt qd-row', html: 'I’m under 18', onclick: function () { state.ageOk = false; save(); render(); } }));
     } else if (obStep === 1) {
       head.appendChild(el('h1', { class: 'qd-prompt', text: tUi('onboarding', 'nameTitle', { nameTitle: 'What should we call you?' }) }));
       head.appendChild(el('p', { class: 'qd-lede', text: tUi('onboarding', 'nameBody', { nameBody: 'So this feels like yours. Skip it if you’d rather not.' }) }));
@@ -6196,12 +6745,35 @@
 
   /* ── Router ────────────────────────────────────────────────────────────── */
   var tab = 'now';
+  function loadRouteModule(name) {
+    window.SoulCapRoutes = window.SoulCapRoutes || {};
+    if (window.SoulCapRoutes[name] && window.SoulCapRoutes[name].ensure) {
+      return window.SoulCapRoutes[name].ensure();
+    }
+    return new Promise(function (resolve, reject) {
+      var s = document.createElement('script');
+      s.src = 'modules/route-' + name + '.js';
+      s.async = true;
+      s.onload = function () {
+        var mod = window.SoulCapRoutes[name];
+        if (mod && mod.ensure) mod.ensure().then(resolve).catch(reject);
+        else resolve();
+      };
+      s.onerror = function () { reject(new Error('route module ' + name)); };
+      document.head.appendChild(s);
+    });
+  }
   function selectTab(t) {
     closeSubviewImmediate();
     tab = t;
-    withViewTransition(function () {
-      render();
-      window.scrollTo(0, 0);
+    var prep = Promise.resolve();
+    if (t === 'calm') prep = loadRouteModule('calm');
+    if (t === 'me') prep = loadRouteModule('me');
+    prep.catch(function () { /* degrade: catalogs may already be warm from boot */ }).then(function () {
+      withViewTransition(function () {
+        render();
+        window.scrollTo(0, 0);
+      });
     });
   }
   // Re-render in place without jumping to the top — for toggles/pickers inside a
@@ -6217,6 +6789,14 @@
   }
   var VIEWS = ['welcome', 'onboarding', 'now', 'calm', 'journal', 'map', 'me'];
   function render() {
+    if (lockNeedsUnlock && !lockDataKey) {
+      showAppLock();
+      applyTheme();
+      $('#tabs').style.display = 'none';
+      $('#fab').classList.remove('on');
+      VIEWS.forEach(function (v) { $('#view-' + v).classList.remove('on'); });
+      return;
+    }
     applyTheme();
     stopMap(); // cancel any running orbit rAF; drawMap restarts it if we're on the map
     VIEWS.forEach(function (v) { $('#view-' + v).classList.remove('on'); });
@@ -6240,6 +6820,10 @@
   /* ── Demo ──────────────────────────────────────────────────────────────── */
   function seedDemo() {
     state = clone(DEFAULT);
+    lockDataKey = null;
+    lockNeedsUnlock = false;
+    sealedBlob = null;
+    hideAppLock();
     state.welcomed = true; state.onboarded = true; state.ageOk = true;
     state.consent = true;
     state.notices.seenVersion = APP_VERSION;
@@ -6323,6 +6907,7 @@
     var requestedTab = queryValue('tab');
     if (['now', 'calm', 'journal', 'map', 'me'].indexOf(requestedTab) !== -1) tab = requestedTab;
 
+    wireAppLockUi();
     $('#panicExit').addEventListener('click', closePanic);
     $('#runClose').addEventListener('click', closeRunner);
     $('#runGuide').addEventListener('click', toggleGuide);
@@ -6380,13 +6965,31 @@
 
     if ('speechSynthesis' in window) { loadVoices(); window.speechSynthesis.onvoiceschanged = loadVoices; }
 
-    render();
-    setTimeout(function () { loadGsap(); }, 0);
-    if (queryValue('panic') === '1') {
-      $('#splash').classList.add('gone');
-      openPanic();
-    } else if (requestedTab === 'journal' && queryValue('new') === '1' && state.onboarded) {
-      setTimeout(function () { newEntrySheet(); }, 400);
+    var catalogNames = ['EXPERIENCES', 'ARTICLES', 'SCREENERS', 'STORIES', 'DISTORTIONS', 'APPROACH_PACKS'];
+    function finishBoot() {
+      render();
+      try {
+        window.__APP_READY__ = true;
+        document.documentElement.dataset.appReady = 'true';
+        if (window.__soulcap) {
+          window.__soulcap.experienceIds = EXPERIENCES.map(function (item) { return item.id; });
+        }
+      } catch (e) {}
+      setTimeout(function () { loadGsap(); }, 0);
+      if (queryValue('panic') === '1') {
+        $('#splash').classList.add('gone');
+        openPanic();
+      } else if (requestedTab === 'journal' && queryValue('new') === '1' && state.onboarded) {
+        setTimeout(function () { newEntrySheet(); }, 400);
+      }
+    }
+    if (typeof soulEnsureCatalogs === 'function') {
+      soulEnsureCatalogs(catalogNames).then(finishBoot).catch(function (err) {
+        console.warn('SoulCap catalog preload', err);
+        finishBoot();
+      });
+    } else {
+      finishBoot();
     }
 
     var splash = $('#splash');
@@ -6407,7 +7010,7 @@
     setTimeout(dismissSplash, state.onboarded ? 1600 : 2600);
     splash.addEventListener('click', dismissSplash);
 
-    if ('serviceWorker' in navigator) window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js?v=8.1.1').catch(function () {}); });
+    if ('serviceWorker' in navigator) window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js?v=8.2.0').catch(function () {}); });
   }
 
   window.__soulcap = {
@@ -6455,6 +7058,23 @@
     buildLocalInsights: buildLocalInsights,
     buildManualDrafts: buildManualDrafts, refreshManual: refreshManual,
     dismissWhatsNew: dismissWhatsNew,
+    save: save,
+    flushSave: flushSave,
+    enableAppLock: function (passcode, opts) {
+      return Lock.enable(passcode, opts || {}).then(function (res) {
+        try { localStorage.setItem(PRE_LOCK_BACKUP_KEY, JSON.stringify(state)); } catch (e) {}
+        state.lock = res.meta;
+        lockDataKey = res.dataKey;
+        lockNeedsUnlock = false;
+        return persistSealedNow().then(function () {
+          try { localStorage.removeItem(PRE_LOCK_BACKUP_KEY); } catch (e) {}
+          return state.lock;
+        });
+      });
+    },
+    unlockAppLock: unlockWithPasscode,
+    sessionLockNow: sessionLockNow,
+    isAppLocked: function () { return !!(lockNeedsUnlock && !lockDataKey); },
     openPath: pathSheet,
     scorePathFamilies: scorePathFamilies,
     pathPanicCluster: pathPanicCluster,

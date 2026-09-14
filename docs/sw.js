@@ -7,7 +7,7 @@
  *
  * Bump CACHE on every asset change or users get a stale build.
  */
-var CACHE = 'soulcap-v811';
+var CACHE = 'soulcap-v820';
 
 var ASSETS = [
   './',
@@ -17,6 +17,19 @@ var ASSETS = [
   'app.js',
   'vendor/gsap.min.js',
   'vendor/breath-orb.js',
+  'vendor/local-lock.js',
+  'vendor/cap-foundation.css',
+  'modules/route-calm.js',
+  'modules/route-me.js',
+  'data/skills.json',
+  'data/articles.json',
+  'data/experiences.json',
+  'data/screeners.json',
+  'data/stories.json',
+  'data/distortions.json',
+  'data/domain-meta.json',
+  'data/approach-packs.json',
+  'privacy.html',
   'manifest.json',
   'icons/mark.svg',
   'icons/favicon.svg',

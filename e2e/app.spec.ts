@@ -20,7 +20,7 @@ async function dismissSplash(page: Page) {
 
 async function seedDemo(page: Page) {
   await page.goto('/?demo=1');
-  await page.waitForFunction(() => !!(window as any).__soulcap);
+  await page.waitForFunction(() => !!(window as any).__soulcap && (window as any).__APP_READY__ === true);
   await dismissSplash(page);
 }
 
@@ -29,7 +29,7 @@ async function freshThrough(page: Page) {
   await page.goto('/');
   await dismissSplash(page);
   await page.getByRole('button', { name: 'Begin' }).click();
-  await page.getByRole('button', { name: '18 or older' }).click();
+  await page.getByRole('button', { name: /I.?m 18 or over/i }).click();
   await page.getByRole('button', { name: 'Skip', exact: true }).click(); // name step
   await page.getByRole('button', { name: 'I understand' }).click();
   await page.getByRole('button', { name: 'Skip', exact: true }).click(); // motion preset
@@ -548,7 +548,7 @@ test.describe('v1.9.3 reflection screeners', () => {
     await expect(page.locator('#panic.on')).toBeVisible({ timeout: 5000 });
     const panicText = await page.locator('#panic').innerText();
     expect(panicText.toLowerCase()).not.toMatch(/\bsevere\b|\bmild\b|\bmoderate\b|\bminimal\b/);
-    expect(panicText).toMatch(/not therapy|self-guided wellness/i);
+    expect(panicText).toMatch(/not therapy|self-help tools|crisis service/i);
     expect(panicText).not.toMatch(/\b\d{3}[-.\s]?\d{3}\b/);
     await page.locator('#panicExit').click();
 
@@ -663,7 +663,7 @@ test.describe('v2.1 Guided Path', () => {
     expect(sessions[sessions.length - 1].approachId).toBeTruthy();
   });
 
-  test('panic-like cluster offers Help without crisis numbers', async ({ page }) => {
+  test('panic-like cluster offers Help and opens region Help screen', async ({ page }) => {
     await seedDemo(page);
     await page.evaluate(() => (window as any).__soulcap.openPath());
     const sheet = page.locator('#sheetPanel');
@@ -677,9 +677,8 @@ test.describe('v2.1 Guided Path', () => {
     expect(panic).toBe(true);
     await sheet.getByRole('button', { name: 'I need help now' }).click();
     await expect(page.locator('#panic')).toBeVisible();
-    const panicText = await page.locator('#panic').innerText();
-    expect(panicText).not.toMatch(/\d{3}/);
-    expect(panicText.toLowerCase()).not.toMatch(/hotline|emergency number|988|999|911/);
+    await expect(page.locator('#panicLinks')).toContainText('Get help now');
+    await expect(page.locator('#panicLinks')).toContainText('Emergency');
   });
 
   test('path note appears under What SoulCap knows and clears', async ({ page }) => {
@@ -751,11 +750,49 @@ test.describe('v2.0 IA restructure', () => {
     expect(toolsY && aboutY && toolsY.y < aboutY.y).toBeTruthy();
     await page.evaluate(() => (document.querySelector('#tabs button[data-tab="now"]') as HTMLElement).click());
     await expect(page.locator('#view-now .now-primary .now-suggest')).toBeVisible();
-    await expect(page.locator('#view-now .progress-glance')).toBeVisible();
+    await expect(page.locator('#view-now .now-more .progress-glance')).toBeVisible();
     await expect(page.locator('#view-now .explore-toggle')).toBeVisible();
+    await expect(page.locator('#view-now .help-btn')).toBeVisible();
     await page.locator('#view-now .explore-toggle').click();
     await expect(page.locator('#view-now .now-quiet')).toBeVisible();
     await expect(page.locator('#view-now')).not.toContainText('Your week');
+  });
+
+  test('Now first viewport keeps greeting, check-in, suggest, Explore, Help (SOUL-P1-04)', async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 667 });
+    await seedDemo(page);
+    await page.evaluate(() => {
+      const s = (window as any).__soulcap.getState();
+      s.notices.seenVersion = (window as any).__soulcap.version;
+      (window as any).__soulcap.save?.();
+    });
+    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="now"]') as HTMLElement).click());
+    await page.evaluate(() => { (window as any).__soulcap.render?.(); });
+    // Force a re-render via tab click after dismiss what's new if present
+    const wn = page.locator('#view-now .whats-new');
+    if (await wn.count()) await wn.getByRole('button', { name: 'Got it' }).click();
+
+    const view = page.locator('#view-now');
+    await expect(view.locator('h1.h-voice')).toBeVisible();
+    await expect(view.locator('.qd-checkin')).toBeVisible();
+    await expect(view.locator('.now-suggest .btn', { hasText: 'Begin' })).toBeVisible();
+    await expect(view.locator('.explore-toggle')).toBeVisible();
+    await expect(view.locator('.help-btn')).toBeVisible();
+
+    async function fullyInFirstFold(sel: string) {
+      return page.locator(sel).evaluate((el) => {
+        const r = el.getBoundingClientRect();
+        return r.top >= 0 && r.bottom <= 667 && r.height > 0;
+      });
+    }
+    expect(await fullyInFirstFold('#view-now h1.h-voice')).toBe(true);
+    expect(await fullyInFirstFold('#view-now .qd-checkin')).toBe(true);
+    expect(await fullyInFirstFold('#view-now .now-suggest')).toBe(true);
+    expect(await fullyInFirstFold('#view-now .explore-toggle')).toBe(true);
+    expect(await fullyInFirstFold('#view-now .help-btn')).toBe(true);
+    // Path / this week live under More (may be below the fold)
+    await expect(view.locator('.now-more .path-card')).toBeVisible();
+    await expect(view.locator('.now-more .progress-glance')).toBeVisible();
   });
 
   test('Calm keeps guided first with Also here tools', async ({ page }) => {
@@ -775,7 +812,7 @@ test.describe('v2.0 IA restructure', () => {
     await openSettings(page);
     await page.locator('#sheetPanel').getByRole('button', { name: 'About & Legal', exact: true }).click();
     await expect(page.locator('#sheetPanel')).toContainText(
-      'SoulCap is a self-guided wellness companion — not therapy, diagnosis, or medical advice.',
+      'SoulCap offers self-help tools. It isn’t therapy, medical advice, a diagnosis or a crisis service.',
     );
     await expect(page.locator('#sheetPanel')).toContainText(/Version \d+\.\d+/);
     await page.locator('#sheetPanel').getByRole('button', { name: 'Close' }).click();
@@ -1402,11 +1439,11 @@ test.describe('Journal', () => {
 test.describe('Check-ins', () => {
   test('tapping a mood twice in one day does not stack entries', async ({ page }) => {
     await seedDemo(page);
-    const chip = page.locator('#view-now .qd-checkin .qd-row').filter({ hasText: 'Wired' });
+    const chip = page.locator('#view-now .qd-checkin .chip').filter({ hasText: 'Wired' });
     await chip.click();
     const afterFirst = await page.evaluate(() => (window as any).__soulcap.getState().checkins.length);
-    await page.locator('#view-now .qd-checkin .qd-row').filter({ hasText: 'Flat' }).click();
-    await page.locator('#view-now .qd-checkin .qd-row').filter({ hasText: 'Steady' }).click();
+    await page.locator('#view-now .qd-checkin .chip').filter({ hasText: 'Flat' }).click();
+    await page.locator('#view-now .qd-checkin .chip').filter({ hasText: 'Steady' }).click();
     const afterMore = await page.evaluate(() => (window as any).__soulcap.getState().checkins.length);
     // Same calendar day → the latest entry is updated, not appended.
     expect(afterMore).toBe(afterFirst);
@@ -1414,14 +1451,14 @@ test.describe('Check-ins', () => {
 
   test('same-day check-in keeps original timestamp and updates updatedAt', async ({ page }) => {
     await seedDemo(page);
-    await page.locator('#view-now .qd-checkin .qd-row').filter({ hasText: 'Steady' }).click();
+    await page.locator('#view-now .qd-checkin .chip').filter({ hasText: 'Steady' }).click();
     const before = await page.evaluate(() => {
       const list = (window as any).__soulcap.getState().checkins;
       const c = list[list.length - 1];
       return { id: c.id, t: c.t, state: c.state };
     });
     await page.waitForTimeout(20);
-    await page.locator('#view-now .qd-checkin .qd-row').filter({ hasText: 'Wired' }).click();
+    await page.locator('#view-now .qd-checkin .chip').filter({ hasText: 'Wired' }).click();
     const after = await page.evaluate(() => {
       const list = (window as any).__soulcap.getState().checkins;
       const c = list[list.length - 1];
@@ -1438,7 +1475,7 @@ test.describe('Check-ins', () => {
     const states = ['Steady', 'Wired', 'Flat', 'Heavy', 'Not sure'];
     const results: { state: string; title: string; reason: string }[] = [];
     for (const state of states) {
-      await page.locator('#view-now .qd-checkin .qd-row').filter({ hasText: state }).click();
+      await page.locator('#view-now .qd-checkin .chip').filter({ hasText: state }).click();
       const skillCard = page.locator('#view-now .now-suggest').first();
       results.push({
         state,
@@ -1661,12 +1698,15 @@ test.describe('Accessibility', () => {
   test('compact labels preserve the iPhone visual hierarchy', async ({ page }) => {
     await seedDemo(page);
     const sizes = await page.evaluate(() => ({
+      width: window.innerWidth,
       tab: parseFloat(getComputedStyle(document.querySelector('#tabs button span')!).fontSize),
       eyebrow: parseFloat(getComputedStyle(document.querySelector('.view.on .eyebrow')!).fontSize),
       tabTarget: document.querySelector('#tabs button')!.getBoundingClientRect().height,
     }));
     expect(sizes.tab).toBeGreaterThanOrEqual(11);
-    expect(sizes.tab).toBeLessThanOrEqual(12);
+    // Phone bottom tabs stay caption-sized; ≥900px sidebar uses readable 15px labels (SOUL-P1-01).
+    if (sizes.width >= 900) expect(sizes.tab).toBeLessThanOrEqual(16);
+    else expect(sizes.tab).toBeLessThanOrEqual(12);
     expect(sizes.eyebrow).toBeLessThanOrEqual(13);
     expect(sizes.tabTarget).toBeGreaterThanOrEqual(48);
   });
@@ -2008,7 +2048,12 @@ test.describe('v1.4 bundled features', () => {
       expect(Math.abs(layout.tabsBottom - layout.viewportH), `${tab} tabs at bottom`).toBeLessThanOrEqual(2);
       expect(layout.padBottom, `${tab} view pad`).toBeGreaterThanOrEqual(layout.tabsH);
       expect(layout.helpClearsTabs, `${tab} help clears tab zone`).toBe(true);
-      expect(layout.helpIsLast, `${tab} help at end`).toBe(true);
+      // Now: Help sits above More (SOUL-P1-04 / Q-3). Other tabs keep Help last.
+      if (tab === 'now') {
+        expect(layout.helpIsLast, 'now help above More').toBe(false);
+      } else {
+        expect(layout.helpIsLast, `${tab} help at end`).toBe(true);
+      }
     }
   });
 
@@ -2724,7 +2769,7 @@ test.describe('Phase 1–4 live invariants (Fable QA)', () => {
     await page.getByRole('button', { name: 'Begin' }).click();
     await page.getByRole('button', { name: 'I need help now' }).click();
     await expect(page.locator('#panic.on')).toBeVisible();
-    await expect(page.locator('#panicLinks')).toContainText(/not therapy|self-guided wellness/i);
+    await expect(page.locator('#panicLinks')).toContainText(/not therapy|self-help tools|crisis service/i);
     await expect(page.getByRole('button', { name: /Try a 1-minute breath/ })).toBeVisible();
     const nums = await page.locator('#panic').innerText();
     expect(nums).not.toMatch(/\b\d{3}[-.\s]?\d{3}\b/);
@@ -2778,7 +2823,7 @@ test.describe('Phase 1–4 live invariants (Fable QA)', () => {
     await page.locator('.me-settings-gear').click();
     await expect(page.locator('#sheet.on')).toBeVisible();
     await page.locator('#sheetPanel').getByRole('button', { name: 'About & Legal', exact: true }).click();
-    await expect(page.locator('#sheet.on')).toContainText(/not therapy|self-guided wellness/i);
+    await expect(page.locator('#sheet.on')).toContainText(/isn.?t therapy|self-help tools|self-guided/i);
   });
 
   test('FAB does not overlap tab bar or journal tools when editor closed', async ({ page }, testInfo) => {

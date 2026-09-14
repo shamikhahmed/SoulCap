@@ -471,41 +471,7 @@ var PATH_REASONS = {
 
 /* Approach packs (v3) — educational recommendation after path chips.
  * Titles name approaches warmly; never "you have X" or modality-as-prescription. */
-var APPROACH_PACKS = {
-  cbt: {
-    title:'Working with thoughts',
-    shortLabel:'CBT ideas',
-    family:'cognitive',
-    chips:['worry','spin','allornothing','mindread','overgeneral'],
-    why:'You mentioned a lot of what-if or looping thoughts — an approach called CBT works on looking at thoughts as thoughts. Not a diagnosis, just a good fit to try.',
-    skills:['thought-record','worry-vs-problem','defusion','count-backwards']
-  },
-  dbt: {
-    title:'Steadying when feelings run hot',
-    shortLabel:'DBT ideas',
-    family:'autonomic',
-    chips:['heart','tension','edge'],
-    why:'When the body alarm is loud, distress-tolerance moves from DBT often start with the body first. Not a diagnosis — a practical place to begin.',
-    skills:['physiological-sigh','grounding-54321','pmr','ice-hold','humming','cold-water','box-breathing']
-  },
-  act: {
-    title:'Making room for hard feelings',
-    shortLabel:'ACT ideas',
-    family:'cognitive',
-    chips:['avoid','spin'],
-    why:'Avoiding or fighting a feeling can tighten the knot. ACT-style moves practise noticing, stepping back, and choosing a small valued step. Not a diagnosis.',
-    skills:['defusion','values-check','opposite-action']
-  },
-  ba: {
-    title:'Small steps when energy is low',
-    shortLabel:'Behavioural activation',
-    family:'activation',
-    chips:['low','avoid'],
-    why:'When energy is flat, waiting to feel like acting often waits forever. Behavioural activation starts with one tiny outward step. Not a diagnosis — a gentle experiment.',
-    skills:['behavioural-activation','ten-minute-walk','opposite-action']
-  }
-};
-
+var APPROACH_PACKS = {};
 var PROGRESS_UI = {
   title:'This week',
   weekLabel:'This week',
@@ -532,7 +498,7 @@ var SESSION_UI = {
 var ABOUT_UI = {
   title:'About & Legal',
   purpose:'A calm, private place for self-regulation techniques, a journal, and the people around you.',
-  honesty:'SoulCap is a self-guided wellness companion — not therapy, diagnosis, or medical advice.',
+  honesty:'SoulCap offers self-help tools. It isn’t therapy, medical advice, a diagnosis or a crisis service.',
   credits:'Built by Capricorn Systems. Everything stays on this device.',
   open:'About & Legal',
   close:'Close'
@@ -555,6 +521,13 @@ var SETTINGS_UI = {
   constellation:'Constellation',
   privacyData:'Privacy & Data',
   onDevice:'Everything stays on this device. No account, no cloud sync.',
+  appLock:'App lock',
+  appLockHint:'Optional passcode. Journal, check-ins, people and related private data stay encrypted on this device.',
+  appLockEnable:'Turn on app lock',
+  appLockDisable:'Turn off app lock',
+  appLockExportFirst:'Export a backup first',
+  appLockAuto:'Auto-lock',
+  appLockBio:'Unlock with device',
   yourData:'Your data',
   about:'About & Legal',
   spoken:'Spoken guidance',
@@ -649,57 +622,7 @@ var SCREENER_UI = {
   historyLine:'Last reflection · {band}'
 };
 
-var SCREENERS = [
-  { id:'phq9', name:'Mood reflection (PHQ-9)',
-    blurb:'Nine questions about the last two weeks. Reflection only.',
-    item9Index:8,
-    items:[
-      'Little interest or pleasure in doing things',
-      'Feeling down, depressed, or hopeless',
-      'Trouble falling or staying asleep, or sleeping too much',
-      'Feeling tired or having little energy',
-      'Poor appetite or overeating',
-      'Feeling bad about yourself — or that you are a failure or have let yourself or your family down',
-      'Trouble concentrating on things, such as reading the newspaper or watching television',
-      'Moving or speaking so slowly that other people could have noticed — or being so fidgety or restless that you have been moving around a lot more than usual',
-      'Thoughts that you would be better off dead, or of hurting yourself'
-    ],
-    /* Band ids stay for logic; labels must never read as clinical severity verdicts. */
-    bands:[
-      { id:'minimal', min:0, max:4, label:'quieter days' },
-      { id:'mild', min:5, max:9, label:'some harder days' },
-      { id:'moderate', min:10, max:14, label:'a heavier stretch' },
-      { id:'moderately_severe', min:15, max:19, label:'a very heavy stretch' },
-      { id:'severe', min:20, max:27, label:'an especially heavy stretch' }
-    ],
-    topBand:'severe',
-    helpSkills:['self-compassion-break','behavioural-activation','hand-on-heart'],
-    helpExperiences:['fatigue','self-criticism','rumination']
-  },
-  { id:'gad7', name:'Worry reflection (GAD-7)',
-    blurb:'Seven questions about anxiety and worry over the last two weeks. Reflection only.',
-    item9Index:-1,
-    items:[
-      'Feeling nervous, anxious, or on edge',
-      'Not being able to stop or control worrying',
-      'Worrying too much about different things',
-      'Trouble relaxing',
-      'Being so restless that it is hard to sit still',
-      'Becoming easily annoyed or irritable',
-      'Feeling afraid as if something awful might happen'
-    ],
-    bands:[
-      { id:'minimal', min:0, max:4, label:'quieter days' },
-      { id:'mild', min:5, max:9, label:'some harder days' },
-      { id:'moderate', min:10, max:14, label:'a heavier stretch' },
-      { id:'severe', min:15, max:21, label:'an especially heavy stretch' }
-    ],
-    topBand:'severe',
-    helpSkills:['box-breathing','worry-postponement','grounding-54321'],
-    helpExperiences:['racing-thoughts','catastrophising','hypervigilance']
-  }
-];
-
+var SCREENERS = [];
 var USER_MODEL_KEYS = [
   { key:'stress', label:'Stress load', low:'Lighter', high:'Heavier' },
   { key:'sleep', label:'Sleep strain', low:'Rested', high:'Worn' },
@@ -753,7 +676,7 @@ var STRINGS = {
     onboarding:{
       ageTitle:'First — how old are you?',
       ageBody:'SoulCap is built for adults. We ask because the right support for someone under 18 looks different, and we’d rather point you somewhere better than get it wrong.',
-      over18:'18 or older',
+      over18:'I’m 18 or over',
       under18:'Under 18',
       under18Hint:'This isn’t built for you yet — please talk to a trusted adult or a service for young people',
       under18Body:'SoulCap isn’t the right fit yet. Please reach out to a trusted adult, or a support service made for young people where you are.',
@@ -1124,372 +1047,8 @@ var REDFLAG_UI = {
 };
 
 /* Experiences library (v1.9). Screen + reflect — never diagnose. helps ids must exist in SKILLS. */
-var EXPERIENCES = [
-  { id:'racing-heart', name:'Racing heart or palpitations', group:'physical',
-    aka:['heart pounding','chest fluttering','skipping beats'],
-    whatItis:'Your heart feels like it is pounding, racing, or skipping. It is one of the most common and most frightening feelings of anxiety.',
-    why:'When your brain senses threat it releases adrenaline, which speeds the heart to ready you to act. There is nothing wrong with the heart itself — it is doing its job, just when no running or fighting is needed.',
-    commonWith:['anxiety','panic'],
-    helps:['physiological-sigh','cold-water','box-breathing'],
-    selfCare:['Let the wave crest — it peaks and falls within minutes; it cannot harm a healthy heart.','Slow the exhale; a long out-breath is the brake.','Feel your feet on the floor.'],
-    reflection:['What was happening just before it started?'],
-    redFlag:{ level:'emergency', text:'Crushing chest pain, pain spreading to your arm or jaw, or breathlessness while resting is different from anxiety — treat it as a possible heart problem and contact emergency services or a doctor now.' },
-    source:'Autonomic arousal — standard anxiety psychoeducation' },
-
-  { id:'short-breath', name:'Can’t get a full breath', group:'physical',
-    aka:['air hunger','shallow breathing','can’t breathe deep'],
-    whatItis:'You feel you cannot take a satisfying breath, even though air is moving. The urge to gulp more air can make the feeling stronger.',
-    why:'Anxiety often leads to over-breathing. Blowing off carbon dioxide too fast can create air hunger that feels like a lack of oxygen — even when your lungs are fine.',
-    commonWith:['anxiety','panic'],
-    helps:['box-breathing','four-seven-eight','grounding-54321'],
-    selfCare:['Lengthen the out-breath more than the in-breath.','Breathe into a cupped hand or a scarf to gently raise CO₂.','Name five things you can see while you breathe.'],
-    reflection:['Did the breath change before or after the worry peaked?'],
-    redFlag:{ level:'emergency', text:'Sudden severe breathlessness, blue lips, or breathlessness with chest pain is not something to wait out — contact emergency services or a doctor now.' },
-    source:'Hyperventilation / respiratory alkalosis — standard anxiety psychoeducation' },
-
-  { id:'chest-tight', name:'Chest tightness or pressure', group:'physical',
-    aka:['chest pressure','tight chest','band around chest'],
-    whatItis:'A sense of pressure, bracing, or a band around the chest. It can feel alarming even when it comes and goes with stress.',
-    why:'Shoulders, chest, and breathing muscles brace when the threat system is on. Shallow breathing and muscle tension can create a tight, heavy feeling without a heart problem.',
-    commonWith:['anxiety','panic'],
-    helps:['pmr','physiological-sigh'],
-    selfCare:['Unclench your jaw and drop your shoulders.','Place a hand on the chest and feel one slow out-breath.','Change posture — stand or walk a few steps.'],
-    reflection:['Where else in your body is bracing right now?'],
-    redFlag:{ level:'emergency', text:'Pain spreading to arm or jaw, sweating, or breathlessness with chest pressure can be a heart emergency — contact emergency services or a doctor now.' },
-    source:'Somatic bracing + shallow breathing — standard anxiety psychoeducation' },
-
-  { id:'dizzy', name:'Dizziness or lightheaded', group:'physical',
-    aka:['lightheaded','woozy','unsteady'],
-    whatItis:'The room may feel floaty, or you feel briefly unsteady. It often arrives with fast breathing or a surge of fear.',
-    why:'Fast breathing lowers carbon dioxide, which can reduce blood flow to the brain briefly and create lightheadedness. The sensation is usually temporary.',
-    commonWith:['anxiety','panic'],
-    helps:['box-breathing','feet-floor'],
-    selfCare:['Sit or lean somewhere safe.','Slow the exhale.','Press both feet into the floor and name the contact.'],
-    reflection:['Were you standing still, over-breathing, or skipping food or water?'],
-    redFlag:{ level:'seeDoctor', text:'Fainting, the room truly spinning, or one-sided weakness is not typical anxiety — get it checked by a doctor. Sudden confusion with weakness needs urgent care.' },
-    source:'Hypocapnia / vestibular cueing — standard anxiety psychoeducation' },
-
-  { id:'trembling', name:'Trembling or shaking', group:'physical',
-    aka:['shaking','tremor','jitters'],
-    whatItis:'Hands, legs, or the whole body may tremble. It can feel embarrassing and hard to hide.',
-    why:'Adrenaline readies muscles for action. When you are still, that charge can show up as shaking until the surge settles.',
-    commonWith:['anxiety','panic'],
-    helps:['burst-movement','physiological-sigh'],
-    selfCare:['Shake out your hands on purpose for ten seconds.','Take a short burst of movement, then slow the breath.','Warm your hands if they feel cold.'],
-    reflection:['Does movement or stillness change the shake?'],
-    redFlag:null,
-    source:'Adrenergic muscle readiness — standard anxiety psychoeducation' },
-
-  { id:'nausea-gut', name:'Nausea, butterflies, or gut clench', group:'physical',
-    aka:['butterflies','sick stomach','gut knot'],
-    whatItis:'The stomach drops, flutters, or clenches. Appetite may vanish or food may feel hard to keep down.',
-    why:'The gut and brain share a fast signalling loop. Threat chemistry shifts digestion toward “pause,” which many people feel as butterflies or nausea.',
-    commonWith:['anxiety','stress'],
-    helps:['grounding-54321','cold-sip'],
-    selfCare:['Sip something cool slowly.','Feel your feet and name three sounds.','Avoid forcing a big meal until the wave softens.'],
-    reflection:['What was the first body cue — gut, chest, or thought?'],
-    redFlag:{ level:'seeDoctor', text:'Severe or persistent abdominal pain, vomiting blood, or black stools need a doctor — do not treat that as anxiety alone.' },
-    source:'Gut–brain axis / autonomic shift — standard stress psychoeducation' },
-
-  { id:'facial-tension', name:'Jaw or face tension, tingling, numb lips', group:'physical',
-    aka:['jaw clench','numb lips','face tingling'],
-    whatItis:'Jaw, cheeks, or lips feel tight, tingly, or briefly numb. Some people notice it around the mouth first.',
-    why:'Bracing the jaw and over-breathing can change blood chemistry and nerve sensation around the face. It feels strange; it is usually temporary with stress.',
-    commonWith:['anxiety','panic'],
-    helps:['pmr','box-breathing'],
-    selfCare:['Unclench your teeth; rest the tongue gently on the floor of the mouth.','Slow the out-breath.','Massage the hinge of the jaw lightly if that feels safe.'],
-    reflection:['Have you been holding your breath or clenching while concentrating?'],
-    redFlag:{ level:'emergency', text:'Sudden one-sided facial droop, slurred speech, or arm weakness can be a stroke emergency — contact emergency services or a doctor now.' },
-    source:'Bracing + hyperventilation paraesthesia — standard anxiety psychoeducation' },
-
-  { id:'muscle-tension', name:'Neck, shoulder, or back tension', group:'physical',
-    aka:['tight shoulders','stiff neck','back knot'],
-    whatItis:'Muscles stay braced as if ready for impact. The neck and shoulders often carry it first.',
-    why:'Sustained bracing is part of the threat response. Held for hours or days, it becomes aches and stiffness even after the moment of stress has passed.',
-    commonWith:['stress','anxiety'],
-    helps:['pmr','ten-minute-walk'],
-    selfCare:['Drop the shoulders and roll them once.','Stand and walk for a few minutes.','Heat or a warm shower if available.'],
-    reflection:['When did you last fully unclench today?'],
-    redFlag:null,
-    source:'Sustained muscle bracing — standard stress psychoeducation' },
-
-  { id:'headache', name:'Tension headache or band around the head', group:'physical',
-    aka:['band headache','tight scalp','stress headache'],
-    whatItis:'A dull band or pressure around the head, often with a tight neck. Screens and jaw clench can amplify it.',
-    why:'Scalp, jaw, and neck muscles brace under load. Shallow breathing and screen posture stack on top.',
-    commonWith:['stress','anxiety'],
-    helps:['pmr','wind-down'],
-    selfCare:['Soften the jaw and forehead.','Dim the screen and look far away for a minute.','Drink water if you have been under-hydrated.'],
-    reflection:['Is this more posture and bracing, or did it arrive with a fear spike?'],
-    redFlag:{ level:'seeDoctor', text:'A sudden “worst ever” headache, or headache with fever, confusion, stiff neck, or weakness needs urgent medical care — contact emergency services or a doctor now.' },
-    source:'Tension-type headache mechanisms — standard stress psychoeducation' },
-
-  { id:'fatigue', name:'Exhaustion or heavy limbs', group:'physical',
-    aka:['heavy limbs','wiped out','bone tired'],
-    whatItis:'The body feels drained or weighted. Ordinary tasks can feel like climbing.',
-    why:'Chronic arousal burns energy. Low mood and poor sleep stack on top, so heaviness can be both physical and emotional.',
-    commonWith:['low mood','stress'],
-    helps:['behavioural-activation','wind-down'],
-    selfCare:['Choose one tiny action — smaller than you think you “should.”','Rest without calling it failure.','Protect an earlier wind-down if evenings run late.'],
-    reflection:['What has been asking for constant readiness lately?'],
-    redFlag:{ level:'seeDoctor', text:'Sudden severe weakness, especially one-sided, needs urgent medical care — contact emergency services or a doctor now.' },
-    source:'Allostatic load / low mood energy — standard psychoeducation' },
-
-  { id:'sweating-flush', name:'Sweating, hot-cold flushes, or dry mouth', group:'physical',
-    aka:['hot flush','cold sweat','dry mouth'],
-    whatItis:'Sudden heat, chills, sweat, or a mouth that feels dry. It can arrive with embarrassment or fear.',
-    why:'The autonomic system redirects blood flow and moisture when it prepares for action. The body is doing alarm chemistry, not “failing.”',
-    commonWith:['anxiety','panic'],
-    helps:['cold-water','grounding-54321'],
-    selfCare:['Cool your wrists or face if you can.','Name five things you see.','Loosen a collar or step into cooler air.'],
-    reflection:['Did the flush follow a social moment, a thought, or come from nowhere?'],
-    redFlag:null,
-    source:'Autonomic surge — standard anxiety psychoeducation' },
-
-  { id:'clenching', name:'Teeth grinding or jaw clenching', group:'physical',
-    aka:['bruxism','jaw clench','grinding teeth'],
-    whatItis:'You catch yourself pressing teeth together, or wake with a sore jaw. It often runs under awareness.',
-    why:'Stress bracing includes the jaw. At night it can continue as grinding while the mind is offline.',
-    commonWith:['stress','anxiety'],
-    helps:['pmr','wind-down'],
-    selfCare:['Rest the tongue gently and separate the teeth a little.','Massage the jaw hinge.','Build a calmer wind-down before bed.'],
-    reflection:['When do you notice the clench most — screens, driving, sleep?'],
-    redFlag:null,
-    source:'Orofacial bracing — standard stress psychoeducation' },
-
-  { id:'appetite', name:'Appetite change (loss or comfort eating)', group:'physical',
-    aka:['no appetite','comfort eating','stress eating'],
-    whatItis:'Food interest shrinks, or eating becomes a way to soothe. Both can show up in the same week.',
-    why:'Threat chemistry pauses digestion for some people; for others, eating briefly settles the nervous system. Mood shifts also change appetite signals.',
-    commonWith:['stress','low mood'],
-    helps:['self-compassion-break','wind-down'],
-    selfCare:['Eat something small and regular rather than waiting for perfect hunger.','If comfort eating, pause and ask what the body needed besides food.','Keep harsh self-talk out of the kitchen.'],
-    reflection:['Is appetite quieter, louder, or swinging?'],
-    redFlag:{ level:'seeDoctor', text:'Rapid weight loss, inability to keep food down, or medical concerns around eating need a doctor — do not rely on this app alone.' },
-    source:'Stress–appetite links — standard psychoeducation' },
-
-  { id:'restless', name:'Restlessness / can’t sit still', group:'physical',
-    aka:['can’t sit still','fidgety','wired body'],
-    whatItis:'An urge to move, pace, or fidget. Sitting can feel impossible even when you are tired.',
-    why:'Circulating adrenaline wants an outlet. Stillness can make the charge feel louder until some of it is used.',
-    commonWith:['anxiety','wired'],
-    helps:['burst-movement','feet-floor'],
-    selfCare:['Give the body a short, safe burst of movement.','Then plant both feet and name the contact.','Shake out your hands on purpose.'],
-    reflection:['Does a short walk change the urge?'],
-    redFlag:null,
-    source:'Adrenergic restlessness — standard anxiety psychoeducation' },
-
-  { id:'racing-thoughts', name:'Racing thoughts', group:'cognitive',
-    aka:['thoughts racing','mind spinning','too many thoughts'],
-    whatItis:'Thoughts arrive faster than you can finish them. Topics jump; nothing feels settled.',
-    why:'A threat-scanning mind keeps generating possibilities. Speed can feel like problem-solving while it rarely reaches a next useful step.',
-    commonWith:['anxiety','wired'],
-    helps:['count-backwards','categories-game','worry-postponement'],
-    selfCare:['Park one thought on paper.','Do a short cognitive load task to interrupt the spin.','Choose a later worry window if nothing is actionable now.'],
-    reflection:['Is there one next action, or only circling?'],
-    redFlag:null,
-    source:'Threat scanning / cognitive load — standard anxiety psychoeducation' },
-
-  { id:'rumination', name:'Rumination (chewing the past)', group:'cognitive',
-    aka:['chewing the past','replaying','stuck on what happened'],
-    whatItis:'The mind replays a scene, conversation, or mistake. It feels sticky and hard to leave.',
-    why:'Rumination tries to gain control after the fact. The loop can keep the body in mild alarm without producing new information.',
-    commonWith:['low mood','anxiety'],
-    helps:['defusion','worry-vs-problem','behavioural-activation'],
-    selfCare:['Name it: “this is a replay.”','Ask whether a next action exists; if not, gently shift to one small present task.','Move your body briefly to change state.'],
-    reflection:['What would “enough revisiting for now” look like?'],
-    redFlag:null,
-    source:'Ruminative looping — standard CBT/ACT psychoeducation' },
-
-  { id:'overthinking', name:'Overthinking / paralysis', group:'cognitive',
-    aka:['analysis paralysis','stuck deciding','over-analysing'],
-    whatItis:'You keep analysing options until action feels impossible. Certainty never quite arrives.',
-    why:'Analysis can be a way to avoid the discomfort of choosing. The loop grows with each new “what if.”',
-    commonWith:['anxiety','worry'],
-    helps:['thought-record','behavioural-activation'],
-    selfCare:['Write the decision in one sentence.','Pick a time-box: decide within ten minutes, or defer with a date.','Do one tiny related action even if imperfect.'],
-    reflection:['What is the smallest reversible next step?'],
-    redFlag:null,
-    source:'Avoidance via analysis — standard CBT psychoeducation' },
-
-  { id:'catastrophising', name:'“What if the worst…”', group:'cognitive',
-    aka:['catastrophising','worst case','what if'],
-    whatItis:'The mind jumps to the worst outcome and treats it as likely. Body alarm often follows the picture.',
-    why:'Threat systems overestimate danger to keep you safe. Probability gets distorted; vivid images feel like evidence.',
-    commonWith:['anxiety','worry'],
-    helps:['thought-record','worry-postponement'],
-    selfCare:['Write the feared outcome and a more balanced alternative.','Ask what you would tell a friend.','Postpone further worry to a set time if no action is needed now.'],
-    reflection:['How many times has the worst version actually happened?'],
-    redFlag:null,
-    source:'Threat overestimation — standard CBT psychoeducation' },
-
-  { id:'intrusive', name:'Intrusive thoughts', group:'cognitive',
-    aka:['unwanted thoughts','intrusions','sticky image'],
-    whatItis:'Unwanted images or thoughts pop in and feel shocking or “not me.” Distress is common; the thought itself is not a plan.',
-    why:'Brains misfile and generate odd content under stress. Fighting the thought hard can make it stickier. Distressing does not mean dangerous or intended.',
-    commonWith:['anxiety','OCD-like worry'],
-    helps:['defusion','container','self-compassion-break'],
-    selfCare:['Label: “an intrusive thought showed up.”','Do not treat it as a command.','Return attention to the room with a grounding technique.'],
-    reflection:['Did the thought feel more sticky when you tried to push it away?'],
-    redFlag:null,
-    source:'Intrusive cognition — standard OCD/anxiety psychoeducation; not a diagnosis' },
-
-  { id:'brain-fog', name:'Can’t concentrate / fog', group:'cognitive',
-    aka:['brain fog','can’t focus','fuzzy mind'],
-    whatItis:'Focus slips. Words hide. Reading or deciding feels muffled.',
-    why:'Arousal steals working memory. Sleep debt and low mood amplify the fog. It is usually a capacity issue, not a character flaw.',
-    commonWith:['stress','low mood','poor sleep'],
-    helps:['grounding-54321','feet-floor'],
-    selfCare:['Shrink the task to one tiny step.','Orient to the room before forcing focus.','Protect rest if nights have been rough.'],
-    reflection:['What load has been constant for days?'],
-    redFlag:{ level:'seeDoctor', text:'Sudden confusion or disorientation is not ordinary fog — seek urgent medical care now.' },
-    source:'Arousal and working memory — standard stress psychoeducation' },
-
-  { id:'indecision', name:'Indecision', group:'cognitive',
-    aka:['can’t decide','stuck choosing','decision fog'],
-    whatItis:'Even small choices feel heavy. You bounce between options without landing.',
-    why:'Load and fear of regret make every option look costly. The nervous system prefers delay over a wrong move.',
-    commonWith:['anxiety','overwhelm'],
-    helps:['values-check'],
-    selfCare:['Name what matters most in one line.','Choose a reversible option.','Ask a trusted person for one perspective, not ten.'],
-    reflection:['Which choice fits your values even if it is imperfect?'],
-    redFlag:null,
-    source:'Decision load under threat — standard psychoeducation' },
-
-  { id:'self-criticism', name:'Harsh self-talk', group:'cognitive',
-    aka:['inner critic','beating myself up','harsh voice'],
-    whatItis:'An inner voice attacks, shames, or calls you a failure. It can feel like the only honest voice.',
-    why:'Many people learn a critic early as a way to stay safe or accepted. Under stress it gets louder, even when it no longer helps.',
-    commonWith:['low mood','anxiety'],
-    helps:['self-compassion-break','thought-record'],
-    selfCare:['Notice the critic without agreeing.','Speak one kinder factual line.','Ask what you needed instead of what you “are.”'],
-    reflection:['Would you say this to someone you care about?'],
-    redFlag:null,
-    source:'Internalised critic — standard compassion-focused / CBT psychoeducation' },
-
-  { id:'time-blur', name:'“The day is a blur”', group:'cognitive',
-    aka:['day blur','dissociative fog','checked out'],
-    whatItis:'Hours pass without a clear memory of them. You feel distant from yourself or the room.',
-    why:'Under overload, attention can narrow or detach. It is a protective fog, not proof you are broken — though it can feel eerie.',
-    commonWith:['stress','overwhelm'],
-    helps:['grounding-54321','orient-room'],
-    selfCare:['Name three colours and two sounds.','Feel your feet and the temperature of the air.','Do one ordinary task slowly on purpose.'],
-    reflection:['When did the blur start today?'],
-    redFlag:null,
-    source:'Attentional detachment under load — gentle psychoeducation; not a diagnosis' },
-
-  { id:'hypervigilance', name:'On edge / startle / scanning', group:'cognitive',
-    aka:['on edge','startle','scanning for danger'],
-    whatItis:'You jump at sounds, scan faces or rooms, and struggle to feel “off duty.”',
-    why:'The threat system can stay switched on after stress. Scanning once helped; stuck scanning exhausts you.',
-    commonWith:['anxiety','trauma history'],
-    helps:['orient-room','box-breathing'],
-    selfCare:['Look around and name that you are here, now.','Slow the exhale.','Reduce one input (news, alerts) for a short window.'],
-    reflection:['What would “safe enough for this next hour” look like?'],
-    redFlag:null,
-    source:'Sustained threat orientation — standard anxiety/trauma-informed psychoeducation' }
-];
-
-var ARTICLES = [
-  { id:'anxiety-panic', title:'Anxiety and panic', tags:['anxiety','panic','wired','fear'],
-    summary:'When the body’s alarm system fires hard, even without immediate danger.',
-    sections:[
-      { title:'What it can feel like', body:'A racing heart, short breath, dizziness, tightness, dread, or a strong urge to escape. The sensations are real. They do not tell you, by themselves, what is causing them.' },
-      { title:'What may be happening', body:'The threat system prepares the body to act. Fighting every sensation can add another layer of alarm; some people find it easier to orient to the room and let the wave change at its own pace.' }
-    ],
-    practical:['Put both feet somewhere supported and name what you can see.','Try a slower exhale without forcing a deep breath.','If symptoms are new, severe, or medically concerning, seek medical advice rather than assuming anxiety.'],
-    reflection:['What did you notice first: a thought, a body sensation, or something around you?','What helped the wave become even slightly more manageable?'],
-    support:'Consider professional support when panic keeps returning, changes what you can do, or you are unsure whether symptoms have a physical cause.',
-    references:['World Health Organization — Doing What Matters in Times of Stress (2020)','NHS — Panic disorder overview and self-help guidance'],
-    skillIds:['physiological-sigh','feet-floor','orient-room'] },
-
-  { id:'overthinking', title:'Overthinking and worry', tags:['worry','overthinking','thoughts','focus'],
-    summary:'When the mind keeps rehearsing possibilities without reaching a useful next step.',
-    sections:[
-      { title:'Worry is not failure', body:'Worry often tries to create certainty. It can feel productive while repeating the same question. A useful distinction is whether something needs one concrete action now or whether the mind is circling an uncertainty.' },
-      { title:'Making room around a thought', body:'A thought can be important without being a fact or an instruction. Writing it down, naming it as a thought, or choosing a later time to revisit it can reduce the need to keep holding it.' }
-    ],
-    practical:['Write the question down once.','Ask whether one small action is available today.','If no action is available, choose when you will revisit it and return attention to the present task.'],
-    reflection:['Is this a problem with a next action, or an uncertainty you cannot settle tonight?','What would “enough thinking for now” look like?'],
-    support:'Consider professional support when worry takes up much of the day, disrupts sleep, or makes ordinary responsibilities hard to manage.',
-    references:['World Health Organization — Doing What Matters in Times of Stress (2020)','NHS Every Mind Matters — Tackling your worries'],
-    skillIds:['worry-vs-problem','worry-postponement','defusion'] },
-
-  { id:'sleep', title:'Sleep when the mind will not switch off', tags:['sleep','night','rest','insomnia'],
-    summary:'A gentle explanation of why trying harder to sleep can sometimes keep you awake.',
-    sections:[
-      { title:'Sleep cannot be forced', body:'Pressure to sleep can make the bed feel like a place for effort and monitoring. A calmer aim is to create conditions for rest, then let sleep arrive rather than checking whether it has.' },
-      { title:'Protecting the association', body:'If you are awake and frustrated for a while, some sleep guidance suggests moving to a dim, quiet activity and returning when sleepiness comes back.' }
-    ],
-    practical:['Keep light low and avoid clock-checking if you can.','Choose something quiet and uninteresting rather than trying to solve tomorrow.','Keep wake time reasonably consistent after a rough night.'],
-    reflection:['What usually turns bedtime into effort?','What is one part of the evening you can make less demanding?'],
-    support:'Consider professional or medical support when sleep trouble persists, affects safety or daily functioning, or comes with breathing problems, severe mood changes, or medication concerns.',
-    references:['NHS — Insomnia guidance','American Academy of Sleep Medicine — Behavioral and psychological treatments for chronic insomnia'],
-    skillIds:['stimulus-control','wind-down','worry-postponement'] },
-
-  { id:'low-mood', title:'Low mood and feeling flat', tags:['low mood','flat','heavy','motivation'],
-    summary:'When energy and interest shrink, small action can be more available than motivation.',
-    sections:[
-      { title:'Why starting feels hard', body:'Low mood can reduce energy, reward, and expectation that anything will help. Waiting to feel motivated may keep life smaller; a tiny chosen action can sometimes come before any change in feeling.' },
-      { title:'Small means small', body:'The aim is not a perfect routine. It may be standing by an open window, washing one cup, or walking for two minutes. Completion is information, not a score.' }
-    ],
-    practical:['Choose one action that takes under ten minutes.','Make the first step smaller than your mind says it should be.','Notice what happened without demanding that it improve your mood.'],
-    reflection:['What has become harder lately?','What used to give even a small sense of interest, care, or movement?'],
-    support:'Consider professional support when low mood lasts, keeps deepening, affects basic care or functioning, or includes thoughts of self-harm or not wanting to live.',
-    references:['NHS — Low mood and depression guidance','World Health Organization — Doing What Matters in Times of Stress (2020)'],
-    skillIds:['behavioural-activation','ten-minute-walk','self-compassion-break'] },
-
-  { id:'grief', title:'Grief', tags:['grief','loss','bereavement','missing'],
-    summary:'Grief can move between pain, numbness, memory, anger, relief, and ordinary moments.',
-    sections:[
-      { title:'No single correct shape', body:'Grief is not a fixed sequence. Feelings can change by the hour, return after quiet periods, or be absent when you expected them. None of that measures how much someone mattered.' },
-      { title:'Continuing while carrying it', body:'Support can include remembering, resting, keeping one ordinary routine, or being near someone who does not require you to explain.' }
-    ],
-    practical:['Lower expectations on days with less capacity.','Choose one person or place where you do not have to perform being okay.','Keep a small routine that supports food, rest, or daylight.'],
-    reflection:['What part of this loss feels most present today?','Is there a way you want to remember or stay connected to what mattered?'],
-    support:'Consider professional support when grief feels impossible to carry alone, daily functioning remains severely affected, or safety becomes a concern.',
-    references:['NHS — Grief after bereavement or loss','American Psychological Association — Grief resources'],
-    skillIds:['hand-on-heart','reach-out','values-check'] },
-
-  { id:'boundaries', title:'Boundaries and difficult relationships', tags:['boundaries','relationships','family','work'],
-    summary:'A boundary describes what you will do to protect capacity; it does not control another person.',
-    sections:[
-      { title:'Boundaries can be quiet', body:'A boundary may be ending a conversation, delaying a reply, sharing less information, or choosing where you spend time. It does not need a perfect speech.' },
-      { title:'Discomfort is not proof of wrongdoing', body:'Setting a limit can bring guilt or anxiety, especially when others expect access. Those feelings may need care without deciding the limit was wrong.' }
-    ],
-    practical:['Name the limit in one plain sentence.','Choose what you will do if the limit is not respected.','Practise with a lower-stakes situation first.'],
-    reflection:['What interaction leaves you with less capacity than you can afford?','What is in your control before, during, or after it?'],
-    support:'Consider professional support when a relationship involves fear, coercion, threats, violence, or repeated control. Prioritise local, qualified help and immediate safety.',
-    references:['NHS — Mental wellbeing and relationships resources','American Psychological Association — Building and maintaining healthy relationships'],
-    skillIds:['values-check','self-compassion-break','orient-room'] },
-
-  { id:'alarm-system', title:'Your body’s alarm — fight, flight, freeze', tags:['fight','flight','freeze','fawn','adrenaline','alarm','panic','threat'],
-    summary:'Why the threat response is protective — and why it produces so many of the body sensations in the Experiences library.',
-    sections:[
-      { title:'An alarm, not a broken system', body:'When the brain detects possible danger it prepares the body to act. Heart rate rises, breath quickens, muscles brace, digestion pauses, attention narrows. That is the same family of change behind a racing heart, short breath, shaking, gut clench, and scanning the room. The system is doing a job — often at the wrong time.' },
-      { title:'Fight, flight, freeze — and fawn', body:'Fight mobilises energy toward confrontation. Flight mobilises toward escape. Freeze can feel like shutdown, fog, or inability to move or speak. Fawn is a social appease response some people notice under threat. None of these prove you are weak; they are old survival options.' },
-      { title:'The recovery side', body:'The parasympathetic side of the nervous system helps the body come back down. A longer exhale is one lever many people find useful. Co-regulation — being near a calm person, voice, or place — can also help. Recovery is not forced calm; it is giving the alarm a chance to stand down.' }
-    ],
-    practical:['Name the alarm: “my body is preparing for action.”','Lengthen the out-breath without forcing a deep gasp.','Orient: look around and name what is here, now.','If symptoms are new, severe, or medically concerning, seek medical advice rather than assuming anxiety.'],
-    reflection:['Which mode shows up most for you — fight, flight, freeze, or fawn?','What usually helps the wave crest and fall, even a little?'],
-    support:'Consider professional support when the alarm keeps returning, changes what you can do, or you are unsure whether symptoms have a physical cause. Sudden crushing chest pain, one-sided weakness, or severe breathlessness need urgent medical care.',
-    references:['World Health Organization — Doing What Matters in Times of Stress (2020)','NHS — Anxiety and panic self-help guidance'],
-    skillIds:['physiological-sigh','box-breathing','orient-room','grounding-54321'] },
-
-  { id:'wind-down-boundaries', title:'Slowing down — boundaries and winding down', tags:['boundaries','wind-down','evening','screens','rest','work','sleep'],
-    summary:'A protected wind-down window, closing the day, and why chronic arousal needs an off-ramp — without guilt if you miss it.',
-    sections:[
-      { title:'Why evenings bleed', body:'Work, messages, and bright screens keep the threat and reward systems half-awake. Chronic arousal needs a daily off-ramp. A wind-down window is not a rule to fail; it is a protected stretch where fewer demands are allowed in.' },
-      { title:'Close the day', body:'A short ritual can mark the end of effort: write tomorrow’s one next step, put the phone out of arm’s reach, dim lights, or use a night reflection in the journal. Micro-breaks and single-tasking during the day reduce how much evening has to repair.' },
-      { title:'Light, sleep pressure, and morning', body:'Morning light helps set sleep pressure later. An earlier wind-down supports that loop. Missed nights happen. The kind next move is one smaller boundary tomorrow — not a streak to rebuild.' }
-    ],
-    practical:['Choose an optional wind-down hour in Settings (no notifications — only a gentle card in the app after that hour).','Pick one “close the day” action under five minutes.','Protect one screen-dim stretch before bed if you can.','Link a daily support or a journal night template when that feels useful.'],
-    reflection:['What usually steals the last quiet hour of your day?','What is one boundary you can keep even on a hard day?'],
-    support:'Consider professional or medical support when sleep trouble persists, mood keeps worsening, or you cannot protect basic rest and safety. This article is not a diagnosis or a treatment plan.',
-    references:['NHS — Sleep and tiredness guidance','World Health Organization — Doing What Matters in Times of Stress (2020)'],
-    skillIds:['wind-down','stimulus-control','worry-postponement','values-check'] }
-];
-
+var EXPERIENCES = [];
+var ARTICLES = [];
 var WIND_DOWN_UI = {
   settingsTitle:'Evening wind-down (optional)',
   settingsHint:'No notifications. After this hour, Now may show a gentle card. Off means no card.',
@@ -2119,18 +1678,7 @@ var TRIANGLE_UI = {
   listHeading:'Common traps',
   notDiagnosis:'Noticing a trap is not a verdict — everyone has these.'
 };
-var DISTORTIONS = [
-  { name:'All-or-nothing', sounds:'“I always mess this up.”', counter:'Is there a middle, greyer version?' },
-  { name:'Catastrophising', sounds:'“This will be a disaster.”', counter:'What is most likely, not worst case?' },
-  { name:'Mind-reading', sounds:'“They think I’m boring.”', counter:'What else could they be thinking?' },
-  { name:'Overgeneralising', sounds:'“Nothing ever works out.”', counter:'One time, or truly every time?' },
-  { name:'Mental filter', sounds:'“The whole day was ruined.”', counter:'What went okay, even a little?' },
-  { name:'Should statements', sounds:'“I should be over this.”', counter:'Says who? Is that fair to you?' },
-  { name:'Personalising', sounds:'“It’s my fault they’re upset.”', counter:'What part is actually mine?' },
-  { name:'Labelling', sounds:'“I’m useless.”', counter:'A person is more than one moment.' }
-];
-
-/* Y4 — Comfort / Stretch / Panic zones (Tier C: Senninger/Vygotsky; graded exposure). */
+var DISTORTIONS = [];
 var ZONES_UI = {
   cardTitle:'Comfort · Stretch · Panic',
   cardHint:'A gentle way to size a step so it grows you without overwhelming you.',
@@ -2183,23 +1731,36 @@ var STORIES_UI = {
   empty:'No stories here yet.',
   triedLabel:'What helped'
 };
-var STORIES = [
-  { id:'anx-eve', feeling:'anxious', title:'The 9pm spiral',
-    body:'Every evening the same worry looped — did I say the wrong thing at work? It felt bigger each lap.',
-    tried:'They named it (“anxious, catastrophising”), tried one slow breath cycle, and wrote the worry down to look at in the morning. It didn’t vanish, but it got quieter, and the morning version looked smaller.' },
-  { id:'low-flat', feeling:'low', title:'Heavy mornings',
-    body:'Getting up felt like moving through water. Nothing seemed worth doing, so nothing got done, which made it heavier.',
-    tried:'Instead of a big plan, they picked one comfort-zone-plus step — open the curtains and stand outside for a minute. Small, doable. Some days that was the whole win, and that counted.' },
-  { id:'lonely', feeling:'lonely', title:'Full room, still alone',
-    body:'Surrounded by people all day, they still felt unseen — like the version everyone met wasn’t the real one.',
-    tried:'They noticed the gap between how they felt inside and how they came across, and how tiring holding it was. They sent one honest message to someone they trusted. One real reply helped more than the crowd.' },
-  { id:'self-crit', feeling:'self-critical', title:'The harsh voice',
-    body:'After one mistake, the voice started: you’re not good enough, you never learn.',
-    tried:'They caught the belief and tried a kinder line that still felt honest — “I’m learning, and one mistake isn’t the whole story.” It only felt half-true at first. Rated later, it felt a little truer.' },
-  { id:'stuck', feeling:'stuck', title:'Too big to start',
-    body:'The task had grown so large in their head that starting felt impossible, so they kept not starting.',
-    tried:'They asked if it was comfort, stretch, or panic — it was panic. So they shrank it to a two-minute first step. Panic became stretch, and stretch actually moved.' },
-  { id:'grief', feeling:'grief', title:'Waves, not a line',
-    body:'Some days felt almost normal, then a song or a smell brought it all back without warning.',
-    tried:'They learned grief comes in waves, not a straight line, and stopped expecting steady progress. On wave days they were gentler with themselves and reached for one steadying thing instead of pushing through.' }
-];
+var STORIES = [];
+
+
+/* Lazy catalogs (SOUL-P1-06 / Q-5) — fetched on first use; SW-precached for offline. */
+var __SOUL_LAZY = {
+  APPROACH_PACKS: { file: 'data/approach-packs.json', ready: false },
+  SCREENERS: { file: 'data/screeners.json', ready: false },
+  EXPERIENCES: { file: 'data/experiences.json', ready: false },
+  ARTICLES: { file: 'data/articles.json', ready: false },
+  DISTORTIONS: { file: 'data/distortions.json', ready: false },
+  STORIES: { file: 'data/stories.json', ready: false }
+};
+function soulEnsureCatalog(name) {
+  var meta = __SOUL_LAZY[name];
+  if (!meta) return Promise.resolve(null);
+  if (meta.ready) return Promise.resolve(globalThis[name]);
+  if (meta._p) return meta._p;
+  meta._p = fetch(meta.file, { credentials: 'same-origin' }).then(function (r) {
+    if (!r.ok) throw new Error('catalog ' + name + ' HTTP ' + r.status);
+    return r.json();
+  }).then(function (data) {
+    globalThis[name] = data;
+    meta.ready = true;
+    return data;
+  }).catch(function (err) {
+    meta._p = null;
+    throw err;
+  });
+  return meta._p;
+}
+function soulEnsureCatalogs(names) {
+  return Promise.all((names || []).map(soulEnsureCatalog));
+}

@@ -180,7 +180,7 @@ async function dismissSplash(page: Page) {
 
 async function seedDemo(page: Page) {
   await page.goto('/?demo=1');
-  await page.waitForFunction(() => Boolean((window as any).__soulcap));
+  await page.waitForFunction(() => Boolean((window as any).__soulcap) && (window as any).__APP_READY__ === true);
   await dismissSplash(page);
   await page.evaluate(() => {
     const api = (window as any).__soulcap;
@@ -256,7 +256,7 @@ async function captureFreshFlow(page: Page, viewport: keyof typeof VIEWPORTS, sh
   await page.waitForFunction(() => Boolean((window as any).__soulcap));
   await dismissSplash(page);
   await page.getByRole('button', { name: 'Begin' }).click();
-  await page.getByRole('button', { name: '18 or older' }).click();
+  await page.getByRole('button', { name: /I.?m 18 or over/i }).click();
   await page.waitForTimeout(300);
   await snap(page, shots, viewport, 'default', 'default', 'onboard-name', 'Onboarding · name', 'onboard/name');
 
@@ -324,7 +324,7 @@ async function captureAll(page: Page, viewport: keyof typeof VIEWPORTS) {
   await page.waitForFunction(() => Boolean((window as any).__soulcap));
   await dismissSplash(page);
   await page.getByRole('button', { name: 'Begin' }).click();
-  await page.getByRole('button', { name: '18 or older' }).click();
+  await page.getByRole('button', { name: /I.?m 18 or over/i }).click();
   await page.getByRole('button', { name: 'Skip', exact: true }).click();
   await page.getByRole('button', { name: 'I understand' }).click();
   await page.getByRole('button', { name: 'Skip', exact: true }).click();
