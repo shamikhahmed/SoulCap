@@ -1,4 +1,23 @@
-**Version:** 8.0.2 · SW `soulcap-v802`
+**Version:** 8.1.0 · SW `soulcap-v810`
+
+## Current state (v8.1.0 — 2026-09-14)
+
+**SPEC-v10 therapist-informed frameworks shipped** (web-verified, evidence-tiered), folded into the
+**You** tab under a new **"Reframe & learn"** group — no new tab:
+Name a feeling (emotion wheel) · Reframe a harsh thought (NC→PC, **CBT reframe, never EMDR**) ·
+Thinking traps (distortions + triangle) · Steady your system (Window of Tolerance → breath/grounding/
+check-in) · Comfort·Stretch·Panic zones · SUDS helper · Stories (fictional/composite, hope-ending).
+Schema **v14** (`emotionNotes`, `reframes`, `storiesSeen`). New sheet fns:
+`emotionSheet, reframeSheet, distortionsSheet, zonesSheet, wotSheet, storiesSheet, sudsRow`
+(function index in `docs/app.js`). Content lives in `docs/data.js` (`EMOTION_WHEEL`, `REFRAME_*`,
+`DISTORTIONS`, `TRIANGLE_UI`, `ZONES_UI`, `WOT_UI`, `SUDS_UI`, `STORIES`). Spec: `SPEC-v10-frameworks-and-stories.md`.
+Suggestions are AUTHORED grounded heuristics, **not** ML. All non-diagnostic, local, safety-kernel on
+free text. Still **not clinician-reviewed** — biggest open gate, now larger (EMDR-adjacent + trauma).
+Verified live at 8.1.0 (tools open, reframe/emotion persist, WoT routes, zones render on-brand).
+Playwright not run in this environment (no `node_modules`) — run `CI=1 npm run verify` in CI.
+
+---
+
 
 # SoulCap — Project Handover
 

@@ -1,8 +1,8 @@
 {
   "name": "SoulCap",
-  "version": "8.0.2",
-  "swCache": "soulcap-v802",
+  "version": "8.1.0",
+  "swCache": "soulcap-v810",
   "schema": 13,
   "released": "2026-07-30",
-  "note": "v8.0.2 full-phase audit: AUDIT.md / PERF.md / QA-MATRIX.md + budget e2e + splash token"
+  "note": "v8.1.0 therapist-informed frameworks — emotion wheel, belief reframe (non-EMDR), thinking traps + triangle, comfort/stretch/panic zones, window of tolerance, SUDS, fictional stories; folded into You"
 }

@@ -1,6 +1,6 @@
 # SoulCap — Safety & Truth Inventory
 
-**Version:** 8.0.2 · **Updated:** 2026-07-30
+**Version:** 8.1.0 · **Updated:** 2026-09-14
 **Status:** **Clinical path** — self-guided wellness companion.
 **Not** a cleared SaMD / medical device. **Not** a substitute for licensed care.
 See also `CLINICAL.md` and `Capricorn-Brain/AI/Claude-Code/SoulCap-Eval-Harness.md`.
@@ -109,9 +109,36 @@ re-introduce them per region behind the region-pack model and verify each is liv
 
 ---
 
+## v10 therapist-informed frameworks (8.1.0) — safety notes
+
+Added, web-verified 2026-09-14, folded into the You tab. All reflective, non-diagnostic,
+user-correctable, local-only; free text runs the keyword safety kernel (tier-3 → hard-coded Help).
+
+- **Name a feeling** (emotion wheel, Tier A — affect labeling): vocabulary, not assessment.
+- **Reframe a harsh thought** (Tier B): borrows the EMDR NC/PC construct but is a **CBT-style belief
+  reframe only — NEVER EMDR**. No eye movements, bilateral stimulation, or memory reprocessing, and
+  the word "EMDR" is never shown. VoC-style 1–7 is personal, not a score.
+- **Thinking traps** (Tier A): cognitive distortions + thoughts·feelings·actions triangle. Noticing a
+  trap is never a verdict.
+- **Steady your system** (Window of Tolerance, Tier B): routes to existing breath / grounding /
+  check-in. No clinical labels as verdicts.
+- **Comfort · Stretch · Panic** (Tier C): psychoeducation + self-rated step size. "Comfort is allowed."
+- **SUDS 0–100**: personal noticing, never gamified.
+- **Stories**: **clearly-labelled fictional/composite** ("a made-up example, not a real person"),
+  concrete, no exaggeration, no graphic crisis detail, always end in realistic hope/agency.
+
+**Grounded heuristics, not machine learning.** All suggestions/content are AUTHORED from how these
+frameworks are used in clinical/case literature and encoded as transparent, inspectable rules with
+confidence + one-tap correction. The app does **not** train on user data, and makes **zero** network
+calls — the privacy promise is intact.
+
 ## Blockers remaining
 
-1. **No licensed clinician has reviewed any skill card, library article, Guided Path, pattern, or screener copy.** Calm / path / About say so in-product. Pattern + screener remain reflection-only.
+1. **No licensed clinician has reviewed any skill card, library article, Guided Path, pattern,
+   screener, or v10 framework/story copy.** Calm / path / About say so in-product. Pattern + screener
+   + all v10 frameworks remain reflection-only. This gate is now **larger**: the belief reframe is
+   EMDR-adjacent and the stories touch distress — both especially need review before any "reviewed"
+   or "clinically safe" claim.
 2. No Urdu clinical copy reviewer; no Urdu localisation shipped.
 3. Safety kernel is still keyword-based. It cannot detect oblique risk
    ("I've been sorting out my things", "I finally feel calm about it all").

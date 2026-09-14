@@ -12,6 +12,7 @@
  *  Patterns … derivePatterns, patternSheet, patternsOverviewSheet
  *  Self-concept … selfConceptSheet, selfConceptInsight
  *  Habits … habitsOverviewSheet, habitDetailSheet
+ *  Frameworks(v10) … emotionSheet, reframeSheet, distortionsSheet, zonesSheet, wotSheet, storiesSheet, sudsRow
  *  Screener … screenerPick/Run/ResultSheet
  *  Runner …… startSkill, breathSetup, breathRun, startSteps, closeRunner
  *  Sheets …… openSheet, skillSheet, articleSheet, experienceSheet, settingsSheet
@@ -78,7 +79,7 @@
   /* ── State ─────────────────────────────────────────────────────────────── */
   var KEY = 'soulcap_v1';
   var DEFAULT = {
-    v: 13, onboarded: false, welcomed: false, ageOk: null, consent: false,
+    v: 14, onboarded: false, welcomed: false, ageOk: null, consent: false,
     profile: { name: '', age: '', pronouns: '' },
     history: {},
     concerns: [], checkins: [], skillRuns: [], people: [], links: [],
@@ -104,7 +105,8 @@
     pathPrefs: { hide: false },
     selfConcept: { areas: {}, updatedAt: null },
     habits: [],
-    experienceViews: {}
+    experienceViews: {},
+    emotionNotes: [], reframes: [], storiesSeen: []
   };
   var VALID_THEMES = { light:1, dark:1, night:1, ocean:1, forest:1, amoled:1 };
   var DRIP_DAY_CAP = 4;
@@ -258,6 +260,12 @@
       p.experienceViews = p.experienceViews && typeof p.experienceViews === 'object' && !Array.isArray(p.experienceViews)
         ? p.experienceViews : {};
       p.v = 13; changed = true;
+    }
+    if (version < 14) {
+      p.emotionNotes = Array.isArray(p.emotionNotes) ? p.emotionNotes : [];
+      p.reframes = Array.isArray(p.reframes) ? p.reframes : [];
+      p.storiesSeen = Array.isArray(p.storiesSeen) ? p.storiesSeen : [];
+      p.v = 14; changed = true;
     }
     return { value: p, changed: changed };
   }
@@ -2524,7 +2532,14 @@
       update();
     }
     try {
-      document.startViewTransition(apply);
+      var vt = document.startViewTransition(apply);
+      /* Rapid nav aborts the previous transition; ignore its rejected promises
+       * so they don't surface as uncaught InvalidStateError noise. */
+      if (vt) {
+        if (vt.finished && vt.finished.catch) vt.finished.catch(function () {});
+        if (vt.ready && vt.ready.catch) vt.ready.catch(function () {});
+        if (vt.updateCallbackDone && vt.updateCallbackDone.catch) vt.updateCallbackDone.catch(function () {});
+      }
     } catch (e) {
       apply();
       return;
@@ -5085,6 +5100,20 @@
     tools.appendChild(toolsGroup);
     v.appendChild(tools);
 
+    /* v10 — reflective frameworks + stories (folded into You, second group). */
+    var learn = el('div', { class: 'section-block me-tools qd-ruled' }, [
+      el('p', { class: 'section-label', text: 'Reframe & learn' })
+    ]);
+    var learnGroup = el('div', { class: 'list-group qd-list-group' });
+    learnGroup.appendChild(listRow({ title: EMOTION_UI.cardTitle, meta: state.emotionNotes.length ? (state.emotionNotes.length + ' note' + (state.emotionNotes.length === 1 ? '' : 's')) : EMOTION_UI.cardHint, onclick: emotionSheet }));
+    learnGroup.appendChild(listRow({ title: REFRAME_UI.cardTitle, meta: state.reframes.length ? (state.reframes.length + ' reframe' + (state.reframes.length === 1 ? '' : 's')) : REFRAME_UI.cardHint, onclick: reframeSheet }));
+    learnGroup.appendChild(listRow({ title: TRIANGLE_UI.cardTitle, meta: TRIANGLE_UI.cardHint, onclick: distortionsSheet }));
+    learnGroup.appendChild(listRow({ title: WOT_UI.cardTitle, meta: WOT_UI.cardHint, onclick: wotSheet }));
+    learnGroup.appendChild(listRow({ title: ZONES_UI.cardTitle, meta: ZONES_UI.cardHint, onclick: zonesSheet }));
+    learnGroup.appendChild(listRow({ title: STORIES_UI.cardTitle, meta: STORIES_UI.cardHint, onclick: storiesSheet }));
+    learn.appendChild(learnGroup);
+    v.appendChild(learn);
+
     /* Compact week glance — not the full dashboard (W1 / W4 / W5). */
     var progDots = weekActivityDots();
     var progN = progDots.filter(function (x) { return x.on; }).length;
@@ -5502,6 +5531,270 @@
       }
     });
   }
+  /* ── v10 frameworks (reflective, non-diagnostic, local) ─────────────────── */
+  function sudsRow(value, onCommit) {
+    var out = el('span', { class: 'meta', text: (typeof value === 'number' ? value : 0) + ' / 100' });
+    var range = el('input', {
+      type: 'range', min: 0, max: 100, step: 5, value: typeof value === 'number' ? value : 0,
+      'aria-label': SUDS_UI.label
+    });
+    range.addEventListener('input', function () { out.textContent = range.value + ' / 100'; });
+    if (onCommit) range.addEventListener('change', function () { onCommit(parseInt(range.value, 10)); });
+    return el('div', { class: 'stack' }, [
+      el('div', { class: 'dimension-head' }, [el('span', { class: 'lab', text: SUDS_UI.label }), out]),
+      range,
+      el('div', { class: 'dimension-ends' }, [el('span', { text: SUDS_UI.low }), el('span', { text: SUDS_UI.high })]),
+      el('p', { class: 'meta', text: SUDS_UI.note })
+    ]);
+  }
+
+  function emotionSheet() {
+    pushOrReplaceView({
+      id: 'emotion', title: EMOTION_UI.title,
+      build: function (p) {
+        p.appendChild(el('p', { class: 'p-sm', text: EMOTION_UI.intro }));
+        p.appendChild(el('p', { class: 'reason', text: EMOTION_UI.notDiagnosis }));
+        var picked = { core: '', word: '' };
+        var refineWrap = el('div', { class: 'stack' });
+        var note = el('textarea', { rows: 2, maxlength: 200, placeholder: EMOTION_UI.notePlaceholder, 'aria-label': EMOTION_UI.notePlaceholder });
+        wireSafetyText(note, null);
+        p.appendChild(el('p', { class: 'lab', text: EMOTION_UI.corePrompt }));
+        var coreChips = el('div', { class: 'chips' });
+        EMOTION_WHEEL.forEach(function (grp) {
+          coreChips.appendChild(el('button', {
+            class: 'chip', type: 'button', text: grp.core,
+            onclick: function () {
+              picked.core = grp.core; picked.word = grp.core;
+              Array.prototype.forEach.call(coreChips.children, function (c) { c.setAttribute('aria-pressed', c.textContent === grp.core ? 'true' : 'false'); });
+              clear(refineWrap);
+              refineWrap.appendChild(el('p', { class: 'lab', text: EMOTION_UI.refinePrompt }));
+              var wordChips = el('div', { class: 'chips' });
+              grp.words.forEach(function (w) {
+                wordChips.appendChild(el('button', {
+                  class: 'chip', type: 'button', text: w,
+                  onclick: function () {
+                    picked.word = w;
+                    Array.prototype.forEach.call(wordChips.children, function (c) { c.setAttribute('aria-pressed', c.textContent === w ? 'true' : 'false'); });
+                  }
+                }));
+              });
+              refineWrap.appendChild(wordChips);
+            }
+          }));
+        });
+        p.appendChild(coreChips);
+        p.appendChild(refineWrap);
+        p.appendChild(el('p', { class: 'lab', text: EMOTION_UI.notePlaceholder }));
+        p.appendChild(note);
+        p.appendChild(el('p', { class: 'p-voice', text: EMOTION_UI.affectNote }));
+        var recentBox = el('div', { class: 'stack' });
+        function drawRecent() {
+          clear(recentBox);
+          if (!state.emotionNotes.length) { recentBox.appendChild(el('p', { class: 'p-sm', text: EMOTION_UI.empty })); return; }
+          recentBox.appendChild(el('p', { class: 'eyebrow', text: EMOTION_UI.recent }));
+          state.emotionNotes.slice(-5).reverse().forEach(function (n) {
+            recentBox.appendChild(el('p', { class: 'p-sm', text: n.word + (n.note ? (' — ' + n.note) : '') }));
+          });
+        }
+        p.appendChild(el('button', {
+          class: 'btn', text: EMOTION_UI.save, type: 'button',
+          onclick: function () {
+            if (!picked.word) return;
+            openPanicIfTier3(note.value, { closeSheet: false });
+            state.emotionNotes.push({ t: Date.now(), core: picked.core, word: picked.word, note: note.value.trim().slice(0, 200) });
+            save(); note.value = ''; drawRecent(); haptic('tick');
+          }
+        }));
+        p.appendChild(recentBox); drawRecent();
+        p.appendChild(el('p', { class: 'meta', text: EMOTION_UI.saved }));
+      }
+    });
+  }
+
+  function reframeSheet() {
+    pushOrReplaceView({
+      id: 'reframe', title: REFRAME_UI.title,
+      build: function (p) {
+        p.appendChild(el('p', { class: 'p-sm', text: REFRAME_UI.intro }));
+        p.appendChild(el('p', { class: 'reason', text: REFRAME_UI.notDiagnosis }));
+        var draft = { family: '' };
+        var neg = el('textarea', { rows: 2, maxlength: 240, placeholder: REFRAME_UI.negativePlaceholder, 'aria-label': REFRAME_UI.negativeLabel });
+        var pos = el('textarea', { rows: 2, maxlength: 240, placeholder: REFRAME_UI.positivePlaceholder, 'aria-label': REFRAME_UI.positiveLabel });
+        wireSafetyText(neg, null); wireSafetyText(pos, null);
+        var suggest = el('div', { class: 'stack' });
+        p.appendChild(el('p', { class: 'lab', text: REFRAME_UI.negativeLabel }));
+        p.appendChild(neg);
+        p.appendChild(el('p', { class: 'lab', text: REFRAME_UI.familyLabel }));
+        var famChips = el('div', { class: 'chips' });
+        REFRAME_FAMILIES.forEach(function (fam) {
+          famChips.appendChild(el('button', {
+            class: 'chip', type: 'button', text: fam.label,
+            onclick: function () {
+              draft.family = fam.key;
+              Array.prototype.forEach.call(famChips.children, function (c) { c.setAttribute('aria-pressed', c.textContent === fam.label ? 'true' : 'false'); });
+              clear(suggest);
+              suggest.appendChild(el('p', { class: 'eyebrow', text: REFRAME_UI.suggestHeading }));
+              var sc = el('div', { class: 'chips' });
+              fam.positives.forEach(function (line) {
+                sc.appendChild(el('button', { class: 'chip', type: 'button', text: line, onclick: function () { pos.value = line; } }));
+              });
+              suggest.appendChild(sc);
+            }
+          }));
+        });
+        p.appendChild(famChips);
+        p.appendChild(suggest);
+        p.appendChild(el('p', { class: 'lab', text: REFRAME_UI.positiveLabel }));
+        p.appendChild(pos);
+        var voc = { n: 4 };
+        var vocOut = el('span', { class: 'meta', text: '4 / 7' });
+        var vocRange = el('input', { type: 'range', min: 1, max: 7, step: 1, value: 4, 'aria-label': REFRAME_UI.vocLabel });
+        vocRange.addEventListener('input', function () { voc.n = parseInt(vocRange.value, 10); vocOut.textContent = voc.n + ' / 7'; });
+        p.appendChild(el('div', { class: 'dimension-head' }, [el('span', { class: 'lab', text: REFRAME_UI.vocLabel }), vocOut]));
+        p.appendChild(vocRange);
+        p.appendChild(el('div', { class: 'dimension-ends' }, [el('span', { text: REFRAME_UI.vocLow }), el('span', { text: REFRAME_UI.vocHigh })]));
+        var recentBox = el('div', { class: 'stack' });
+        function drawRecent() {
+          clear(recentBox);
+          if (!state.reframes.length) { recentBox.appendChild(el('p', { class: 'p-sm', text: REFRAME_UI.empty })); return; }
+          recentBox.appendChild(el('p', { class: 'eyebrow', text: REFRAME_UI.recent }));
+          state.reframes.slice(-5).reverse().forEach(function (r) {
+            recentBox.appendChild(el('div', { class: 'notice' }, [
+              el('p', { class: 'p-sm', text: '“' + r.positive + '”' }),
+              el('p', { class: 'meta', text: 'felt ' + r.voc + '/7' })
+            ]));
+          });
+        }
+        p.appendChild(el('button', {
+          class: 'btn', type: 'button', text: REFRAME_UI.save,
+          onclick: function () {
+            if (!pos.value.trim()) return;
+            openPanicIfTier3(neg.value + ' ' + pos.value, { closeSheet: false });
+            state.reframes.push({ id: uid(), t: Date.now(), negative: neg.value.trim().slice(0, 240), family: draft.family, positive: pos.value.trim().slice(0, 240), voc: voc.n });
+            save(); neg.value = ''; pos.value = ''; clear(suggest); drawRecent(); haptic('tick');
+          }
+        }));
+        p.appendChild(el('p', { class: 'p-voice', text: REFRAME_UI.revisit }));
+        p.appendChild(recentBox); drawRecent();
+        p.appendChild(el('p', { class: 'meta', text: REFRAME_UI.saved }));
+      }
+    });
+  }
+
+  function distortionsSheet() {
+    pushOrReplaceView({
+      id: 'distortions', title: TRIANGLE_UI.title,
+      build: function (p) {
+        p.appendChild(el('div', { class: 'notice' }, [
+          el('p', { class: 'eyebrow', text: TRIANGLE_UI.triangleHeading }),
+          el('p', { class: 'p-sm', text: TRIANGLE_UI.triangleBody })
+        ]));
+        p.appendChild(el('p', { class: 'reason', text: TRIANGLE_UI.notDiagnosis }));
+        p.appendChild(el('p', { class: 'eyebrow', text: TRIANGLE_UI.listHeading }));
+        DISTORTIONS.forEach(function (d) {
+          p.appendChild(el('div', { class: 'notice stack' }, [
+            el('p', { class: 'lr-title', text: d.name }),
+            el('p', { class: 'p-sm', text: d.sounds }),
+            el('p', { class: 'p-voice', text: d.counter })
+          ]));
+        });
+        p.appendChild(el('div', { class: 'chips' }, [
+          el('button', { class: 'chip', type: 'button', text: REFRAME_UI.cardTitle, onclick: function () { reframeSheet(); } })
+        ]));
+      }
+    });
+  }
+
+  function zonesSheet() {
+    pushOrReplaceView({
+      id: 'zones', title: ZONES_UI.title,
+      build: function (p) {
+        p.appendChild(el('p', { class: 'p-sm', text: ZONES_UI.intro }));
+        p.appendChild(el('p', { class: 'reason', text: ZONES_UI.notDiagnosis }));
+        [['comfort', ZONES_UI.comfortTitle, ZONES_UI.comfortBody], ['stretch', ZONES_UI.stretchTitle, ZONES_UI.stretchBody], ['panic', ZONES_UI.panicTitle, ZONES_UI.panicBody]].forEach(function (z) {
+          p.appendChild(el('div', { class: 'notice zone-' + z[0] }, [
+            el('p', { class: 'lr-title', text: z[1] }),
+            el('p', { class: 'p-sm', text: z[2] })
+          ]));
+        });
+        p.appendChild(el('p', { class: 'lab', text: ZONES_UI.ask }));
+        var reply = el('div', { class: 'stack' });
+        var chips = el('div', { class: 'chips' });
+        [['comfort', ZONES_UI.comfortTitle, ZONES_UI.comfortReply], ['stretch', ZONES_UI.stretchTitle, ZONES_UI.stretchReply], ['panic', ZONES_UI.panicTitle, ZONES_UI.panicReply]].forEach(function (z) {
+          chips.appendChild(el('button', {
+            class: 'chip', type: 'button', text: z[1],
+            onclick: function () {
+              Array.prototype.forEach.call(chips.children, function (c) { c.setAttribute('aria-pressed', c.textContent === z[1] ? 'true' : 'false'); });
+              clear(reply);
+              reply.appendChild(el('p', { class: 'p-voice', text: z[2] }));
+              if (z[0] === 'panic') {
+                var smaller = el('textarea', { rows: 2, maxlength: 200, placeholder: ZONES_UI.smallerPlaceholder, 'aria-label': ZONES_UI.smallerPlaceholder });
+                wireSafetyText(smaller, null);
+                reply.appendChild(smaller);
+              }
+            }
+          }));
+        });
+        p.appendChild(chips);
+        p.appendChild(reply);
+      }
+    });
+  }
+
+  function wotSheet() {
+    pushOrReplaceView({
+      id: 'wot', title: WOT_UI.title,
+      build: function (p) {
+        p.appendChild(el('p', { class: 'p-sm', text: WOT_UI.intro }));
+        p.appendChild(el('p', { class: 'reason', text: WOT_UI.notDiagnosis }));
+        p.appendChild(el('p', { class: 'lab', text: WOT_UI.ask }));
+        var reply = el('div', { class: 'stack' });
+        var chips = el('div', { class: 'chips' });
+        var zones = [
+          ['hyper', WOT_UI.hyperTitle, WOT_UI.hyperBody, WOT_UI.hyperAction, function () { closeSubview(); skillSheet('physiological-sigh'); }, WOT_UI.toBreath],
+          ['ok', WOT_UI.okTitle, WOT_UI.okBody, WOT_UI.okAction, function () { closeSubview(); selectTab('now'); }, WOT_UI.toCheckin],
+          ['hypo', WOT_UI.hypoTitle, WOT_UI.hypoBody, WOT_UI.hypoAction, function () { closeSubview(); skillSheet('grounding-54321'); }, WOT_UI.toGround]
+        ];
+        zones.forEach(function (z) {
+          chips.appendChild(el('button', {
+            class: 'chip', type: 'button', text: z[1],
+            onclick: function () {
+              Array.prototype.forEach.call(chips.children, function (c) { c.setAttribute('aria-pressed', c.textContent === z[1] ? 'true' : 'false'); });
+              clear(reply);
+              reply.appendChild(el('div', { class: 'notice stack' }, [
+                el('p', { class: 'p-sm', text: z[2] }),
+                el('p', { class: 'p-voice', text: z[3] }),
+                el('button', { class: 'btn', type: 'button', text: z[5], onclick: z[4] })
+              ]));
+            }
+          }));
+        });
+        p.appendChild(chips);
+        p.appendChild(reply);
+      }
+    });
+  }
+
+  function storiesSheet() {
+    pushOrReplaceView({
+      id: 'stories', title: STORIES_UI.title,
+      build: function (p) {
+        p.appendChild(el('p', { class: 'p-sm', text: STORIES_UI.intro }));
+        STORIES.forEach(function (s) {
+          if (state.storiesSeen.indexOf(s.id) === -1) { state.storiesSeen.push(s.id); }
+          p.appendChild(el('div', { class: 'notice stack story-card' }, [
+            el('p', { class: 'meta', text: STORIES_UI.fictionLabel }),
+            el('p', { class: 'lr-title', text: s.title }),
+            el('p', { class: 'p-sm', text: s.body }),
+            el('p', { class: 'eyebrow', text: STORIES_UI.triedLabel }),
+            el('p', { class: 'p-voice', text: s.tried })
+          ]));
+        });
+        save();
+      }
+    });
+  }
+
   function knowsSheet() {
     pushOrReplaceView({
       id: 'knows',
@@ -5592,7 +5885,7 @@
       }
     });
   }
-  var APP_VERSION = '8.0.2';
+  var APP_VERSION = '8.1.0';
   var settingsQuery = '';
   function settingsGroup(v, title, kids) {
     v.appendChild(el('p', { class: 'eyebrow settings-eyebrow', text: title }));
@@ -6087,7 +6380,8 @@
       function hide() { splash.classList.add('gone'); }
       if (document.startViewTransition) {
         try {
-          document.startViewTransition(hide);
+          var svt = document.startViewTransition(hide);
+          if (svt && svt.finished && svt.finished.catch) svt.finished.catch(function () {});
           return;
         } catch (e) {}
       }

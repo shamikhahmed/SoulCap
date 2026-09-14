@@ -1751,3 +1751,10 @@ hr.sep{border:none;border-top:1px solid var(--line);margin:2px 0}
   opacity:.88;
 }
 .chip:active,.bs-opt:active,.list-row:active,.qd-row:active{transform:scale(.98)}
+
+/* v10 frameworks — zone tints + story card (reuse tokens, no new palette) */
+.zone-comfort{border-left:3px solid var(--accent-soft,var(--line-strong))}
+.zone-stretch{border-left:3px solid var(--accent)}
+.zone-panic{border-left:3px solid var(--danger,var(--accent))}
+.story-card .lr-title{margin-top:2px}
+.story-card .meta{letter-spacing:.04em;text-transform:uppercase;font-size:11.5px}

@@ -1,5 +1,34 @@
 ## [Unreleased]
 
+## [8.1.0] — 2026-09-14
+
+### Added (SPEC-v10 — therapist-informed frameworks, web-verified, evidence-tiered)
+- **Name a feeling** (emotion wheel, Tier A): Plutchik core → nuanced word; optional note; saved
+  locally to `emotionNotes`. Affect-labeling framing.
+- **Reframe a harsh thought** (Tier B): NC→PC belief reframe with 4 families (worth/safety/control/
+  responsibility) + kinder-line suggestions + 1–7 "how true does it feel" (VoC idea). Saved to
+  `reframes`. **Framed as a CBT-style reframe — never EMDR** (no eye movements/reprocessing).
+- **Thinking traps** (Tier A): cognitive-distortion library + thoughts·feelings·actions triangle.
+- **Steady your system** (Window of Tolerance, Tier B): self-locate → routes to existing breath
+  (hyper), grounding 5-4-3-2-1 (hypo), or check-in (settled).
+- **Comfort · Stretch · Panic** (Tier C): zones psychoeducation + a self-rated step-size calibration
+  ("comfort is allowed"; panic → shrink the step).
+- **SUDS 0–100** helper (personal noticing, never a score to beat).
+- **Stories** (lived-experience): 6 clearly-labelled **fictional/composite** stories, concrete,
+  no graphic crisis detail, hope-ending; `storiesSeen` tracked locally.
+- All folded into the **You** tab under a new **"Reframe & learn"** group (no new tab).
+
+### Changed
+- Schema **v14** (adds `emotionNotes`, `reframes`, `storiesSeen`; forward migration from v13).
+- Hardened `withViewTransition` + splash transition to swallow aborted-transition promise rejections
+  (removes uncaught `InvalidStateError` noise under rapid navigation).
+- SW `soulcap-v810`. App **8.1.0**.
+
+### Safety
+- New frameworks are reflective, non-diagnostic, user-correctable, local-only; free text runs the
+  keyword safety kernel (tier-3 → Help). Suggestions are AUTHORED grounded heuristics, **not** machine
+  learning. Every new framework + story remains **not clinician-reviewed** — see `SAFETY.md`.
+
 ## [8.0.2] — 2026-07-30
 
 ### Added

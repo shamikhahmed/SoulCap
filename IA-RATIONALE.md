@@ -128,3 +128,17 @@ Pattern cards, screeners, and local insights remain **not clinician-reviewed**. 
 ## Gallery (W6)
 
 `screen-gallery.html` groups shots by tab. Captions cover what / how selected / how state kept / why (this file). Manifest fields: `caption`, `tab`, `state`.
+
+## v8.1.0 — "Reframe & learn" group (You tab, SPEC-v10)
+
+The new therapist-informed frameworks are folded into **You**, not a new tab (keeps the 5-tab bar).
+They sit in a second Tools group, **"Reframe & learn"**, directly under the existing "Your tools"
+group and above the week glance — high enough to be discoverable (≤2 taps: You → row), grouped so the
+identity/quick tools stay first and the reflective/learning set reads as its own coherent cluster.
+
+Order within the group (lightest-touch → deeper): Name a feeling · Reframe a harsh thought · Thinking
+traps · Steady your system · Comfort·Stretch·Panic · Stories. Each is a `list-row` (label + one-line
+purpose + chevron, ≥48px) opening a pushed subview — same pattern as self-concept/habits. State is kept
+locally (`emotionNotes`, `reframes`, `storiesSeen`); everything else is momentary psychoeducation.
+Rationale: these are reflective/optional, so they live under You (identity/depth) rather than Now
+(in-the-moment) or Calm (techniques) — Now/Calm stay uncluttered.

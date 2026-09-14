@@ -2037,3 +2037,169 @@ var SAFETY_PLAN_STEPS = [
     hint:'What you would move, lock away, or ask someone to hold.',
     placeholder:'e.g. give spare medication to Bilal' }
 ];
+
+/* ── v10 therapist-informed frameworks (web-verified 2026-09-14) ─────────────
+ * All reflective, non-diagnostic, local-only. Evidence tier per framework.
+ * Belief reframe borrows the EMDR NC/PC construct but is a CBT-style reframe —
+ * NEVER EMDR (no eye movements / reprocessing). Stories are labelled fiction. */
+
+/* Y1 — Emotion wheel (Tier A: affect labeling / emotion differentiation).
+ * Plutchik primaries → nuanced words. Naming a feeling precisely takes heat out. */
+var EMOTION_WHEEL = [
+  { core:'Joy',      words:['content','glad','proud','hopeful','grateful','relieved'] },
+  { core:'Trust',    words:['safe','accepted','close','supported','open'] },
+  { core:'Fear',     words:['anxious','worried','nervous','overwhelmed','on edge','scared'] },
+  { core:'Surprise', words:['startled','unsure','thrown','curious'] },
+  { core:'Sadness',  words:['low','flat','lonely','empty','hurt','heavy','grieving'] },
+  { core:'Disgust',  words:['ashamed','self-critical','fed up','uncomfortable'] },
+  { core:'Anger',    words:['frustrated','irritated','resentful','let down','tense'] },
+  { core:'Anticipation', words:['restless','eager','apprehensive','impatient'] }
+];
+var EMOTION_UI = {
+  cardTitle:'Name a feeling',
+  cardHint:'Find a more precise word — naming it can take some of its heat out.',
+  title:'Name a feeling',
+  intro:'Start with a broad feeling, then narrow to the closest word. There is no right answer.',
+  notDiagnosis:'Just vocabulary — not a test or a diagnosis.',
+  corePrompt:'Closest broad feeling right now?',
+  refinePrompt:'Anything closer?',
+  notePlaceholder:'Optional — a line about it',
+  save:'Keep this note',
+  saved:'Kept on this device.',
+  empty:'No feeling notes yet.',
+  recent:'Recent',
+  affectNote:'Putting a word to a feeling is a small, real way to steady it.'
+};
+
+/* Y2 — Belief reframe (Tier B). NC→PC families from EMDR clinical lists,
+ * used here as a gentle CBT reframe. VoC-style 1–7 "how true does it feel". */
+var REFRAME_UI = {
+  cardTitle:'Reframe a harsh thought',
+  cardHint:'Notice a hard self-belief, try a kinder one that still feels honest.',
+  title:'Reframe a harsh thought',
+  intro:'Write a harsh belief about yourself, pick what it is really about, then draft a kinder line that still feels believable.',
+  notDiagnosis:'A reflective reframe — not therapy, and not EMDR.',
+  negativeLabel:'The harsh belief',
+  negativePlaceholder:'e.g. I am not good enough',
+  familyLabel:'What is it really about?',
+  positiveLabel:'A kinder, believable line',
+  positivePlaceholder:'e.g. I am learning, and that is enough for now',
+  vocLabel:'How true does the kinder line feel right now?',
+  vocLow:'Not at all',
+  vocHigh:'Completely',
+  save:'Keep this reframe',
+  saved:'Kept on this device.',
+  empty:'No reframes yet.',
+  recent:'Your reframes',
+  revisit:'Come back later and see if the kinder line feels a little truer.',
+  suggestHeading:'Kinder lines others use'
+};
+var REFRAME_FAMILIES = [
+  { key:'worth', label:'My worth',
+    negatives:['I am not good enough','I am a failure','I am unlovable'],
+    positives:['I am enough as I am','I am worthy of care','I can be valued and imperfect'] },
+  { key:'safety', label:'Safety',
+    negatives:['I am not safe','something bad will happen','I cannot relax'],
+    positives:['I am safe enough right now','I can handle what comes','this feeling will pass'] },
+  { key:'control', label:'Control / power',
+    negatives:['I am powerless','I have no control','I am trapped'],
+    positives:['I have choices here','I can control my next small step','I am not stuck forever'] },
+  { key:'responsibility', label:'Responsibility',
+    negatives:['it is all my fault','I should have known','I am to blame'],
+    positives:['I did the best I could with what I knew','it was not all on me','I can be responsible without carrying it all'] }
+];
+
+/* Y3 — Cognitive distortions + triangle (Tier A). Plain Burns-style list. */
+var TRIANGLE_UI = {
+  cardTitle:'Thinking traps',
+  cardHint:'Common thought patterns, and the thoughts–feelings–actions loop.',
+  title:'Thinking traps',
+  triangleHeading:'Thoughts · feelings · actions',
+  triangleBody:'These three pull on each other. Change one gently and the others can shift. A thought is not a fact.',
+  listHeading:'Common traps',
+  notDiagnosis:'Noticing a trap is not a verdict — everyone has these.'
+};
+var DISTORTIONS = [
+  { name:'All-or-nothing', sounds:'“I always mess this up.”', counter:'Is there a middle, greyer version?' },
+  { name:'Catastrophising', sounds:'“This will be a disaster.”', counter:'What is most likely, not worst case?' },
+  { name:'Mind-reading', sounds:'“They think I’m boring.”', counter:'What else could they be thinking?' },
+  { name:'Overgeneralising', sounds:'“Nothing ever works out.”', counter:'One time, or truly every time?' },
+  { name:'Mental filter', sounds:'“The whole day was ruined.”', counter:'What went okay, even a little?' },
+  { name:'Should statements', sounds:'“I should be over this.”', counter:'Says who? Is that fair to you?' },
+  { name:'Personalising', sounds:'“It’s my fault they’re upset.”', counter:'What part is actually mine?' },
+  { name:'Labelling', sounds:'“I’m useless.”', counter:'A person is more than one moment.' }
+];
+
+/* Y4 — Comfort / Stretch / Panic zones (Tier C: Senninger/Vygotsky; graded exposure). */
+var ZONES_UI = {
+  cardTitle:'Comfort · Stretch · Panic',
+  cardHint:'A gentle way to size a step so it grows you without overwhelming you.',
+  title:'Comfort · Stretch · Panic',
+  intro:'Growth usually happens in the stretch zone — a step big enough to matter, small enough to handle.',
+  notDiagnosis:'A framing tool, not a rule. Comfort is allowed.',
+  comfortTitle:'Comfort', comfortBody:'Familiar and safe. Rest here as long as you need.',
+  stretchTitle:'Stretch', stretchBody:'A little challenge. Where growth tends to live.',
+  panicTitle:'Panic', panicBody:'Too much at once — learning stops. Step back and shrink it.',
+  ask:'How does the step you’re thinking about feel?',
+  comfortReply:'That’s fine. If you want, a slightly bigger version could be a stretch.',
+  stretchReply:'Good size. This is where growth usually happens.',
+  panicReply:'Let’s shrink it. What is a smaller first step you could actually do?',
+  smallerPlaceholder:'A smaller first step…',
+  save:'Keep this'
+};
+
+/* Y5 — Window of Tolerance (Tier B: Siegel / Porges). Routes to regulation. */
+var WOT_UI = {
+  cardTitle:'Steady your system',
+  cardHint:'Notice where your body is right now — then the tool that fits.',
+  title:'Steady your system',
+  intro:'Our nervous system moves through zones. None is wrong — each just asks for a different response.',
+  notDiagnosis:'A way to notice and respond — not a diagnosis.',
+  ask:'Where are you right now?',
+  hyperTitle:'Wound up', hyperBody:'Racing, panicky, on edge, can’t settle.',
+  hyperAction:'Try a longer exhale — breathe out slower than you breathe in.',
+  okTitle:'Settled enough', okBody:'Present, able to think and feel at once.',
+  okAction:'Good place to be. A short check-in or journal might fit.',
+  hypoTitle:'Shut down', hypoBody:'Numb, foggy, flat, far away.',
+  hypoAction:'Gently wake the body — name five things you can see, or move a little.',
+  toBreath:'Open breathing', toGround:'Grounding 5-4-3-2-1', toCheckin:'Check in'
+};
+
+/* Y6 — SUDS 0–100 distress dial (Tier A). Personal noticing, never a score to beat. */
+var SUDS_UI = {
+  label:'Distress right now (0–100)',
+  low:'Calm', high:'Most distress',
+  note:'Just for your own noticing — not a score to beat.'
+};
+
+/* Y7 — Relatable stories (lived-experience). FICTIONAL/composite, hope-ending.
+ * Rules: concrete, no exaggeration, no graphic crisis detail, end in agency. */
+var STORIES_UI = {
+  cardTitle:'Stories',
+  cardHint:'Short, made-up examples of people trying these tools.',
+  title:'Stories',
+  intro:'Short examples of moments and what helped. Made up to be relatable — not real people.',
+  fictionLabel:'A made-up example, not a real person.',
+  empty:'No stories here yet.',
+  triedLabel:'What helped'
+};
+var STORIES = [
+  { id:'anx-eve', feeling:'anxious', title:'The 9pm spiral',
+    body:'Every evening the same worry looped — did I say the wrong thing at work? It felt bigger each lap.',
+    tried:'They named it (“anxious, catastrophising”), tried one slow breath cycle, and wrote the worry down to look at in the morning. It didn’t vanish, but it got quieter, and the morning version looked smaller.' },
+  { id:'low-flat', feeling:'low', title:'Heavy mornings',
+    body:'Getting up felt like moving through water. Nothing seemed worth doing, so nothing got done, which made it heavier.',
+    tried:'Instead of a big plan, they picked one comfort-zone-plus step — open the curtains and stand outside for a minute. Small, doable. Some days that was the whole win, and that counted.' },
+  { id:'lonely', feeling:'lonely', title:'Full room, still alone',
+    body:'Surrounded by people all day, they still felt unseen — like the version everyone met wasn’t the real one.',
+    tried:'They noticed the gap between how they felt inside and how they came across, and how tiring holding it was. They sent one honest message to someone they trusted. One real reply helped more than the crowd.' },
+  { id:'self-crit', feeling:'self-critical', title:'The harsh voice',
+    body:'After one mistake, the voice started: you’re not good enough, you never learn.',
+    tried:'They caught the belief and tried a kinder line that still felt honest — “I’m learning, and one mistake isn’t the whole story.” It only felt half-true at first. Rated later, it felt a little truer.' },
+  { id:'stuck', feeling:'stuck', title:'Too big to start',
+    body:'The task had grown so large in their head that starting felt impossible, so they kept not starting.',
+    tried:'They asked if it was comfort, stretch, or panic — it was panic. So they shrank it to a two-minute first step. Panic became stretch, and stretch actually moved.' },
+  { id:'grief', feeling:'grief', title:'Waves, not a line',
+    body:'Some days felt almost normal, then a song or a smell brought it all back without warning.',
+    tried:'They learned grief comes in waves, not a straight line, and stopped expecting steady progress. On wave days they were gentler with themselves and reached for one steadying thing instead of pushing through.' }
+];
