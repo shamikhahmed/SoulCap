@@ -1,3 +1,6 @@
+## 8.1.1 — 2026-09-14
+- Release (C-01): version + SW `soulcap-v811` so installed PWAs receive Phase 0 fixture privacy fix.
+
 ## [Unreleased]
 
 ## [8.1.0] — 2026-09-14

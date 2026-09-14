@@ -5900,7 +5900,7 @@
       }
     });
   }
-  var APP_VERSION = '8.1.0';
+  var APP_VERSION = '8.1.1';
   var settingsQuery = '';
   function settingsGroup(v, title, kids) {
     v.appendChild(el('p', { class: 'eyebrow settings-eyebrow', text: title }));
@@ -6407,7 +6407,7 @@
     setTimeout(dismissSplash, state.onboarded ? 1600 : 2600);
     splash.addEventListener('click', dismissSplash);
 
-    if ('serviceWorker' in navigator) window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js').catch(function () {}); });
+    if ('serviceWorker' in navigator) window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js?v=8.1.1').catch(function () {}); });
   }
 
   window.__soulcap = {
