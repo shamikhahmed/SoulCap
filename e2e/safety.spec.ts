@@ -46,7 +46,7 @@ async function toAgeGate(page: Page) {
 /** Full fresh onboarding into the app: age → name → consent → concerns (no country). */
 async function freshThrough(page: Page) {
   await toAgeGate(page);
-  await page.getByRole('button', { name: '18 or older' }).click();
+  await page.getByRole('button', { name: /I.?m 18 or over/i }).click();
   await page.getByRole('button', { name: 'Skip', exact: true }).click(); // name step
   await page.getByRole('button', { name: 'I understand' }).click();
   await page.getByRole('button', { name: 'Skip', exact: true }).click(); // motion preset

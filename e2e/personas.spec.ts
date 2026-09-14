@@ -50,7 +50,7 @@ test.describe('Synthetic user journeys', () => {
     await expect(page.locator('#panic')).toContainText('Nothing to get right');
     await page.getByRole('button', { name: /I’m okay/ }).click();
 
-    await page.getByRole('button', { name: '18 or older' }).click();
+    await page.getByRole('button', { name: /I.?m 18 or over/i }).click();
     await page.getByRole('textbox', { name: 'Name' }).fill('Aisha');
     await page.getByRole('button', { name: 'Continue' }).click();
     await page.getByRole('button', { name: 'I understand' }).click();

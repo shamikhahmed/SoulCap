@@ -41,3 +41,9 @@ Current behavior: number-free DRAFT Help
 Plan: DECISIONS §4.3 region Help + age gate; verify numbers in SAFETY.md
 Changes: docs/app.js, docs/data.js, e2e/safety.spec.ts, e2e/app.spec.ts, SAFETY.md, STATES.md
 Verify: test:safety 52 passed
+
+### SOUL-P1-04 — Now simplification (Q-3)                 status: ✅
+Current behavior: tall check-in rows; path/week above fold; Help below fold on 375×667
+Plan: greeting → chip check-in → suggest+Begin → Explore → Help; More holds path/week/etc.
+Changes: docs/app.js renderNow; docs/app.css compact suggest; e2e age-gate "I'm 18 or over"; tab-bar Help-not-last on Now
+Verify: SOUL-P1-04 first-fold + 8 regression fixes; mobile app+safety subset green

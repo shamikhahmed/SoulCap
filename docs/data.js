@@ -753,7 +753,7 @@ var STRINGS = {
     onboarding:{
       ageTitle:'First — how old are you?',
       ageBody:'SoulCap is built for adults. We ask because the right support for someone under 18 looks different, and we’d rather point you somewhere better than get it wrong.',
-      over18:'18 or older',
+      over18:'I’m 18 or over',
       under18:'Under 18',
       under18Hint:'This isn’t built for you yet — please talk to a trusted adult or a service for young people',
       under18Body:'SoulCap isn’t the right fit yet. Please reach out to a trusted adult, or a support service made for young people where you are.',

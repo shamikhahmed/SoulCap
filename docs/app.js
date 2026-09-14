@@ -4983,16 +4983,18 @@
     var pick = suggestSkill(), dm = DOMAIN_META[pick.skill.domain];
     var dots = weekActivityDots();
 
+    /* SOUL-P1-04 / Q-3: greeting → check-in → suggest → Explore → Help.
+     * What's new sits under check-in. Path / experiences / this week → More. */
     var hero = el('div', { class: 'qd-hero now-hero' });
     if (today) hero.setAttribute('data-arrival', today);
     hero.appendChild(el('div', { class: 'living-field', 'aria-hidden': 'true' }));
     hero.appendChild(el('p', { class: 'eyebrow', text: new Date().toLocaleDateString(undefined, { weekday: 'long', day: 'numeric', month: 'long' }) }));
     hero.appendChild(el('h1', { class: 'h-voice', text: greeting() }));
     hero.appendChild(el('p', { class: 'p-voice', style: 'margin-top:var(--space-3)', text: tUi('checkin', 'arrival', { arrival: 'How are you arriving right now?' }) }));
-    var checkin = el('div', { class: 'qd-ruled qd-checkin', role: 'group', 'aria-label': 'How you are arriving' });
+    var checkin = el('div', { class: 'chips qd-checkin', role: 'group', 'aria-label': 'How you are arriving' });
     states.forEach(function (s) {
       checkin.appendChild(el('button', {
-        class: 'qd-row',
+        class: 'chip',
         type: 'button',
         'aria-pressed': today === s ? 'true' : 'false',
         text: checkinStateLabel(s),
@@ -5011,18 +5013,6 @@
     }
     v.appendChild(hero);
 
-    if (state.pendingReflection && !state.reflectionPrefs.dismissedForever) {
-      var pr = REFLECTION_PROMPTS[state.pendingReflection.trigger] || REFLECTION_PROMPTS.journal;
-      v.appendChild(el('div', { class: 'qd-note' }, [
-        el('h2', { class: 'card-title', text: REFLECTION_UI.cardTitle }),
-        el('p', { class: 'p-sm', text: pr }),
-        el('button', { class: 'btn', text: REFLECTION_UI.answer, onclick: reflectionAnswerSheet }),
-        el('div', { class: 'chips mt-2' }, [
-          el('button', { class: 'chip', text: REFLECTION_UI.skip, onclick: skipReflection }),
-          el('button', { class: 'chip', text: REFLECTION_UI.dismiss, onclick: dismissReflectionForever })
-        ])
-      ]));
-    }
     if (shouldShowWhatsNew()) {
       v.appendChild(el('div', { class: 'qd-note whats-new' }, [
         el('h2', { class: 'card-title', text: WHATS_NEW_UI.title }),
@@ -5043,11 +5033,67 @@
     suggest.appendChild(el('h2', { class: 'ht-title', text: pick.skill.name }));
     suggest.appendChild(el('p', { class: 'ht-reason reason', text: reasonText(pick) }));
     suggest.appendChild(el('div', { class: 'qd-action' }, [
-      el('button', { class: 'btn', text: 'Begin', onclick: function () { startSkill(pick.skill.id); } }),
-      el('button', { class: 'btn quiet', text: 'Something else', onclick: function () { calm.browse = false; selectTab('calm'); } })
+      el('button', { class: 'btn', text: 'Begin', onclick: function () { startSkill(pick.skill.id); } })
     ]));
     primary.appendChild(suggest);
 
+    primary.appendChild(el('button', {
+      class: 'btn ghost explore-toggle',
+      'aria-expanded': nowExploreOpen ? 'true' : 'false',
+      text: nowExploreOpen ? 'Hide explore' : 'Explore',
+      onclick: function () { nowExploreOpen = !nowExploreOpen; render(); }
+    }));
+
+    if (nowExploreOpen) {
+      var quiet = el('div', { class: 'now-quiet' });
+      var dripQ = nextDripQuestion();
+      quiet.appendChild(listRow({
+        title: DRIP_UI.cardTitle,
+        meta: dripQ ? DRIP_UI.cardHint : DRIP_UI.doneToday,
+        onclick: dripSheet
+      }));
+      var person = suggestPerson();
+      if (person) {
+        quiet.appendChild(el('div', { class: 'qd-note' }, [
+          el('div', { class: 'card-head' }, [el('h2', { class: 'card-title', text: 'Message ' + person.name + '?' }), el('span', { class: 'domain', style: 'color:var(--connect)', text: 'Connect' })]),
+          el('p', { class: 'reason', text: 'You said ' + person.name + ' usually helps when things are hard.' }),
+          el('p', { class: 'p-sm', text: 'SoulCap never sends anything. This just opens your own messages.' }),
+          el('a', { class: 'btn ghost', href: 'sms:', style: 'text-decoration:none', text: 'Open messages' })
+        ]));
+      }
+      primary.appendChild(quiet);
+    }
+
+    primary.appendChild(el('button', { class: 'help-btn', text: t('helpNow'), onclick: openPanic }));
+
+    var moreKids = [];
+    if (state.pendingReflection && !state.reflectionPrefs.dismissedForever) {
+      var pr = REFLECTION_PROMPTS[state.pendingReflection.trigger] || REFLECTION_PROMPTS.journal;
+      moreKids.push(el('div', { class: 'qd-note' }, [
+        el('h2', { class: 'card-title', text: REFLECTION_UI.cardTitle }),
+        el('p', { class: 'p-sm', text: pr }),
+        el('button', { class: 'btn', text: REFLECTION_UI.answer, onclick: reflectionAnswerSheet }),
+        el('div', { class: 'chips mt-2' }, [
+          el('button', { class: 'chip', text: REFLECTION_UI.skip, onclick: skipReflection }),
+          el('button', { class: 'chip', text: REFLECTION_UI.dismiss, onclick: dismissReflectionForever })
+        ])
+      ]));
+    }
+    if (!state.pathPrefs || !state.pathPrefs.hide) {
+      moreKids.push(listRow({ className: 'path-card', title: PATH_UI.cardTitle, meta: PATH_UI.cardHint, onclick: pathSheet }));
+    }
+    moreKids.push(listRow({ className: 'experience-picker-card', title: EXPERIENCE_PICKER_UI.cardTitle, meta: EXPERIENCE_PICKER_UI.cardHint, onclick: experiencePickerSheet }));
+    if (typeof state.windDownHour === 'number' && new Date().getHours() >= state.windDownHour) {
+      moreKids.push(listRow({
+        className: 'wind-down-card',
+        title: WIND_DOWN_UI.nowTitle,
+        meta: WIND_DOWN_UI.nowHint,
+        onclick: function () {
+          selectTab('calm'); calm.section = 'library'; libraryQuery = 'winding'; libraryFilter = 'articles'; render();
+          setTimeout(function () { articleSheet('wind-down-boundaries'); }, 0);
+        }
+      }));
+    }
     var nowPreview = !(state.checkins || []).length && !(state.skillRuns || []).length;
     var nowWeekLabel = nowPreview ? PREVIEW_UI.weekSummary : weekActivityLabel(dots);
     var progress = el('button', { class: 'progress-glance qd-ruled qd-progress' + (nowPreview ? ' is-preview' : ''), type: 'button',
@@ -5062,66 +5108,15 @@
       progress.appendChild(weekDotsEl(dots, true));
       progress.appendChild(el('p', { class: 'glance-sub', 'aria-hidden': 'true', text: nowWeekLabel }));
     }
-    /* Open quietly removed (SOUL-P1 — orphan link) */
-    primary.appendChild(progress);
+    moreKids.push(progress);
     signatureProgressIn(progress);
 
-    var moreKids = [];
-    if (!state.pathPrefs || !state.pathPrefs.hide) {
-      moreKids.push(listRow({ className: 'path-card', title: PATH_UI.cardTitle, meta: PATH_UI.cardHint, onclick: pathSheet }));
-      moreKids.push(listRow({ className: 'experience-picker-card', title: EXPERIENCE_PICKER_UI.cardTitle, meta: EXPERIENCE_PICKER_UI.cardHint, onclick: experiencePickerSheet }));
-    } else {
-      moreKids.push(listRow({ className: 'experience-picker-card', title: EXPERIENCE_PICKER_UI.cardTitle, meta: EXPERIENCE_PICKER_UI.cardHint, onclick: experiencePickerSheet }));
-    }
-    if (typeof state.windDownHour === 'number' && new Date().getHours() >= state.windDownHour) {
-      moreKids.push(listRow({
-        className: 'wind-down-card',
-        title: WIND_DOWN_UI.nowTitle,
-        meta: WIND_DOWN_UI.nowHint,
-        onclick: function () {
-          selectTab('calm'); calm.section = 'library'; libraryQuery = 'winding'; libraryFilter = 'articles'; render();
-          setTimeout(function () { articleSheet('wind-down-boundaries'); }, 0);
-        }
-      }));
-    }
-    if (moreKids.length) {
-      primary.appendChild(el('div', { class: 'qd-ruled now-more' }, [
-        el('p', { class: 'section-label', text: 'More' }),
-        el('div', { class: 'list-group qd-list-group' }, moreKids)
-      ]));
-    }
+    primary.appendChild(el('div', { class: 'qd-ruled now-more' }, [
+      el('p', { class: 'section-label', text: 'More' }),
+      el('div', { class: 'list-group qd-list-group' }, moreKids)
+    ]));
+
     v.appendChild(primary);
-
-    v.appendChild(el('button', {
-      class: 'btn ghost explore-toggle',
-      'aria-expanded': nowExploreOpen ? 'true' : 'false',
-      text: nowExploreOpen ? 'Hide explore' : 'Explore',
-      onclick: function () { nowExploreOpen = !nowExploreOpen; render(); }
-    }));
-
-    if (!nowExploreOpen) {
-      v.appendChild(el('button', { class: 'help-btn', text: t('helpNow'), onclick: openPanic }));
-      return;
-    }
-
-    var quiet = el('div', { class: 'now-quiet' });
-    var dripQ = nextDripQuestion();
-    quiet.appendChild(listRow({
-      title: DRIP_UI.cardTitle,
-      meta: dripQ ? DRIP_UI.cardHint : DRIP_UI.doneToday,
-      onclick: dripSheet
-    }));
-    var person = suggestPerson();
-    if (person) {
-      quiet.appendChild(el('div', { class: 'qd-note' }, [
-        el('div', { class: 'card-head' }, [el('h2', { class: 'card-title', text: 'Message ' + person.name + '?' }), el('span', { class: 'domain', style: 'color:var(--connect)', text: 'Connect' })]),
-        el('p', { class: 'reason', text: 'You said ' + person.name + ' usually helps when things are hard.' }),
-        el('p', { class: 'p-sm', text: 'SoulCap never sends anything. This just opens your own messages.' }),
-        el('a', { class: 'btn ghost', href: 'sms:', style: 'text-decoration:none', text: 'Open messages' })
-      ]));
-    }
-    v.appendChild(quiet);
-    v.appendChild(el('button', { class: 'help-btn', text: t('helpNow'), onclick: openPanic }));
   }
 
   /* ── Safety plan ───────────────────────────────────────────────────────── */
