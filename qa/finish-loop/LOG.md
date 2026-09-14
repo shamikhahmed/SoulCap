@@ -31,3 +31,7 @@ Plan: region chips + DRAFT guidance map; no helpline numbers until DECISIONS
 Changes: docs/app.js (CRISIS_REGIONS, notices.crisisRegion); app.css panic scroll/sticky exit; e2e region test
 Verify: safety suite green
 Residual: final region copy blocked on D-05
+
+## C-01 — 2026-09-14
+- Released **8.1.1** / `soulcap-v811` from main (Phase 0 privacy fixtures).
+- Live smoke: `https://shamikhahmed.github.io/SoulCap/sw.js` serves `soulcap-v811`.
