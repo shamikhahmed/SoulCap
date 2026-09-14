@@ -1,8 +1,8 @@
 {
   "name": "SoulCap",
-  "version": "8.1.0",
-  "swCache": "soulcap-v810",
+  "version": "8.1.1",
+  "swCache": "soulcap-v811",
   "schema": 13,
-  "released": "2026-07-30",
-  "note": "v8.1.0 therapist-informed frameworks — emotion wheel, belief reframe (non-EMDR), thinking traps + triangle, comfort/stretch/panic zones, window of tolerance, SUDS, fictional stories; folded into You"
+  "released": "2026-09-14",
+  "note": "v8.1.0 therapist-informed frameworks \u2014 emotion wheel, belief reframe (non-EMDR), thinking traps + triangle, comfort/stretch/panic zones, window of tolerance, SUDS, fictional stories; folded into You"
 }
