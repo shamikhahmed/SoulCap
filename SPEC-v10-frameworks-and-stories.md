@@ -11,6 +11,9 @@
 
 Current base: v8.0.2. Build AFTER (or alongside) SPEC-v9 substance work.
 
+**Owner-confirmed 2026-09-14:** (1) belief-reframe ships as a gentle CBT-style reframe — **never** the word/behaviour of EMDR (no eye movements/reprocessing). (2) Stories ship as **clearly-labelled fictional/composite** now (therapist-supplied real ones can come later, reviewed).
+
+
 ## Evidence tiers (label each in-app + in copy)
 - **A (strong):** affect labeling / emotion differentiation; cognitive restructuring + thought records;
   graded exposure (the mechanism behind the zones).
