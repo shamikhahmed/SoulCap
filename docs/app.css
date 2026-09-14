@@ -527,7 +527,7 @@ input[type="range"]{width:100%;min-height:48px;accent-color:var(--accent)}
 .screener-card .card-title{font-size:20px}
 .about-lockup{font-family:var(--voice);font-size:28px;font-weight:600;letter-spacing:-.02em;margin:0 0 var(--space-2)}
 .about-credits{font-size:13.5px;color:var(--ink-3);margin:var(--space-3) 0 0}
-.whats-new{border-left:3px solid var(--accent)}
+.whats-new{border-left:3px solid var(--accent)} /* padding moved to SOUL-P1-02 block */
 .redflag{
   border-radius:var(--r-md);padding:var(--space-3) var(--space-4);margin:var(--space-3) 0 0;
   border:1px solid transparent;
@@ -1758,3 +1758,63 @@ hr.sep{border:none;border-top:1px solid var(--line);margin:2px 0}
 .zone-panic{border-left:3px solid var(--danger,var(--accent))}
 .story-card .lr-title{margin-top:2px}
 .story-card .meta{letter-spacing:.04em;text-transform:uppercase;font-size:11.5px}
+
+/* SOUL-P1-01 — desktop/tablet ≥900px: left sidebar + reading column */
+@media (min-width:900px){
+  #app{
+    max-width:none;width:100%;
+    flex-direction:row;align-items:stretch;
+    padding-left:240px;
+  }
+  #tabs{
+    position:fixed;top:0;left:0;bottom:0;right:auto;
+    transform:none;width:240px;height:100dvh;height:100vh;
+    flex-direction:column;justify-content:flex-start;gap:4px;
+    padding:calc(var(--sat) + 24px) 16px calc(var(--sab) + 24px);
+    border-top:none;border-right:1px solid var(--line);
+    box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none;
+    background:var(--surface);
+  }
+  #tabs button{
+    flex:0 0 auto;flex-direction:row;justify-content:flex-start;
+    gap:12px;padding:12px 14px;min-height:48px;border-radius:var(--r-md);
+    opacity:.72;
+  }
+  #tabs button span{
+    font-size:15px;font-weight:600;letter-spacing:0;
+  }
+  #tabs button[aria-selected="true"]{
+    background:var(--accent-soft);opacity:1;
+  }
+  #tabs svg{width:20px;height:20px}
+  #views{
+    max-width:720px;margin:0 auto;width:100%;
+  }
+  .view{
+    padding:calc(var(--sat) + 32px) 32px calc(var(--sab) + 32px);
+  }
+  #fab{right:28px;bottom:28px}
+}
+
+/* SOUL-P1-02 — What's new card padding */
+.whats-new{
+  border-left:3px solid var(--accent);
+  padding:16px;
+  gap:12px;
+}
+.whats-new .btn.ghost{
+  align-self:flex-end;
+  margin-top:4px;
+}
+
+/* SOUL-P1-03 — confine ambient blob to greeting; lower opacity under text */
+.hero-band::before{
+  inset:-10% 10% auto;height:48%;
+  opacity:.2;
+}
+@media (prefers-reduced-transparency: reduce),:root[data-transparency="reduced"]{
+  .hero-band::before{opacity:0}
+}
+@media (prefers-reduced-motion: reduce),:root[data-motion="still"]{
+  .hero-band::before{animation:none;opacity:.15}
+}

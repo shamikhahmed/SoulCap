@@ -4903,7 +4903,7 @@
       progress.appendChild(weekDotsEl(dots, true));
       progress.appendChild(el('p', { class: 'glance-sub', 'aria-hidden': 'true', text: nowWeekLabel }));
     }
-    progress.appendChild(el('p', { class: 'p-sm glance-open', 'aria-hidden': 'true', text: 'Open quietly' }));
+    /* Open quietly removed (SOUL-P1 — orphan link) */
     primary.appendChild(progress);
     signatureProgressIn(progress);
 
