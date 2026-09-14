@@ -6381,6 +6381,10 @@
     if ('speechSynthesis' in window) { loadVoices(); window.speechSynthesis.onvoiceschanged = loadVoices; }
 
     render();
+    try {
+      window.__APP_READY__ = true;
+      document.documentElement.dataset.appReady = 'true';
+    } catch (e) {}
     setTimeout(function () { loadGsap(); }, 0);
     if (queryValue('panic') === '1') {
       $('#splash').classList.add('gone');
