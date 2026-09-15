@@ -1,3 +1,5 @@
+> Superseded on 2026-09-15 by current HANDOVER/README (C-24).
+
 # SPEC v4.0 — Master design specification (the definitive build guide)
 
 > **The assignment: design and build SoulCap as if a top product studio were making a new therapy

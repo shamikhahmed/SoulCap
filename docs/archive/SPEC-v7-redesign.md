@@ -1,3 +1,5 @@
+> Superseded on 2026-09-15 by current HANDOVER/README (C-24).
+
 # SPEC v7 — "Quiet Depth" full visual-identity redesign
 
 > **This is NOT a polish pass. This is a new visual identity.** v6.0.10 kept the exact same

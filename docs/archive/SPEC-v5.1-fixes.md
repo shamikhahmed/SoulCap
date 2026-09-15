@@ -1,3 +1,5 @@
+> Superseded on 2026-09-15 by current HANDOVER/README (C-24).
+
 # SPEC v5.1 — Breathing visibility, Settings controls, FAB overlap (build guide for Cursor)
 
 > Defect-fix pass on v5.0.7. All four issues below were **measured on the running app**, not

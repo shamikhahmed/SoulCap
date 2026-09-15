@@ -1,3 +1,5 @@
+> Superseded on 2026-09-15 by current HANDOVER/README (C-24).
+
 # SPEC v2.2 — Approach packs, distortion lens, thought-record wizard
 
 > **Later wave** after Guided Path v2.1 feels calm in real use. Craft + education only.

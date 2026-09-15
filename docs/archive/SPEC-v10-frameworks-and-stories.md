@@ -1,3 +1,5 @@
+> Superseded on 2026-09-15 by current HANDOVER/README (C-24).
+
 # SPEC v10 — Therapist-informed frameworks + relatable stories (folded into existing tabs)
 
 > New clinical depth the owner learned from a therapist, web-verified 2026-09-14. Adds several

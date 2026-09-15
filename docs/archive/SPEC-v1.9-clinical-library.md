@@ -1,3 +1,5 @@
+> Superseded on 2026-09-15 by current HANDOVER/README (C-24).
+
 # SPEC v1.9 — Clinical content library (build guide for Cursor)
 
 > **This is an execution spec, not a suggestion.** Build it exactly as written, in the order given,

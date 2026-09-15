@@ -1,3 +1,5 @@
+> Superseded on 2026-09-15 by current HANDOVER/README (C-24).
+
 # SPEC v2.3 — Values path, opposite-action helper, body-scan entry
 
 > **Later wave** after v2.2. Regulation depth without therapy branding.

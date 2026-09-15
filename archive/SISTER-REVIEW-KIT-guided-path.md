@@ -1,3 +1,5 @@
+> Superseded on 2026-09-15 — moved out of Pages-served docs/ for privacy (C-24).
+
 # Sister review kit — Guided Path chips
 
 Please mark **OK / tweak / drop** on each row. SoulCap will not diagnose or say “you need CBT/DBT/ACT.”

@@ -63,3 +63,15 @@ Native confirm()/alert(): none. Fonts: system stack (no Google Fonts).
 Gallery: deferred to release commit if time — fictional names already in fixtures (Alex).
 
 ### Tier 1 release prep — 8.2.0 / soulcap-v820
+
+# SoulCap — LOG
+
+## 2026-09-15 — C-23 stub
+- Tier 1 not verified — Review 2
+- Created/updated finish-loop records (BASELINE, LOG, STATES, APP-REPORT, DOCS-INVENTORY)
+- Known gaps:
+  - TIER1.json smoke currently FAIL (Review 2)
+  - finish-matrix smoke just wired (C-21) — full 15×2 not yet green
+  - Lighthouse JSON per primary route missing (C-22)
+  - Self-host fonts still open where applicable (C-16)
+  - Physical VO/TB ⛔ BLOCKED-EXTERNAL

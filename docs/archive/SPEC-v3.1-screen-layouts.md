@@ -1,3 +1,5 @@
+> Superseded on 2026-09-15 by current HANDOVER/README (C-24).
+
 # SPEC v3.1 — Screen layouts (build guide for Cursor)
 
 > **The problem, measured.** v3.0 landed the Amethyst tokens correctly — but the app still looks

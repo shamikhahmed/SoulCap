@@ -1,3 +1,5 @@
+> Superseded on 2026-09-15 by current HANDOVER/README (C-24).
+
 # SPEC v2.1 — Guided Path (build guide for Cursor)
 
 > **Execution spec.** Offline, rule-based feeling → chips → family why → one exercise.

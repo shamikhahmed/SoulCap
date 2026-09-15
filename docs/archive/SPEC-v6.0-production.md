@@ -1,3 +1,5 @@
+> Superseded on 2026-09-15 by current HANDOVER/README (C-24).
+
 # SPEC v6.0 — Production-grade pass + new depth (master build guide for Cursor)
 
 > **Goal: get SoulCap to the bar where a clinician or an App Store reviewer would be impressed,

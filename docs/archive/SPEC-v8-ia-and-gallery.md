@@ -1,3 +1,5 @@
+> Superseded on 2026-09-15 by current HANDOVER/README (C-24).
+
 # SPEC v8 — Information architecture, organization & documented screen gallery
 
 > After V7 (Quiet Depth) the app looks flagship and the journal void is fixed. The remaining weak area

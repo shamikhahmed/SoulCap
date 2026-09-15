@@ -1,3 +1,5 @@
+> Superseded on 2026-09-15 by current HANDOVER/README (C-24).
+
 # SPEC v5.0 — Native feel, motion & signature moments (build guide for Cursor)
 
 > **Goal: the app must feel like a native 2026 product, not a 1996 web page.** Fluid, physical,

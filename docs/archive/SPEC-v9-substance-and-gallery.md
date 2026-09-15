@@ -1,3 +1,5 @@
+> Superseded on 2026-09-15 by current HANDOVER/README (C-24).
+
 # SPEC v9 — Prove the substance + expand the documented gallery
 
 > v8.0.2 made the app crafted and organized (IA, visuals, perf, offline — verified live). What is NOT

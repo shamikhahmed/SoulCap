@@ -32,6 +32,9 @@ jobs:
         run: npx playwright install --with-deps chromium
       - name: Verify
         run: npm run verify
+      - name: Finish matrix (C-21 smoke)
+        continue-on-error: true
+        run: npm run test:matrix
       - name: Upload report on failure
         if: failure()
         uses: actions/upload-artifact@v4

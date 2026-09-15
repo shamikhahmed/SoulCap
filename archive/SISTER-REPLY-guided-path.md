@@ -1,3 +1,5 @@
+> Superseded on 2026-09-15 — moved out of Pages-served docs/ for privacy (C-24).
+
 # Message to sister — SoulCap Guided Path
 
 **Subject:** Re: AI assessment & therapy recommendation — how it maps to SoulCap

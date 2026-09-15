@@ -1,3 +1,5 @@
+> Superseded on 2026-09-15 by current HANDOVER/README (C-24).
+
 # SPEC v3.0 — The redesign (build guide for Cursor)
 
 > **The assignment: make SoulCap look and feel like a flagship product a senior Apple / Calm /

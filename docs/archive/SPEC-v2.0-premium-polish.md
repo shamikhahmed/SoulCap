@@ -1,3 +1,5 @@
+> Superseded on 2026-09-15 by current HANDOVER/README (C-24).
+
 # SPEC v2.0 — Premium polish pass (build guide for Cursor)
 
 > **The assignment: make SoulCap feel like a flagship product from a top studio.** Not more
