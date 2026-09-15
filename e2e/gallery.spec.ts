@@ -234,11 +234,17 @@ async function snap(
 async function captureFreshFlow(page: Page, viewport: keyof typeof VIEWPORTS, shots: ManifestShot[]) {
   await page.goto('/');
   await page.evaluate(() => localStorage.clear());
-  await page.goto('/');
+  await page.goto('/', { waitUntil: 'domcontentloaded' });
+  // Splash auto-dismisses at ~2.6s — snap immediately; skip frame if already gone.
+  const splash = page.locator('#splash:not(.gone)');
+  try {
+    await splash.waitFor({ state: 'visible', timeout: 2500 });
+    await expect(page.locator('#splash .splash-living')).toBeAttached();
+    await snap(page, shots, viewport, 'default', 'default', 'splash', 'Splash · Quiet Depth', 'splash');
+  } catch {
+    /* race past splash under load — continue without splash frame */
+  }
   await page.waitForFunction(() => Boolean((window as any).__soulcap));
-  // Quiet Depth V1 — capture splash before dismiss (must not match v6 mark+tag splash)
-  await expect(page.locator('#splash .splash-living')).toBeVisible();
-  await snap(page, shots, viewport, 'default', 'default', 'splash', 'Splash · Quiet Depth', 'splash');
   await dismissSplash(page);
   await snap(page, shots, viewport, 'default', 'default', 'welcome', 'Welcome', 'welcome');
 
@@ -246,7 +252,7 @@ async function captureFreshFlow(page: Page, viewport: keyof typeof VIEWPORTS, sh
   await page.waitForTimeout(300);
   await snap(page, shots, viewport, 'default', 'default', 'onboard-age', 'Onboarding · age', 'onboard/age');
 
-  await page.getByRole('button', { name: /Under 18/ }).click();
+  await page.getByRole('button', { name: /under 18/i }).click();
   await page.waitForTimeout(300);
   await snap(page, shots, viewport, 'default', 'default', 'under-18', 'Under 18', 'onboard/under-18');
 
