@@ -1,8 +1,8 @@
 {
   "app": "soulcap",
   "version": "8.2.0",
-  "swCache": "soulcap-v820",
-  "generatedAt": "2026-09-15T09:45:38.896Z",
+  "swCache": "soulcap-v821",
+  "generatedAt": "2026-09-15T10:23:14.275Z",
   "status": "PASS",
   "pass": [
     {
@@ -11,7 +11,7 @@
     },
     {
       "id": "version:sw-cache-match",
-      "detail": "docs/sw.js contains soulcap-v820"
+      "detail": "docs/sw.js contains soulcap-v821"
     },
     {
       "id": "records:BASELINE.md",

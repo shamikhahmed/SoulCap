@@ -96,3 +96,10 @@ FAIL (5): suppressions (backend lab), lighthouse:dir, kill:raw-hex 86, kill:cons
 ### Honesty (C-09)
 Do **not** claim fleet Tier 1 complete: manual VoiceOver evidence still ⛔ BLOCKED-EXTERNAL / not linked.
 
+
+## 2026-09-15 — SW v821 + e2e harden
+- Bumped `swCache` → `soulcap-v821` (still app 8.2.0 / tag v8.2.0) so brand.css + brand-palette.js precache
+- Playwright `serviceWorkers: 'block'` to reduce APP_READY races
+- Mobile safety+lock: green when run focused; parallel suite still flaky on APP_READY under load — not treated as product regress this slice
+- TIER1.json remains PASS (warn: matrix:shots)
+
