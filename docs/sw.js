@@ -12,7 +12,9 @@ var CACHE = 'soulcap-v820';
 var ASSETS = [
   './',
   'index.html',
+  'brand.css',
   'app.css',
+  'brand-palette.js',
   'data.js',
   'app.js',
   'vendor/gsap.min.js',

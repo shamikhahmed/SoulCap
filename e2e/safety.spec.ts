@@ -238,7 +238,7 @@ test.describe('Help is always reachable', () => {
         (document.querySelector(`#tabs button[data-tab="${t}"]`) as HTMLElement).click();
       }, tab);
       await expect(page.locator('.view.on .help-btn')).toBeVisible();
-      await expect(page.locator('#fab.on')).toHaveCount(0);
+      await expect(page.locator('#helpFab.on')).toHaveCount(0);
     }
     await page.evaluate(() => (document.querySelector('#tabs button[data-tab="calm"]') as HTMLElement).click());
     await page.locator('#view-calm .help-btn').click();

@@ -31,6 +31,7 @@ else{document.documentElement.setAttribute('lang','en');document.documentElement
 }catch(e){}})();
 </script>
 <link rel="stylesheet" href="vendor/cap-foundation.css"/>
+<link rel="stylesheet" href="brand.css"/>
 <link rel="stylesheet" href="app.css"/>
 </head>
 <body>
@@ -119,7 +120,7 @@ else{document.documentElement.setAttribute('lang','en');document.documentElement
 </div>
 
 <!-- Persistent help — reachable from every tab in one tap -->
-<button id="fab" aria-label="I need help now">
+<button id="helpFab" aria-label="I need help now">
   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a7 7 0 0 0-4 12.7V18h8v-2.3A7 7 0 0 0 12 3z"/><path d="M10 21h4"/></svg>
   <span id="fabLabel" class="fab-label">Help</span>
 </button>
@@ -219,6 +220,7 @@ else{document.documentElement.setAttribute('lang','en');document.documentElement
 </div>
 
 <script src="vendor/local-lock.js"></script>
+<script src="brand-palette.js"></script>
 <script src="data.js"></script>
 <script src="app.js"></script>
 </body>
