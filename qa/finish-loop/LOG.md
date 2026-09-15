@@ -103,3 +103,8 @@ Do **not** claim fleet Tier 1 complete: manual VoiceOver evidence still ⛔ BLOC
 - Mobile safety+lock: green when run focused; parallel suite still flaky on APP_READY under load — not treated as product regress this slice
 - TIER1.json remains PASS (warn: matrix:shots)
 
+
+## 2026-09-15 — Gallery regen SUCCESS
+- `npm run gallery` mobile+desktop (workers=1)
+- Hardened splash race + under-18 selector
+- Merged `finish/soulcap-gallery` → main
