@@ -8,7 +8,9 @@ export default defineConfig({
   reporter: process.env.CI ? [['html', { open: 'never' }], ['list']] : 'list',
   use: {
     baseURL: 'http://localhost:8788',
-    trace: 'on-first-retry'
+    trace: 'on-first-retry',
+    // Avoid stale SW races when shell assets change mid-loop (brand.css etc.)
+    serviceWorkers: 'block'
   },
   // Chromium for both viewports. The iPhone presets run on WebKit, which would
   // mean a browser download in CI for no extra signal on a layout-only difference.

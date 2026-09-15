@@ -1,3 +1,8 @@
+## 8.2.0+sw821 — 2026-09-15
+- SW `soulcap-v821` precaches `brand.css` + `brand-palette.js` (Tier 1 token split).
+- Playwright `serviceWorkers: block` for stable e2e.
+- `qa/finish-loop/TIER1.json` PASS; fleet Tier 1 not claimed (VO unlinked).
+
 ## 8.2.0 — 2026-09-14
 - Tier 1 finish: Now simplification (Q-3), optional app lock (G-10), lazy catalogs + route modules (Q-5).
 - Region-aware Help + age gate (D-05); hosted `docs/privacy.html`; foundation tokens linked.

@@ -3082,7 +3082,7 @@
     if (!applied) apply();
   }
   function setSubviewBackgroundInert(on) {
-    ['#app', '#fab'].forEach(function (selector) {
+    ['#app', '#helpFab'].forEach(function (selector) {
       var node = $(selector);
       if (!node) return;
       if (on) node.setAttribute('inert', '');
@@ -3167,7 +3167,7 @@
 
   /* ── Sheet ─────────────────────────────────────────────────────────────── */
   function setSheetBackgroundInert(on) {
-    ['#app', '#fab', '#panic', '#runner', '#journalEditor'].forEach(function (selector) {
+    ['#app', '#helpFab', '#panic', '#runner', '#journalEditor'].forEach(function (selector) {
       var node = $(selector);
       if (!node) return;
       if (on) node.setAttribute('inert', '');
@@ -6793,19 +6793,19 @@
       showAppLock();
       applyTheme();
       $('#tabs').style.display = 'none';
-      $('#fab').classList.remove('on');
+      $('#helpFab').classList.remove('on');
       VIEWS.forEach(function (v) { $('#view-' + v).classList.remove('on'); });
       return;
     }
     applyTheme();
     stopMap(); // cancel any running orbit rAF; drawMap restarts it if we're on the map
     VIEWS.forEach(function (v) { $('#view-' + v).classList.remove('on'); });
-    if (!state.welcomed) { $('#tabs').style.display = 'none'; $('#fab').classList.remove('on'); renderWelcome(); $('#view-welcome').classList.add('on'); return; }
-    if (!state.onboarded) { $('#tabs').style.display = 'none'; $('#fab').classList.remove('on'); renderOnboarding(); $('#view-onboarding').classList.add('on'); return; }
+    if (!state.welcomed) { $('#tabs').style.display = 'none'; $('#helpFab').classList.remove('on'); renderWelcome(); $('#view-welcome').classList.add('on'); return; }
+    if (!state.onboarded) { $('#tabs').style.display = 'none'; $('#helpFab').classList.remove('on'); renderOnboarding(); $('#view-onboarding').classList.add('on'); return; }
     $('#tabs').style.display = 'flex';
     // Every main tab already has a header Help button — keep FAB off so it
     // never paints over rails/opts (Calm especially) or empties a column.
-    $('#fab').classList.remove('on');
+    $('#helpFab').classList.remove('on');
     if (tab === 'now') renderNow();
     if (tab === 'calm') renderCalm();
     if (tab === 'journal') renderJournal();
@@ -6912,7 +6912,7 @@
     $('#runClose').addEventListener('click', closeRunner);
     $('#runGuide').addEventListener('click', toggleGuide);
     $('#sheetScrim').addEventListener('click', closeSheet);
-    $('#fab').addEventListener('click', function () { haptic('done'); openPanic(); });
+    $('#helpFab').addEventListener('click', function () { haptic('done'); openPanic(); });
     bindGestures();
     pauseOrbsForVisibility();
     wireKeyboardSafety();
@@ -7010,7 +7010,7 @@
     setTimeout(dismissSplash, state.onboarded ? 1600 : 2600);
     splash.addEventListener('click', dismissSplash);
 
-    if ('serviceWorker' in navigator) window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js?v=8.2.0').catch(function () {}); });
+    if ('serviceWorker' in navigator) window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js?v=8.2.0-v821').catch(function () {}); });
   }
 
   window.__soulcap = {

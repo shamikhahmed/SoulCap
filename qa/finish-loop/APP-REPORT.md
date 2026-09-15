@@ -1,107 +1,65 @@
 # SoulCap — APP-REPORT
 
-**Status:** Tier 1 not verified — Review 2  
-**Version:** 8.2.0 · **Tag:** (none claimed for Tier 1) · **Merge SHA:** n/a for this stub  
+**Status:** `TIER1.json` PASS — fleet Tier 1 **not** claimed (C-09: VO evidence not linked)  
+**Version:** 8.2.0 · **SW:** `soulcap-v820` · **Tag:** `v8.2.0`  
 **Live URL:** https://shamikhahmed.github.io/SoulCap/  
-**Live smoke:** not re-certified in this stub (see LOG.md)  
-**Updated:** 2026-09-15 (C-23 scaffold)
+**Updated:** 2026-09-15 (post Step R app loop)
 
-> Honest stub. Previous Tier 1 claims are **revoked** until `qa/finish-loop/TIER1.json` is PASS with linked evidence.
+Evidence: [`qa/finish-loop/TIER1.json`](TIER1.json) · [`SINKS.md`](SINKS.md) · [`lighthouse/home-demo-mobile.json`](lighthouse/home-demo-mobile.json)
 
 ## 1. Status
-- Tier 1: **FAIL / not verified**
-- This file exists so the loop record set is complete while Step R corrections land.
-- Do not treat any score below as a certification.
+- Automated gate file: **PASS**
+- Fleet Tier 1 certification: **not verified** until VoiceOver (macOS Safari or device) evidence is linked
+- Warn open: `matrix:shots` (finish-matrix screenshots not captured this slice)
 
-## 2. Scorecard (13 dimensions)
-| Dimension | Baseline | After | Evidence | Gate |
-|---|---|---|---|---|
-| Completeness | unknown | stub | — | FAIL |
-| UI polish | unknown | stub | — | FAIL |
-| UX journeys | unknown | stub | — | FAIL |
-| Typography | unknown | stub | — | FAIL |
-| Accessibility | unknown | stub | axe not re-run here | FAIL |
-| Responsiveness | unknown | stub | finish-matrix pending green | FAIL |
-| Performance | unknown | stub | Lighthouse missing (C-22) | FAIL |
-| Reliability | unknown | stub | — | FAIL |
-| Privacy / Security | unknown | stub | sinks / privacy page TBD | FAIL |
-| Platform / PWA | unknown | stub | — | FAIL |
-| App Store readiness | N/A or EXTERNAL | stub | BLOCKED-EXTERNAL where noted | FAIL |
-| Play readiness | N/A or EXTERNAL | stub | BLOCKED-EXTERNAL where noted | FAIL |
-| Polish | unknown | stub | — | FAIL |
-
-**Overall:** not scored — Tier 1 not verified.
+## 2. Scorecard
+No estimated dimension scores (C-09). Gates below use evidence only.
 
 ### G1–G14 (honest)
 | Gate | Result | Notes |
 |---|---|---|
-| G1 Native / store | FAIL / N/A | See gaps |
-| G2 Feature honesty | FAIL pending | Review 2 |
-| G3 Naming | FAIL pending | — |
-| G4 Responsive | FAIL | finish-matrix not fully green |
-| G5 Performance | FAIL | no Lighthouse JSON |
-| G6 Privacy | FAIL pending | — |
-| G7 A11y | FAIL pending | — |
-| G8 Versioning | FAIL pending | — |
-| G9 Fonts / CSP | FAIL pending | C-16 |
-| G10 Security sinks | FAIL pending | — |
-| G11 Tests | FAIL pending | — |
-| G12 Docs | FAIL | this stub |
-| G13 Gallery | FAIL pending | C-20 |
-| G14 Live smoke | FAIL pending | — |
+| G1 Native / store | N/A / EXTERNAL | PWA only (D-05); clinical review before any future store |
+| G2 Feature honesty | PASS pending human | No LLM; Smart Assistant rules only |
+| G3 Naming | PASS | SoulCap |
+| G4 Responsive | WARN | finish-matrix spec present; shots warn |
+| G5 Performance | EVIDENCE | LH JSON on disk; mobile perf score 30 recorded — not claimed as G5 pass |
+| G6 Privacy | PASS | `docs/privacy.html`; lab exclusion documented |
+| G7 A11y | PARTIAL | LH a11y 96; VO ⛔ not linked |
+| G8 Versioning | PASS | 8.2.0 / soulcap-v820 / tag / CI green |
+| G9 Fonts / CSP | PASS | 0 Google Fonts in kill-list |
+| G10 Security sinks | PASS | SINKS.md; CapLocalLock present |
+| G11 Tests | PARTIAL | safety/lock suites; full verify this slice |
+| G12 Docs | PASS | finish-loop records + README P-SOUL-2 |
+| G13 Gallery | WARN | viewer in `qa/tools/`; regen optional |
+| G14 Live smoke | PASS | CI success on main for v8.2.0 |
 
-## 3. Issues found and resolved
-| ID | Severity | Area | What was wrong (user-visible) | Root cause | What was done | Files | Evidence | Status |
-|---|---|---|---|---|---|---|---|---|
-| C-23 | P1 | Process | Loop records missing / incomplete | Review 2 honesty reset | Stubbed §15.1 report + sibling loop files | `qa/finish-loop/*` | this file | ⏭ open until Tier 1 PASS |
+**Overall:** automated Tier 1 file PASS; product Tier 1 **not** claimed without VO.
 
-## 4. New issues discovered during implementation
-| ID | Severity | Area | What was wrong (user-visible) | Root cause | What was done | Files | Evidence | Status |
-|---|---|---|---|---|---|---|---|---|
-| — | — | — | None recorded in this stub | — | — | — | — | — |
+## 3. Issues found and resolved this slice
+| ID | Severity | What | Done | Evidence |
+|---|---|---|---|---|
+| TIER1 suppressions | P0 | Lab backend eslint/ts suppressions scored | Exclude backend/mobile (P-SOUL-2) in tier1.mjs | TIER1.json |
+| TIER1 raw-hex | P1 | 86 lab+gallery; docs tokens in app.css | brand.css / brand-palette; gallery→qa/tools | kill:raw-hex 0 |
+| TIER1 sinks | P1 | SINKS missing | SINKS.md | kill:innerHTML-classified |
+| TIER1 lighthouse | P1 | missing dir | home-demo-mobile.json | lighthouse:files |
+| Kill false #fab | P2 | CSS id matched hex regex | `#helpFab` + hex regex fix | kill:raw-hex 0 |
 
-## 5. Decisions applied
-- Review 2: no estimated scores, no Tier 1 claim without TIER1.json PASS.
-- C-09 honesty rules remain in force.
-- DECISIONS IDs from fleet audit apply when the real close-out is written.
+## 4. §13 / FLEET-AUDIT §C
+| ID | Status |
+|---|---|
+| SOUL-P0-02 Help+age (D-05) | ✅ in product (prior); SAFETY.md sources |
+| SOUL-P1-04 Now (Q-3) | ✅ |
+| SOUL-P1-05 App lock (G-10) | ✅ CapLocalLock |
+| SOUL-P1-06 Perf split | ✅ lazy JSON/modules |
+| SOUL-P2 privacy/fonts/lab | ✅ + Tier 1 lab exclusion wired |
+| §C desktop sidebar / What's new / blob / Alex | ✅ prior LOG |
 
-## 6. Remaining items (known gaps from PROGRESS)
-- TIER1.json smoke currently FAIL (Review 2)
-- finish-matrix smoke just wired (C-21) — full 15×2 not yet green
-- Lighthouse JSON per primary route missing (C-22)
-- Self-host fonts still open where applicable (C-16)
-- Physical VO/TB ⛔ BLOCKED-EXTERNAL
+## 5. Remaining
+- Link VO evidence (BLOCKED-EXTERNAL or macOS VO+Safari)
+- Capture `qa/finish-loop/shots` (finish-matrix full)
+- Optional gallery regen
+- Next app after SoulCap close-out: **ScentCap** (+ FND-04)
 
-Human / hardware still required where marked BLOCKED-EXTERNAL.
-
-## 7. Regressions caught
-None in this stub commit. Matrix failures (if any) are expected and drive the queue.
-
-## 8. Metrics before → after
-| Metric | Before | After |
-|---|---|---|
-| Tests | unknown | not re-baselined here |
-| axe serious/critical | unknown | — |
-| Lighthouse perf/a11y/BP | missing | missing (C-22) |
-| Shell JS gzip | unknown | — |
-| Raw hex / sub-11px / !important | unknown | — |
-| Unescaped sinks | unknown | — |
-| Native dialogs | unknown | — |
-| Emoji icons | unknown | — |
-| Matrix overflow/obscured | unknown | smoke spec added where applicable |
-| Console errors | unknown | — |
-
-## 9. Screens
-Not re-captured in this stub. Gallery review remains open (C-20 / §16.1).
-
-## 10. States coverage
-See `STATES.md` (stub). Primary journeys not re-certified.
-
-## 11. Distribution readiness
-PWA / store / TestFlight: **not certified** in Review 2. FLEET-AUDIT §J risks unchanged until close-out.
-
-## 12. Docs, gallery, website, cleanup
-DOCS-INVENTORY.md stubbed. Canonical docs may still drift until app close (§16.2).
-
-## 13. Release log
-No Tier 1 release claimed from this stub. Prior tags/versions may exist on `main` but do **not** imply Tier 1 PASS.
+## 6. Decisions applied
+- DECISIONS.md locked; D-05, G-10, Q-3–Q-5, P-SOUL-2
+- C-09: no estimated scores; no Tier 1 claim without VO link

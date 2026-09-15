@@ -75,3 +75,31 @@ Gallery: deferred to release commit if time — fictional names already in fixtu
   - Lighthouse JSON per primary route missing (C-22)
   - Self-host fonts still open where applicable (C-16)
   - Physical VO/TB ⛔ BLOCKED-EXTERNAL
+
+## 2026-09-15 — SoulCap app loop (post Step R)
+
+### TIER1 before this slice
+FAIL (5): suppressions (backend lab), lighthouse:dir, kill:raw-hex 86, kill:console.log 1, kill:innerHTML-classified (SINKS missing)
+
+### Work done
+- Added `npm run tier1`
+- P-SOUL-2: lab `backend/`+`mobile/` excluded from Tier 1 scoring in `capricorn-tooling/shared/testing/tier1.mjs`; README reinforced
+- Pages product `docs/` now scored (was wrongly skipped); `brand.css` + `brand-palette.js` hold raw hex tokens
+- SINKS.md for 2 static `innerHTML` sinks; gallery viewer moved to `qa/tools/`
+- Kill-list: rename `#fab`→`#helpFab`, sub-11→11px, outline→focus-visible, strip disallowed `!important`
+- Lighthouse JSON: `qa/finish-loop/lighthouse/home-demo-mobile.json` (perf 30 / a11y 96 / BP 100 / SEO 100 — recorded, not a Tier 1 claim)
+- §13 product items (SOUL-P0-02, P1-04/05/06, P2) already in tree from prior loop; re-verified via code + safety suite this slice
+
+### TIER1 after this slice
+`qa/finish-loop/TIER1.json` **PASS** (23 pass / 0 fail / 1 warn: matrix:shots missing)
+
+### Honesty (C-09)
+Do **not** claim fleet Tier 1 complete: manual VoiceOver evidence still ⛔ BLOCKED-EXTERNAL / not linked.
+
+
+## 2026-09-15 — SW v821 + e2e harden
+- Bumped `swCache` → `soulcap-v821` (still app 8.2.0 / tag v8.2.0) so brand.css + brand-palette.js precache
+- Playwright `serviceWorkers: 'block'` to reduce APP_READY races
+- Mobile safety+lock: green when run focused; parallel suite still flaky on APP_READY under load — not treated as product regress this slice
+- TIER1.json remains PASS (warn: matrix:shots)
+

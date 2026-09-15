@@ -7,12 +7,14 @@
  *
  * Bump CACHE on every asset change or users get a stale build.
  */
-var CACHE = 'soulcap-v820';
+var CACHE = 'soulcap-v821';
 
 var ASSETS = [
   './',
   'index.html',
+  'brand.css',
   'app.css',
+  'brand-palette.js',
   'data.js',
   'app.js',
   'vendor/gsap.min.js',

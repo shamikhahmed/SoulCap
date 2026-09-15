@@ -5,28 +5,22 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>SoulCap Privacy</title>
 <meta name="description" content="SoulCap privacy — what stays on your device, and what never leaves."/>
+<link rel="stylesheet" href="brand.css"/>
 <style>
   :root { color-scheme: light dark; }
   body {
     margin: 0 auto; max-width: 40rem; padding: 1.5rem;
-    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    line-height: 1.55; color: #1a1625; background: #f5f3f8;
-  }
-  @media (prefers-color-scheme: dark) {
-    body { color: #ece9f4; background: #14121a; }
-    a { color: #c4a8ff; }
-    code { background: rgba(255,255,255,.08); }
+    font-family: var(--ui, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", sans-serif);
+    line-height: 1.55; color: var(--ink); background: var(--ground);
   }
   h1 { font-size: 1.75rem; line-height: 1.2; margin: 0 0 .5rem; }
   h2 { font-size: 1.1rem; margin: 1.5rem 0 .5rem; }
   p, li { font-size: 1rem; }
-  .meta { color: #5c5668; font-size: .95rem; }
-  @media (prefers-color-scheme: dark) { .meta { color: #a39bb3; } }
+  .meta { color: var(--ink-2); font-size: .95rem; }
   table { width: 100%; border-collapse: collapse; font-size: .95rem; margin: .5rem 0 1rem; }
-  th, td { text-align: left; padding: .4rem .35rem; border-bottom: 1px solid rgba(0,0,0,.08); vertical-align: top; }
-  @media (prefers-color-scheme: dark) { th, td { border-bottom-color: rgba(255,255,255,.1); } }
-  a { color: #5b3cc4; }
-  code { font-size: .9em; padding: .1em .35em; border-radius: 4px; background: rgba(0,0,0,.06); }
+  th, td { text-align: left; padding: .4rem .35rem; border-bottom: 1px solid var(--line); vertical-align: top; }
+  a { color: var(--accent); }
+  code { font-size: .9em; padding: .1em .35em; border-radius: 4px; background: var(--accent-soft); }
   nav { margin-bottom: 1.25rem; font-size: .95rem; }
 </style>
 </head>

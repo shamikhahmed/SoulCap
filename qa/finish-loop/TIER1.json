@@ -1,9 +1,9 @@
 {
   "app": "soulcap",
   "version": "8.2.0",
-  "swCache": "soulcap-v820",
-  "generatedAt": "2026-09-15T08:44:12.429Z",
-  "status": "FAIL",
+  "swCache": "soulcap-v821",
+  "generatedAt": "2026-09-15T10:24:10.759Z",
+  "status": "PASS",
   "pass": [
     {
       "id": "version:field",
@@ -11,7 +11,7 @@
     },
     {
       "id": "version:sw-cache-match",
-      "detail": "docs/sw.js contains soulcap-v820"
+      "detail": "docs/sw.js contains soulcap-v821"
     },
     {
       "id": "records:BASELINE.md",
@@ -26,6 +26,22 @@
       "detail": "present"
     },
     {
+      "id": "records:APP-REPORT.md",
+      "detail": "present"
+    },
+    {
+      "id": "records:DOCS-INVENTORY.md",
+      "detail": "present"
+    },
+    {
+      "id": "records:APP-REPORT-size",
+      "detail": "3230 bytes (need ≥1024)"
+    },
+    {
+      "id": "suppressions",
+      "detail": "none"
+    },
+    {
       "id": "app-ready",
       "detail": "window.__APP_READY__ referenced"
     },
@@ -36,6 +52,22 @@
     {
       "id": "tag",
       "detail": "found v8.2.0"
+    },
+    {
+      "id": "matrix:spec",
+      "detail": "e2e/finish-matrix.spec.ts"
+    },
+    {
+      "id": "lighthouse:files",
+      "detail": "1 JSON"
+    },
+    {
+      "id": "sinks:SINKS.md",
+      "detail": "present"
+    },
+    {
+      "id": "kill:raw-hex",
+      "detail": "0"
     },
     {
       "id": "kill:sub-11px",
@@ -54,62 +86,33 @@
       "detail": "0"
     },
     {
+      "id": "kill:console.log",
+      "detail": "0"
+    },
+    {
       "id": "kill:google-fonts",
       "detail": "0"
-    }
-  ],
-  "fail": [
-    {
-      "id": "records:APP-REPORT.md",
-      "detail": "missing qa/finish-loop/APP-REPORT.md"
-    },
-    {
-      "id": "records:DOCS-INVENTORY.md",
-      "detail": "missing qa/finish-loop/DOCS-INVENTORY.md"
-    },
-    {
-      "id": "suppressions",
-      "detail": "backend/src/database/prisma/prisma.service.ts:17: // @ts-expect-error: Prisma event\nbackend/src/main.ts:57: bootstrap().catch((err) => { console.error(err); process.exit(1); });\nbackend/src/modules/notification/notification.service.ts:4: // eslint-disable-next-line @typescript-eslint/no-explicit-any\nbackend/src/modules/notification/notification.service.ts:11: // eslint-disable-next-line @typescript-eslint/no-explicit-any"
-    },
-    {
-      "id": "matrix:spec",
-      "detail": "no finish-matrix spec"
-    },
-    {
-      "id": "lighthouse:dir",
-      "detail": "missing qa/finish-loop/lighthouse/"
-    },
-    {
-      "id": "kill:raw-hex",
-      "detail": "86"
-    },
-    {
-      "id": "kill:console.log",
-      "detail": "1"
     },
     {
       "id": "kill:innerHTML-classified",
-      "detail": "4 sinks; SINKS.md MISSING"
+      "detail": "2 sinks; SINKS.md ok"
     }
   ],
+  "fail": [],
   "warn": [
     {
       "id": "matrix:shots",
       "detail": "qa/finish-loop/shots missing (run matrix)"
-    },
-    {
-      "id": "sinks",
-      "detail": "SINKS.md missing — required when innerHTML > 0"
     }
   ],
   "killList": {
-    "rawHex": 86,
+    "rawHex": 0,
     "sub11": 0,
     "important": 0,
     "nativeDialog": 0,
     "outlineNone": 0,
-    "consoleLog": 1,
+    "consoleLog": 0,
     "googleFonts": 0,
-    "innerHTML": 4
+    "innerHTML": 2
   }
 }

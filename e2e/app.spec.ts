@@ -1988,7 +1988,7 @@ test.describe('v1.4 bundled features', () => {
         (document.querySelector(`#tabs button[data-tab="${t}"]`) as HTMLElement).click();
       }, tab);
       await expect(page.locator(`#view-${tab}.on`)).toBeVisible();
-      await expect(page.locator('#fab.on')).toHaveCount(0);
+      await expect(page.locator('#helpFab.on')).toHaveCount(0);
       await expect(page.locator(`#view-${tab} .help-btn`)).toBeVisible();
     }
   });
