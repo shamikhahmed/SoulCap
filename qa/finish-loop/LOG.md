@@ -149,3 +149,8 @@ Do **not** claim fleet Tier 1 complete: manual VoiceOver evidence still ⛔ BLOC
 - home-demo-desktop: P67 A96 BP100 SEO100 (fetch 2026-09-16T10:39Z)
 - home-demo-mobile: P57 A96 BP100 SEO100 (fetch 2026-09-16T10:41Z)
 - Not claiming lighthouse:passing until thresholds met.
+
+## 2026-09-16 — LH refresh (post UI)
+- desktop P87 A96 BP100 SEO100 fetch 10:44:46Z
+- mobile P61 A96 BP100 SEO100 fetch 10:44:46Z
+- Still below perf≥90 gate; honest FAIL lighthouse:passing.

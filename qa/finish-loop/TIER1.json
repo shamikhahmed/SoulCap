@@ -2,7 +2,7 @@
   "app": "soulcap",
   "version": "8.2.1",
   "swCache": "soulcap-v824",
-  "generatedAt": "2026-09-16T10:43:53.555Z",
+  "generatedAt": "2026-09-16T10:45:53.632Z",
   "status": "FAIL",
   "pass": [
     {
@@ -54,12 +54,12 @@
       "detail": "e2e/finish-matrix.spec.ts"
     },
     {
-      "id": "matrix:failures",
-      "detail": "0"
-    },
-    {
       "id": "matrix:shot-count",
       "detail": "6 shots (need routes×viewports×themes = 6)"
+    },
+    {
+      "id": "matrix:freshness",
+      "detail": "2026-09-16T10:44:19.686Z"
     },
     {
       "id": "axe:serious-critical",
@@ -112,16 +112,16 @@
       "detail": "missing tag v8.2.1 (have: v8.1.1, v8.2.0)"
     },
     {
-      "id": "matrix:freshness",
-      "detail": "matrix 2026-09-16T09:59:56.273Z before last UI commit 2026-09-16T15:43:05+05:00"
+      "id": "matrix:failures",
+      "detail": "1"
     },
     {
       "id": "lighthouse:home-demo-desktop.json",
-      "detail": "fetchTime 2026-09-16T10:39:05.238Z before last UI commit 2026-09-16T15:43:05+05:00"
+      "detail": "perf 87 a11y 96 bp 100 LCP 494.195 TBT 180.5 CLS 0.002350264988588483"
     },
     {
       "id": "lighthouse:home-demo-mobile.json",
-      "detail": "fetchTime 2026-09-16T10:41:12.602Z before last UI commit 2026-09-16T15:43:05+05:00"
+      "detail": "perf 61 a11y 96 bp 100 LCP 2310.1405 TBT 1749.9999999999998 CLS 0"
     },
     {
       "id": "lighthouse:passing",
@@ -135,7 +135,7 @@
   "warn": [
     {
       "id": "ci:main",
-      "detail": "latest still pending: Merge finish/soulcap-c34-offline — C-34 offline SW harden"
+      "detail": "latest still pending: Merge pull request #9 from shamikhahmed/finish/soulcap-a11y-r2"
     }
   ],
   "killList": {
