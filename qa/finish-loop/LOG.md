@@ -161,9 +161,9 @@ Do **not** claim fleet Tier 1 complete: manual VoiceOver evidence still ⛔ BLOC
 ## 2026-09-16 — Step R matrix evidence (finish/soulcap-stepR)
 
 ### §15 mini-plan
-- Problem: matrix-results had failures / incomplete shots; Python http.server reset concurrent GETs so app.js never loaded (__APP_READY__ never set).
-- Root cause: SimpleHTTPRequestHandler under Chromium asset storms → ERR_CONNECTION_RESET on docs/app.js.
-- Files: scripts/serve-docs.mjs, playwright.config.ts webServer, e2e/helpers waitForAppReady, matrix-results.json.
-- Change: Node static server for Playwright; balanced ready retries; FINISH_MATRIX=1 → 6/6 shots, 0 failures.
-- C-57: docs/VERSION.json already present (Pages path=docs). C-34 SW untouched.
-- Verification: npm run tier1 — honest FAIL list (no Tier 1 claim).
+- Problem: matrix `__APP_READY__` timeouts (laptop/iphone-16); shotCount &lt; 6.
+- Root cause: Python `http.server` under Chromium asset storms → `ERR_CONNECTION_RESET` on `data.js`/`app.js` → `SKILLS is not defined` → never sets `__APP_READY__`.
+- Fix: `scripts/serve-docs.mjs` as Playwright `webServer`; `waitForAppReady` one reload retry; splash dismiss harden; personas allow `127.0.0.1`.
+- Evidence: `qa/finish-loop/matrix-results.json` generatedAt **2026-09-16T11:18:37.057Z** — shotCount **6**/6, failures **[]**.
+- Optional: `npm run test:matrix:live` → `playwright.matrix.config.ts` (Pages base).
+- Tier1 **2026-09-16T11:19:12.473Z**: **FAIL** (26 pass / 5 fail / 1 warn). Matrix gates green. Remaining fails: `tag`, `lighthouse:home-demo-{desktop,mobile}.json` (fetchTime before UI commit + perf 87/61), `lighthouse:passing`, `gallery:freshness`. No Tier 1 PASS claim.
