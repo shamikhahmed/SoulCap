@@ -1,3 +1,9 @@
+## 8.2.1 — 2026-09-16
+- C-35: tab labels meet color-contrast (drop fade opacity; selected uses ink, not accent-on-soft).
+- Publish `docs/VERSION.json` on GitHub Pages (live `/VERSION.json` was 404).
+- Q-5: first paint no longer waits on lazy catalog fetch; warm via `requestIdleCallback`.
+- SW `soulcap-v824`.
+
 ## 8.2.0+sw821 — 2026-09-15
 - SW `soulcap-v821` precaches `brand.css` + `brand-palette.js` (Tier 1 token split).
 - Playwright `serviceWorkers: block` for stable e2e.

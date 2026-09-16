@@ -133,3 +133,14 @@ Do **not** claim fleet Tier 1 complete: manual VoiceOver evidence still ⛔ BLOC
 - Root cause: second caches.delete forced cold SW precache; mobile blew 30s before help-btn click.
 - Fix: clear SW+caches once before seedDemo; after seedDemo unregister+register `./sw.js` without wiping caches; dismissSplash after offline reload; app registers `./sw.js` (no query).
 - Local: 4 passed (`network down|offline reload`, workers=1).
+
+## 2026-09-16 — Step R product gates (finish/soulcap-stepR)
+**Status:** partial — not Tier 1 PASS
+**Mini-plan (§15):**
+- Problem: Review 3 C-35 tab contrast; live VERSION.json 404; LH TBT; hardened tier1 still red on evidence gates.
+- Root cause: `#tabs button` opacity .52/.72 + selected accent-on-soft <4.5:1; Pages serves `docs/` so root VERSION.json unpublished; boot awaited `soulEnsureCatalogs` before `__APP_READY__`.
+- Change: tab ink/opacity fix; `docs/VERSION.json` bump 8.2.1 / soulcap-v824; idle catalog warm; axe JSON evidence.
+- C-34: main CI already green — not redone.
+- Kill-list: measured 0 hex/sub-11/important/outline (unchanged).
+**Verify:** axe serious 0 on home×light/dark×393/1440; `node --check` app.js; `npm run tier1` (expect remaining fails — honesty, no PASS claim).
+**LH note:** idle catalog warm cut TBT sharply in local runs (≈0–13 ms vs Review 3 6341 ms) but mobile LCP/perf still under threshold (recorded fail, not claimed).

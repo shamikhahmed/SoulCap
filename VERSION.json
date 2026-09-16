@@ -1,8 +1,8 @@
 {
   "name": "SoulCap",
   "version": "8.2.1",
-  "swCache": "soulcap-v823",
+  "swCache": "soulcap-v824",
   "schema": 13,
-  "released": "2026-09-15",
-  "note": "C-34: register SW as ./sw.js (no query); offline e2e keep cache on re-register"
+  "released": "2026-09-16",
+  "note": "Step R: tab contrast (C-35), docs/VERSION.json for Pages, idle catalog warm (Q-5 TBT)"
 }

@@ -6972,10 +6972,25 @@
         window.__APP_READY__ = true;
         document.documentElement.dataset.appReady = 'true';
         if (window.__soulcap) {
-          window.__soulcap.experienceIds = EXPERIENCES.map(function (item) { return item.id; });
+          window.__soulcap.experienceIds = (EXPERIENCES || []).map(function (item) { return item.id; });
         }
       } catch (e) {}
+      /* GSAP + lazy catalogs after first paint — cut main-thread TBT (Q-5 / C-34 LH). */
       setTimeout(function () { loadGsap(); }, 0);
+      function warmCatalogs() {
+        if (typeof soulEnsureCatalogs !== 'function') return;
+        soulEnsureCatalogs(catalogNames).then(function () {
+          try {
+            if (window.__soulcap) {
+              window.__soulcap.experienceIds = (EXPERIENCES || []).map(function (item) { return item.id; });
+            }
+          } catch (e) {}
+        }).catch(function (err) {
+          console.warn('SoulCap catalog preload', err);
+        });
+      }
+      if (typeof requestIdleCallback === 'function') requestIdleCallback(warmCatalogs, { timeout: 2500 });
+      else setTimeout(warmCatalogs, 0);
       if (queryValue('panic') === '1') {
         $('#splash').classList.add('gone');
         openPanic();
@@ -6983,14 +6998,8 @@
         setTimeout(function () { newEntrySheet(); }, 400);
       }
     }
-    if (typeof soulEnsureCatalogs === 'function') {
-      soulEnsureCatalogs(catalogNames).then(finishBoot).catch(function (err) {
-        console.warn('SoulCap catalog preload', err);
-        finishBoot();
-      });
-    } else {
-      finishBoot();
-    }
+    /* First paint must not wait on catalog fetch/parse (was blocking __APP_READY__). */
+    finishBoot();
 
     var splash = $('#splash');
     function dismissSplash() {
