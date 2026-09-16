@@ -154,3 +154,6 @@ Do **not** claim fleet Tier 1 complete: manual VoiceOver evidence still ⛔ BLOC
 - desktop P87 A96 BP100 SEO100 fetch 10:44:46Z
 - mobile P61 A96 BP100 SEO100 fetch 10:44:46Z
 - Still below perf≥90 gate; honest FAIL lighthouse:passing.
+
+## 2026-09-16 — matrix harden
+- Theme after boot; splash hide; primary wait; mobile-only workers=1; refreshed matrix-results.json.

@@ -26,12 +26,13 @@ if (RUN) {
       for (const vp of matrixViewports()) {
         for (const theme of FINISH_THEMES) {
           test(`${route.id} · ${vp.name} · ${theme}`, async ({ page }) => {
-            test.setTimeout(60_000);
+            test.setTimeout(90_000);
             try {
               await page.setViewportSize({ width: vp.width, height: vp.height });
-              await applyFinishTheme(page, theme);
+              /* Theme after boot — evaluate on about:blank can race a cold shell. */
               await page.goto(route.path);
-              await waitForAppReady(page);
+              await waitForAppReady(page, { timeout: 45_000 });
+              await applyFinishTheme(page, theme);
               /* SoulCap splash sits fixed over the tab bar until dismissed. */
               await page.evaluate(() => {
                 const s = document.getElementById('splash');
@@ -41,6 +42,7 @@ if (RUN) {
                 s.style.visibility = 'hidden';
                 s.style.pointerEvents = 'none';
               });
+              await page.locator(route.primary).waitFor({ state: 'visible', timeout: 10_000 });
               await assertNoHorizontalOverflow(page);
               await assertNotObscured(page, route.primary);
               const dir = path.join(SHOTS, route.id, theme);
