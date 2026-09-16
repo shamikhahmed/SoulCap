@@ -32,6 +32,15 @@ if (RUN) {
               await applyFinishTheme(page, theme);
               await page.goto(route.path);
               await waitForAppReady(page);
+              /* SoulCap splash sits fixed over the tab bar until dismissed. */
+              await page.evaluate(() => {
+                const s = document.getElementById('splash');
+                if (!s) return;
+                s.classList.add('gone');
+                s.setAttribute('hidden', '');
+                s.style.visibility = 'hidden';
+                s.style.pointerEvents = 'none';
+              });
               await assertNoHorizontalOverflow(page);
               await assertNotObscured(page, route.primary);
               const dir = path.join(SHOTS, route.id, theme);

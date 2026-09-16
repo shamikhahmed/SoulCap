@@ -7010,7 +7010,12 @@
     setTimeout(dismissSplash, state.onboarded ? 1600 : 2600);
     splash.addEventListener('click', dismissSplash);
 
-    if ('serviceWorker' in navigator) window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js?v=8.2.0-v822').catch(function () {}); });
+    /* Always register (do not wait for "load") — async catalog boot often finishes after load. */
+    function registerSW() {
+      if (!('serviceWorker' in navigator)) return;
+      navigator.serviceWorker.register('sw.js?v=8.2.0-v823').catch(function () {});
+    }
+    registerSW();
   }
 
   window.__soulcap = {

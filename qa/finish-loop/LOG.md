@@ -110,11 +110,16 @@ Do **not** claim fleet Tier 1 complete: manual VoiceOver evidence still ⛔ BLOC
 - Merged `finish/soulcap-gallery` → main
 
 ## 2026-09-16 — C-34 e2e red on main
-**Status:** ✅ verified local (4/4 focused e2e)
-**Result:** helpFab locale + scroll settle green; SW soulcap-v822; LH untouched.
-**Problem:** CI on main failed mood-themes (~906) + theme-scroll (~1231).
+**Status:** ✅ product+test fix; full CI follow-up
+**Problem:** mood-themes (~906) + theme-scroll (~1231) red on main; offline SW + finish-matrix also red after merge.
 **Root cause:**
-1. Incomplete `#fab`→`#helpFab` rename left `applyLocale` / e2e on `#fab` (null TypeError; Roman Urdu never updated help aria-label).
-2. Theme-scroll setup raced `selectTab` View Transition `scrollTo(0,0)`.
-**Fix:** `helpFab` in applyLocale + e2e; `clickTab` + height/scroll waits; SW `soulcap-v822`.
-**LH perf 30:** noted only — no fake LH; Q-5 split deferred (separate commit).
+1. Incomplete `#fab`→`#helpFab` rename (`applyLocale` / e2e still `#fab`).
+2. Theme-scroll raced View Transition `scrollTo(0,0)`.
+3. SW registered only on `window.load` after async catalogs — load already fired → offline tests never saw `controller`.
+4. Finish-matrix asserted `#tabs` while splash still covered it.
+**Fix:** helpFab + scroll settle; register SW when `readyState==='complete'`; dismiss splash in finish-matrix; SW `soulcap-v823`.
+**LH perf 30:** noted only — no fake LH; Q-5 deferred.
+
+## 2026-09-16 — C-34 offline SW
+- Root cause: playwright.config `serviceWorkers: block` prevented controller; offline suites now `test.use({ serviceWorkers: allow })`.
+- SW register immediate + cache soulcap-v823.
