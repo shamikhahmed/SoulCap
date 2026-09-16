@@ -128,3 +128,13 @@ Do **not** claim fleet Tier 1 complete: manual VoiceOver evidence still ⛔ BLOC
 ## 2026-09-16 — C-34 offline SW cache clear
 - Offline suites: unregister SW + delete caches before seedDemo; register `./sw.js` (no query).
 - Avoids stale shell blocking `__APP_READY__` when `serviceWorkers: allow`.
+
+## 2026-09-16 — C-30 real Lighthouse (product)
+- Tool: `npx lighthouse@13.4.1` against live GH Pages `/?demo=1` (mobile + desktop).
+- Wrote `qa/finish-loop/lighthouse/home-demo-{mobile,desktop}.json` (no stubs / no null scores).
+- **Before (stale 2026-09-15 mobile):** perf 30 · a11y 96 · bp 100 · LCP 5779ms · TBT 6341ms · CLS 0.024
+- **After mobile:** perf 60 · a11y 96 · bp 100 · LCP 3015ms · TBT 1012ms · CLS 0
+- **After desktop:** perf 95 · a11y 96 · bp 100 · LCP 517ms · TBT 6ms · CLS 0.002
+- Thresholds (perf≥90 a11y≥95 BP≥95 LCP≤2.5s TBT≤200ms CLS≤0.1): desktop meets; mobile still fails LCP/TBT/perf — honest JSON committed.
+- Rejected a parallel local `:8801` mobile run where `app.js` transferred 0 bytes (false TBT 0).
+- Product perf follow-up: further defer/split main-thread JS (Q-5) — not in this evidence commit.
