@@ -1193,7 +1193,7 @@
       var tab = span.parentNode.getAttribute('data-tab');
       if (STRINGS.en.tabs[tab]) span.textContent = t('tabs.' + tab);
     });
-    var fab = document.getElementById('fab');
+    var fab = document.getElementById('helpFab');
     if (fab) {
       fab.setAttribute('aria-label', t('helpNow'));
       var fabLabel = document.getElementById('fabLabel');

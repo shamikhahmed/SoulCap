@@ -2,8 +2,8 @@
   "app": "soulcap",
   "version": "8.2.0",
   "swCache": "soulcap-v821",
-  "generatedAt": "2026-09-15T10:24:10.759Z",
-  "status": "PASS",
+  "generatedAt": "2026-09-16T09:42:10.810Z",
+  "status": "FAIL",
   "pass": [
     {
       "id": "version:field",
@@ -42,12 +42,12 @@
       "detail": "none"
     },
     {
-      "id": "app-ready",
-      "detail": "window.__APP_READY__ referenced"
+      "id": "test-skip",
+      "detail": "none"
     },
     {
-      "id": "ci:main",
-      "detail": "release: SoulCap v8.2.0 Tier 1 → success https://github.com/shamikhahmed/SoulCap/actions/runs/34883661430"
+      "id": "app-ready",
+      "detail": "window.__APP_READY__ assigned in product code"
     },
     {
       "id": "tag",
@@ -56,10 +56,6 @@
     {
       "id": "matrix:spec",
       "detail": "e2e/finish-matrix.spec.ts"
-    },
-    {
-      "id": "lighthouse:files",
-      "detail": "1 JSON"
     },
     {
       "id": "sinks:SINKS.md",
@@ -98,11 +94,36 @@
       "detail": "2 sinks; SINKS.md ok"
     }
   ],
-  "fail": [],
+  "fail": [
+    {
+      "id": "matrix:results",
+      "detail": "missing qa/finish-loop/matrix-results.json (CI must set FINISH_MATRIX=1)"
+    },
+    {
+      "id": "lighthouse:home-demo-mobile.json",
+      "detail": "fetchTime 2026-09-15T09:22:56.479Z before last UI commit 2026-09-16T14:39:06+05:00"
+    },
+    {
+      "id": "lighthouse:passing",
+      "detail": "0/1 files meet thresholds"
+    },
+    {
+      "id": "axe:dir",
+      "detail": "missing qa/finish-loop/axe/ (JSON per route×theme)"
+    },
+    {
+      "id": "gallery:freshness",
+      "detail": "gallery 2026-09-15T18:26:23+05:00 before last UI commit 2026-09-16T14:39:06+05:00"
+    }
+  ],
   "warn": [
     {
-      "id": "matrix:shots",
-      "detail": "qa/finish-loop/shots missing (run matrix)"
+      "id": "ci:main",
+      "detail": "latest still in_progress: Merge finish/soulcap-c31 — C-31 FINISH_MATRIX CI job"
+    },
+    {
+      "id": "live:VERSION.json",
+      "detail": "https://shamikhahmed.github.io/soulcap/VERSION.json → 404"
     }
   ],
   "killList": {
