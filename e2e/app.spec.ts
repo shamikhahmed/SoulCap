@@ -2467,10 +2467,18 @@ test.describe('Offline', () => {
   test.use({ serviceWorkers: 'allow' });
 
   test('app still works with the network down', async ({ page, context }) => {
+    // Clear any prior SW/cache so allow-mode does not serve a stale shell that never sets __APP_READY__.
+    await page.goto('/');
+    await page.evaluate(async () => {
+      const regs = await navigator.serviceWorker.getRegistrations();
+      await Promise.all(regs.map((r) => r.unregister()));
+      const keys = await caches.keys();
+      await Promise.all(keys.map((k) => caches.delete(k)));
+    });
     await seedDemo(page);
     await page.evaluate(async () => {
       if (!('serviceWorker' in navigator)) throw new Error('no serviceWorker');
-      await navigator.serviceWorker.register('sw.js?v=8.2.0-v823');
+      await navigator.serviceWorker.register('./sw.js');
       await navigator.serviceWorker.ready;
     });
     if (!(await page.evaluate(() => navigator.serviceWorker.controller !== null))) {
@@ -2726,10 +2734,17 @@ test.describe('Phase J — final QA stress', () => {
     test.use({ serviceWorkers: 'allow' });
 
     test('offline reload still opens Help without network', async ({ page, context }) => {
+      await page.goto('/');
+      await page.evaluate(async () => {
+        const regs = await navigator.serviceWorker.getRegistrations();
+        await Promise.all(regs.map((r) => r.unregister()));
+        const keys = await caches.keys();
+        await Promise.all(keys.map((k) => caches.delete(k)));
+      });
       await seedDemo(page);
       await page.evaluate(async () => {
         if (!('serviceWorker' in navigator)) throw new Error('no serviceWorker');
-        await navigator.serviceWorker.register('sw.js?v=8.2.0-v823');
+        await navigator.serviceWorker.register('./sw.js');
         await navigator.serviceWorker.ready;
       });
       if (!(await page.evaluate(() => navigator.serviceWorker.controller !== null))) {
