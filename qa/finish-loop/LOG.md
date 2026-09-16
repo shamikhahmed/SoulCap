@@ -124,3 +124,7 @@ Do **not** claim fleet Tier 1 complete: manual VoiceOver evidence still ⛔ BLOC
 ## 2026-09-16 — C-34 offline SW
 - Root cause: playwright.config `serviceWorkers: block` prevented controller; offline suites now `test.use({ serviceWorkers: allow })`.
 - SW register immediate + cache soulcap-v823.
+
+## 2026-09-16 — C-34 offline SW cache clear
+- Offline suites: unregister SW + delete caches before seedDemo; register `./sw.js` (no query).
+- Avoids stale shell blocking `__APP_READY__` when `serviceWorkers: allow`.
