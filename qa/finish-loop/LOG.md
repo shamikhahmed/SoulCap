@@ -128,3 +128,8 @@ Do **not** claim fleet Tier 1 complete: manual VoiceOver evidence still ⛔ BLOC
 ## 2026-09-16 — C-34 offline SW cache clear
 - Offline suites: unregister SW + delete caches before seedDemo; register `./sw.js` (no query).
 - Avoids stale shell blocking `__APP_READY__` when `serviceWorkers: allow`.
+
+## 2026-09-16 — C-34 offline e2e harden
+- Root cause: second caches.delete forced cold SW precache; mobile blew 30s before help-btn click.
+- Fix: clear SW+caches once before seedDemo; after seedDemo unregister+register `./sw.js` without wiping caches; dismissSplash after offline reload; app registers `./sw.js` (no query).
+- Local: 4 passed (`network down|offline reload`, workers=1).

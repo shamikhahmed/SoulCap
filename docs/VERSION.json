@@ -1,8 +1,8 @@
 {
   "name": "SoulCap",
-  "version": "8.2.0",
+  "version": "8.2.1",
   "swCache": "soulcap-v823",
   "schema": 13,
   "released": "2026-09-15",
-  "note": "SW bump for helpFab locale + SW register-after-load fix (C-34); app still 8.2.0"
+  "note": "C-34: register SW as ./sw.js (no query); offline e2e keep cache on re-register"
 }

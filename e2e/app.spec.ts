@@ -2478,11 +2478,9 @@ test.describe('Offline', () => {
     await seedDemo(page);
     await page.evaluate(async () => {
       if (!('serviceWorker' in navigator)) throw new Error('no serviceWorker');
-      // Drop app's sw.js?v=… registration so one controller owns ./sw.js.
+      // Unregister only (keep Cache Storage) so ./sw.js activates without a cold precache.
       const regs = await navigator.serviceWorker.getRegistrations();
       await Promise.all(regs.map((r) => r.unregister()));
-      const keys = await caches.keys();
-      await Promise.all(keys.map((k) => caches.delete(k)));
       await navigator.serviceWorker.register('./sw.js');
       await navigator.serviceWorker.ready;
     });
@@ -2495,6 +2493,8 @@ test.describe('Offline', () => {
 
     await context.setOffline(true);
     await page.reload();
+    await page.waitForFunction(() => !!(window as any).__soulcap && (window as any).__APP_READY__ === true);
+    await dismissSplash(page);
 
     await expect(page.locator('#view-now')).toBeVisible();
     await expect(page.locator('.view.on .help-btn')).toBeVisible();
@@ -2749,10 +2749,9 @@ test.describe('Phase J — final QA stress', () => {
       await seedDemo(page);
       await page.evaluate(async () => {
         if (!('serviceWorker' in navigator)) throw new Error('no serviceWorker');
+        // Unregister only (keep Cache Storage) so ./sw.js activates without a cold precache.
         const regs = await navigator.serviceWorker.getRegistrations();
         await Promise.all(regs.map((r) => r.unregister()));
-        const keys = await caches.keys();
-        await Promise.all(keys.map((k) => caches.delete(k)));
         await navigator.serviceWorker.register('./sw.js');
         await navigator.serviceWorker.ready;
       });
@@ -2764,7 +2763,7 @@ test.describe('Phase J — final QA stress', () => {
       await page.waitForFunction(() => navigator.serviceWorker.controller !== null, null, { timeout: 20000 });
       await context.setOffline(true);
       await page.reload();
-      await page.waitForFunction(() => !!(window as any).__soulcap);
+      await page.waitForFunction(() => !!(window as any).__soulcap && (window as any).__APP_READY__ === true);
       await dismissSplash(page);
       await page.locator('.view.on .help-btn').click();
       await expect(page.locator('#panic.on')).toBeVisible();
