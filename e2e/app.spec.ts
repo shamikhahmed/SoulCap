@@ -909,6 +909,7 @@ test.describe('v1.1 adaptive drip, themes, locale', () => {
     await page.getByRole('button', { name: 'Ocean', exact: true }).click();
     expect(await page.evaluate(() => document.documentElement.getAttribute('data-theme'))).toBe('ocean');
     await page.getByRole('button', { name: 'Roman Urdu (preview)' }).click();
+    await page.waitForFunction(() => document.documentElement.getAttribute('lang') === 'rui');
     const locale = await page.evaluate(() => ({
       lang: document.documentElement.getAttribute('lang'),
       dir: document.documentElement.getAttribute('dir'),

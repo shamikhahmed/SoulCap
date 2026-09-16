@@ -108,3 +108,13 @@ Do **not** claim fleet Tier 1 complete: manual VoiceOver evidence still ⛔ BLOC
 - `npm run gallery` mobile+desktop (workers=1)
 - Hardened splash race + under-18 selector
 - Merged `finish/soulcap-gallery` → main
+
+## 2026-09-16 — C-34 e2e red on main
+**Status:** ✅ verified local (4/4 focused e2e)
+**Result:** helpFab locale + scroll settle green; SW soulcap-v822; LH untouched.
+**Problem:** CI on main failed mood-themes (~906) + theme-scroll (~1231).
+**Root cause:**
+1. Incomplete `#fab`→`#helpFab` rename left `applyLocale` / e2e on `#fab` (null TypeError; Roman Urdu never updated help aria-label).
+2. Theme-scroll setup raced `selectTab` View Transition `scrollTo(0,0)`.
+**Fix:** `helpFab` in applyLocale + e2e; `clickTab` + height/scroll waits; SW `soulcap-v822`.
+**LH perf 30:** noted only — no fake LH; Q-5 split deferred (separate commit).
