@@ -130,3 +130,9 @@ Do **not** claim fleet Tier 1 complete: manual VoiceOver evidence still ⛔ BLOC
 **Root cause:** inactive tabs used `opacity:.52` on `--ink-2` (computed ~#a9a6b2 @ 2.33:1 light); dark desktop selected tab used accent on accent-soft (~4.11:1).
 **Fix:** solid `--ink-3` (dark token `#A39DB8`); selected desktop tab `color:var(--ink)` on `--accent-soft`.
 **Verify:** local axe on `docs/` serve (SW blocked).
+
+## C-35 a11y color-contrast — 2026-09-16
+
+- **Changed:** Tab inactive opacity removed (solid `--ink-3`); desktop selected tab uses `--ink` on `--accent-soft`; dark `--ink-3` bumped to `#A39DB8`.
+- **Root cause:** `#tabs button { opacity:.52 }` collapsed ink-2 below AA; desktop selected accent-on-accent-soft was 4.11:1.
+- **Verify:** axe primary route light+dark → 0 serious/critical. Evidence: `qa/finish-loop/axe/home-{light,dark}.json`.
