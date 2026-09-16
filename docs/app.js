@@ -6434,7 +6434,7 @@
       }
     });
   }
-  var APP_VERSION = '8.2.0';
+  var APP_VERSION = '8.2.1';
   var settingsQuery = '';
   function settingsGroup(v, title, kids) {
     v.appendChild(el('p', { class: 'eyebrow settings-eyebrow', text: title }));
@@ -7013,7 +7013,7 @@
     /* Always register (do not wait for "load") — async catalog boot often finishes after load. */
     function registerSW() {
       if (!('serviceWorker' in navigator)) return;
-      navigator.serviceWorker.register('sw.js?v=8.2.0-v823').catch(function () {});
+      navigator.serviceWorker.register('./sw.js').catch(function () {});
     }
     registerSW();
   }
