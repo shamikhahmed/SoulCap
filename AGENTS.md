@@ -45,8 +45,11 @@ Success = the user needs the app **less** over time. Never optimise for time-in-
 - Never claim it is therapy, treats, cures, diagnoses, or replaces professional care.
 - Never render a technique as clinically reviewed — none are yet. The Techniques screen shows a
   "not yet clinically reviewed" banner; keep it until a licensed clinician signs off.
-- **No crisis phone numbers, no country/region selection** (owner decision). The help screen gives
-  gentle, number-free, country-agnostic guidance only. Do not re-add specific lines.
+- **Crisis resources follow owner decision D-05** (`docs/audit-2026-09-14/DECISIONS.md` in the Cap-Apps
+  workspace, 2026-09-14; supersedes the earlier number-free rule). The Help screen is region-aware
+  (Pakistan · UK · US · UAE · Somewhere else) and shows only numbers verified from official sources,
+  recorded with URL and date in `SAFETY.md`; unverifiable lines are omitted. Emergency guidance always
+  remains. Do not remove verified numbers, do not add unverified ones, never auto-dial.
 - Crisis/help flows are **hard-coded text**, never generated, never model-driven.
 - The app **never contacts anyone**. "Message someone" opens the user's own messaging app (`sms:`).
 - Trauma-aware: if the user records trauma in "Your story", potentially-activating techniques

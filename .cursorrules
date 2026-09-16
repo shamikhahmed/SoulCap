@@ -14,8 +14,9 @@ NOT an AI therapist, mood tracker, or crisis service. Success = the user needs t
   only under `docs/vendor/` (GSAP UMD + hand-written WebGL) — never Three.js, never a CDN.
 - Never claim it is therapy / treats / diagnoses / replaces care. Never mark a technique as
   clinically reviewed (none are).
-- Never add crisis phone numbers or a country/region picker (removed by owner). Help is
-  gentle, number-free, country-agnostic guidance only.
+- Never add unverified crisis numbers or remove verified ones. Help follows owner decision D-05
+  (Cap-Apps `docs/audit-2026-09-14/DECISIONS.md`): region-aware, officially verified numbers recorded
+  in `SAFETY.md`, emergency guidance always present, no auto-dial.
 - Never add streaks, points, badges, guilt notifications, red counts, infinite scroll, fake
   typing indicators, or "I care about you" copy.
 - Never contact anyone on the user's behalf — "Message someone" opens the user's own `sms:`.
