@@ -30,19 +30,29 @@ if (RUN) {
             test.setTimeout(90_000);
             try {
               await page.setViewportSize({ width: vp.width, height: vp.height });
-              await page.goto(route.path);
-              await waitForAppReady(page, { timeout: 45000 });
+              await page.goto(route.path, { waitUntil: 'domcontentloaded' });
+              await waitForAppReady(page, { timeout: 30000 });
               await applyFinishTheme(page, theme);
-              /* SoulCap splash sits fixed over the tab bar until dismissed. */
+              /* Match e2e dismissSplash — splash is position:fixed over #tabs until gone. */
               await page.evaluate(() => {
-                try { localStorage.setItem('soulcap_theme', document.documentElement.dataset.theme || 'light'); } catch (e) {}
+                try {
+                  localStorage.setItem('soulcap_theme', document.documentElement.dataset.theme || 'light');
+                } catch (e) {}
                 const s = document.getElementById('splash');
                 if (!s) return;
                 s.classList.add('gone');
                 s.setAttribute('hidden', '');
                 s.style.visibility = 'hidden';
+                s.style.opacity = '0';
                 s.style.pointerEvents = 'none';
               });
+              await page.waitForFunction(() => {
+                const s = document.getElementById('splash');
+                if (!s) return true;
+                if (s.hasAttribute('hidden')) return true;
+                const cs = getComputedStyle(s);
+                return cs.visibility === 'hidden' || cs.pointerEvents === 'none' || cs.opacity === '0';
+              }, null, { timeout: 12000 });
               await page.locator(route.primary).waitFor({ state: 'visible', timeout: 10000 });
               await assertNoHorizontalOverflow(page);
               await assertNotObscured(page, route.primary);

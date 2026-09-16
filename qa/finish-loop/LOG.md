@@ -152,3 +152,15 @@ Do **not** claim fleet Tier 1 complete: manual VoiceOver evidence still ⛔ BLOC
 - **Verify:** axe primary route light+dark → 0 serious/critical. Evidence: `qa/finish-loop/axe/home-{light,dark}.json`.
 
 **After (local axe):** 393-light **0** · 1440-dark **0** serious/critical.
+
+## 2026-09-16 — C-31 APP_READY / data.js race fix
+**Status:** ✅ FULL matrix 0 failures / 30 shots
+**Root cause:** If `data.js` failed/truncated, `SKILLS is not defined` threw while building `window.__soulcap`, so `boot()` never registered and `__APP_READY__` never flipped. Catalog fetches could also hang indefinitely on a flaky static server.
+**Fix:** Stub content globals before/after data.js; `markAppReady()` before render; catalog 8s timeout; boot try/finally; hardened splash dismiss + `waitForAppReady` retry; SW `soulcap-v824`.
+**Evidence:** `FINISH_MATRIX_FULL=1` → `matrix-results.json` failures=[] shotCount=30 expectedShots=30.
+
+## 2026-09-16 — C-31 APP_READY / data.js race fix
+**Status:** ✅ FULL matrix 0 failures / 30 shots
+**Root cause:** If `data.js` failed/truncated, `SKILLS is not defined` threw while building `window.__soulcap`, so `boot()` never registered and `__APP_READY__` never flipped. Catalog fetches could also hang indefinitely on a flaky static server.
+**Fix:** Stub content globals before/after data.js; `markAppReady()` before render; catalog 8s timeout; boot try/finally; hardened splash dismiss + `waitForAppReady` retry; SW `soulcap-v824`.
+**Evidence:** `FINISH_MATRIX_FULL=1` → `matrix-results.json` failures=[] shotCount=30 expectedShots=30.

@@ -19,8 +19,15 @@ async function dismissSplash(page: Page) {
 }
 
 async function seedDemo(page: Page) {
-  await page.goto('/?demo=1');
-  await page.waitForFunction(() => !!(window as any).__soulcap && (window as any).__APP_READY__ === true);
+  await page.goto('/?demo=1', { waitUntil: 'domcontentloaded' });
+  await page.waitForFunction(
+    () =>
+      !!(window as any).__soulcap &&
+      ((window as any).__APP_READY__ === true ||
+        document.documentElement.dataset.appReady === 'true'),
+    null,
+    { timeout: 30000 },
+  );
   await dismissSplash(page);
 }
 
