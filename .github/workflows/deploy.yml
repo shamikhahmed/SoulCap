@@ -32,9 +32,6 @@ jobs:
         run: npx playwright install --with-deps chromium
       - name: Verify
         run: npm run verify
-      - name: Finish matrix (C-21 smoke)
-        continue-on-error: true
-        run: npm run test:matrix
       - name: Upload report on failure
         if: failure()
         uses: actions/upload-artifact@v4
@@ -43,8 +40,37 @@ jobs:
           path: playwright-report/
           retention-days: 7
 
+  # C-31: FINISH_MATRIX=1 required — do not continue-on-error.
+  finish-matrix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install
+        run: npm ci
+      - name: Install Playwright browser
+        run: npx playwright install --with-deps chromium
+      - name: Finish matrix
+        env:
+          FINISH_MATRIX: "1"
+        run: npm run test:matrix
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: finish-matrix-shots
+          path: qa/finish-loop/shots/
+          retention-days: 14
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: matrix-results
+          path: qa/finish-loop/matrix-results.json
+          retention-days: 14
+
   build:
-    needs: test
+    needs: [test, finish-matrix]
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     steps:
