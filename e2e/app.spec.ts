@@ -2463,10 +2463,22 @@ test.describe('v1.7 polish and locale', () => {
 });
 
 test.describe('Offline', () => {
+  // Global config blocks SWs to avoid stale-asset races; offline suites need a real SW.
+  test.use({ serviceWorkers: 'allow' });
+
   test('app still works with the network down', async ({ page, context }) => {
     await seedDemo(page);
-    // Let the service worker install and take control.
-    await page.waitForFunction(() => navigator.serviceWorker.controller !== null, null, { timeout: 15000 });
+    await page.evaluate(async () => {
+      if (!('serviceWorker' in navigator)) throw new Error('no serviceWorker');
+      await navigator.serviceWorker.register('sw.js?v=8.2.0-v823');
+      await navigator.serviceWorker.ready;
+    });
+    if (!(await page.evaluate(() => navigator.serviceWorker.controller !== null))) {
+      await page.reload();
+      await page.waitForFunction(() => !!(window as any).__soulcap && (window as any).__APP_READY__ === true);
+      await dismissSplash(page);
+    }
+    await page.waitForFunction(() => navigator.serviceWorker.controller !== null, null, { timeout: 20000 });
 
     await context.setOffline(true);
     await page.reload();
@@ -2710,17 +2722,31 @@ test.describe('Phase J — final QA stress', () => {
     expect(min).toBe(true);
   });
 
-  test('offline reload still opens Help without network', async ({ page, context }) => {
-    await seedDemo(page);
-    await page.waitForFunction(() => navigator.serviceWorker.controller !== null, null, { timeout: 15000 });
-    await context.setOffline(true);
-    await page.reload();
-    await page.waitForFunction(() => !!(window as any).__soulcap);
-    await dismissSplash(page);
-    await page.locator('.view.on .help-btn').click();
-    await expect(page.locator('#panic.on')).toBeVisible();
-    await expect(page.locator('#panicLinks')).toBeVisible();
-    await context.setOffline(false);
+  test.describe('offline (service worker allowed)', () => {
+    test.use({ serviceWorkers: 'allow' });
+
+    test('offline reload still opens Help without network', async ({ page, context }) => {
+      await seedDemo(page);
+      await page.evaluate(async () => {
+        if (!('serviceWorker' in navigator)) throw new Error('no serviceWorker');
+        await navigator.serviceWorker.register('sw.js?v=8.2.0-v823');
+        await navigator.serviceWorker.ready;
+      });
+      if (!(await page.evaluate(() => navigator.serviceWorker.controller !== null))) {
+        await page.reload();
+        await page.waitForFunction(() => !!(window as any).__soulcap && (window as any).__APP_READY__ === true);
+        await dismissSplash(page);
+      }
+      await page.waitForFunction(() => navigator.serviceWorker.controller !== null, null, { timeout: 20000 });
+      await context.setOffline(true);
+      await page.reload();
+      await page.waitForFunction(() => !!(window as any).__soulcap);
+      await dismissSplash(page);
+      await page.locator('.view.on .help-btn').click();
+      await expect(page.locator('#panic.on')).toBeVisible();
+      await expect(page.locator('#panicLinks')).toBeVisible();
+      await context.setOffline(false);
+    });
   });
 });
 

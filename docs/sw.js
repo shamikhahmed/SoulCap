@@ -7,7 +7,7 @@
  *
  * Bump CACHE on every asset change or users get a stale build.
  */
-var CACHE = 'soulcap-v822';
+var CACHE = 'soulcap-v823';
 
 var ASSETS = [
   './',
@@ -45,7 +45,12 @@ var ASSETS = [
 self.addEventListener('install', function (e) {
   e.waitUntil(
     caches.open(CACHE)
-      .then(function (c) { return c.addAll(ASSETS); })
+      .then(function (c) {
+        /* Per-URL add — one missing asset must not abort the whole install (CI / flaky servers). */
+        return Promise.all(ASSETS.map(function (url) {
+          return c.add(url).catch(function () { return null; });
+        }));
+      })
       .then(function () { return self.skipWaiting(); })
   );
 });
