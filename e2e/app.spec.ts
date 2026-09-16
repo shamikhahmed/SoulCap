@@ -909,10 +909,11 @@ test.describe('v1.1 adaptive drip, themes, locale', () => {
     await page.getByRole('button', { name: 'Ocean', exact: true }).click();
     expect(await page.evaluate(() => document.documentElement.getAttribute('data-theme'))).toBe('ocean');
     await page.getByRole('button', { name: 'Roman Urdu (preview)' }).click();
+    await page.waitForFunction(() => document.documentElement.getAttribute('lang') === 'rui');
     const locale = await page.evaluate(() => ({
       lang: document.documentElement.getAttribute('lang'),
       dir: document.documentElement.getAttribute('dir'),
-      fab: document.getElementById('fab')!.getAttribute('aria-label'),
+      fab: document.getElementById('helpFab')!.getAttribute('aria-label'),
       stored: (window as any).__soulcap.getState().locale,
       mirror: localStorage.getItem('soulcap_locale'),
       theme: localStorage.getItem('soulcap_theme')
@@ -1230,12 +1231,18 @@ test.describe('Journal', () => {
 
   test('changing theme does not scroll the page to the top', async ({ page }) => {
     await seedDemo(page);
-    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="me"]') as HTMLElement).click());
+    /* clickTab waits for #view-me.on — raw tab click races View Transitions scrollTo(0,0). */
+    await clickTab(page, 'me');
     await page.evaluate(() => {
       var v = document.querySelector('#view-me');
       if (v) v.style.minHeight = '2200px';
-      window.scrollTo(0, 720);
     });
+    await page.waitForFunction(() => {
+      var v = document.querySelector('#view-me');
+      return !!(v && v.getBoundingClientRect().height >= 2000);
+    });
+    await page.evaluate(() => window.scrollTo(0, 720));
+    await page.waitForFunction(() => window.scrollY > 300);
     const before = await page.evaluate(() => window.scrollY);
     expect(before).toBeGreaterThan(300);
     /* DOM click — Playwright auto-scroll-into-view on the header gear would jump to top. */
@@ -2831,7 +2838,7 @@ test.describe('Phase 1–4 live invariants (Fable QA)', () => {
     await seedDemo(page);
     await clickTab(page, 'calm');
     const overlap = await page.evaluate(() => {
-      const fab = document.getElementById('fab');
+      const fab = document.getElementById('helpFab');
       const tabs = document.getElementById('tabs');
       if (!fab || !tabs) return { ok: true, reason: 'missing' };
       if (!fab.classList.contains('on')) return { ok: true, reason: 'fab-off' };

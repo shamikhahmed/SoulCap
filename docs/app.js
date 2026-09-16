@@ -1193,7 +1193,7 @@
       var tab = span.parentNode.getAttribute('data-tab');
       if (STRINGS.en.tabs[tab]) span.textContent = t('tabs.' + tab);
     });
-    var fab = document.getElementById('fab');
+    var fab = document.getElementById('helpFab');
     if (fab) {
       fab.setAttribute('aria-label', t('helpNow'));
       var fabLabel = document.getElementById('fabLabel');
@@ -7010,7 +7010,7 @@
     setTimeout(dismissSplash, state.onboarded ? 1600 : 2600);
     splash.addEventListener('click', dismissSplash);
 
-    if ('serviceWorker' in navigator) window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js?v=8.2.0-v821').catch(function () {}); });
+    if ('serviceWorker' in navigator) window.addEventListener('load', function () { navigator.serviceWorker.register('sw.js?v=8.2.0-v822').catch(function () {}); });
   }
 
   window.__soulcap = {

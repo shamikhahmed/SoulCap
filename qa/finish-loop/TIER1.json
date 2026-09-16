@@ -1,7 +1,7 @@
 {
   "app": "soulcap",
   "version": "8.2.0",
-  "swCache": "soulcap-v821",
+  "swCache": "soulcap-v822",
   "generatedAt": "2026-09-15T10:24:10.759Z",
   "status": "PASS",
   "pass": [
@@ -11,7 +11,7 @@
     },
     {
       "id": "version:sw-cache-match",
-      "detail": "docs/sw.js contains soulcap-v821"
+      "detail": "docs/sw.js contains soulcap-v822"
     },
     {
       "id": "records:BASELINE.md",
@@ -35,7 +35,7 @@
     },
     {
       "id": "records:APP-REPORT-size",
-      "detail": "3230 bytes (need ≥1024)"
+      "detail": "3230 bytes (need \u22651024)"
     },
     {
       "id": "suppressions",
@@ -47,7 +47,7 @@
     },
     {
       "id": "ci:main",
-      "detail": "release: SoulCap v8.2.0 Tier 1 → success https://github.com/shamikhahmed/SoulCap/actions/runs/34883661430"
+      "detail": "release: SoulCap v8.2.0 Tier 1 \u2192 success https://github.com/shamikhahmed/SoulCap/actions/runs/34883661430"
     },
     {
       "id": "tag",

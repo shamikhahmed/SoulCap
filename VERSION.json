@@ -1,8 +1,8 @@
 {
   "name": "SoulCap",
   "version": "8.2.0",
-  "swCache": "soulcap-v821",
+  "swCache": "soulcap-v822",
   "schema": 13,
   "released": "2026-09-15",
-  "note": "SW bump for brand.css/brand-palette precache after Tier1 token split; app still 8.2.0"
+  "note": "SW bump for helpFab locale applyLocale fix (C-34); app still 8.2.0"
 }
