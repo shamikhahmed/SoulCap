@@ -125,6 +125,7 @@ Do **not** claim fleet Tier 1 complete: manual VoiceOver evidence still ⛔ BLOC
 - Root cause: playwright.config `serviceWorkers: block` prevented controller; offline suites now `test.use({ serviceWorkers: allow })`.
 - SW register immediate + cache soulcap-v823.
 
+<<<<<<< HEAD
 ## 2026-09-16 — C-34 offline SW cache clear
 - Offline suites: unregister SW + delete caches before seedDemo; register `./sw.js` (no query).
 - Avoids stale shell blocking `__APP_READY__` when `serviceWorkers: allow`.
@@ -133,3 +134,10 @@ Do **not** claim fleet Tier 1 complete: manual VoiceOver evidence still ⛔ BLOC
 - Root cause: second caches.delete forced cold SW precache; mobile blew 30s before help-btn click.
 - Fix: clear SW+caches once before seedDemo; after seedDemo unregister+register `./sw.js` without wiping caches; dismissSplash after offline reload; app registers `./sw.js` (no query).
 - Local: 4 passed (`network down|offline reload`, workers=1).
+=======
+## 2026-09-16 — C-35 axe serious/critical (finish/soulcap-a11y)
+**Baseline (live):** 393-light 4 · 1440-dark 5 (all color-contrast on `#tabs` labels)
+**Root cause:** inactive tabs used `opacity:.52` on `--ink-2` (computed ~#a9a6b2 @ 2.33:1 light); dark desktop selected tab used accent on accent-soft (~4.11:1).
+**Fix:** solid `--ink-3` (dark token `#A39DB8`); selected desktop tab `color:var(--ink)` on `--accent-soft`.
+**Verify:** local axe on `docs/` serve (SW blocked).
+>>>>>>> 0693d1b (fix(a11y): C-35 tab label color contrast AA)
