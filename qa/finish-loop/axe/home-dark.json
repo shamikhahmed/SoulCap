@@ -1,0 +1,14 @@
+{
+  "url": "http://127.0.0.1:8788/?demo=1",
+  "theme": "dark",
+  "viewport": {
+    "width": 1440,
+    "height": 900
+  },
+  "timestamp": "2026-09-16T10:35:32.538Z",
+  "violations": [],
+  "passes": 24,
+  "incomplete": 1,
+  "seriousCriticalNodeCount": 0,
+  "seriousCriticalIds": []
+}
