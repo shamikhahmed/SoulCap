@@ -119,6 +119,7 @@ Do **not** claim fleet Tier 1 complete: manual VoiceOver evidence still ⛔ BLOC
 4. Finish-matrix asserted `#tabs` while splash still covered it.
 **Fix:** helpFab + scroll settle; register SW when `readyState==='complete'`; dismiss splash in finish-matrix; SW `soulcap-v823`.
 **LH perf 30:** noted only — no fake LH; Q-5 deferred.
+**CI:** main green https://github.com/shamikhahmed/SoulCap/actions/runs/35083274385 (SHA ac0da66).
 
 ## 2026-09-16 — C-34 offline SW
 - Root cause: playwright.config `serviceWorkers: block` prevented controller; offline suites now `test.use({ serviceWorkers: allow })`.
