@@ -2,7 +2,7 @@
   "app": "soulcap",
   "version": "8.2.1",
   "swCache": "soulcap-v824",
-  "generatedAt": "2026-09-16T10:42:45.437Z",
+  "generatedAt": "2026-09-16T10:43:53.555Z",
   "status": "FAIL",
   "pass": [
     {
@@ -113,19 +113,23 @@
     },
     {
       "id": "matrix:freshness",
-      "detail": "matrix 2026-09-16T09:59:56.273Z before last UI commit 2026-09-16T15:41:49+05:00"
+      "detail": "matrix 2026-09-16T09:59:56.273Z before last UI commit 2026-09-16T15:43:05+05:00"
+    },
+    {
+      "id": "lighthouse:home-demo-desktop.json",
+      "detail": "fetchTime 2026-09-16T10:39:05.238Z before last UI commit 2026-09-16T15:43:05+05:00"
     },
     {
       "id": "lighthouse:home-demo-mobile.json",
-      "detail": "fetchTime 2026-09-16T10:39:33.954Z before last UI commit 2026-09-16T15:41:49+05:00"
+      "detail": "fetchTime 2026-09-16T10:41:12.602Z before last UI commit 2026-09-16T15:43:05+05:00"
     },
     {
       "id": "lighthouse:passing",
-      "detail": "0/1 files meet thresholds"
+      "detail": "0/2 files meet thresholds"
     },
     {
       "id": "gallery:freshness",
-      "detail": "gallery 2026-09-15T18:26:23+05:00 before last UI commit 2026-09-16T15:41:49+05:00"
+      "detail": "gallery 2026-09-15T18:26:23+05:00 before last UI commit 2026-09-16T15:43:05+05:00"
     }
   ],
   "warn": [

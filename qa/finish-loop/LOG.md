@@ -144,3 +144,8 @@ Do **not** claim fleet Tier 1 complete: manual VoiceOver evidence still ⛔ BLOC
 - Kill-list: measured 0 hex/sub-11/important/outline (unchanged).
 **Verify:** axe serious 0 on home×light/dark×393/1440; `node --check` app.js; `npm run tier1` (expect remaining fails — honesty, no PASS claim).
 **LH note:** idle catalog warm cut TBT sharply in local runs (≈0–13 ms vs Review 3 6341 ms) but mobile LCP/perf still under threshold (recorded fail, not claimed).
+
+## 2026-09-16 — real Lighthouse (live Pages)
+- home-demo-desktop: P67 A96 BP100 SEO100 (fetch 2026-09-16T10:39Z)
+- home-demo-mobile: P57 A96 BP100 SEO100 (fetch 2026-09-16T10:41Z)
+- Not claiming lighthouse:passing until thresholds met.
