@@ -7,7 +7,7 @@ export default defineConfig({
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? [['html', { open: 'never' }], ['list']] : 'list',
   use: {
-    baseURL: 'http://localhost:8788',
+    baseURL: 'http://127.0.0.1:8788',
     trace: 'on-first-retry',
     // Avoid stale SW races when shell assets change mid-loop (brand.css etc.)
     serviceWorkers: 'block'
@@ -22,8 +22,11 @@ export default defineConfig({
     { name: 'desktop', use: { ...devices['Desktop Chrome'] } }
   ],
   webServer: {
-    command: 'python3 -m http.server 8788 --directory docs',
-    url: 'http://localhost:8788',
+    // ThreadingHTTPServer: plain http.server serializes requests and can stall
+    // soulEnsureCatalogs (many parallel GETs) so __APP_READY__ never fires.
+    command:
+      'python3 -c "from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler as H; import os; os.chdir(\'docs\'); ThreadingHTTPServer((\'127.0.0.1\', 8788), H).serve_forever()"',
+    url: 'http://127.0.0.1:8788',
     reuseExistingServer: !process.env.CI,
     timeout: 30000
   }
