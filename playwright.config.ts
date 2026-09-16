@@ -7,7 +7,9 @@ export default defineConfig({
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? [['html', { open: 'never' }], ['list']] : 'list',
   use: {
-    baseURL: 'http://localhost:8788',
+    // 127.0.0.1 matches ThreadingHTTPServer bind (avoids ::1 localhost flake).
+    // personas.spec allows both localhost and 127.0.0.1.
+    baseURL: 'http://127.0.0.1:8788',
     trace: 'on-first-retry',
     // Avoid stale SW races when shell assets change mid-loop (brand.css etc.)
     serviceWorkers: 'block'
@@ -22,8 +24,9 @@ export default defineConfig({
     { name: 'desktop', use: { ...devices['Desktop Chrome'] } }
   ],
   webServer: {
-    command: 'python3 -m http.server 8788 --directory docs',
-    url: 'http://localhost:8788',
+    // Node static: Python http.server resets concurrent GETs (app.js never loads).
+    command: 'node scripts/serve-docs.mjs',
+    url: 'http://127.0.0.1:8788',
     reuseExistingServer: !process.env.CI,
     timeout: 30000
   }

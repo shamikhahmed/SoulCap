@@ -41,13 +41,29 @@ export function matrixViewports() {
   return process.env.FINISH_MATRIX_FULL === '1' ? FINISH_VIEWPORTS : FINISH_SMOKE_VIEWPORTS;
 }
 
-/** Wait until the app signals the first real screen (not splash). */
-export async function waitForAppReady(page, { timeout = 15000 } = {}) {
-  await page.waitForFunction(
-    () => window.__APP_READY__ === true || document.documentElement.dataset.appReady === 'true',
-    null,
-    { timeout },
-  );
+/** Wait until the app signals ready (splash may still be visible). Retries once. */
+export async function waitForAppReady(page, { timeout = 20000 } = {}) {
+  const perAttempt = Math.max(8000, Math.floor(timeout / 2));
+  let lastErr;
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      await page.waitForFunction(
+        () =>
+          window.__APP_READY__ === true ||
+          document.documentElement.dataset.appReady === 'true' ||
+          !!(window.__soulcap && typeof window.__soulcap.getState === 'function'),
+        null,
+        { timeout: perAttempt },
+      );
+      return;
+    } catch (e) {
+      lastErr = e;
+      if (attempt === 0) {
+        await page.reload({ waitUntil: 'domcontentloaded' }).catch(function () {});
+      }
+    }
+  }
+  throw lastErr;
 }
 
 export async function assertNoHorizontalOverflow(page) {

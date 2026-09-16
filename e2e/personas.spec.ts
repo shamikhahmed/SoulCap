@@ -110,7 +110,7 @@ test.describe('Synthetic user journeys', () => {
   test('relationship-stressed user can add someone without exposing data', async ({ page }) => {
     const external: string[] = [];
     page.on('request', (request) => {
-      if (!request.url().startsWith('http://localhost:8788')) external.push(request.url());
+      if (!/^https?:\/\/(localhost|127\.0\.0\.1):8788\b/.test(request.url())) external.push(request.url());
     });
     await seedDemo(page);
     await selectTab(page, 'map');

@@ -157,3 +157,13 @@ Do **not** claim fleet Tier 1 complete: manual VoiceOver evidence still ⛔ BLOC
 
 ## 2026-09-16 — matrix harden
 - Theme after boot; splash hide; primary wait; mobile-only workers=1; refreshed matrix-results.json.
+
+## 2026-09-16 — Step R matrix evidence (finish/soulcap-stepR)
+
+### §15 mini-plan
+- Problem: matrix-results had failures / incomplete shots; Python http.server reset concurrent GETs so app.js never loaded (__APP_READY__ never set).
+- Root cause: SimpleHTTPRequestHandler under Chromium asset storms → ERR_CONNECTION_RESET on docs/app.js.
+- Files: scripts/serve-docs.mjs, playwright.config.ts webServer, e2e/helpers waitForAppReady, matrix-results.json.
+- Change: Node static server for Playwright; balanced ready retries; FINISH_MATRIX=1 → 6/6 shots, 0 failures.
+- C-57: docs/VERSION.json already present (Pages path=docs). C-34 SW untouched.
+- Verification: npm run tier1 — honest FAIL list (no Tier 1 claim).

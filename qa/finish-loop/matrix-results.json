@@ -1,10 +1,8 @@
 {
-  "failures": [
-    "home-demo/iphone-16/light: page.waitForFunction: Timeout 45000ms exceeded."
-  ],
-  "shotCount": 2,
+  "failures": [],
+  "shotCount": 6,
   "expectedShots": 6,
-  "generatedAt": "2026-09-16T10:49:18.714Z",
+  "generatedAt": "2026-09-16T11:15:56.265Z",
   "routes": [
     "home-demo"
   ],
