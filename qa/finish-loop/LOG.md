@@ -124,3 +124,9 @@ Do **not** claim fleet Tier 1 complete: manual VoiceOver evidence still ⛔ BLOC
 ## 2026-09-16 — C-34 offline SW
 - Root cause: playwright.config `serviceWorkers: block` prevented controller; offline suites now `test.use({ serviceWorkers: allow })`.
 - SW register immediate + cache soulcap-v823.
+
+## 2026-09-16 — C-35 axe serious/critical (finish/soulcap-a11y)
+**Baseline (live):** 393-light 4 · 1440-dark 5 (all color-contrast on `#tabs` labels)
+**Root cause:** inactive tabs used `opacity:.52` on `--ink-2` (computed ~#a9a6b2 @ 2.33:1 light); dark desktop selected tab used accent on accent-soft (~4.11:1).
+**Fix:** solid `--ink-3` (dark token `#A39DB8`); selected desktop tab `color:var(--ink)` on `--accent-soft`.
+**Verify:** local axe on `docs/` serve (SW blocked).
