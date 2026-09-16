@@ -129,6 +129,12 @@ Do **not** claim fleet Tier 1 complete: manual VoiceOver evidence still ⛔ BLOC
 - Offline suites: unregister SW + delete caches before seedDemo; register `./sw.js` (no query).
 - Avoids stale shell blocking `__APP_READY__` when `serviceWorkers: allow`.
 
+## 2026-09-16 — C-31 matrix evidence
+**Status:** ✅ smoke evidence committed
+**Changed:** `FINISH_MATRIX=1` smoke (3 vp × 2 themes) → `qa/finish-loop/matrix-results.json` (0 failures, 6 shots); shots under `qa/finish-loop/shots/` (gitignored, CI artifact). Spec dismisses splash; `test:matrix` pins `--project=mobile --workers=1`; playwright webServer uses ThreadingHTTPServer.
+**FULL:** `FINISH_MATRIX_FULL=1` flaky locally under port contention (tiny-se1 APP_READY); CI job remains smoke (`FINISH_MATRIX=1`) per FINISH-MATRIX-CI.md.
+**Branch:** `finish/soulcap-matrix` (c34 left alone).
+
 ## 2026-09-16 — C-34 offline e2e harden
 - Root cause: second caches.delete forced cold SW precache; mobile blew 30s before help-btn click.
 - Fix: clear SW+caches once before seedDemo; after seedDemo unregister+register `./sw.js` without wiping caches; dismissSplash after offline reload; app registers `./sw.js` (no query).

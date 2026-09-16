@@ -22,18 +22,20 @@ if (RUN) {
     test.describe.configure({ mode: 'serial' });
     const failures = [];
 
+
     for (const route of ROUTES) {
       for (const vp of matrixViewports()) {
         for (const theme of FINISH_THEMES) {
           test(`${route.id} · ${vp.name} · ${theme}`, async ({ page }) => {
-            test.setTimeout(60_000);
+            test.setTimeout(90_000);
             try {
               await page.setViewportSize({ width: vp.width, height: vp.height });
-              await applyFinishTheme(page, theme);
               await page.goto(route.path);
-              await waitForAppReady(page);
+              await waitForAppReady(page, { timeout: 45000 });
+              await applyFinishTheme(page, theme);
               /* SoulCap splash sits fixed over the tab bar until dismissed. */
               await page.evaluate(() => {
+                try { localStorage.setItem('soulcap_theme', document.documentElement.dataset.theme || 'light'); } catch (e) {}
                 const s = document.getElementById('splash');
                 if (!s) return;
                 s.classList.add('gone');
@@ -41,6 +43,7 @@ if (RUN) {
                 s.style.visibility = 'hidden';
                 s.style.pointerEvents = 'none';
               });
+              await page.locator(route.primary).waitFor({ state: 'visible', timeout: 10000 });
               await assertNoHorizontalOverflow(page);
               await assertNotObscured(page, route.primary);
               const dir = path.join(SHOTS, route.id, theme);
