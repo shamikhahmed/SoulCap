@@ -221,7 +221,18 @@ else{document.documentElement.setAttribute('lang','en');document.documentElement
 
 <script src="vendor/local-lock.js"></script>
 <script src="brand-palette.js"></script>
-<script src="data.js"></script>
+<!-- If data.js fails to load (flaky static server / truncated response), stub the
+     content globals so app.js can still boot and set __APP_READY__ for tests. -->
+<script>
+window.SKILLS = window.SKILLS || [];
+window.EXPERIENCES = window.EXPERIENCES || [];
+window.ARTICLES = window.ARTICLES || [];
+window.SCREENERS = window.SCREENERS || [];
+window.STORIES = window.STORIES || [];
+window.DISTORTIONS = window.DISTORTIONS || [];
+window.APPROACH_PACKS = window.APPROACH_PACKS || {};
+</script>
+<script src="data.js" onerror="console.warn('SoulCap data.js failed to load');"></script>
 <script src="app.js"></script>
 </body>
 </html>

@@ -43,17 +43,18 @@ export function matrixViewports() {
 
 /** Wait until the app signals ready (splash may still be visible). Retries once. */
 export async function waitForAppReady(page, { timeout = 20000 } = {}) {
-  const perAttempt = Math.max(8000, Math.floor(timeout / 2));
+  const deadline = Date.now() + timeout;
   let lastErr;
   for (let attempt = 0; attempt < 2; attempt++) {
+    const remaining = Math.max(3000, deadline - Date.now());
     try {
       await page.waitForFunction(
         () =>
           window.__APP_READY__ === true ||
           document.documentElement.dataset.appReady === 'true' ||
-          !!(window.__soulcap && typeof window.__soulcap.getState === 'function'),
+          !!(window.__soulcap && window.__soulcap.getState),
         null,
-        { timeout: perAttempt },
+        { timeout: remaining },
       );
       return;
     } catch (e) {

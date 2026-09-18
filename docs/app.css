@@ -369,8 +369,8 @@ input[type="range"]{width:100%;min-height:48px;accent-color:var(--accent)}
   flex:1 1 0;min-width:0;background:none;border:none;
   padding:10px 2px;min-height:48px;
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
-  /* Full opacity + ink-2 — faded tabs failed axe color-contrast (~2.3:1). */
-  color:var(--ink-2);border-radius:var(--r-sm);opacity:1;
+  /* Solid ink-3 — opacity on ink-2 failed AA (≈2.3:1 light / 4.2:1 dark). */
+  color:var(--ink-3);border-radius:var(--r-sm);
   transition:color var(--dur-fast) var(--ease-quiet),background var(--dur-fast) var(--ease-quiet),transform var(--dur-fast) var(--ease-quiet);
   position:relative;
 }
@@ -379,8 +379,7 @@ input[type="range"]{width:100%;min-height:48px;accent-color:var(--accent)}
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;
 }
 #tabs button[aria-selected="true"]{
-  /* Ink (not accent-on-soft) so selected label stays ≥4.5:1 on light and dark. */
-  color:var(--ink);background:transparent;font-weight:700;opacity:1;
+  color:var(--accent);background:transparent;font-weight:700;
 }
 #tabs button:active{transform:scale(.98)}
 #tabs button[aria-selected="true"]::before{display:none}
@@ -1602,13 +1601,13 @@ hr.sep{border:none;border-top:1px solid var(--line);margin:2px 0}
   #tabs button{
     flex:0 0 auto;flex-direction:row;justify-content:flex-start;
     gap:12px;padding:12px 14px;min-height:48px;border-radius:var(--r-md);
-    opacity:1;
   }
   #tabs button span{
     font-size:15px;font-weight:600;letter-spacing:0;
   }
   #tabs button[aria-selected="true"]{
-    background:var(--accent-soft);color:var(--ink);opacity:1;
+    /* Ink on soft tint — accent-on-accent-soft failed AA at desktop (≥900px). */
+    background:var(--accent-soft);color:var(--ink);
   }
   #tabs svg{width:20px;height:20px}
   #views{

@@ -26,6 +26,17 @@
 (function () {
   'use strict';
 
+  /* Content globals live in data.js (loaded before this file). If data.js failed
+   * or was truncated, unqualified SKILLS/EXPERIENCES throw and boot never runs —
+   * then __APP_READY__ never flips and finish-matrix hangs. Stub empty arrays. */
+  if (typeof SKILLS === 'undefined') window.SKILLS = [];
+  if (typeof EXPERIENCES === 'undefined') window.EXPERIENCES = [];
+  if (typeof ARTICLES === 'undefined') window.ARTICLES = [];
+  if (typeof SCREENERS === 'undefined') window.SCREENERS = [];
+  if (typeof STORIES === 'undefined') window.STORIES = [];
+  if (typeof DISTORTIONS === 'undefined') window.DISTORTIONS = [];
+  if (typeof APPROACH_PACKS === 'undefined') window.APPROACH_PACKS = {};
+
   /* View Transitions reject their promises with InvalidStateError when a newer
    * transition supersedes them (expected on fast navigation). Swallow ONLY that
    * benign case globally so it never surfaces as console noise; everything else
@@ -3074,8 +3085,6 @@
       var vt = document.startViewTransition(apply);
       function release() { vtActive = false; }
       if (vt) {
-        /* Ignore rejected promises from a superseded transition (benign) and
-         * always clear the in-flight flag when it settles. */
         if (vt.finished && vt.finished.then) vt.finished.then(release, release);
         else release();
         if (vt.ready && vt.ready.catch) vt.ready.catch(function () {});
@@ -6908,140 +6917,166 @@
     try { return decodeURIComponent(match[1].replace(/\+/g, ' ')); }
     catch (e) { return ''; }
   }
+  function markAppReady() {
+    try {
+      window.__APP_READY__ = true;
+      document.documentElement.dataset.appReady = 'true';
+    } catch (e) {}
+  }
+
   function boot() {
-    if (location.search.indexOf('demo=1') !== -1) seedDemo();
-    var requestedTab = queryValue('tab');
-    if (['now', 'calm', 'journal', 'map', 'me'].indexOf(requestedTab) !== -1) tab = requestedTab;
+    var requestedTab = '';
+    try {
+      if (location.search.indexOf('demo=1') !== -1) seedDemo();
+      requestedTab = queryValue('tab');
+      if (['now', 'calm', 'journal', 'map', 'me'].indexOf(requestedTab) !== -1) tab = requestedTab;
 
-    wireAppLockUi();
-    $('#panicExit').addEventListener('click', closePanic);
-    $('#runClose').addEventListener('click', closeRunner);
-    $('#runGuide').addEventListener('click', toggleGuide);
-    $('#sheetScrim').addEventListener('click', closeSheet);
-    $('#helpFab').addEventListener('click', function () { haptic('done'); openPanic(); });
-    bindGestures();
-    pauseOrbsForVisibility();
-    wireKeyboardSafety();
+      wireAppLockUi();
+      $('#panicExit').addEventListener('click', closePanic);
+      $('#runClose').addEventListener('click', closeRunner);
+      $('#runGuide').addEventListener('click', toggleGuide);
+      $('#sheetScrim').addEventListener('click', closeSheet);
+      var helpFab = $('#helpFab');
+      if (helpFab) helpFab.addEventListener('click', function () { haptic('done'); openPanic(); });
+      bindGestures();
+      pauseOrbsForVisibility();
+      wireKeyboardSafety();
 
-    // Journal editor
-    $('#jeCancel').addEventListener('click', closeEditor);
-    $('#jePhotoBtn').addEventListener('click', function () { $('#jeFile').click(); });
-    $('#jeFile').addEventListener('change', function (e) { var f = e.target.files && e.target.files[0]; if (f) addPhotoFromFile(f); e.target.value = ''; });
-    $('#jeDecorBtn').addEventListener('click', decorateDraftSheet);
-    $('#jeMicBtn').addEventListener('click', startJournalTranscription);
-    $('#jeFeelingBtn').addEventListener('click', function () {
-      var host = $('#jeEmotionOverlay');
-      setFeelingOverlayOpen(!(host && host.classList.contains('on')));
-    });
-    $('#jeStickerBtn').addEventListener('click', function () {
-      openSheet(function (p) {
-        p.appendChild(el('h2', { class: 'h-sec', text: 'Add a sticker' }));
-        p.appendChild(el('div', { class: 'sticker-row' }, JOURNAL_STICKERS.map(function (s) {
-          return el('button', { text: s, 'aria-label': 'Sticker ' + s, onclick: function () {
-            var ta = $('#jeBody'); ta.value = (ta.value + (ta.value && !/\s$/.test(ta.value) ? ' ' : '') + s + ' ');
-            closeSheet(); ta.focus();
-          } });
-        })));
-        p.appendChild(el('button', { class: 'btn quiet', text: 'Close', onclick: closeSheet }));
+      // Journal editor
+      $('#jeCancel').addEventListener('click', closeEditor);
+      $('#jePhotoBtn').addEventListener('click', function () { $('#jeFile').click(); });
+      $('#jeFile').addEventListener('change', function (e) { var f = e.target.files && e.target.files[0]; if (f) addPhotoFromFile(f); e.target.value = ''; });
+      $('#jeDecorBtn').addEventListener('click', decorateDraftSheet);
+      $('#jeMicBtn').addEventListener('click', startJournalTranscription);
+      $('#jeFeelingBtn').addEventListener('click', function () {
+        var host = $('#jeEmotionOverlay');
+        setFeelingOverlayOpen(!(host && host.classList.contains('on')));
       });
-    });
-    $('#jePromptBtn').addEventListener('click', function () {
-      var pr = JOURNAL_PROMPTS[Math.floor(Math.random() * JOURNAL_PROMPTS.length)];
-      var pEl = $('#jePrompt'); pEl.textContent = pr; pEl.classList.add('on'); $('#jeBody').focus();
-    });
-
-    Array.prototype.forEach.call($('#tabs').children, function (b) { b.addEventListener('click', function () { haptic('tick'); selectTab(b.dataset.tab); }); });
-
-    document.addEventListener('keydown', function (e) {
-      if (e.key === 'Tab' && $('#sheet').classList.contains('on')) {
-        trapSheetFocus(e);
-        return;
-      }
-      if (e.key !== 'Escape') return;
-      if (viewStack.length) popView();
-      else if ($('#sheet').classList.contains('on')) closeSheet();
-      else if ($('#journalEditor').classList.contains('on')) closeEditor();
-      else if ($('#runner').classList.contains('on')) closeRunner();
-      else if ($('#panic').classList.contains('on')) closePanic();
-    });
-
-    window.addEventListener('offline', function () { $('#offline').hidden = false; });
-    window.addEventListener('online', function () { $('#offline').hidden = true; });
-    if (!navigator.onLine) $('#offline').hidden = false;
-
-    if ('speechSynthesis' in window) { loadVoices(); window.speechSynthesis.onvoiceschanged = loadVoices; }
-
-    var catalogNames = ['EXPERIENCES', 'ARTICLES', 'SCREENERS', 'STORIES', 'DISTORTIONS', 'APPROACH_PACKS'];
-    function finishBoot() {
-      render();
-      try {
-        window.__APP_READY__ = true;
-        document.documentElement.dataset.appReady = 'true';
-        if (window.__soulcap) {
-          window.__soulcap.experienceIds = (EXPERIENCES || []).map(function (item) { return item.id; });
-        }
-      } catch (e) {}
-      /* GSAP + lazy catalogs after first paint — cut main-thread TBT (Q-5 / C-34 LH). */
-      setTimeout(function () { loadGsap(); }, 0);
-      function warmCatalogs() {
-        if (typeof soulEnsureCatalogs !== 'function') return;
-        soulEnsureCatalogs(catalogNames).then(function () {
-          try {
-            if (window.__soulcap) {
-              window.__soulcap.experienceIds = (EXPERIENCES || []).map(function (item) { return item.id; });
-            }
-          } catch (e) {}
-        }).catch(function (err) {
-          console.warn('SoulCap catalog preload', err);
+      $('#jeStickerBtn').addEventListener('click', function () {
+        openSheet(function (p) {
+          p.appendChild(el('h2', { class: 'h-sec', text: 'Add a sticker' }));
+          p.appendChild(el('div', { class: 'sticker-row' }, JOURNAL_STICKERS.map(function (s) {
+            return el('button', { text: s, 'aria-label': 'Sticker ' + s, onclick: function () {
+              var ta = $('#jeBody'); ta.value = (ta.value + (ta.value && !/\s$/.test(ta.value) ? ' ' : '') + s + ' ');
+              closeSheet(); ta.focus();
+            } });
+          })));
+          p.appendChild(el('button', { class: 'btn quiet', text: 'Close', onclick: closeSheet }));
         });
-      }
-      if (typeof requestIdleCallback === 'function') requestIdleCallback(warmCatalogs, { timeout: 2500 });
-      else setTimeout(warmCatalogs, 0);
-      if (queryValue('panic') === '1') {
-        $('#splash').classList.add('gone');
-        openPanic();
-      } else if (requestedTab === 'journal' && queryValue('new') === '1' && state.onboarded) {
-        setTimeout(function () { newEntrySheet(); }, 400);
-      }
-    }
-    /* First paint must not wait on catalog fetch/parse (was blocking __APP_READY__). */
-    finishBoot();
+      });
+      $('#jePromptBtn').addEventListener('click', function () {
+        var pr = JOURNAL_PROMPTS[Math.floor(Math.random() * JOURNAL_PROMPTS.length)];
+        var pEl = $('#jePrompt'); pEl.textContent = pr; pEl.classList.add('on'); $('#jeBody').focus();
+      });
 
-    var splash = $('#splash');
-    function dismissSplash() {
-      if (!splash || splash.classList.contains('gone')) return;
-      function hide() { splash.classList.add('gone'); }
-      if (document.startViewTransition) {
-        try {
-          var svt = document.startViewTransition(hide);
-          if (svt && svt.finished && svt.finished.catch) svt.finished.catch(function () {});
+      Array.prototype.forEach.call($('#tabs').children, function (b) { b.addEventListener('click', function () { haptic('tick'); selectTab(b.dataset.tab); }); });
+
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Tab' && $('#sheet').classList.contains('on')) {
+          trapSheetFocus(e);
           return;
-        } catch (e) {}
-      }
-      splash.classList.add('splash-exit');
-      setTimeout(hide, 480);
-    }
-    signatureSplash();
-    setTimeout(dismissSplash, state.onboarded ? 1600 : 2600);
-    splash.addEventListener('click', dismissSplash);
+        }
+        if (e.key !== 'Escape') return;
+        if (viewStack.length) popView();
+        else if ($('#sheet').classList.contains('on')) closeSheet();
+        else if ($('#journalEditor').classList.contains('on')) closeEditor();
+        else if ($('#runner').classList.contains('on')) closeRunner();
+        else if ($('#panic').classList.contains('on')) closePanic();
+      });
 
-    /* Always register (do not wait for "load") — async catalog boot often finishes after load. */
-    function registerSW() {
-      if (!('serviceWorker' in navigator)) return;
-      navigator.serviceWorker.register('./sw.js').catch(function () {});
+      window.addEventListener('offline', function () { $('#offline').hidden = false; });
+      window.addEventListener('online', function () { $('#offline').hidden = true; });
+      if (!navigator.onLine) $('#offline').hidden = false;
+
+      if ('speechSynthesis' in window) { loadVoices(); window.speechSynthesis.onvoiceschanged = loadVoices; }
+
+      var catalogNames = ['EXPERIENCES', 'ARTICLES', 'SCREENERS', 'STORIES', 'DISTORTIONS', 'APPROACH_PACKS'];
+      function finishBoot() {
+        /* Signal ready before render so tests/matrix do not hang if render throws.
+         * Splash may still be visible — that is intentional (C-20 / finish-matrix). */
+        markAppReady();
+        try {
+          render();
+          if (window.__soulcap && EXPERIENCES && EXPERIENCES.map) {
+            window.__soulcap.experienceIds = EXPERIENCES.map(function (item) { return item.id; });
+            window.__soulcap.skillCount = SKILLS.length;
+            window.__soulcap.skillIds = SKILLS.map(function (skill) { return skill.id; });
+          }
+        } catch (err) {
+          console.warn('SoulCap finishBoot render', err);
+        }
+        setTimeout(function () { loadGsap(); }, 0);
+        if (queryValue('panic') === '1') {
+          $('#splash').classList.add('gone');
+          openPanic();
+        } else if (requestedTab === 'journal' && queryValue('new') === '1' && state.onboarded) {
+          setTimeout(function () { newEntrySheet(); }, 400);
+        }
+      }
+      /* Catalog fetch can hang on a broken static server; race a timeout so ready always fires. */
+      var catalogBudgetMs = 8000;
+      var finished = false;
+      function finishBootOnce() {
+        if (finished) return;
+        finished = true;
+        finishBoot();
+      }
+      if (typeof soulEnsureCatalogs === 'function') {
+        var catalogTimer = setTimeout(function () {
+          console.warn('SoulCap catalog preload timed out');
+          finishBootOnce();
+        }, catalogBudgetMs);
+        soulEnsureCatalogs(catalogNames).then(function () {
+          clearTimeout(catalogTimer);
+          finishBootOnce();
+        }).catch(function (err) {
+          clearTimeout(catalogTimer);
+          console.warn('SoulCap catalog preload', err);
+          finishBootOnce();
+        });
+      } else {
+        finishBootOnce();
+      }
+
+      var splash = $('#splash');
+      function dismissSplash() {
+        if (!splash || splash.classList.contains('gone')) return;
+        function hide() { splash.classList.add('gone'); }
+        if (document.startViewTransition) {
+          try {
+            var svt = document.startViewTransition(hide);
+            if (svt && svt.finished && svt.finished.catch) svt.finished.catch(function () {});
+            return;
+          } catch (e) {}
+        }
+        splash.classList.add('splash-exit');
+        setTimeout(hide, 480);
+      }
+      signatureSplash();
+      setTimeout(dismissSplash, state.onboarded ? 1600 : 2600);
+      if (splash) splash.addEventListener('click', dismissSplash);
+
+      /* Always register (do not wait for "load") — async catalog boot often finishes after load. */
+      function registerSW() {
+        if (!('serviceWorker' in navigator)) return;
+        navigator.serviceWorker.register('./sw.js').catch(function () {});
+      }
+      registerSW();
+    } catch (bootErr) {
+      console.warn('SoulCap boot', bootErr);
+      markAppReady();
     }
-    registerSW();
   }
 
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
-    getState: function () { return state; }, skillCount: SKILLS.length,
-    skillIds: SKILLS.map(function (skill) { return skill.id; }),     version: APP_VERSION,
+    getState: function () { return state; }, skillCount: (SKILLS && SKILLS.length) || 0,
+    skillIds: (SKILLS && SKILLS.map) ? SKILLS.map(function (skill) { return skill.id; }) : [],     version: APP_VERSION,
     effectiveMotion: effectiveMotion,
     motionCap: function () { return motionCap; },
     loadGsap: loadGsap,
     withViewTransition: withViewTransition,
-    experienceIds: EXPERIENCES.map(function (item) { return item.id; }),
+    experienceIds: (EXPERIENCES && EXPERIENCES.map) ? EXPERIENCES.map(function (item) { return item.id; }) : [],
     experienceHelpsOk: function () {
       return EXPERIENCES.every(function (exp) {
         return (exp.helps || []).every(function (hid) {

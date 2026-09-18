@@ -1,8 +1,8 @@
 {
   "name": "SoulCap",
-  "version": "8.2.1",
-  "swCache": "soulcap-v824",
-  "schema": 13,
-  "released": "2026-09-16",
-  "note": "Step R: tab contrast (C-35), docs/VERSION.json for Pages, idle catalog warm (Q-5 TBT)"
+  "version": "8.3.0",
+  "swCache": "soulcap-v830",
+  "schema": 14,
+  "released": "2026-09-18",
+  "note": "v8.3.0 Quiet Depth calm pass: top-vignette background, tab-stacking fix, journal + Now polish"
 }

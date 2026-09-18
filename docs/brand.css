@@ -39,7 +39,7 @@
   :root:not([data-theme]) {
     --ground:#14121A; --surface:#1E1B29; --surface-2:#272334; --sunken:#0F0D14; --raise:var(--surface-2);
     --line:rgba(236,233,244,.08); --line-strong:rgba(236,233,244,.14);
-    --ink:#ECE9F4; --ink-2:#A8A2BC; --ink-3:#827C96;
+    --ink:#ECE9F4; --ink-2:#A8A2BC; --ink-3:#A39DB8;
     --accent:#8B7CF0; --accent-press:#6D5DD3; --accent-ink:#14121A; --accent-soft:rgba(139,124,240,.14);
     --accent-glow:rgba(139,124,240,.20);
     --accent-grad:linear-gradient(135deg,#8B7CF0,#6D5DD3);
@@ -65,7 +65,7 @@
 :root[data-theme="dark"] {
   --ground:#14121A; --surface:#1E1B29; --surface-2:#272334; --sunken:#0F0D14; --raise:var(--surface-2);
   --line:rgba(236,233,244,.08); --line-strong:rgba(236,233,244,.14);
-  --ink:#ECE9F4; --ink-2:#A8A2BC; --ink-3:#827C96;
+  --ink:#ECE9F4; --ink-2:#A8A2BC; --ink-3:#A39DB8;
   --accent:#8B7CF0; --accent-press:#6D5DD3; --accent-ink:#14121A; --accent-soft:rgba(139,124,240,.14);
   --accent-glow:rgba(139,124,240,.20);
   --accent-grad:linear-gradient(135deg,#8B7CF0,#6D5DD3);

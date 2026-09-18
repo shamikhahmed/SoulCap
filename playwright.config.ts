@@ -7,9 +7,7 @@ export default defineConfig({
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? [['html', { open: 'never' }], ['list']] : 'list',
   use: {
-    // 127.0.0.1 matches ThreadingHTTPServer bind (avoids ::1 localhost flake).
-    // personas.spec allows both localhost and 127.0.0.1.
-    baseURL: 'http://127.0.0.1:8788',
+    baseURL: 'http://localhost:8788',
     trace: 'on-first-retry',
     // Avoid stale SW races when shell assets change mid-loop (brand.css etc.)
     serviceWorkers: 'block'
@@ -24,9 +22,11 @@ export default defineConfig({
     { name: 'desktop', use: { ...devices['Desktop Chrome'] } }
   ],
   webServer: {
-    // Node static: Python http.server resets concurrent GETs (app.js never loads).
-    command: 'node scripts/serve-docs.mjs',
-    url: 'http://127.0.0.1:8788',
+    // ThreadingHTTPServer: plain http.server serializes requests and can stall
+    // soulEnsureCatalogs (many parallel GETs) so __APP_READY__ never fires.
+    command:
+      'python3 -c "from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler as H; import os; os.chdir(\'docs\'); ThreadingHTTPServer((\'127.0.0.1\', 8788), H).serve_forever()"',
+    url: 'http://localhost:8788',
     reuseExistingServer: !process.env.CI,
     timeout: 30000
   }

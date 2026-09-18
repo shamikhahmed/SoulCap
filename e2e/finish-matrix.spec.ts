@@ -12,8 +12,7 @@ import {
 } from './helpers/finish-matrix.js';
 
 const SHOTS = path.join('qa', 'finish-loop', 'shots');
-/* Relative `?demo=1` preserves baseURL path (e.g. /SoulCap/). Leading `/` would drop it. */
-const ROUTES = [{ id: 'home-demo', path: '?demo=1', primary: '#tabs button[data-tab="now"]' }];
+const ROUTES = [{ id: 'home-demo', path: '/?demo=1', primary: '#tabs button[data-tab="now"]' }];
 
 const RUN = process.env.FINISH_MATRIX === '1' || process.env.FINISH_MATRIX_FULL === '1';
 
@@ -21,11 +20,8 @@ const RUN = process.env.FINISH_MATRIX === '1' || process.env.FINISH_MATRIX_FULL 
 if (RUN) {
   test.describe('finish-matrix', () => {
     test.describe.configure({ mode: 'serial' });
-    /* Optional live base (Review 3) — avoids flaky local single-thread serve races. */
-    if (process.env.FINISH_MATRIX_BASE) {
-      test.use({ baseURL: process.env.FINISH_MATRIX_BASE });
-    }
     const failures = [];
+
 
     for (const route of ROUTES) {
       for (const vp of matrixViewports()) {
@@ -35,7 +31,7 @@ if (RUN) {
             try {
               await page.setViewportSize({ width: vp.width, height: vp.height });
               await page.goto(route.path, { waitUntil: 'domcontentloaded' });
-              await waitForAppReady(page, { timeout: 45000 });
+              await waitForAppReady(page, { timeout: 30000 });
               await applyFinishTheme(page, theme);
               /* Match e2e dismissSplash — splash is position:fixed over #tabs until gone. */
               await page.evaluate(() => {
