@@ -28,7 +28,7 @@
   --layer-1:rgba(255,255,255,.78);
   --layer-2:var(--surface-2);
   --layer-3:var(--surface);
-  --living:radial-gradient(ellipse 55% 45% at 50% 42%,rgba(109,93,211,.20),transparent 70%);
+  --living:radial-gradient(ellipse 130% 44% at 50% -8%,rgba(109,93,211,.20),transparent 70%);
   --ease-quiet:cubic-bezier(.25,.1,.25,1);
   --splash-bg:#0A0810;
   color-scheme: light;
@@ -56,7 +56,7 @@
     --layer-1:rgba(30,27,41,.88);
     --layer-2:var(--surface-2);
     --layer-3:var(--surface);
-    --living:radial-gradient(ellipse 55% 45% at 50% 42%,rgba(139,124,240,.32),transparent 70%);
+    --living:radial-gradient(ellipse 130% 44% at 50% -8%,rgba(139,124,240,.32),transparent 70%);
     --ease-quiet:cubic-bezier(.25,.1,.25,1);
     color-scheme: dark;
   }
@@ -82,7 +82,7 @@
   --layer-1:rgba(30,27,41,.88);
   --layer-2:var(--surface-2);
   --layer-3:var(--surface);
-  --living:radial-gradient(ellipse 55% 45% at 50% 42%,rgba(139,124,240,.32),transparent 70%);
+  --living:radial-gradient(ellipse 130% 44% at 50% -8%,rgba(139,124,240,.32),transparent 70%);
   --ease-quiet:cubic-bezier(.25,.1,.25,1);
   color-scheme: dark;
 }
@@ -108,7 +108,7 @@
   --layer-1:rgba(22,19,28,.90);
   --layer-2:var(--surface-2);
   --layer-3:var(--surface);
-  --living:radial-gradient(ellipse 55% 45% at 50% 42%,rgba(126,112,212,.26),transparent 70%);
+  --living:radial-gradient(ellipse 130% 44% at 50% -8%,rgba(126,112,212,.26),transparent 70%);
   --ease-quiet:cubic-bezier(.25,.1,.25,1);
   color-scheme: dark;
 }
@@ -135,7 +135,7 @@
   --layer-1:rgba(244,250,251,.82);
   --layer-2:var(--surface-2);
   --layer-3:var(--surface);
-  --living:radial-gradient(ellipse 55% 45% at 50% 42%,rgba(47,111,126,.22),transparent 70%);
+  --living:radial-gradient(ellipse 130% 44% at 50% -8%,rgba(47,111,126,.22),transparent 70%);
   --ease-quiet:cubic-bezier(.25,.1,.25,1);
   color-scheme: light;
 }
@@ -160,7 +160,7 @@
   --layer-1:rgba(245,249,242,.82);
   --layer-2:var(--surface-2);
   --layer-3:var(--surface);
-  --living:radial-gradient(ellipse 55% 45% at 50% 42%,rgba(79,115,64,.22),transparent 70%);
+  --living:radial-gradient(ellipse 130% 44% at 50% -8%,rgba(79,115,64,.22),transparent 70%);
   --ease-quiet:cubic-bezier(.25,.1,.25,1);
   color-scheme: light;
 }
@@ -185,7 +185,7 @@
   --layer-1:rgba(14,14,18,.92);
   --layer-2:var(--surface-2);
   --layer-3:var(--surface);
-  --living:radial-gradient(ellipse 55% 45% at 50% 42%,rgba(155,140,245,.30),transparent 70%);
+  --living:radial-gradient(ellipse 130% 44% at 50% -8%,rgba(155,140,245,.30),transparent 70%);
   --ease-quiet:cubic-bezier(.25,.1,.25,1);
   color-scheme: dark;
 }

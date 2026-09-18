@@ -880,7 +880,7 @@ html[data-app-locked="1"] #sheet.on{visibility:visible}
   gap:0;position:relative;overflow:hidden;min-height:100%;
 }
 .living-field{
-  position:absolute;inset:0;background:var(--living);opacity:.55;
+  position:absolute;inset:0;background:var(--living);opacity:.4;
   pointer-events:none;z-index:0;
   animation:qdLiving 10s var(--ease-soft) infinite;
 }
@@ -1051,15 +1051,14 @@ html[data-app-locked="1"] #sheet.on{visibility:visible}
 }
 .qd-hero.journal-hero .living-field{opacity:.5}
 .qd-hero.journal-hero .p-voice.journal-hero-sub{color:var(--ink-2);margin:0 0 var(--space-2);max-width:28ch}
-.qd-hero.journal-hero .book-cover-bleed{
-  margin:var(--space-2) 0 0;width:100%;min-height:148px;border-radius:var(--r-lg);
-  box-shadow:var(--shadow-2);border:1px solid var(--line);
-  position:relative;
+.qd-hero.journal-hero .journal-cover-card{
+  margin:var(--space-2) 0 0;width:100%;min-height:88px;border-radius:var(--r-lg);
+  padding:16px 18px;box-shadow:var(--shadow-1);border:1px solid var(--cover-border);
+  position:relative;display:flex;flex-direction:column;justify-content:flex-end;gap:2px;
 }
-.qd-hero.journal-hero .book-cover-bleed .bc-title{
-  font-family:var(--voice);font-size:22px;font-weight:500;letter-spacing:-.018em;color:var(--ink);
-}
-.qd-hero.journal-hero .book-cover-bleed .bc-sub{font-size:13px;color:var(--ink-2)}
+.qd-hero.journal-hero .journal-cover-card .bc-sticker{font-size:26px;margin-bottom:2px}
+.qd-hero.journal-hero .journal-cover-card .bc-sub{font-size:13px;color:var(--cover-text);opacity:.92}
+.qd-hero.journal-hero .journal-cover-card .bc-edit{top:12px;right:12px;min-height:40px;padding:6px 12px}
 .progress-glance.qd-progress{
   width:100%;text-align:left;border:none;background:transparent;cursor:pointer;
   padding:var(--space-3) 0;font:inherit;color:inherit;
@@ -1161,7 +1160,7 @@ html[data-app-locked="1"] #sheet.on{visibility:visible}
 .map-empty-stage{
   flex:1 1 auto;
   min-height:calc(100dvh - var(--tab-h) - var(--sab) - 148px);
-  justify-content:flex-start;
+  justify-content:center;
 }
 .me-empty-stage{
   min-height:min(42vh, 320px);

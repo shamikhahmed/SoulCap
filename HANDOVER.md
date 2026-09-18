@@ -1,4 +1,15 @@
-**Version:** 8.1.0 · SW `soulcap-v810`
+**Version:** 8.3.0 · SW `soulcap-v830`
+
+## Current state (v8.3.0 — 2026-09-18) — Quiet Depth calm pass
+Apple-grade UX pass: **background redesigned** (every theme's `--living` ambient moved from a centred
+blob at 50% 42% — which sat behind body text — to a soft top vignette `at 50% -8%`, field opacity
+.55→.4). **Tab-switch stacking bug fixed** (`withViewTransition` skips a new transition while one is in
+flight, so an aborted transition can't leave the old view painted). **Journal hero re-composed**
+(duplicate "My Journal" + "title0 entries" collision gone; cover slimmed to an 88px editorial
+`journal-cover-card`, title lives once in the header). **Now decluttered** (redundant empty box
+dropped; Begin rises). **People empty centred.** Suite green (372) + gallery regenerated. See
+`CHANGELOG.md` 8.3.0. Note: `docs/brand.css` holds theme tokens (incl. `--living`); it was not in the
+older file map.
 
 ## Current state (v8.1.0 — 2026-09-14)
 

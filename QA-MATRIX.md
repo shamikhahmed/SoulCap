@@ -1,6 +1,6 @@
 # SoulCap — Interactive QA matrix
 
-**Version:** 8.1.0 · Updated **2026-09-14**  
+**Version:** 8.3.0 · Updated **2026-09-18**  
 **Method:** Every primary control class below was exercised via Playwright e2e and/or live Chromium against `/?demo=1` or `freshThrough`. Failures fixed before ship; re-verify = `npm run verify`.
 
 Legend: **P** = pass (live/e2e) · **N/A** = surface absent by product law.

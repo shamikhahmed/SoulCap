@@ -3053,8 +3053,13 @@
   var viewStack = [];
   var subviewOpener = null;
   var tabScrollY = 0;
+  var vtActive = false;
   function withViewTransition(update) {
-    if (effectiveMotion() === 'still' || typeof document.startViewTransition !== 'function') {
+    /* Skip the View Transition when motion is off, unsupported, OR one is already
+     * running. Overlapping transitions abort each other and can leave the outgoing
+     * view painted (two tabs stacked). Applying synchronously keeps the DOM correct;
+     * the cross-fade is cosmetic, so dropping it under rapid nav is the safe trade. */
+    if (vtActive || effectiveMotion() === 'still' || typeof document.startViewTransition !== 'function') {
       update();
       return;
     }
@@ -3065,15 +3070,21 @@
       update();
     }
     try {
+      vtActive = true;
       var vt = document.startViewTransition(apply);
-      /* Rapid nav aborts the previous transition; ignore its rejected promises
-       * so they don't surface as uncaught InvalidStateError noise. */
+      function release() { vtActive = false; }
       if (vt) {
-        if (vt.finished && vt.finished.catch) vt.finished.catch(function () {});
+        /* Ignore rejected promises from a superseded transition (benign) and
+         * always clear the in-flight flag when it settles. */
+        if (vt.finished && vt.finished.then) vt.finished.then(release, release);
+        else release();
         if (vt.ready && vt.ready.catch) vt.ready.catch(function () {});
         if (vt.updateCallbackDone && vt.updateCallbackDone.catch) vt.updateCallbackDone.catch(function () {});
+      } else {
+        release();
       }
     } catch (e) {
+      vtActive = false;
       apply();
       return;
     }
@@ -4343,7 +4354,7 @@
     hero.appendChild(el('h1', { class: 'h-voice', text: cov.title || 'A private page.' }));
     hero.appendChild(el('p', { class: 'p-voice journal-hero-sub',
       text: cov.subtitle || 'Only on this device. Write anything — nobody else will ever read it.' }));
-    hero.appendChild(el('button', { class: 'book-cover book-cover-bleed',
+    hero.appendChild(el('button', { class: 'book-cover journal-cover-card',
       style: '--bc-a:' + cc[0] + ';--bc-b:' + cc[1],
       'aria-label': 'Customise journal cover',
       onclick: coverSheet }, [
@@ -4353,7 +4364,6 @@
       coverPhoto ? el('span', { class: 'bc-shade' }) : null,
       el('span', { class: 'bc-edit', text: 'Customise cover' }),
       cov.sticker ? el('span', { class: 'bc-sticker', text: cov.sticker }) : null,
-      el('span', { class: 'bc-title', text: cov.title || 'My Journal' }),
       el('span', { class: 'bc-sub', text: state.journal.length + (state.journal.length === 1 ? ' entry' : ' entries') })
     ]));
     v.appendChild(hero);
@@ -5400,12 +5410,8 @@
         el('button', { class: 'btn ghost', text: WHATS_NEW_UI.dismiss, onclick: dismissWhatsNew })
       ]));
     }
-    if (!state.checkins.length) {
-      v.appendChild(emptyState({
-        body: tUi('empty', 'now', EMPTY_UI)
-      }));
-    }
-
+    /* Cold-open message lives once, in the preview-week glance below — no separate
+     * empty box above the suggestion (kept the actionable card first). */
     var primary = el('div', { class: 'now-primary' });
     var suggest = el('div', { class: 'qd-hero qd-suggest now-suggest' });
     suggest.appendChild(el('div', { class: 'living-field', 'aria-hidden': 'true' }));
@@ -6434,7 +6440,7 @@
       }
     });
   }
-  var APP_VERSION = '8.2.1';
+  var APP_VERSION = '8.3.0';
   var settingsQuery = '';
   function settingsGroup(v, title, kids) {
     v.appendChild(el('p', { class: 'eyebrow settings-eyebrow', text: title }));

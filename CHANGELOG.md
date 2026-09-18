@@ -1,3 +1,20 @@
+## 8.3.0 — 2026-09-18 · "Quiet Depth" calm pass (Apple-grade UX)
+- **Background redesigned:** the `--living` ambient in every theme was a blob centred at 50% 42% —
+  it sat behind body text and read as a smudge. Retargeted to a soft top vignette (`at 50% -8%`),
+  field opacity .55→.4. No colour lives behind reading text now; contrast up across all 7 themes.
+- **Tab-switch stacking bug fixed:** fast navigation could abort a View Transition and leave the
+  outgoing view painted (two tabs stacked). `withViewTransition` now skips a new transition while one
+  is in flight (applies synchronously) and clears the in-flight flag on settle. Verified live: after
+  rapid People→You, only `view-me` shows.
+- **Journal hero re-composed:** removed the duplicate "My Journal" (it was in the header AND on the
+  cover) and the "title0 entries" collision; cover slimmed from a 148–220px flat slab to an 88px
+  editorial card (sticker + entries + Customise). Title now lives once, in the header.
+- **Now decluttered:** dropped the redundant "No check-ins yet" box above the suggestion — the
+  actionable card (Begin) rises to the top; the cold-open message stays once in the preview-week
+  glance below.
+- **People empty centred** (was top-aligned with a dead void above Help).
+- Suite green (372) at 8.3.0; gallery regenerated. SW `soulcap-v830`.
+
 ## 8.2.1 — 2026-09-16
 - C-35: tab labels meet color-contrast (drop fade opacity; selected uses ink, not accent-on-soft).
 - Publish `docs/VERSION.json` on GitHub Pages (live `/VERSION.json` was 404).

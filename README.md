@@ -1,6 +1,6 @@
 # SoulCap
 
-**v8.1.1 — offline-first wellness PWA.** Quiet Depth visual identity (SPEC-v7) complete —
+**v8.3.0 — offline-first wellness PWA.** Quiet Depth visual identity (SPEC-v7) complete —
 see [`REDESIGN-DIFF.md`](REDESIGN-DIFF.md). Full-phase audit: [`AUDIT.md`](AUDIT.md) ·
 [`PERF.md`](PERF.md) · [`QA-MATRIX.md`](QA-MATRIX.md). **Not** therapy · not diagnosis · not crisis service.
 See [`SAFETY.md`](SAFETY.md).
@@ -14,7 +14,7 @@ See [`SAFETY.md`](SAFETY.md).
 
 | Surface | URL / path | Reality |
 |---|---|---|
-| **PWA** | [shamikhahmed.github.io/SoulCap](https://shamikhahmed.github.io/SoulCap/) · `docs/` | The product (**8.1.1** / schema **v14**). Quiet Depth identity. Five tabs, Guided Path, Settings + About & Legal, Personal Manual, Thought Parking, optional detailed check-ins, inspectable local patterns, self-concept reflection, habit-loop / urge surfing, therapist-informed frameworks, techniques, offline library, book-style journal, Constellation, Roman Urdu chrome preview, region-aware Help, optional app lock. **Zero third-party network calls — localStorage only.** Privacy: [`docs/privacy.html`](docs/privacy.html). |
+| **PWA** | [shamikhahmed.github.io/SoulCap](https://shamikhahmed.github.io/SoulCap/) · `docs/` | The product (**8.3.0** / schema **v14**). Quiet Depth identity. Five tabs, Guided Path, Settings + About & Legal, Personal Manual, Thought Parking, optional detailed check-ins, inspectable local patterns, self-concept reflection, habit-loop / urge surfing, therapist-informed frameworks, techniques, offline library, book-style journal, Constellation, Roman Urdu chrome preview, region-aware Help, optional app lock. **Zero third-party network calls — localStorage only.** Privacy: [`docs/privacy.html`](docs/privacy.html). |
 | Nest API | `backend/` | **Lab only** (P-SOUL-2). Full module source (LMM, safety gate). Builds clean, **not deployed**; excluded from GitHub Pages (`docs/` only) and from Tier 1 product scoring. PWA does not call it. |
 | Expo | `mobile/` | **Lab only** (P-SOUL-2). Thin client source. Excluded from Pages and from Tier 1 scoring. |
 | **Screen gallery** | [`qa/tools/screen-gallery.html`](qa/tools/screen-gallery.html) · `docs/screenshots/gallery/` | Local viewer only (not Pages). `npm run gallery` → `npm run gallery:view`. |

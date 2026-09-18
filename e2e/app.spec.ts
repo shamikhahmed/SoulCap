@@ -1195,7 +1195,8 @@ test.describe('Journal', () => {
     const title = page.locator('#sheetPanel input').first();
     await title.fill('Night Pages');
     await page.locator('#sheetPanel').getByRole('button', { name: 'Save' }).click();
-    await expect(page.locator('.book-cover')).toContainText('Night Pages');
+    // Title shows once, in the journal header (the cover no longer duplicates it).
+    await expect(page.locator('#view-journal .journal-hero')).toContainText('Night Pages');
   });
 
   test('a local photo can become the journal cover', async ({ page }) => {
