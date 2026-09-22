@@ -140,7 +140,7 @@
     libraryBookmarks: [],
     windDownHour: null,
     screenerResults: {},
-    notices: { clinicalEnglishDismissed: false, seenVersion: null, crisisRegion: 'other' },
+    notices: { clinicalEnglishDismissed: false, seenVersion: null },
     pathSessions: [],
     pathPrefs: { hide: false },
     selfConcept: { areas: {}, updatedAt: null },
@@ -234,8 +234,7 @@
       } catch (noticeErr) {}
       p.notices.clinicalEnglishDismissed = p.notices.clinicalEnglishDismissed === true;
       if (typeof p.notices.seenVersion !== 'string') p.notices.seenVersion = null;
-      var crisisRegions = { pk: 1, uk: 1, us: 1, uae: 1, other: 1 };
-      if (!crisisRegions[p.notices.crisisRegion]) p.notices.crisisRegion = 'other';
+      delete p.notices.crisisRegion;
       p.pathSessions = Array.isArray(p.pathSessions) ? p.pathSessions : [];
       p.pathPrefs = Object.assign(clone(DEFAULT.pathPrefs), p.pathPrefs || {});
       p.pathPrefs.hide = p.pathPrefs.hide === true;
@@ -1318,83 +1317,11 @@
   }
   function hushVoice() { try { window.speechSynthesis.cancel(); } catch (e) {} }
 
-  /* ── Get help now (SOUL-P0-02 / D-05) — DECISIONS.md §4.3 exactly ───────────
-   * Numbers verified from official sources (see SAFETY.md). Omit unverifiable
-   * helplines. tel: only on user tap; bundled for offline; never auto-dial. */
-  var CRISIS_REGIONS = [
-    { id: 'pk', label: 'Pakistan' },
-    { id: 'uk', label: 'United Kingdom' },
-    { id: 'us', label: 'United States' },
-    { id: 'uae', label: 'United Arab Emirates' },
-    { id: 'other', label: 'Somewhere else' }
-  ];
-  /** Verified emergency + talk lines per region (tel digits only in `tel`). */
-  var CRISIS_RESOURCES = {
-    pk: {
-      emergency: [
-        { label: 'Call 1122 — Rescue', display: '1122', tel: '1122' },
-        { label: 'Call 115 — Edhi ambulance', display: '115', tel: '115' },
-        { label: 'Call 15 — Police', display: '15', tel: '15' }
-      ],
-      talk: [
-        { label: 'Call Umang — 0311 7786264', display: '0311 7786264', tel: '+923117786264' }
-      ]
-    },
-    uk: {
-      emergency: [
-        { label: 'Call 999 — Emergency', display: '999', tel: '999' },
-        { label: 'Call 111 — NHS (urgent, not emergency)', display: '111', tel: '111' }
-      ],
-      talk: [
-        { label: 'Call Samaritans — 116 123', display: '116 123', tel: '116123' }
-      ]
-    },
-    us: {
-      emergency: [
-        { label: 'Call 911 — Emergency', display: '911', tel: '911' }
-      ],
-      talk: [
-        { label: 'Call or text 988 — Suicide & Crisis Lifeline', display: '988', tel: '988' }
-      ]
-    },
-    uae: {
-      emergency: [
-        { label: 'Call 999 — Police', display: '999', tel: '999' },
-        { label: 'Call 998 — Ambulance', display: '998', tel: '998' }
-      ],
-      talk: [
-        { label: 'Call 800-HOPE — Mental Support Line', display: '800 4673', tel: '8004673' }
-      ]
-    },
-    other: {
-      emergency: [],
-      talk: [],
-      emergencyNote: 'Call your local emergency number.',
-      talkNote: 'Find a free, confidential helpline near you at findahelpline.com.'
-    }
-  };
-  function crisisRegion() {
-    return (state.notices && state.notices.crisisRegion) || 'other';
-  }
-  function setCrisisRegion(id) {
-    if (!state.notices) state.notices = clone(DEFAULT.notices);
-    state.notices.crisisRegion = id;
-    save();
-  }
-  function appendTelButton(parent, item) {
-    parent.appendChild(el('a', {
-      href: 'tel:' + item.tel,
-      class: 'btn help-tel',
-      style: 'text-decoration:none;display:block;text-align:center;margin-top:8px',
-      'aria-label': item.label,
-      text: item.label
-    }));
-    parent.appendChild(el('p', {
-      class: 'p-sm',
-      style: 'margin:2px 0 0;text-align:center',
-      text: item.display
-    }));
-  }
+  /* ── Get help now — number-free, country-agnostic (owner-locked decision) ───
+   * No crisis phone numbers and no country/region picker: SoulCap cannot promise
+   * any specific line is reachable, and a number that rings out is worse than none.
+   * Guides to a trusted person and to local services as a category. `tel:` is never
+   * used. Help is always reachable; tier-3 free text routes here. */
   function renderPanicHelp(container, opts) {
     opts = opts || {};
     clear(container);
@@ -1409,56 +1336,25 @@
       class: 'panic-sub',
       style: 'margin:0',
       text: under18
-        ? 'If you need support, talk to an adult you trust, or contact emergency services if you’re in danger.'
-        : 'If you might hurt yourself or someone else, or you’re in danger, contact emergency services now.'
+        ? 'If you need support, talk to an adult you trust. If you’re in danger, contact your local emergency services.'
+        : 'If you might hurt yourself or someone else, or you’re in danger, contact your local emergency services now.'
     }));
 
-    container.appendChild(el('p', { class: 'eyebrow', style: 'margin:14px 0 6px', text: 'Your region' }));
-    var regionRow = el('div', { class: 'chips', role: 'group', 'aria-label': 'Your region' });
-    CRISIS_REGIONS.forEach(function (r) {
-      regionRow.appendChild(el('button', {
-        class: 'chip',
-        type: 'button',
-        'aria-pressed': crisisRegion() === r.id ? 'true' : 'false',
-        text: r.label,
-        onclick: function () {
-          setCrisisRegion(r.id);
-          renderPanicHelp(container, opts);
-        }
-      }));
-    });
-    container.appendChild(regionRow);
-
-    var res = CRISIS_RESOURCES[crisisRegion()] || CRISIS_RESOURCES.other;
-
-    container.appendChild(el('p', { class: 'eyebrow', style: 'margin:14px 0 6px', text: 'Emergency' }));
-    if (res.emergency && res.emergency.length) {
-      res.emergency.forEach(function (item) { appendTelButton(container, item); });
-    } else if (res.emergencyNote) {
-      container.appendChild(el('p', { class: 'p-sm', style: 'margin:4px 0 0', text: res.emergencyNote }));
-    }
-
     if (!under18) {
-      container.appendChild(el('p', { class: 'eyebrow', style: 'margin:14px 0 6px', text: 'Talk to someone' }));
-      if (res.talk && res.talk.length) {
-        res.talk.forEach(function (item) { appendTelButton(container, item); });
-      } else if (res.talkNote) {
-        container.appendChild(el('p', { class: 'p-sm', style: 'margin:4px 0 0', text: res.talkNote }));
-        container.appendChild(el('a', {
-          href: 'https://findahelpline.com',
-          class: 'btn ghost',
-          style: 'text-decoration:none;margin-top:8px',
-          target: '_blank',
-          rel: 'noopener noreferrer',
-          text: 'Open findahelpline.com'
-        }));
-      }
-
+      container.appendChild(el('p', { class: 'eyebrow', style: 'margin:14px 0 6px', text: 'Reach out' }));
+      container.appendChild(el('p', {
+        class: 'p-sm', style: 'margin:0',
+        text: 'You don’t have to carry this alone. Reach out to someone you trust — a family member or a friend.'
+      }));
       container.appendChild(el('a', {
         href: 'sms:',
-        class: 'btn ghost',
+        class: 'btn',
         style: 'text-decoration:none;margin-top:12px',
         text: 'Message someone I trust'
+      }));
+      container.appendChild(el('p', {
+        class: 'p-sm', style: 'margin:12px 0 0',
+        text: 'If you feel unsafe or in danger, please contact your local emergency services or a crisis helpline in your area.'
       }));
     }
 
@@ -6449,7 +6345,7 @@
       }
     });
   }
-  var APP_VERSION = '8.3.0';
+  var APP_VERSION = '8.3.1';
   var settingsQuery = '';
   function settingsGroup(v, title, kids) {
     v.appendChild(el('p', { class: 'eyebrow settings-eyebrow', text: title }));

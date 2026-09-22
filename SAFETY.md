@@ -1,6 +1,6 @@
 # SoulCap — Safety & Truth Inventory
 
-**Version:** 8.1.1 · **Updated:** 2026-09-14
+**Version:** 8.3.1 · **Updated:** 2026-09-14
 **Status:** **Clinical path** — self-guided wellness companion.
 **Not** a cleared SaMD / medical device. **Not** a substitute for licensed care.
 See also `CLINICAL.md` and `Capricorn-Brain/AI/Claude-Code/SoulCap-Eval-Harness.md`.
@@ -13,7 +13,7 @@ SoulCap is **not** clinical care, therapy, medical advice, diagnosis, or crisis 
 
 - Market as **self-guided wellness companion (clinical path)** only.
 - Never claim FDA/CE clearance, "clinical-grade therapy," or replacement for licensed professionals.
-- Help is hard-coded, region-aware, and offline (bundled). Numbers are verified from official sources before shipping (omit if unverifiable). SoulCap never auto-dials and never contacts anyone for the user.
+- Help is hard-coded, **number-free, and country-agnostic** (offline). No crisis phone numbers and no country/region picker — SoulCap cannot promise any specific line is reachable, and a number that rings out is worse than none (owner-locked). It guides the user to someone they trust and to local emergency services as a category, and never contacts anyone for the user.
 
 **Qualified clinical review is required before any store submission** (none planned under G-1). Recorded 2026-09-14.
 
@@ -26,24 +26,24 @@ the single not-medical line. **Do not claim clinical review** until a licensed c
 
 ---
 
-## Crisis resources (SOUL-P0-02 / D-05) — verified 2026-09-14
+## Crisis resources — number-free (owner-locked, restored 8.3.1)
 
-| Region | Type | Number | Official source | Checked |
-|---|---|---|---|---|
-| Pakistan | Emergency | 1122 Rescue | https://sers.gos.pk/ · https://karachipolice.gov.pk/services/emergency-contact-directory/ | 2026-09-14 |
-| Pakistan | Emergency | 115 Edhi | https://karachipolice.gov.pk/services/emergency-contact-directory/ | 2026-09-14 |
-| Pakistan | Emergency | 15 Police | https://karachipolice.gov.pk/services/emergency-contact-directory/ | 2026-09-14 |
-| Pakistan | Talk | Umang 0311 7786264 | https://www.umang.com.pk/ | 2026-09-14 |
-| United Kingdom | Emergency | 999 · NHS 111 | UK government / NHS | 2026-09-14 |
-| United Kingdom | Talk | Samaritans 116 123 | https://www.samaritans.org/ | 2026-09-14 |
-| United States | Emergency | 911 | US emergency services | 2026-09-14 |
-| United States | Talk | 988 | https://988lifeline.org/ | 2026-09-14 |
-| United Arab Emirates | Emergency | Police 999 · Ambulance 998 | https://u.ae/ | 2026-09-14 |
-| United Arab Emirates | Talk | 800-HOPE (8004673) | https://hope.hw.gov.ae/ | 2026-09-14 |
-| Somewhere else | Emergency | Local emergency number (copy only) | — | 2026-09-14 |
-| Somewhere else | Talk | findahelpline.com | https://findahelpline.com/ (HTTP 200) | 2026-09-14 |
+**No crisis phone numbers. No country/region picker.** A previous change (8.2.x) re-introduced a
+region picker with verified `tel:` numbers (Samaritans 116 123, 988, 999, 911, etc.); this was
+reverted in **8.3.1** to honour the owner's standing decision. Rationale: SoulCap cannot guarantee any
+specific line is live, and a number that rings out is worse than none.
 
-Age gate copy and Help footer match DECISIONS.md §4.3 / §4.2 exactly.
+The "Get help now" screen is hard-coded and offline. It:
+- states: if you might hurt yourself or someone else, or you're in danger, contact your **local
+  emergency services** now (a category — not a number);
+- guides the user to **reach out to someone they trust** (a family member or a friend);
+- offers **"Message someone I trust"** → opens the user's own messages with an empty draft (`sms:`, no
+  recipient, no number);
+- ends with: *"SoulCap isn't a crisis service and can't contact anyone for you."*
+
+Help is always reachable (every tab, before consent, `?panic=1`). Tier-3 free text routes here. No
+`tel:` links anywhere. If a future market wants verified local lines, re-introduce them per region
+behind a region-pack model **only with the owner's explicit go-ahead**, verifying each is live.
 
 ---
 
@@ -79,7 +79,7 @@ record optional per-day IDs only and create no streak, adherence score, reminder
 
 **Guided Path (v2.1)** is rule-based chip routing to exercise *families* with educational footnotes.
 It never diagnoses, never says “start CBT/DBT/ACT,” never shows severity scores.
-Panic-like chip clusters open the same hard-coded region-aware Help screen. Path free-text
+Panic-like chip clusters open the same hard-coded number-free Help screen. Path free-text
 is not collected in the v2.1 core (chips only). Path copy carries an in-sheet “not yet clinically
 reviewed” notice until sister / licensed sign-off.
 

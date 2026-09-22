@@ -670,7 +670,7 @@ test.describe('v2.1 Guided Path', () => {
     expect(sessions[sessions.length - 1].approachId).toBeTruthy();
   });
 
-  test('panic-like cluster offers Help and opens region Help screen', async ({ page }) => {
+  test('panic-like cluster offers Help and opens number-free Help screen', async ({ page }) => {
     await seedDemo(page);
     await page.evaluate(() => (window as any).__soulcap.openPath());
     const sheet = page.locator('#sheetPanel');
@@ -685,7 +685,8 @@ test.describe('v2.1 Guided Path', () => {
     await sheet.getByRole('button', { name: 'I need help now' }).click();
     await expect(page.locator('#panic')).toBeVisible();
     await expect(page.locator('#panicLinks')).toContainText('Get help now');
-    await expect(page.locator('#panicLinks')).toContainText('Emergency');
+    await expect(page.locator('#panicLinks a[href^="tel:"]')).toHaveCount(0);
+    await expect(page.locator('#panicLinks')).toContainText(/local emergency services/i);
   });
 
   test('path note appears under What SoulCap knows and clears', async ({ page }) => {

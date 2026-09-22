@@ -14,14 +14,14 @@ See [`SAFETY.md`](SAFETY.md).
 
 | Surface | URL / path | Reality |
 |---|---|---|
-| **PWA** | [shamikhahmed.github.io/SoulCap](https://shamikhahmed.github.io/SoulCap/) · `docs/` | The product (**8.3.0** / schema **v14**). Quiet Depth identity. Five tabs, Guided Path, Settings + About & Legal, Personal Manual, Thought Parking, optional detailed check-ins, inspectable local patterns, self-concept reflection, habit-loop / urge surfing, therapist-informed frameworks, techniques, offline library, book-style journal, Constellation, Roman Urdu chrome preview, region-aware Help, optional app lock. **Zero third-party network calls — localStorage only.** Privacy: [`docs/privacy.html`](docs/privacy.html). |
+| **PWA** | [shamikhahmed.github.io/SoulCap](https://shamikhahmed.github.io/SoulCap/) · `docs/` | The product (**8.3.0** / schema **v14**). Quiet Depth identity. Five tabs, Guided Path, Settings + About & Legal, Personal Manual, Thought Parking, optional detailed check-ins, inspectable local patterns, self-concept reflection, habit-loop / urge surfing, therapist-informed frameworks, techniques, offline library, book-style journal, Constellation, Roman Urdu chrome preview, number-free Help, optional app lock. **Zero third-party network calls — localStorage only.** Privacy: [`docs/privacy.html`](docs/privacy.html). |
 | Nest API | `backend/` | **Lab only** (P-SOUL-2). Full module source (LMM, safety gate). Builds clean, **not deployed**; excluded from GitHub Pages (`docs/` only) and from Tier 1 product scoring. PWA does not call it. |
 | Expo | `mobile/` | **Lab only** (P-SOUL-2). Thin client source. Excluded from Pages and from Tier 1 scoring. |
 | **Screen gallery** | [`qa/tools/screen-gallery.html`](qa/tools/screen-gallery.html) · `docs/screenshots/gallery/` | Local viewer only (not Pages). `npm run gallery` → `npm run gallery:view`. |
 
 Demo walkthrough → `?demo=1`.
 
-Help uses region-aware, officially verified emergency / talk lines (see [`SAFETY.md`](SAFETY.md)). SoulCap still isn’t a crisis service and can’t contact anyone for you.
+Help is number-free and country-agnostic (owner decision): it guides you to someone you trust and to your local emergency services as a category — no crisis phone numbers, no country picker. SoulCap isn’t a crisis service and can’t contact anyone for you (see [`SAFETY.md`](SAFETY.md)).
 
 ---
 

@@ -1,3 +1,15 @@
+## 8.3.1 — 2026-09-22 · Restore number-free Help (owner-locked)
+- **Removed the region/country picker and all crisis phone numbers** that a prior 8.2.x change had
+  re-introduced (Samaritans 116 123, 988, 999, 911, 1122, etc. + `tel:` links + findahelpline.com).
+  This reverts to the owner's standing, repeatedly-stated decision: **no crisis numbers, no country
+  picker, number-free country-agnostic guidance only.**
+- "Get help now" now: points to **local emergency services as a category** (no number), guides the
+  user to **someone they trust**, offers **"Message someone I trust"** (`sms:` empty draft, no
+  recipient), and keeps the honesty lines. Help stays reachable everywhere; tier-3 routes here.
+- Dropped `state.notices.crisisRegion` + `CRISIS_REGIONS`/`CRISIS_RESOURCES`/`tel:` helpers.
+- Safety e2e rewritten to *enforce* number-free (no `tel:`, no region picker, no Samaritans/988).
+  25/25 safety tests green. Docs: SAFETY.md + README restored to number-free. SW `soulcap-v831`.
+
 ## 8.3.0 — 2026-09-18 · "Quiet Depth" calm pass (Apple-grade UX)
 - **Background redesigned:** the `--living` ambient in every theme was a blob centred at 50% 42% —
   it sat behind body text and read as a smudge. Retargeted to a soft top vignette (`at 50% -8%`),
