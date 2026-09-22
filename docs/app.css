@@ -133,7 +133,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 #splash,.splash-qd{
   position:fixed;inset:0;z-index:200;background:var(--splash-bg);
   display:flex;align-items:center;justify-content:center;
-  transition:opacity 480ms var(--ease-quiet),visibility 480ms;
+  transition:opacity 300ms var(--ease-quiet),visibility 300ms;
   overflow:hidden;
 }
 #splash .splash-living,.splash-living{
@@ -916,6 +916,19 @@ html[data-app-locked="1"] #sheet.on{visibility:visible}
 .qd-thumb .btn{width:100%}
 .qd-thumb .btn.quiet{margin-top:var(--space-2)}
 .qd-thumb input[type="text"]{margin-bottom:var(--space-3)}
+/* Welcome: centre the mark+headline+copy block so the space reads intentional,
+   not a big void above the thumb-zone CTA (Apple-calm first impression). */
+.welcome-head{
+  flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;
+  padding-top:0;overflow:visible;min-height:0;
+}
+.welcome-head .qd-mark{margin:0 0 var(--space-4)}
+.welcome-head .qd-lede{margin-top:var(--space-3)}
+/* Honesty line shares the serif voice (no sans/serif clash), quieter + smaller. */
+.qd-tagline{
+  font-family:var(--voice);font-size:16px;line-height:1.5;color:var(--ink-3);
+  margin-top:var(--space-2);max-width:34ch;
+}
 .qd-row,
 .view-qd .opt.qd-row{
   display:flex;flex-direction:column;align-items:flex-start;justify-content:center;

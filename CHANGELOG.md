@@ -1,3 +1,11 @@
+## 8.3.2 — 2026-09-22 · Welcome + splash, Apple-calm
+- **Welcome recomposed:** mark + headline + copy now vertically centred as one block, so the space
+  above the thumb-zone CTA reads intentional instead of a big empty void.
+- **One voice:** the honesty line ("Not therapy. Not a crisis service…") shares the serif voice as
+  the subtitle (was a serif/sans clash), quieter and smaller.
+- **Splash:** exit fade 480ms → 300ms — snappier, less crossfade ghosting into Welcome.
+- Welcome/onboarding e2e green. SW `soulcap-v832`.
+
 ## 8.3.1 — 2026-09-22 · Restore number-free Help (owner-locked)
 - **Removed the region/country picker and all crisis phone numbers** that a prior 8.2.x change had
   re-introduced (Samaritans 116 123, 988, 999, 911, 1122, etc. + `tel:` links + findahelpline.com).

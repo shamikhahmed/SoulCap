@@ -6345,7 +6345,7 @@
       }
     });
   }
-  var APP_VERSION = '8.3.1';
+  var APP_VERSION = '8.3.2';
   var settingsQuery = '';
   function settingsGroup(v, title, kids) {
     v.appendChild(el('p', { class: 'eyebrow settings-eyebrow', text: title }));
@@ -6559,10 +6559,12 @@
     var v = $('#view-welcome'); clear(v);
     v.className = 'view view-qd';
     v.appendChild(el('div', { class: 'living-field', 'aria-hidden': 'true' }));
-    v.appendChild(el('img', { class: 'qd-mark', src: 'icons/mark.svg', alt: '', width: '48', height: '48' }));
-    v.appendChild(el('h1', { class: 'qd-prompt type-display', text: tUi('welcome', 'title', { title: 'A quiet place to steady yourself.' }) }));
-    v.appendChild(el('p', { class: 'qd-lede p-voice', text: tUi('welcome', 'subtitle', { subtitle: 'Techniques that work in a few minutes. A private journal. A map of the people around you. Everything stays on your phone.' }) }));
-    v.appendChild(el('p', { class: 'qd-lede type-callout', text: tUi('welcome', 'tagline', { tagline: 'Not therapy. Not a crisis service. Just something that helps.' }) }));
+    v.appendChild(el('div', { class: 'qd-head welcome-head' }, [
+      el('img', { class: 'qd-mark', src: 'icons/mark.svg', alt: '', width: '48', height: '48' }),
+      el('h1', { class: 'qd-prompt type-display', text: tUi('welcome', 'title', { title: 'A quiet place to steady yourself.' }) }),
+      el('p', { class: 'qd-lede p-voice', text: tUi('welcome', 'subtitle', { subtitle: 'Techniques that work in a few minutes. A private journal. A map of the people around you. Everything stays on your phone.' }) }),
+      el('p', { class: 'qd-lede qd-tagline', text: tUi('welcome', 'tagline', { tagline: 'Not therapy. Not a crisis service. Just something that helps.' }) })
+    ]));
     v.appendChild(el('div', { class: 'qd-thumb' }, [
       el('button', { class: 'btn', text: tUi('welcome', 'begin', { begin: 'Begin' }), onclick: function () { state.welcomed = true; save(); render(); } }),
       el('button', { class: 'help-btn qd-help', text: t('helpNow'), onclick: openPanic })
