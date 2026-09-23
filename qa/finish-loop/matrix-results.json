@@ -1,27 +1,15 @@
 {
   "failures": [],
-  "shotCount": 30,
-  "expectedShots": 30,
-  "generatedAt": "2026-09-16T10:56:52.768Z",
+  "shotCount": 6,
+  "expectedShots": 6,
+  "generatedAt": "2026-09-23T05:28:53.098Z",
   "routes": [
     "home-demo"
   ],
   "viewports": [
-    "tiny-se1",
-    "fold-cover",
-    "android-s",
     "iphone-se3",
     "iphone-16",
-    "iphone-17",
-    "pixel",
-    "promax",
-    "phone-land",
-    "fold-open",
-    "ipad-mini",
-    "ipad-land",
-    "laptop",
-    "desktop",
-    "wide"
+    "laptop"
   ],
   "themes": [
     "light",
