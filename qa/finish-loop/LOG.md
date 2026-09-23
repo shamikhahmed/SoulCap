@@ -164,3 +164,12 @@ Do **not** claim fleet Tier 1 complete: manual VoiceOver evidence still ⛔ BLOC
 **Root cause:** If `data.js` failed/truncated, `SKILLS is not defined` threw while building `window.__soulcap`, so `boot()` never registered and `__APP_READY__` never flipped. Catalog fetches could also hang indefinitely on a flaky static server.
 **Fix:** Stub content globals before/after data.js; `markAppReady()` before render; catalog 8s timeout; boot try/finally; hardened splash dismiss + `waitForAppReady` retry; SW `soulcap-v824`.
 **Evidence:** `FINISH_MATRIX_FULL=1` → `matrix-results.json` failures=[] shotCount=30 expectedShots=30.
+
+## 2026-09-23 — Finish Review 3 (v8.3.2)
+
+- Branch: `finish/soulcap-stepR-v832` from `origin/main` @ 241724a (Apple-calm welcome + splash). Local `finish/soulcap-stepR` was ahead 16 of its remote tracking but already equal to `origin/main` — no reset/force-push.
+- Tag: created + pushed `v8.3.2` → 241724a.
+- Lighthouse live `?demo=1`: desktop perf 99 / a11y 100 / bp 100 / LCP 579 / TBT 0 / CLS 0; mobile perf 98 / a11y 100 / bp 100 / LCP 1625 / TBT 137 / CLS 0. JSON under `qa/finish-loop/lighthouse/`.
+- Gallery: freshness OK (manifest in same UI commit); no regen.
+- Matrix: 0 failures / 6 shots.
+- Tier1: **PASS** 32/0/0.

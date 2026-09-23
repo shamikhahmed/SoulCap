@@ -1,17 +1,17 @@
 {
   "app": "soulcap",
-  "version": "8.2.1",
-  "swCache": "soulcap-v824",
-  "generatedAt": "2026-09-16T11:19:12.473Z",
-  "status": "FAIL",
+  "version": "8.3.2",
+  "swCache": "soulcap-v832",
+  "generatedAt": "2026-09-23T05:29:02.285Z",
+  "status": "PASS",
   "pass": [
     {
       "id": "version:field",
-      "detail": "8.2.1"
+      "detail": "8.3.2"
     },
     {
       "id": "version:sw-cache-match",
-      "detail": "docs/sw.js contains soulcap-v824"
+      "detail": "docs/sw.js contains soulcap-v832"
     },
     {
       "id": "records:BASELINE.md",
@@ -50,6 +50,14 @@
       "detail": "window.__APP_READY__ assigned in product code"
     },
     {
+      "id": "ci:main",
+      "detail": "Verify and deploy @ 241724a → success https://github.com/shamikhahmed/SoulCap/actions/runs/35761671577"
+    },
+    {
+      "id": "tag",
+      "detail": "found v8.3.2"
+    },
+    {
       "id": "matrix:spec",
       "detail": "e2e/finish-matrix.spec.ts"
     },
@@ -63,11 +71,27 @@
     },
     {
       "id": "matrix:freshness",
-      "detail": "2026-09-16T11:18:37.057Z"
+      "detail": "2026-09-23T05:28:53.098Z"
+    },
+    {
+      "id": "lighthouse:home-demo-desktop.json",
+      "detail": "perf 99 a11y 100 bp 100 LCP 578.983 TBT 0 CLS 0"
+    },
+    {
+      "id": "lighthouse:home-demo-mobile.json",
+      "detail": "perf 98 a11y 100 bp 100 LCP 1624.7179999999998 TBT 136.9999999999999 CLS 0"
+    },
+    {
+      "id": "lighthouse:passing",
+      "detail": "2/2 files meet thresholds"
     },
     {
       "id": "axe:serious-critical",
-      "detail": "4 JSON clean"
+      "detail": "7 JSON clean"
+    },
+    {
+      "id": "gallery:freshness",
+      "detail": "docs/screenshots/gallery/gallery-manifest.json @ 2026-09-22T22:23:59+05:00"
     },
     {
       "id": "live:VERSION.json",
@@ -110,34 +134,8 @@
       "detail": "2 sinks; SINKS.md ok"
     }
   ],
-  "fail": [
-    {
-      "id": "tag",
-      "detail": "missing tag v8.2.1 (have: v8.1.1, v8.2.0)"
-    },
-    {
-      "id": "lighthouse:home-demo-desktop.json",
-      "detail": "fetchTime 2026-09-16T10:44:46.105Z before last UI commit 2026-09-16T16:16:46+05:00"
-    },
-    {
-      "id": "lighthouse:home-demo-mobile.json",
-      "detail": "fetchTime 2026-09-16T10:44:46.108Z before last UI commit 2026-09-16T16:16:46+05:00"
-    },
-    {
-      "id": "lighthouse:passing",
-      "detail": "0/2 files meet thresholds"
-    },
-    {
-      "id": "gallery:freshness",
-      "detail": "gallery 2026-09-15T18:26:23+05:00 before last UI commit 2026-09-16T16:16:46+05:00"
-    }
-  ],
-  "warn": [
-    {
-      "id": "ci:main",
-      "detail": "latest still in_progress: Merge pull request #10 from shamikhahmed/finish/soulcap-matrix"
-    }
-  ],
+  "fail": [],
+  "warn": [],
   "killList": {
     "rawHex": 0,
     "sub11": 0,
