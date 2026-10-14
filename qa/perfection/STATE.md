@@ -7,7 +7,7 @@ App version: **8.3.2** (no release bump yet — Phase I after Auditor)
 Safety: Help / crisis / age-gate copy **unchanged** (§2.2 / §13.8).
 
 ## Tip
-`8f0d5c1` on `origin/perfection/soulcap-v3` (from `main` @ `32c6961`).
+`30dadd3` on `origin/perfection/soulcap-v3` (gallery tip `8f0d5c1`; from `main` @ `32c6961`).
 
 ## Tickets (§13.8)
 | ID | Status | Notes |
