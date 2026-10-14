@@ -1,5 +1,6 @@
 ## 8.4.0 — 2026-10-14 · Perfection Loop v3
 
+- CI: vendor gallery `capture-helpers` into `e2e/helpers/` so verify resolves the module without sibling tooling (same pattern as TravelCap 1.1.1).
 - Gallery schema-v2 + shared v3 viewer; matrix light/dark primary coverage (SOL-V3-1).
 - Baseline device-qa **7/7 hard-clean** (no open P0/P1).
 - **Help / crisis / age-gate copy unchanged** (DECISIONS §4.2–§4.3).
