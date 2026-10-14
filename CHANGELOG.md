@@ -1,3 +1,10 @@
+## 8.4.0 — 2026-10-14 · Perfection Loop v3
+
+- Gallery schema-v2 + shared v3 viewer; matrix light/dark primary coverage (SOL-V3-1).
+- Baseline device-qa **7/7 hard-clean** (no open P0/P1).
+- **Help / crisis / age-gate copy unchanged** (DECISIONS §4.2–§4.3).
+- SW `soulcap-v840`.
+
 ## 8.3.2 — 2026-09-22 · Welcome + splash, Apple-calm
 - **Welcome recomposed:** mark + headline + copy now vertically centred as one block, so the space
   above the thumb-zone CTA reads intentional instead of a big empty void.

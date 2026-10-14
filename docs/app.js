@@ -6345,7 +6345,7 @@
       }
     });
   }
-  var APP_VERSION = '8.3.2';
+  var APP_VERSION = '8.4.0';
   var settingsQuery = '';
   function settingsGroup(v, title, kids) {
     v.appendChild(el('p', { class: 'eyebrow settings-eyebrow', text: title }));
