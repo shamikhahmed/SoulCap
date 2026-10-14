@@ -1,4 +1,10 @@
-**Version:** 8.3.0 · SW `soulcap-v830`
+**Version:** 8.4.0 · SW `soulcap-v840`
+
+## Current state (v8.4.0 — 2026-10-14) — Perfection Loop v3
+Gallery schema-v2 + shared v3 viewer; matrix light/dark primary coverage (SOL-V3-1). CI vendors
+gallery `capture-helpers` into `e2e/helpers/` (no sibling tooling path). Baseline device-qa **7/7
+hard-clean** on live `/SoulCap/?demo=1`. **Help / crisis / age-gate copy unchanged** (DECISIONS §4.2–§4.3).
+See `CHANGELOG.md` 8.4.0. Prior 8.3.x Quiet Depth calm pass remains in history below.
 
 ## Current state (v8.3.0 — 2026-09-18) — Quiet Depth calm pass
 Apple-grade UX pass: **background redesigned** (every theme's `--living` ambient moved from a centred
