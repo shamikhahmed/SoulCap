@@ -7,7 +7,7 @@ App version: **8.3.2** (no release bump yet — Phase I after Auditor)
 Safety: Help / crisis / age-gate copy **unchanged** (§2.2 / §13.8).
 
 ## Tip
-See latest commit on `perfection/soulcap-v3` (Builder-SoulCap Wave C).
+`8f0d5c1` on `origin/perfection/soulcap-v3` (from `main` @ `32c6961`).
 
 ## Tickets (§13.8)
 | ID | Status | Notes |
