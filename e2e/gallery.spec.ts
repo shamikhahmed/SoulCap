@@ -149,7 +149,8 @@ const APPEARANCE_LOOKS: { id: string; label: string; look: Look }[] = [
 ];
 
 function writeManifest(shots: ManifestShot[], viewport: string) {
-  const manifestPath = join(GALLERY_DIR, 'gallery-manifest.json');
+  // Legacy v1 writer — never clobber schema-v2 gallery-manifest.json (Perfection Loop v3).
+  const manifestPath = join(GALLERY_DIR, 'gallery-manifest.v1.json');
   let existing: { shots: ManifestShot[] } = { shots: [] };
   try {
     existing = JSON.parse(readFileSync(manifestPath, 'utf8'));
@@ -161,7 +162,7 @@ function writeManifest(shots: ManifestShot[], viewport: string) {
   const version = JSON.parse(readFileSync(join(process.cwd(), 'VERSION.json'), 'utf8')).version;
   writeFileSync(
     manifestPath,
-    JSON.stringify({ app: 'SoulCap', version, generated: new Date().toISOString(), shots: merged }, null, 2),
+    JSON.stringify({ app: 'SoulCap', version, generated: new Date().toISOString(), schema: 1, shots: merged }, null, 2),
   );
 }
 
