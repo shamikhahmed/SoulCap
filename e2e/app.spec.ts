@@ -180,11 +180,17 @@ test.describe('v0.9 local model', () => {
     await seedDemo(page);
     await page.getByRole('button', { name: 'Wired', exact: true }).click();
     await page.getByRole('button', { name: 'Add optional detail' }).click();
+    await expect(page.locator('#sheet.on')).toBeVisible();
     await page.getByRole('slider', { name: 'Mental noise' }).fill('5');
     await page.getByRole('button', { name: 'Clear my head' }).click();
     await page.getByRole('button', { name: 'Work or study' }).click();
     await page.getByRole('textbox', { name: 'Your own words (optional)' }).fill('Scattered');
     await page.getByRole('button', { name: 'Save detail' }).click();
+    await page.waitForFunction(() => {
+      const api = (window as any).__soulcap;
+      const c = api && api.getState().checkins.slice(-1)[0];
+      return !!(c && c.need === 'clarity' && c.feeling === 'Scattered');
+    });
     const result = await page.evaluate(() => {
       const state = (window as any).__soulcap.getState();
       return {
@@ -3106,8 +3112,10 @@ test.describe('V13 You insights + empty middle (SPEC-v7)', () => {
 test.describe('SPEC-v8 IA', () => {
   test('You: one profile entry, tools high, Settings gear, no bottom settings row', async ({ page }) => {
     await freshThrough(page);
-    await page.evaluate(() => (document.querySelector('#tabs button[data-tab="me"]') as HTMLElement).click());
+    await clickTab(page, 'me');
     const me = page.locator('#view-me');
+    await expect(me).toBeVisible();
+    await expect(me.getByText(/Set up your profile/i)).toBeVisible();
     const profileHits = await me.evaluate((root) => {
       const text = root.textContent || '';
       const setup = (text.match(/Set up (your )?profile/gi) || []).length;
@@ -3120,7 +3128,7 @@ test.describe('SPEC-v8 IA', () => {
       const toolTitles = Array.from(root.querySelectorAll('.me-tools .lr-title')).map((el) => (el.textContent || '').trim());
       return { setup, gear, bottomSettings, toolsBeforeAbout, toolTitles };
     });
-    expect(profileHits.setup, 'duplicate Set up profile').toBe(1);
+    expect(profileHits.setup, 'exactly one Set up profile').toBe(1);
     expect(profileHits.gear).toBe(true);
     expect(profileHits.bottomSettings).toBe(false);
     expect(profileHits.toolsBeforeAbout).toBe(true);
