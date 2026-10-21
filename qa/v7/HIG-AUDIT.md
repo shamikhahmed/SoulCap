@@ -105,4 +105,4 @@ Script: `capricorn-tooling/scripts/hig-check.mjs --url … --out … --viewport=
 | No therapy/AI claims | Locked product language |
 | Full VoiceOver every control | Spot-check 10 controls in sim — see APP-REPORT |
 
-**Gate:** 8 FAIL rows remaining for §2.2 acceptance on shipped UI chrome.
+**Gate:** 8 FAIL viewport-runs remaining (rules: navigation) for §2.2 acceptance on shipped UI chrome.
