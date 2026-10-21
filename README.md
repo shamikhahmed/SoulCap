@@ -11,7 +11,7 @@ See [`SAFETY.md`](SAFETY.md).
 ---
 
 
-## Real stories
+## Example stories
 
 Illustrative day-in-the-life stories (fictional personas) with screenshots and captions:
 
