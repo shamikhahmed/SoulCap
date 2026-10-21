@@ -1,3 +1,9 @@
+## [8.4.1] — 2026-10-21
+
+- HIG v7: iOS tokens / native feel; Dynamic Type & hit targets where applicable
+- Real-people stories live on hub (`/apps/<slug>/` + `/stories/`)
+- Pitch/presentation/README synced to 8.4.1
+
 ## 8.4.0 — 2026-10-14 · Perfection Loop v3
 
 - CI: vendor gallery `capture-helpers` into `e2e/helpers/` so verify resolves the module without sibling tooling (same pattern as TravelCap 1.1.1).

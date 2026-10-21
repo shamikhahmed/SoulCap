@@ -324,3 +324,15 @@ shamikh73@gmail.com
 ---
 
 *SoulCap. Know yourself. Grow yourself.*
+
+---
+
+## Slide — Real people (illustrative)
+
+Three fictional personas show how people use SoulCap day to day — before/after numbers, timeline screenshots, and a short silent video with captions.
+
+**Stories:** https://shamikhahmed.github.io/apps/soulcap/  
+**Index:** https://shamikhahmed.github.io/stories/
+
+*Illustrative story. People and data are fictional.*
+

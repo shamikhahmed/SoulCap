@@ -1,6 +1,6 @@
 # SoulCap
 
-**v8.4.0 — offline-first wellness PWA.** Quiet Depth visual identity (SPEC-v7) complete —
+**v8.4.1 — offline-first wellness PWA.** Quiet Depth visual identity (SPEC-v7) complete —
 see [`REDESIGN-DIFF.md`](REDESIGN-DIFF.md). Full-phase audit: [`AUDIT.md`](AUDIT.md) ·
 [`PERF.md`](PERF.md) · [`QA-MATRIX.md`](QA-MATRIX.md). **Not** therapy · not diagnosis · not crisis service.
 See [`SAFETY.md`](SAFETY.md).
@@ -9,6 +9,15 @@ See [`SAFETY.md`](SAFETY.md).
 > (what's next). [`.cursorrules`](.cursorrules) is the short version for Cursor.
 
 ---
+
+
+## Real stories
+
+Illustrative day-in-the-life stories (fictional personas) with screenshots and captions:
+
+- App stories: https://shamikhahmed.github.io/apps/soulcap/
+- All Cap stories: https://shamikhahmed.github.io/stories/
+
 
 ## What ships in this working tree
 

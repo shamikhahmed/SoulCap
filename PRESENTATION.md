@@ -1,6 +1,6 @@
 # SoulCap — Platform Presentation
 
-> **Honesty (shipped product · v8.0.2):** The live PWA at [`docs/`](./docs/) / GitHub Pages is a
+> **Honesty (shipped product · v8.4.1):** The live PWA at [`docs/`](./docs/) / GitHub Pages is a
 > private, self-guided wellness tool with the **Quiet Depth** visual identity (editorial surface,
 > one living ambient layer, depth ramp). Theme + appearance system, deterministic suggestions,
 > Guided Path with educational approach packs, guided skills, journal, Constellation, Personal
@@ -137,3 +137,15 @@ The current PWA has no chat input and does not run private journal text through 
 ## Closing
 
 > *"Safety gates first. Honest companion language second. Models only when we actually ship them."*
+
+---
+
+## Slide — Real people (illustrative)
+
+Three fictional personas show how people use SoulCap day to day — before/after numbers, timeline screenshots, and a short silent video with captions.
+
+**Stories:** https://shamikhahmed.github.io/apps/soulcap/  
+**Index:** https://shamikhahmed.github.io/stories/
+
+*Illustrative story. People and data are fictional.*
+
