@@ -25,16 +25,26 @@
   --fs-section: var(--ios-title3);
   --fs-display: var(--ios-large-title);
 
-  /* Semantic surfaces (alias existing brand tokens) */
-  --label: var(--text);
-  --secondary-label: var(--text2);
-  --tertiary-label: var(--text3);
-  --system-background: var(--bg);
-  --secondary-system-background: var(--bg2);
-  --tertiary-system-background: var(--bg3);
-  --grouped-background: var(--bg2);
-  --secondary-grouped-background: var(--steel);
-  --separator: var(--border);
+  /* SoulCap brand tokens use --ground/--ink (not --bg/--text). Alias so HIG sheet wins correctly. */
+  --bg: var(--ground);
+  --bg2: var(--surface);
+  --bg3: var(--surface-2);
+  --text: var(--ink);
+  --text2: var(--ink-2);
+  --text3: var(--ink-3);
+  --border: var(--line);
+  --steel: var(--sunken);
+
+  /* Semantic surfaces (alias brand tokens) */
+  --label: var(--ink);
+  --secondary-label: var(--ink-2);
+  --tertiary-label: var(--ink-3);
+  --system-background: var(--ground);
+  --secondary-system-background: var(--surface);
+  --tertiary-system-background: var(--surface-2);
+  --grouped-background: var(--surface);
+  --secondary-grouped-background: var(--sunken);
+  --separator: var(--line);
   --tint: var(--accent);
 
   /* Spacing 4/8/12/16/20/24/32 */
@@ -52,7 +62,8 @@
   --ios-r-lg: 16px;
   --ios-r-xl: 22px;
 
-  --hit-min: 44px;
+  /* Cap a11y contract + SoulCap e2e: 48px minimum touch targets (HIG 44pt floor). */
+  --hit-min: 48px;
   --hit-dense: 28px;
   --gutter-compact: 16px;
   --gutter-regular: 20px;
@@ -258,10 +269,14 @@ body {
   line-height: 1.5;
 }
 
-/* Ensure chips / dense controls still meet 44pt hit area via padding box */
-.chip {
+/* Ensure chips / dense controls meet Cap 48px hit area via padding box */
+.chip,
+#sheet button.chip,
+#sheet .chips button {
   min-height: var(--hit-min);
+  min-width: var(--hit-min);
   padding-inline: 15px;
   display: inline-flex;
   align-items: center;
+  box-sizing: border-box;
 }

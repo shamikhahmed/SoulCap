@@ -1794,7 +1794,12 @@ test.describe('Accessibility', () => {
 
     const themes = ['light', 'dark', 'night', 'amoled', 'ocean', 'forest'];
     for (const theme of themes) {
-      await page.evaluate((t) => document.documentElement.setAttribute('data-theme', t), theme);
+      // Use app setTheme so state + applyTheme stay aligned (attribute-only is overwritten on re-render).
+      await page.evaluate((t) => {
+        const api = (window as any).__soulcap;
+        if (api && typeof api.setTheme === 'function') api.setTheme(t);
+        else document.documentElement.setAttribute('data-theme', t);
+      }, theme);
       await waitForAnimationsIdle(page, 'body');
 
       await page.getByRole('button', { name: 'I need help now' }).first().click();

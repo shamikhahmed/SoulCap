@@ -91,7 +91,9 @@
 :root[data-theme="night"] {
   --ground:#0C0A10; --surface:#16131C; --surface-2:#1E1A26; --sunken:#08070C; --raise:var(--surface-2);
   --line:rgba(190,182,198,.07); --line-strong:rgba(190,182,198,.12);
-  --ink:#A49CB4; --ink-2:#9A92AA; --ink-3:#827A92;
+  /* ink-safe: panic/runner countdown must stay ≥7:1 on --ground (A49CB4 alone is marginal). */
+  --ink-safe:#EDE8F6;
+  --ink:#D4CEE0; --ink-2:#A49CB4; --ink-3:#827A92;
   --accent:#7E70D4; --accent-press:#6558B0; --accent-ink:#0C0A10; --accent-soft:rgba(126,112,212,.12);
   --accent-glow:rgba(126,112,212,.14);
   --accent-grad:linear-gradient(135deg,#8B7CF0,#6558B0);
