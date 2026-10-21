@@ -1,0 +1,34 @@
+{
+  "id": "soulcap-amina",
+  "name": "Amina Okello",
+  "age": 19,
+  "city": "Nairobi, Kenya",
+  "role": "Exam season",
+  "tech": "medium",
+  "accessibility": "standard",
+  "device": "iPhone 15",
+  "goal": "Grounding tools; crisis help numbers unchanged from app",
+  "pain_before": [
+    "Scattered notes",
+    "Forgot to log"
+  ],
+  "how_she_uses_it": [
+    "help-numbers",
+    "guided-techniques"
+  ],
+  "numbers": {
+    "before": {
+      "minutes_lost": 15
+    },
+    "after": {
+      "minutes_lost": 2
+    }
+  },
+  "quote": "When panic hits, I know where help is.",
+  "seed": "qa/v7/personas/soulcap-amina.seed.json",
+  "features_used": [
+    "help-numbers",
+    "guided-techniques"
+  ],
+  "fictional": true
+}

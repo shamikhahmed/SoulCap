@@ -1,8 +1,10 @@
 {
   "name": "SoulCap",
-  "version": "8.4.0",
-  "swCache": "soulcap-v840",
+  "version": "8.4.1",
+  "swCache": "soulcap-v841",
   "schema": 14,
   "released": "2026-10-14",
-  "note": "Perfection Loop v3: gallery schema-v2 + matrix L/D; Help/crisis copy unchanged"
+  "note": "Perfection Loop v3: gallery schema-v2 + matrix L/D; Help/crisis copy unchanged",
+  "updated": "2026-10-21",
+  "notes": "v7 HIG ios-tokens scaffold"
 }
