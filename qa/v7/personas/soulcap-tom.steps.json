@@ -1,5 +1,6 @@
 {
   "personaId": "soulcap-tom",
+  "personaName": "Tom Weber",
   "baseUrl": "/",
   "viewport": {
     "width": 402,
@@ -9,26 +10,45 @@
   "prep": [
     {
       "action": "goto",
-      "path": "/"
+      "path": "/?demo=1"
     },
     {
       "action": "wait",
-      "ms": 800
+      "ms": 1000
     }
   ],
   "steps": [
     {
-      "id": "01-home",
-      "title": "Home",
-      "action": "screenshot",
-      "route": "home",
-      "alt": "soulcap-tom home screen with sample data"
+      "id": "01-iphone",
+      "title": "Commute breath",
+      "action": "goto",
+      "path": "/?demo=1",
+      "waitMs": 1000,
+      "alt": "Breath on commute"
     },
     {
-      "id": "02-task",
-      "title": "Primary task",
-      "action": "screenshot",
-      "alt": "soulcap-tom primary task view"
+      "id": "02-ipad",
+      "title": "Sofa tablet",
+      "action": "goto",
+      "path": "/?demo=1",
+      "waitMs": 1000,
+      "alt": "Calm on iPad"
+    },
+    {
+      "id": "03-mac",
+      "title": "Laptop reflection",
+      "action": "goto",
+      "path": "/?demo=1",
+      "waitMs": 1000,
+      "alt": "Reflection on laptop"
+    },
+    {
+      "id": "04-iphone",
+      "title": "Phone away",
+      "action": "goto",
+      "path": "/?demo=1",
+      "waitMs": 1000,
+      "alt": "Phone wind-down"
     }
   ]
 }

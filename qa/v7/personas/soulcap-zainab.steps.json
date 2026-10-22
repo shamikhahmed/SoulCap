@@ -1,5 +1,6 @@
 {
   "personaId": "soulcap-zainab",
+  "personaName": "Zainab Farooq",
   "baseUrl": "/",
   "viewport": {
     "width": 402,
@@ -9,26 +10,53 @@
   "prep": [
     {
       "action": "goto",
-      "path": "/"
+      "path": "/?demo=1"
     },
     {
       "action": "wait",
-      "ms": 800
+      "ms": 1000
     }
   ],
   "steps": [
     {
-      "id": "01-home",
-      "title": "Home",
-      "action": "screenshot",
-      "route": "home",
-      "alt": "soulcap-zainab home screen with sample data"
+      "id": "01-iphone",
+      "title": "Breath first",
+      "action": "goto",
+      "path": "/?demo=1",
+      "waitMs": 1000,
+      "alt": "Breathing on iPhone"
     },
     {
-      "id": "02-task",
-      "title": "Primary task",
-      "action": "screenshot",
-      "alt": "soulcap-zainab primary task view"
+      "id": "02-iphone",
+      "title": "Feeling check",
+      "action": "goto",
+      "path": "/?demo=1",
+      "waitMs": 1000,
+      "alt": "Check-in on phone"
+    },
+    {
+      "id": "03-ipad",
+      "title": "Tablet calm",
+      "action": "goto",
+      "path": "/?demo=1",
+      "waitMs": 1000,
+      "alt": "Calm on tablet"
+    },
+    {
+      "id": "04-mac",
+      "title": "Friday laptop journal",
+      "action": "goto",
+      "path": "/?demo=1",
+      "waitMs": 1000,
+      "alt": "Journal on laptop"
+    },
+    {
+      "id": "05-iphone",
+      "title": "Close kindly",
+      "action": "goto",
+      "path": "/?demo=1",
+      "waitMs": 1000,
+      "alt": "Help nearby on phone"
     }
   ]
 }

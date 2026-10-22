@@ -1,5 +1,6 @@
 {
   "personaId": "soulcap-amina",
+  "personaName": "Amina Otieno",
   "baseUrl": "/",
   "viewport": {
     "width": 402,
@@ -9,26 +10,45 @@
   "prep": [
     {
       "action": "goto",
-      "path": "/"
+      "path": "/?demo=1"
     },
     {
       "action": "wait",
-      "ms": 800
+      "ms": 1000
     }
   ],
   "steps": [
     {
-      "id": "01-home",
-      "title": "Home",
-      "action": "screenshot",
-      "route": "home",
-      "alt": "soulcap-amina home screen with sample data"
+      "id": "01-iphone",
+      "title": "Grounding",
+      "action": "goto",
+      "path": "/?demo=1",
+      "waitMs": 1000,
+      "alt": "Grounding on phone"
     },
     {
-      "id": "02-task",
-      "title": "Primary task",
-      "action": "screenshot",
-      "alt": "soulcap-amina primary task view"
+      "id": "02-mac",
+      "title": "Library laptop",
+      "action": "goto",
+      "path": "/?demo=1",
+      "waitMs": 1000,
+      "alt": "Journal on laptop"
+    },
+    {
+      "id": "03-ipad",
+      "title": "Home tablet",
+      "action": "goto",
+      "path": "/?demo=1",
+      "waitMs": 1000,
+      "alt": "Calm on tablet"
+    },
+    {
+      "id": "04-iphone",
+      "title": "Help is there",
+      "action": "goto",
+      "path": "/?demo=1",
+      "waitMs": 1000,
+      "alt": "Crisis info as locked"
     }
   ]
 }
