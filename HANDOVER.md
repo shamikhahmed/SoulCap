@@ -1,6 +1,10 @@
-**Version:** 8.4.0 · SW `soulcap-v840`
+**Version:** 8.5.0 · SW `soulcap-v850`
 
-## Current state (v8.4.0 — 2026-10-14) — Perfection Loop v3
+## Current state (v8.5.0 — 2026-10-25) — HIG 3 rollout (`design/hig-3`)
+Floating glass tab bar / sidebar, document scroll, ScrollLock, Amethyst `--tint` / `--tint-text`.
+Crisis/Help copy unchanged. See `DESIGN.md` + `qa/hig/REPORT.md`.
+
+## Prior (v8.4.0 — 2026-10-14) — Perfection Loop v3
 Gallery schema-v2 + shared v3 viewer; matrix light/dark primary coverage (SOL-V3-1). CI vendors
 gallery `capture-helpers` into `e2e/helpers/` (no sibling tooling path). Baseline device-qa **7/7
 hard-clean** on live `/SoulCap/?demo=1`. **Help / crisis / age-gate copy unchanged** (DECISIONS §4.2–§4.3).

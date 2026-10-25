@@ -1,10 +1,10 @@
 {
   "name": "SoulCap",
-  "version": "8.4.1",
-  "swCache": "soulcap-v841",
+  "version": "8.5.0",
+  "swCache": "soulcap-v850",
   "schema": 14,
-  "released": "2026-10-14",
-  "note": "Perfection Loop v3: gallery schema-v2 + matrix L/D; Help/crisis copy unchanged",
-  "updated": "2026-10-21",
-  "notes": "v7 HIG ios-tokens scaffold"
+  "released": "2026-10-25",
+  "note": "HIG 3 rollout: floating glass tab bar, document scroll, ScrollLock, SW no auto-claim",
+  "updated": "2026-10-25",
+  "notes": "design/hig-3 — Amethyst accent kept as --tint / --tint-text"
 }
