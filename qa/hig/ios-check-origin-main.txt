@@ -1,0 +1,23 @@
+PASS  engine
+PASS  tab bar controls tappable
+PASS  hit areas ≥44pt (tabs)
+FAIL  tab bar floats ≥14px above bottom  ({"gap":0,"pad":72,"h":62.09375})
+FAIL  content padding clears tab bar  ({"gap":0,"pad":72,"h":62.09375})
+PASS  no sideways overflow · now
+PASS  document scrolls (no inner scroller) · now
+PASS  no sideways overflow · calm
+PASS  document scrolls (no inner scroller) · calm
+PASS  no sideways overflow · journal
+PASS  document scrolls (no inner scroller) · journal
+FAIL  no sideways overflow · map  (409 > 393)
+PASS  document scrolls (no inner scroller) · map
+PASS  no sideways overflow · me
+PASS  document scrolls (no inner scroller) · me
+PASS  programmatic scroll lands instantly
+PASS  tab tap keeps shell (no reload)
+PASS  new screen opens at top
+FAIL  sheet flow  (page.evaluate: TypeError: window.__soulcap.openSheet is not a function. (In 'window.__soulcap.openSheet(function (p) {)
+FAIL  inputs ≥16px (no zoom-on-focus)  (-1 small)
+PASS  no reload during session
+FAIL  SW: skipWaiting only on user request
+FAIL  SW: no auto clients.claim

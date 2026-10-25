@@ -1,0 +1,24 @@
+PASS  engine
+PASS  tab bar controls tappable
+PASS  hit areas ≥44pt (tabs)
+PASS  tab bar floats ≥14px above bottom
+PASS  content padding clears tab bar
+PASS  no sideways overflow · now
+PASS  document scrolls (no inner scroller) · now
+PASS  no sideways overflow · calm
+PASS  document scrolls (no inner scroller) · calm
+PASS  no sideways overflow · journal
+PASS  document scrolls (no inner scroller) · journal
+PASS  no sideways overflow · map
+PASS  document scrolls (no inner scroller) · map
+PASS  no sideways overflow · me
+PASS  document scrolls (no inner scroller) · me
+PASS  programmatic scroll lands instantly
+PASS  tab tap keeps shell (no reload)
+PASS  new screen opens at top
+PASS  page locked behind sheet
+PASS  sheet keeps scroll position
+PASS  inputs ≥16px (no zoom-on-focus)
+PASS  no reload during session
+PASS  SW: skipWaiting only on user request
+PASS  SW: no auto clients.claim

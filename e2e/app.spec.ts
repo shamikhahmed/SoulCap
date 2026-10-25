@@ -1726,8 +1726,8 @@ test.describe('Accessibility', () => {
       tabTarget: document.querySelector('#tabs button')!.getBoundingClientRect().height,
     }));
     expect(sizes.tab).toBeGreaterThanOrEqual(11);
-    // Phone bottom tabs stay caption-sized; ≥900px sidebar uses readable 15px labels (SOUL-P1-01).
-    if (sizes.width >= 900) expect(sizes.tab).toBeLessThanOrEqual(16);
+    // Phone floating tabs stay caption-sized; ≥700px HIG sidebar uses body-scale labels.
+    if (sizes.width >= 700) expect(sizes.tab).toBeLessThanOrEqual(17);
     else expect(sizes.tab).toBeLessThanOrEqual(12);
     expect(sizes.eyebrow).toBeLessThanOrEqual(13);
     expect(sizes.tabTarget).toBeGreaterThanOrEqual(48);
@@ -2041,7 +2041,7 @@ test.describe('v1.4 bundled features', () => {
     }
   });
 
-  test('tab bar stays pinned to viewport bottom with content clearance', async ({ page }) => {
+  test('tab bar floats above bottom with content clearance', async ({ page }) => {
     await seedDemo(page);
     await page.setViewportSize({ width: 430, height: 932 });
     for (const tab of ['now', 'calm', 'me'] as const) {
@@ -2066,14 +2066,16 @@ test.describe('v1.4 bundled features', () => {
           tabsBottom: tr.bottom,
           tabsH: tr.height,
           viewportH: window.innerHeight,
+          gap: window.innerHeight - tr.bottom,
           padBottom,
           helpClearsTabs,
           helpIsLast: help ? help === view.lastElementChild : true
         };
       }, tab);
       expect(layout.position, `${tab} tabs position`).toBe('fixed');
-      expect(Math.abs(layout.tabsBottom - layout.viewportH), `${tab} tabs at bottom`).toBeLessThanOrEqual(2);
-      expect(layout.padBottom, `${tab} view pad`).toBeGreaterThanOrEqual(layout.tabsH);
+      /* HIG floating glass bar: ≥14px above the bottom edge (safe-area + 6). */
+      expect(layout.gap, `${tab} tabs float gap`).toBeGreaterThanOrEqual(14);
+      expect(layout.padBottom, `${tab} view pad`).toBeGreaterThanOrEqual(layout.tabsH + 48);
       expect(layout.helpClearsTabs, `${tab} help clears tab zone`).toBe(true);
       // Now: Help sits above More (SOUL-P1-04 / Q-3). Other tabs keep Help last.
       if (tab === 'now') {

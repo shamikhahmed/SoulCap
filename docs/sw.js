@@ -7,14 +7,21 @@
  *
  * Bump CACHE on every asset change or users get a stale build.
  */
-var CACHE = 'soulcap-v841';
+var CACHE = 'soulcap-v850';
 
 var ASSETS = [
   './',
   'index.html',
   'VERSION.json',
+  'css/design/tokens.css',
+  'css/cascade.css',
+  'css/design/system.css',
+  'css/design/soulcap.css',
   'brand.css',
   'app.css',
+  'ios-tokens.css',
+  'js/scroll-lock.js',
+  'js/hig-dt.js',
   'brand-palette.js',
   'data.js',
   'app.js',
@@ -52,8 +59,12 @@ self.addEventListener('install', function (e) {
           return c.add(url).catch(function () { return null; });
         }));
       })
-      .then(function () { return self.skipWaiting(); })
   );
+});
+
+/* Activate only when the user asks (update banner → postMessage SKIP_WAITING). */
+self.addEventListener('message', function (e) {
+  if (e.data && e.data.type === 'SKIP_WAITING') self.skipWaiting();
 });
 
 self.addEventListener('activate', function (e) {
@@ -62,7 +73,6 @@ self.addEventListener('activate', function (e) {
       .then(function (keys) {
         return Promise.all(keys.filter(function (k) { return k !== CACHE; }).map(function (k) { return caches.delete(k); }));
       })
-      .then(function () { return self.clients.claim(); })
   );
 });
 

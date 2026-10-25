@@ -1,0 +1,15 @@
+/*
+ * SoulCap — cascade order: Quiet Depth / legacy CSS < HIG components
+ * (system.css primitives + soulcap.css reskin).
+ * css/design/tokens.css loads unlayered (render-blocking), so it always wins.
+ * brand.css carries theme hex (--accent etc.); app.css / ios-tokens / foundation
+ * sit in the legacy layer. Docs: DESIGN.md.
+ */
+@layer legacy, components;
+
+@import url("../vendor/cap-foundation.css") layer(legacy);
+@import url("../brand.css") layer(legacy);
+@import url("../app.css") layer(legacy);
+@import url("../ios-tokens.css") layer(legacy);
+@import url("design/system.css");
+@import url("design/soulcap.css");

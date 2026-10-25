@@ -30,10 +30,14 @@ if(loc==='rui'||loc==='ur'){document.documentElement.setAttribute('lang','rui');
 else{document.documentElement.setAttribute('lang','en');document.documentElement.setAttribute('dir','ltr');}
 }catch(e){}})();
 </script>
-<link rel="stylesheet" href="vendor/cap-foundation.css"/>
-<link rel="stylesheet" href="brand.css"/>
-<link rel="stylesheet" href="app.css"/>
-<link rel="stylesheet" href="ios-tokens.css"/>
+<!-- HIG design: Quiet Depth CSS sits in @layer legacy under HIG components (css/cascade.css, DESIGN.md). -->
+<link rel="preload" href="vendor/cap-foundation.css" as="style"/>
+<link rel="preload" href="brand.css" as="style"/>
+<link rel="preload" href="app.css" as="style"/>
+<link rel="preload" href="css/design/system.css" as="style"/>
+<link rel="preload" href="css/design/soulcap.css" as="style"/>
+<link rel="stylesheet" href="css/design/tokens.css"/>
+<link rel="stylesheet" href="css/cascade.css"/>
 </head>
 <body>
 
@@ -220,6 +224,7 @@ else{document.documentElement.setAttribute('lang','en');document.documentElement
   <div id="sheetPanel" class="panel"></div>
 </div>
 
+<script src="js/scroll-lock.js"></script>
 <script src="vendor/local-lock.js"></script>
 <script src="brand-palette.js"></script>
 <!-- If data.js fails to load (flaky static server / truncated response), stub the

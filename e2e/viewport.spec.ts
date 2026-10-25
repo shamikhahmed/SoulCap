@@ -45,8 +45,9 @@ test.describe('SoulCap viewport contract', () => {
     });
     expect(phone.position).toBe('fixed');
     expect(phone.top).toBeGreaterThan(phone.vh * 0.6);
-    expect(phone.bottom).toBeGreaterThan(phone.vh - 8);
-    expect(phone.width).toBeGreaterThan(phone.vw * 0.7);
+    /* HIG floating glass bar: ≥14px above the bottom edge (safe-area + 6). */
+    expect(phone.vh - phone.bottom).toBeGreaterThanOrEqual(14);
+    expect(phone.width).toBeGreaterThan(phone.vw * 0.55);
 
     for (const tab of ['now', 'calm', 'journal', 'map', 'me']) {
       await page.locator(`#tabs button[data-tab="${tab}"]`).click();

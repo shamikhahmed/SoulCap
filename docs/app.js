@@ -1406,10 +1406,11 @@
     // enabled, the speaker toggle lets someone alone turn it on in one tap.
     sessionMute = true;
     $('#panic').classList.add('on'); $('#panic').setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
+    if (window.ScrollLock) window.ScrollLock.sync();
     renderPanicHelp($('#panicLinks')); renderVoiceToggle($('#panicVoice'), 'panic');
     mountOrb('panic', '.pacer-hold', '#pacer');
-    runPacer(); buzz(18); $('#panicExit').focus();
+    runPacer(); buzz(18);
+    try { $('#panicExit').focus({ preventScroll: true }); } catch (e) { $('#panicExit').focus(); }
   }
 
   // A small speaker control shown on panic + runner. Only appears if the user has
@@ -1432,7 +1433,8 @@
   }
   function closePanic() {
     $('#panic').classList.remove('on'); $('#panic').setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = ''; stopPacer(); hushVoice(); panicSaveWarning = false;
+    if (window.ScrollLock) window.ScrollLock.sync();
+    stopPacer(); hushVoice(); panicSaveWarning = false;
     destroyOrb('panic');
     var hold = $('.pacer-hold');
     if (hold) { hold.classList.remove('has-webgl-orb'); hold.classList.remove('session-settle'); }
@@ -2699,12 +2701,13 @@
 
   function openRunnerShell() {
     $('#runner').classList.add('on'); $('#runner').setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
+    if (window.ScrollLock) window.ScrollLock.sync();
   }
   function closeRunner() {
     if (runState) { clearTimeout(runState.timer); clearInterval(runState.ticker); }
     $('#runner').classList.remove('on'); $('#runner').setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = ''; runState = null; hushVoice();
+    if (window.ScrollLock) window.ScrollLock.sync();
+    runState = null; hushVoice();
     destroyOrb('run');
     var hold = $('.run-orb-hold');
     if (hold) { hold.classList.remove('has-webgl-orb'); hold.classList.remove('session-settle'); }
@@ -3016,9 +3019,15 @@
     clear($('#subviewNav'));
     clear($('#subviewBody'));
     setSubviewBackgroundInert(false);
-    document.body.style.overflow = '';
-    window.scrollTo(0, tabScrollY || 0);
-    if (subviewOpener && document.documentElement.contains(subviewOpener)) subviewOpener.focus();
+    if (window.ScrollLock) {
+      window.ScrollLock.sync();
+      window.ScrollLock.scrollTo(tabScrollY || 0);
+    } else {
+      window.scrollTo(0, tabScrollY || 0);
+    }
+    if (subviewOpener && document.documentElement.contains(subviewOpener)) {
+      try { subviewOpener.focus({ preventScroll: true }); } catch (e) { subviewOpener.focus(); }
+    }
     subviewOpener = null;
   }
   function closeSubview() {
@@ -3042,11 +3051,15 @@
     host.setAttribute('aria-modal', 'true');
     host.setAttribute('aria-labelledby', 'subviewTitle');
     setSubviewBackgroundInert(true);
-    document.body.style.overflow = 'hidden';
+    if (window.ScrollLock) window.ScrollLock.sync();
     host.scrollTop = top.scrollY || 0;
     var focusable = body.querySelector('button, a, input, textarea, select');
-    if (focusable) focusable.focus();
-    else nav.querySelector('.nav-back').focus();
+    function focusEl(node) {
+      if (!node) return;
+      try { node.focus({ preventScroll: true }); } catch (e) { node.focus(); }
+    }
+    if (focusable) focusEl(focusable);
+    else focusEl(nav.querySelector('.nav-back'));
   }
   function pushView(opts) {
     if (!viewStack.length) {
@@ -3127,23 +3140,29 @@
     }
     $('#sheet').classList.add('on'); $('#sheet').setAttribute('aria-hidden', 'false');
     setSheetBackgroundInert(true);
-    document.body.style.overflow = 'hidden';
+    /* ScrollLock pins body (position:fixed); do not use overflow:hidden — iOS jumps. */
+    if (window.ScrollLock) window.ScrollLock.sync();
     haptic('tick');
     /* Phase D focus: open keyboard only for dedicated text entry (opts.autofocusField).
-     * Chip / settings / browse sheets focus first button so the keyboard stays down. */
+     * Chip / settings / browse sheets focus first button so the keyboard stays down.
+     * preventScroll keeps the locked page from jumping under the sheet. */
     setTimeout(function () {
+      function focusEl(node) {
+        if (!node) return;
+        try { node.focus({ preventScroll: true }); } catch (e) { node.focus(); }
+      }
       var field = null;
       if (opts.autofocusField === true) {
         field = panel.querySelector('input:not([type="hidden"]):not([type="file"]):not([type="range"]), textarea');
       } else if (typeof opts.autofocusField === 'string') {
         field = panel.querySelector(opts.autofocusField);
       }
-      if (field) { field.focus(); return; }
+      if (field) { focusEl(field); return; }
       var btn = panel.querySelector('button, [href]');
-      if (btn) btn.focus();
+      if (btn) focusEl(btn);
       else {
         var any = panel.querySelector('input, select, textarea, a');
-        if (any) any.focus();
+        focusEl(any);
       }
     }, 40);
   }
@@ -3160,13 +3179,16 @@
     $('#sheet').classList.remove('flow');
     $('#sheet').setAttribute('aria-hidden', 'true');
     setSheetBackgroundInert(false);
-    document.body.style.overflow = '';
+    if (window.ScrollLock) window.ScrollLock.sync();
     if (sheetOpener && document.documentElement.contains(sheetOpener)) {
       try { sheetOpener.focus({ preventScroll: true }); } catch (e) { sheetOpener.focus(); }
     }
     sheetOpener = null;
-    window.scrollTo(0, sheetScrollY || 0);
-    requestAnimationFrame(function () { window.scrollTo(0, sheetScrollY || 0); });
+    /* ScrollLock restores Y; keep a same-turn fallback for engines without the observer yet. */
+    if (!window.ScrollLock) {
+      window.scrollTo(0, sheetScrollY || 0);
+      requestAnimationFrame(function () { window.scrollTo(0, sheetScrollY || 0); });
+    }
   }
 
   /* ── Gestures (v5 PR-3) — always paired with visible controls ─────────── */
@@ -4521,8 +4543,12 @@
 
     $('#journalEditor').classList.add('on'); $('#journalEditor').setAttribute('aria-hidden', 'false');
     signatureJournalOpen();
-    document.body.style.overflow = 'hidden';
-    setTimeout(function () { $('#jeBody').focus(); }, 60);
+    if (window.ScrollLock) window.ScrollLock.sync();
+    setTimeout(function () {
+      var body = $('#jeBody');
+      if (!body) return;
+      try { body.focus({ preventScroll: true }); } catch (e) { body.focus(); }
+    }, 60);
 
     $('#jeSave').onclick = function () { saveDraft(isNew); };
   }
@@ -4559,7 +4585,8 @@
     stopJournalRecognition(false);
     setFeelingOverlayOpen(false);
     $('#journalEditor').classList.remove('on'); $('#journalEditor').setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = ''; draft = null;
+    if (window.ScrollLock) window.ScrollLock.sync();
+    draft = null;
   }
   function saveDraft(isNew) {
     stopJournalRecognition(false);
@@ -6345,7 +6372,7 @@
       }
     });
   }
-  var APP_VERSION = '8.4.0';
+  var APP_VERSION = '8.5.0';
   var settingsQuery = '';
   function settingsGroup(v, title, kids) {
     v.appendChild(el('p', { class: 'eyebrow settings-eyebrow', text: title }));
@@ -6685,7 +6712,8 @@
     prep.catch(function () { /* degrade: catalogs may already be warm from boot */ }).then(function () {
       withViewTransition(function () {
         render();
-        window.scrollTo(0, 0);
+        if (window.ScrollLock) window.ScrollLock.scrollTo(0);
+        else window.scrollTo(0, 0);
       });
     });
   }
@@ -6968,6 +6996,8 @@
 
   window.__soulcap = {
     assessRisk: assessRisk, suggestSkill: suggestSkill, suggestPerson: suggestPerson,
+    openSheet: openSheet, closeSheet: closeSheet, openPanic: openPanic, closePanic: closePanic,
+    selectTab: selectTab,
     getState: function () { return state; }, skillCount: (SKILLS && SKILLS.length) || 0,
     skillIds: (SKILLS && SKILLS.map) ? SKILLS.map(function (skill) { return skill.id; }) : [],     version: APP_VERSION,
     effectiveMotion: effectiveMotion,

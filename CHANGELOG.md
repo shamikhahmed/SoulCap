@@ -1,3 +1,11 @@
+## [8.5.0] — 2026-10-25 · HIG 3 rollout
+
+- Apple HIG shell: floating glass tab bar (<700px), glass sidebar (≥700px), document scroll (no inner view scroller), ScrollLock for sheets/overlays, flat buttons / chips / filled fields, sheet grabber pattern.
+- Design tokens: `docs/css/design/{tokens,system,soulcap}.css` + `docs/css/cascade.css` (`@layer legacy, components`). Amethyst accent kept as `--tint` / `--tint-text` (AA on light).
+- iPhone recipe: `scroll-behavior: auto`, inputs ≥16px, `touch-action: manipulation`, hover only under `@media (hover:hover)`, content padding clears floating bar + 48 + safe area.
+- SW `soulcap-v850`: no auto `skipWaiting` / `clients.claim` (message `SKIP_WAITING` only).
+- Verify: `scripts/ios-behaviour-check.mjs`; safety e2e must stay green.
+
 ## [8.4.1] — 2026-10-21
 
 - HIG v7: iOS tokens / native feel; Dynamic Type & hit targets where applicable

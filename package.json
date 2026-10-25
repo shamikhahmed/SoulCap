@@ -1,10 +1,11 @@
 {
   "name": "soulcap",
   "private": true,
-  "version": "8.4.1",
+  "version": "8.5.0",
   "description": "SoulCap PWA \u2014 private, offline-first self-guided wellness tools",
   "scripts": {
     "dev": "python3 -m http.server 8788 --directory docs",
+    "ios:check": "node scripts/ios-behaviour-check.mjs http://127.0.0.1:8810/",
     "test:e2e": "playwright test",
     "test:safety": "playwright test e2e/safety.spec.ts",
     "verify": "npm run test:e2e",
