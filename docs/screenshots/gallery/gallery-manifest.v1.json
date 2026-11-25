@@ -1,7 +1,8 @@
 {
   "app": "SoulCap",
-  "version": "8.3.2",
-  "generated": "2026-09-22T17:23:41.749Z",
+  "version": "8.4.1",
+  "generated": "2026-11-25T20:26:08.160Z",
+  "schema": 1,
   "shots": [
     {
       "file": "desktop__accent-lilac__calm.png",

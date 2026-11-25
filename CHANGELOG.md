@@ -1,3 +1,7 @@
+## Gallery regen — 2026-11-26 (Wave 2)
+
+- Real Playwright capture (`npm run gallery`) — mobile + desktop screen galleries refreshed.
+
 ## Motion craft — 2026-11-26
 
 - Motion contract: this app does **not** vendor Cap design-system CSS; fleet source of truth is `Cap-Apps/capricorn-tooling/shared/design-system/MOTION.md` (`--cap-dur-*`, app-shell instant reveals via `data-cap-app="1"`).
