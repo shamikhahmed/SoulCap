@@ -1,6 +1,6 @@
 ## Gallery regen — 2026-11-26 (Wave 2)
 
-- Real Playwright capture (`npm run gallery`) — mobile + desktop screen galleries refreshed.
+- Real Playwright capture (`npm run gallery`) — mobile + desktop; **392** shots; `gallery-manifest.v1.json` `generated` **2026-11-25T20:26:08.160Z**.
 
 ## Motion craft — 2026-11-26
 

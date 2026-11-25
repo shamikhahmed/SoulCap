@@ -855,4 +855,5 @@ A full panel review was conducted (Staff Engineers, AI Architect, Clinical Psych
 - Motion contract: this app does **not** vendor Cap design-system CSS; fleet source of truth is `Cap-Apps/capricorn-tooling/shared/design-system/MOTION.md` (`--cap-dur-*`, app-shell instant reveals via `data-cap-app="1"`).
 
 ## Gallery (2026-11-26 Wave 2)
-- Real Playwright gallery — mobile + desktop suites passed (~3.8m).
+- Real Playwright `npm run gallery` (mobile + desktop) — **392** shots / **390** PNG diffs committed.
+- Manifest `docs/screenshots/gallery/gallery-manifest.v1.json` `generated` **2026-11-25T20:26:08.160Z** (schema-v2 manifest intentionally preserved).
