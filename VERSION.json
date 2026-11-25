@@ -5,6 +5,7 @@
   "schema": 14,
   "released": "2026-10-14",
   "note": "Perfection Loop v3: gallery schema-v2 + matrix L/D; Help/crisis copy unchanged",
-  "updated": "2026-10-21",
-  "notes": "v7 HIG ios-tokens scaffold"
+  "updated": "2026-11-26",
+  "notes": "v7 HIG ios-tokens scaffold",
+  "motionContract": "capricorn-tooling/shared/design-system/MOTION.md (shared; not vendored)"
 }

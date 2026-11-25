@@ -849,3 +849,7 @@ A full panel review was conducted (Staff Engineers, AI Architect, Clinical Psych
 *Owner: update this document whenever you change architecture, add a module, or complete a backlog item.*
 
 </details>
+
+## Motion contract (2026-11-26)
+
+- Motion contract: this app does **not** vendor Cap design-system CSS; fleet source of truth is `Cap-Apps/capricorn-tooling/shared/design-system/MOTION.md` (`--cap-dur-*`, app-shell instant reveals via `data-cap-app="1"`).
